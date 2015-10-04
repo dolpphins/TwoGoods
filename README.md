@@ -100,5 +100,3 @@ com.lym.twogoods.viewholder:存放App公共ViewHolder
 3.大部分值文件放在values目录下
 
 4.第三方jar包没有特殊情况都放在libs目录下
-
-
