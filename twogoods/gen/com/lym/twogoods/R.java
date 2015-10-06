@@ -30,6 +30,8 @@ public final class R {
         public static final int xlistview_header=0x7f030001;
     }
     public static final class string {
+        /**  common string 
+         */
         public static final int app_name=0x7f040000;
         public static final int xlistview_footer_hint_normal=0x7f040005;
         public static final int xlistview_footer_hint_ready=0x7f040006;
