@@ -10,9 +10,9 @@ UTF-8
 ---
 Java1.7+Eclipse(集成ADT插件和Android SDK)
 
-Android minSdkVersion：14
+Android minSdkVersion：14(Android 4.0 Ice Cream Sandwich)
 
-Android targetSdkVersion：19
+Android targetSdkVersion：19(Android 4.4 KitKat)
 
 ###运行环境
 ---
@@ -28,6 +28,7 @@ Android targetSdkVersion：19
         * com.lym.twogoods.bean
         * com.lym.twogoods.config
         * com.lym.twogoods.db
+        * com.lym.twogoods.eventbus.event
         * com.lym.twogoods.fragment
         * com.lym.twogoods.fragment.base
         * com.lym.twogoods.https
@@ -58,6 +59,8 @@ com.lym.twogoods.bean:存放所有实体类
 com.lym.twogoods.config:存放配置类
 
 com.lym.twogoods.db:存放与数据库操作相关的类
+
+com.lym.twogoods.eventbus.event:存放EventBus对象
 
 com.lym.twogoods.fragment:存放App公共的fragment
 
@@ -100,3 +103,24 @@ com.lym.twogoods.viewholder:存放App公共ViewHolder
 3.大部分值文件放在values目录下
 
 4.第三方jar包没有特殊情况都放在libs目录下
+
+###编码分工
+---
+
+* 2015.10.7-2015.10.10
+    
+    * 麦灿标
+          项目主体框架，SharePreference管理类，AccessTokenKeeper类，其它实体类及greenDAO代码
+    
+    * 尧俊锋
+          大部分工具类，包括StringUtil，ImageUtil，FileUtil，MethodCompat，NetworkHelper,EncryptHelper，DatabaseHelper，Debugger、TimeUtil
+    
+    * 龙宇文
+          App首页，登录页面，注册页面，找回密码页面，UserBean，UserInfoBean，相应的greenDAO代码
+
+
+
+
+
+
+

@@ -12,9 +12,33 @@ public final class R {
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
+        public static final int xlistview_arrow=0x7f020001;
+    }
+    public static final class id {
+        public static final int xlistview_footer_content=0x7f060000;
+        public static final int xlistview_footer_hint_textview=0x7f060002;
+        public static final int xlistview_footer_progressbar=0x7f060001;
+        public static final int xlistview_header_arrow=0x7f060007;
+        public static final int xlistview_header_content=0x7f060003;
+        public static final int xlistview_header_hint_textview=0x7f060005;
+        public static final int xlistview_header_progressbar=0x7f060008;
+        public static final int xlistview_header_text=0x7f060004;
+        public static final int xlistview_header_time=0x7f060006;
+    }
+    public static final class layout {
+        public static final int xlistview_footer=0x7f030000;
+        public static final int xlistview_header=0x7f030001;
     }
     public static final class string {
-        public static final int app_name=0x7f030000;
+        public static final int app_name=0x7f040000;
+        public static final int xlistview_footer_hint_normal=0x7f040005;
+        public static final int xlistview_footer_hint_ready=0x7f040006;
+        public static final int xlistview_header_hint_loading=0x7f040003;
+        /**  XListView 
+         */
+        public static final int xlistview_header_hint_normal=0x7f040001;
+        public static final int xlistview_header_hint_ready=0x7f040002;
+        public static final int xlistview_header_last_time=0x7f040004;
     }
     public static final class style {
         /** 
@@ -38,10 +62,10 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f040000;
+        public static final int AppBaseTheme=0x7f050000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f040001;
+        public static final int AppTheme=0x7f050001;
     }
 }
