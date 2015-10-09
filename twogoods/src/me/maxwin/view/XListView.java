@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -375,5 +376,64 @@ public class XListView extends ListView implements OnScrollListener {
 		public void onRefresh();
 
 		public void onLoadMore();
+	}
+	
+	
+	
+	//扩展方法
+	
+	/**
+	 * 设置头部刚下拉时提示文字
+	 * 
+	 * @param 要设置的内容,注意如果为""表示不显示任何内容,为null表示显示默认文本
+	 * */
+	public void setHeaderHintNormalText(CharSequence text) {
+		if(mHeaderView != null) {
+			mHeaderView.setHintNormalText(text);
+		}
+	}
+	
+	/**
+	 * 设置头部下拉到一定程度提示文字
+	 * 
+	 * @param 要设置的内容,注意如果为""表示不显示任何内容,为null表示显示默认文本
+	 * */
+	public void setHeaderHintReadyText(CharSequence text) {
+		if(mHeaderView != null) {
+			mHeaderView.setHintReadyText(text);
+		}
+	}
+	
+	/**
+	 * 设置头部正在加载时提示文字
+	 * 
+	 * @param 要设置的内容,注意如果为""表示不显示任何内容,为null表示显示默认文本
+	 * */
+	public void setHeaderHintLodingText(CharSequence text) {
+		if(mHeaderView != null) {
+			mHeaderView.setHintLodingText(text);
+		}
+	}
+	
+	/**
+	 * 设置头部上次刷新时间提示文字
+	 * 
+	 * @param 要设置的内容,注意如果为""表示不显示任何内容,为null表示显示默认文本
+	 * */
+	public void setHeaderHintLastTimeTipText(CharSequence text) {
+		if(mHeaderView != null) {
+			mHeaderView.setHintLastTimeTipText(text);
+		}
+	}
+	
+	/**
+	 * 设置头部箭头图标
+	 * 
+	 * @param resId 要设置的资源ID
+	 * */
+	public void setRefreshArrow(int resId) {
+		if(mHeaderView != null) {
+			mHeaderView.setRefreshArrow(resId);
+		}
 	}
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	App主布局
+	
+	author:麦灿标
+ -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:orientation="vertical">
+    
+    <RelativeLayout
+        android:id="@+id/app_decorview_content" 
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1000">
+        <!-- 这里放每个Tab内容 -->
+    </RelativeLayout>
+    
+	<RelativeLayout 
+	    android:id="@+id/app_decorview_bottom_tab"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@color/app_tab_backgound_bg">
+	    <!-- 这里代码动态添加Activity底部布局 -->
+	</RelativeLayout>
+    
+</LinearLayout>

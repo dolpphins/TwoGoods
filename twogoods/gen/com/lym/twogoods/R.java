@@ -10,37 +10,113 @@ package com.lym.twogoods;
 public final class R {
     public static final class attr {
     }
+    public static final class color {
+        /**  common 
+ ActionBar 
+         */
+        public static final int app_common_actionbar_bg=0x7f040000;
+        /**  Tab顶部分割线背景颜色 
+         */
+        public static final int app_tab_backgound_bg=0x7f040004;
+        /**  Tab选项文字选中颜色 
+         */
+        public static final int app_tab_top_separator=0x7f040003;
+        /**  ActionBar背景颜色 
+         */
+        public static final int color_bottom_text_normal=0x7f040001;
+        /**  Tab选项文字未选中颜色 
+         */
+        public static final int color_bottom_text_press=0x7f040002;
+    }
+    public static final class dimen {
+        public static final int app_common_actionbar_centerTextSize=0x7f050005;
+        public static final int app_common_actionbar_leftTextSize=0x7f050004;
+        public static final int app_common_actionbar_rightTextSize=0x7f050006;
+        public static final int app_coomon_actionbar_leftrelativelayout_paddingBottom=0x7f050003;
+        public static final int app_coomon_actionbar_leftrelativelayout_paddingTop=0x7f050002;
+        /**  common 
+ 公共ActionBar 
+         */
+        public static final int app_coomon_actionbar_paddingLeft=0x7f050000;
+        public static final int app_coomon_actionbar_paddingRight=0x7f050001;
+        public static final int app_main_bottomdock_tab_paddingBottom=0x7f050008;
+        /**  公共底部Tab 
+         */
+        public static final int app_main_bottomdock_tab_paddingTop=0x7f050007;
+    }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int xlistview_arrow=0x7f020001;
+        public static final int app__actionbar_backarrow=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
+        public static final int publish_btn=0x7f020002;
+        public static final int tab_home_btn=0x7f020003;
+        public static final int tab_home_normal_button=0x7f020004;
+        public static final int tab_home_pressed_button=0x7f020005;
+        public static final int tab_message_btn=0x7f020006;
+        public static final int tab_message_normal_button=0x7f020007;
+        public static final int tab_message_pressed_button=0x7f020008;
+        public static final int tab_mine_btn=0x7f020009;
+        public static final int tab_mine_normal_button=0x7f02000a;
+        public static final int tab_mine_pressed_button=0x7f02000b;
+        public static final int tab_near_normal_button=0x7f02000c;
+        public static final int tab_near_pressed_button=0x7f02000d;
+        public static final int tab_nearby_btn=0x7f02000e;
+        public static final int tab_textcolor=0x7f02000f;
+        public static final int xlistview_arrow=0x7f020010;
     }
     public static final class id {
-        public static final int xlistview_footer_content=0x7f060000;
-        public static final int xlistview_footer_hint_textview=0x7f060002;
-        public static final int xlistview_footer_progressbar=0x7f060001;
-        public static final int xlistview_header_arrow=0x7f060007;
-        public static final int xlistview_header_content=0x7f060003;
-        public static final int xlistview_header_hint_textview=0x7f060005;
-        public static final int xlistview_header_progressbar=0x7f060008;
-        public static final int xlistview_header_text=0x7f060004;
-        public static final int xlistview_header_time=0x7f060006;
+        public static final int app_common_actionbar_center_iv=0x7f080003;
+        public static final int app_common_actionbar_center_tv=0x7f080002;
+        public static final int app_common_actionbar_left_iv=0x7f080000;
+        public static final int app_common_actionbar_left_tv=0x7f080001;
+        public static final int app_common_actionbar_right_iv=0x7f080005;
+        public static final int app_common_actionbar_right_tv=0x7f080004;
+        public static final int app_decorview_bottom_tab=0x7f08000c;
+        public static final int app_decorview_content=0x7f08000b;
+        public static final int publish_btn=0x7f080008;
+        public static final int tab_home_btn=0x7f080006;
+        public static final int tab_message_btn=0x7f080009;
+        public static final int tab_mine_btn=0x7f08000a;
+        public static final int tab_nearby_btn=0x7f080007;
+        public static final int xlistview_footer_content=0x7f08000d;
+        public static final int xlistview_footer_hint_textview=0x7f08000f;
+        public static final int xlistview_footer_progressbar=0x7f08000e;
+        public static final int xlistview_header_arrow=0x7f080015;
+        public static final int xlistview_header_content=0x7f080010;
+        public static final int xlistview_header_hint_textview=0x7f080012;
+        public static final int xlistview_header_progressbar=0x7f080016;
+        public static final int xlistview_header_text=0x7f080011;
+        public static final int xlistview_header_time=0x7f080014;
+        public static final int xlistview_header_time_tip=0x7f080013;
     }
     public static final class layout {
-        public static final int xlistview_footer=0x7f030000;
-        public static final int xlistview_header=0x7f030001;
+        public static final int app_basefragment_listview=0x7f030000;
+        public static final int app_common_actionbar=0x7f030001;
+        public static final int app_fragment_activity=0x7f030002;
+        public static final int app_header_listview_decorview=0x7f030003;
+        public static final int app_main_activity=0x7f030004;
+        public static final int app_main_bottomdock_tab=0x7f030005;
+        public static final int app_main_decorview=0x7f030006;
+        public static final int xlistview_footer=0x7f030007;
+        public static final int xlistview_header=0x7f030008;
     }
     public static final class string {
         /**  common string 
          */
-        public static final int app_name=0x7f040000;
-        public static final int xlistview_footer_hint_normal=0x7f040005;
-        public static final int xlistview_footer_hint_ready=0x7f040006;
-        public static final int xlistview_header_hint_loading=0x7f040003;
+        public static final int app_name=0x7f060000;
+        /**  底部Tab 
+         */
+        public static final int home=0x7f060007;
+        public static final int message=0x7f060009;
+        public static final int mine=0x7f06000a;
+        public static final int nearby=0x7f060008;
+        public static final int xlistview_footer_hint_normal=0x7f060005;
+        public static final int xlistview_footer_hint_ready=0x7f060006;
+        public static final int xlistview_header_hint_loading=0x7f060003;
         /**  XListView 
          */
-        public static final int xlistview_header_hint_normal=0x7f040001;
-        public static final int xlistview_header_hint_ready=0x7f040002;
-        public static final int xlistview_header_last_time=0x7f040004;
+        public static final int xlistview_header_hint_normal=0x7f060001;
+        public static final int xlistview_header_hint_ready=0x7f060002;
+        public static final int xlistview_header_last_time=0x7f060004;
     }
     public static final class style {
         /** 
@@ -64,10 +140,10 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f050000;
+        public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f050001;
+        public static final int AppTheme=0x7f070001;
     }
 }

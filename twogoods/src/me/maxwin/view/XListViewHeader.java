@@ -36,6 +36,9 @@ public class XListViewHeader extends LinearLayout {
 	public final static int STATE_READY = 1;
 	public final static int STATE_REFRESHING = 2;
 
+	//提示文字
+	private CharSequence[] hintText = new String[3];
+	
 	public XListViewHeader(Context context) {
 		super(context);
 		initView(context);
@@ -95,17 +98,29 @@ public class XListViewHeader extends LinearLayout {
 			if (mState == STATE_REFRESHING) {
 				mArrowImageView.clearAnimation();
 			}
-			mHintTextView.setText(R.string.xlistview_header_hint_normal);
+			if(hintText[0] != null) {
+				mHintTextView.setText(hintText[0]);
+			} else {
+				mHintTextView.setText(R.string.xlistview_header_hint_normal);
+			}
 			break;
 		case STATE_READY:
 			if (mState != STATE_READY) {
 				mArrowImageView.clearAnimation();
 				mArrowImageView.startAnimation(mRotateUpAnim);
-				mHintTextView.setText(R.string.xlistview_header_hint_ready);
+				if(hintText[1] != null) {
+					mHintTextView.setText(hintText[1]);
+				} else {
+					mHintTextView.setText(R.string.xlistview_header_hint_ready);
+				}
 			}
 			break;
 		case STATE_REFRESHING:
-			mHintTextView.setText(R.string.xlistview_header_hint_loading);
+			if(hintText[2] != null) {
+				mHintTextView.setText(hintText[2]);
+			} else {
+				mHintTextView.setText(R.string.xlistview_header_hint_loading);
+			}
 			break;
 			default:
 		}
@@ -125,5 +140,60 @@ public class XListViewHeader extends LinearLayout {
 	public int getVisiableHeight() {
 		return mContainer.getLayoutParams().height;
 	}
-
+	
+	//扩展
+	
+	/**
+	 * 设置刚下拉时提示文字
+	 * 
+	 * @param 要设置的内容,注意如果为""表示不显示任何内容,为null表示显示默认文本
+	 * */
+	public void setHintNormalText(CharSequence text) {
+		hintText[0] = text;
+	}
+	
+	/**
+	 * 设置下拉到一定程度提示文字
+	 * 
+	 * @param 要设置的内容,注意如果为""表示不显示任何内容,为null表示显示默认文本
+	 * */
+	public void setHintReadyText(CharSequence text) {
+		hintText[1] = text;
+	}
+	
+	/**
+	 * 设置正在加载时提示文字
+	 * 
+	 * @param 要设置的内容,注意如果为""表示不显示任何内容,为null表示显示默认文本
+	 * */
+	public void setHintLodingText(CharSequence text) {
+		hintText[2] = text;
+	}
+	
+	/**
+	 * 设置上次刷新时间提示文字
+	 * 
+	 * @param 要设置的内容,注意如果为""表示不显示任何内容,为null表示显示默认文本
+	 * */
+	public void setHintLastTimeTipText(CharSequence text) {
+		if(text == null) {
+			return;
+		}
+		TextView tv = (TextView) findViewById(R.id.xlistview_header_time_tip);
+		if(tv != null) {
+			tv.setText(text);
+		}
+	}
+	
+	/**
+	 * 设置箭头图标
+	 * 
+	 * @param resId 要设置的资源ID
+	 * */
+	public void setRefreshArrow(int resId) {
+		ImageView iv = (ImageView) findViewById(R.id.xlistview_header_arrow);
+		if(iv != null) {
+			iv.setImageResource(resId);
+		}
+	}
 }

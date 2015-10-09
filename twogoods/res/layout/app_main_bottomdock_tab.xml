@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	App主布局底部Tab布局
+	
+	author:麦灿标
+ -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="@color/app_tab_top_separator"/>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:baselineAligned="false"
+    	android:orientation="horizontal">
+
+        <!-- 首页 -->
+		<RelativeLayout 
+		    android:layout_width="0dip"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:paddingTop="@dimen/app_main_bottomdock_tab_paddingTop"
+    		android:paddingBottom="@dimen/app_main_bottomdock_tab_paddingBottom">
+		    <TextView 
+		        android:id="@+id/tab_home_btn"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:drawableTop="@drawable/tab_home_btn"
+		        android:text="@string/home"
+		        android:textColor="@drawable/tab_textcolor"
+		        android:layout_centerInParent="true"/>
+		</RelativeLayout>
+		
+		<!-- 附近 -->
+		<RelativeLayout 
+		    android:layout_width="0dip"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:paddingTop="@dimen/app_main_bottomdock_tab_paddingTop"
+    		android:paddingBottom="@dimen/app_main_bottomdock_tab_paddingBottom">
+		    <TextView 
+		        android:id="@+id/tab_nearby_btn"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:drawableTop="@drawable/tab_nearby_btn"
+		        android:text="@string/nearby"
+		        android:textColor="@drawable/tab_textcolor"
+		        android:layout_centerInParent="true"/>
+		</RelativeLayout>
+		
+		<!-- 发布 -->
+		<RelativeLayout 
+		    android:layout_width="0dip"
+		    android:layout_height="match_parent"
+		    android:gravity="center"
+		    android:layout_weight="1">
+		    <ImageView 
+		        android:id="@+id/publish_btn"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:src="@drawable/publish_btn"
+		        android:contentDescription="@null"/>
+		</RelativeLayout>
+		
+		<!-- 消息 -->
+		<RelativeLayout 
+		    android:layout_width="0dip"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:paddingTop="@dimen/app_main_bottomdock_tab_paddingTop"
+    		android:paddingBottom="@dimen/app_main_bottomdock_tab_paddingBottom">
+		    <TextView 
+		        android:id="@+id/tab_message_btn"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:drawableTop="@drawable/tab_message_btn"
+		        android:text="@string/message"
+		        android:textColor="@drawable/tab_textcolor"
+		        android:layout_centerInParent="true"/>
+		</RelativeLayout>
+		
+		<!-- 我的 -->
+		<RelativeLayout 
+		    android:layout_width="0dip"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:paddingTop="@dimen/app_main_bottomdock_tab_paddingTop"
+    		android:paddingBottom="@dimen/app_main_bottomdock_tab_paddingBottom">
+		    <TextView 
+		        android:id="@+id/tab_mine_btn"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:drawableTop="@drawable/tab_mine_btn"
+		        android:text="@string/mine"
+		        android:textColor="@drawable/tab_textcolor"
+		        android:layout_centerInParent="true"/>
+		</RelativeLayout>
+        
+    </LinearLayout>
+    
+</LinearLayout>
