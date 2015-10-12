@@ -2,7 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="libs/greendao-generator-2.0.0.jar"/>
+	<classpathentry kind="lib" path="libs/greendao-generator-2.0.0.jar" sourcepath="I:/data/Android/项目开发/贰货1+1/设计文档/总体设计/使用到的开源项目/greenDAO/greendao-generator-2.0.0-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/I:/data/Android/项目开发/贰货1+1/设计文档/总体设计/使用到的开源项目/greenDAO/greendao-generator-2.0.0-sources.jar!/"/>
+			<attribute name="source_encoding" value="UTF-8"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="libs/freemarker.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

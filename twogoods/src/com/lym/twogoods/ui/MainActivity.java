@@ -6,6 +6,7 @@ import com.lym.twogoods.fragment.MessageFragment;
 import com.lym.twogoods.fragment.MineFragment;
 import com.lym.twogoods.fragment.NearbyFragment;
 import com.lym.twogoods.ui.base.BottomDockFragmentActivity;
+import com.lym.twogoods.utils.SharePreferenceManager;
 import com.lym.twogoods.viewholder.TabViewHolder;
 
 import android.app.Fragment;
