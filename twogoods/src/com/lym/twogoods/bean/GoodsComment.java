@@ -9,7 +9,7 @@ import com.j256.ormlite.field.DatabaseField;
  * 
  * @author 麦灿标
  * */
-public class GoodsCommnet {
+public class GoodsComment {
 
 	/** id 主键,自增 */
 	@DatabaseField(generatedId = true)

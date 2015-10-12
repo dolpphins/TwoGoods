@@ -5,6 +5,7 @@ import com.lym.twogoods.fragment.IndexFragment;
 import com.lym.twogoods.fragment.MessageFragment;
 import com.lym.twogoods.fragment.MineFragment;
 import com.lym.twogoods.fragment.NearbyFragment;
+import com.lym.twogoods.test.mcb.OrmDatabaseHelperTest;
 import com.lym.twogoods.ui.base.BottomDockFragmentActivity;
 import com.lym.twogoods.utils.SharePreferenceManager;
 import com.lym.twogoods.viewholder.TabViewHolder;
@@ -53,9 +54,7 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		
 		//开始时显示首页
 		resetTab(0);
-		Log.i(TAG, "1111");
 		showSelectTabFragment(0);
-		Log.i(TAG, "222");
 	}
 	
 	@Override
