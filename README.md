@@ -104,6 +104,10 @@ com.lym.twogoods.viewholder:存放App公共ViewHolder
 
 4.第三方jar包没有特殊情况都放在libs目录下
 
+###注意
+---
+1.每次提交都必须写开发文档
+
 ###编码分工
 ---
 

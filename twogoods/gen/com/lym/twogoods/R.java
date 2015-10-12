@@ -61,7 +61,8 @@ public final class R {
         public static final int tab_near_pressed_button=0x7f02000d;
         public static final int tab_nearby_btn=0x7f02000e;
         public static final int tab_textcolor=0x7f02000f;
-        public static final int xlistview_arrow=0x7f020010;
+        public static final int user_default_dead=0x7f020010;
+        public static final int xlistview_arrow=0x7f020011;
     }
     public static final class id {
         public static final int app_common_actionbar_center_iv=0x7f080003;
