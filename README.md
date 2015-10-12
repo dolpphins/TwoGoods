@@ -107,14 +107,14 @@ com.lym.twogoods.viewholder:存放App公共ViewHolder
 ###编码分工
 ---
 
-* 2015.10.7-2015.10.10
+* 2015.10.7-2015.10.14
     
     * 麦灿标
-          项目主体框架，SharePreference管理类，AccessTokenKeeper类，其它实体类及greenDAO代码
+          项目主体框架，SharePreference管理类，AccessTokenKeeper类，其它实体类及OrmLite代码
     
     * 尧俊锋
           大部分工具类，包括StringUtil，ImageUtil，FileUtil，MethodCompat，NetworkHelper,EncryptHelper，DatabaseHelper，Debugger、TimeUtil
     
     * 龙宇文
-          App首页，登录页面，注册页面，找回密码页面，UserBean，UserInfoBean，相应的greenDAO代码
+          App首页，登录页面，注册页面，找回密码页面，UserBean，UserInfoBean，相应的OrmLite代码
 
