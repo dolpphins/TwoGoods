@@ -3,6 +3,8 @@ package com.lym.twogoods.bean;
 import com.j256.ormlite.field.DatabaseField;
 import com.lym.twogoods.config.ChatConfiguration;
 
+import cn.bmob.v3.BmobObject;
+
 /**
  * <p>
  *  消息聊天列表,对应本地数据的chat_snapshot表
@@ -10,7 +12,7 @@ import com.lym.twogoods.config.ChatConfiguration;
  * 
  * @author 麦灿标
  * */
-public class ChatSnapshot {
+public class ChatSnapshot extends BmobObject{
 
 	/** id 主键,自增 */
 	@DatabaseField

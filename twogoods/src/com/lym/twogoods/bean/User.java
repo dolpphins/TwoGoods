@@ -2,6 +2,8 @@ package com.lym.twogoods.bean;
 
 import com.j256.ormlite.field.DatabaseField;
 
+import cn.bmob.v3.BmobObject;
+
 /**
  * <p>
  * 	用户实体类,对应本地数据库的user表
@@ -9,7 +11,7 @@ import com.j256.ormlite.field.DatabaseField;
  * 
  * @author 麦灿标
  * */
-public class User {
+public class User extends BmobObject{
 
 	/** id 主键,自增 */
 	@DatabaseField

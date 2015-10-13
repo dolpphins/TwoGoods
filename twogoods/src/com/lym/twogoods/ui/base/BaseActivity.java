@@ -33,7 +33,6 @@ public abstract class BaseActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.i(TAG, "onCreate");
 		//初始化ActionBar
 		ActionBar actionBar = getActionBar();
 		if(actionBar != null) {
@@ -57,15 +56,25 @@ public abstract class BaseActivity extends Activity{
 	 * </p>
 	 * 
 	 * @param drawable 要设置的图片
+	 * 
+	 * @return 设置成功返回设置的ImageView控件,设置失败返回null.
 	 * */
-	public void setLeftDrawable(Drawable drawable) {
+	public ImageView setLeftDrawable(Drawable drawable) {
 		if(mActionBarView != null) {
 			ImageView actionBarLeftImage = (ImageView) mActionBarView.findViewById(R.id.app_common_actionbar_left_iv);
 			if(actionBarLeftImage != null) {
+				if(drawable == null) {
+					actionBarLeftImage.setImageDrawable(null);
+					actionBarLeftImage.setOnClickListener(null);
+					actionBarLeftImage.setVisibility(View.GONE);
+					return null;
+				}
 				actionBarLeftImage.setVisibility(View.VISIBLE);//可能为不可见
 				actionBarLeftImage.setImageDrawable(drawable);
+				return actionBarLeftImage;
 			}
 		}
+		return null;
 	}
 	
 	/**
@@ -74,15 +83,19 @@ public abstract class BaseActivity extends Activity{
 	 * </p>
 	 * 
 	 * @param title 要设置的内容,如果为null相当于""
+	 * 
+	 * @return 设置成功返回设置的TextView控件,设置失败返回null.
 	 * */
-	public void setLeftTitle(String title) {
+	public TextView setLeftTitle(String title) {
 		if(mActionBarView != null) {
 			TextView actionBarLeftTitle = (TextView) mActionBarView.findViewById(R.id.app_common_actionbar_left_tv);
 			if(actionBarLeftTitle != null) {
 				actionBarLeftTitle.setVisibility(View.VISIBLE);//可能为不可见
 				actionBarLeftTitle.setText(title);
+				return actionBarLeftTitle;
 			}
 		}
+		return null;
 	}
 	
 	/**
@@ -91,15 +104,25 @@ public abstract class BaseActivity extends Activity{
 	 * </p>
 	 * 
 	 * @param drawable 要设置的图片
+	 * 
+	 * @return 设置成功返回设置的ImageView控件,设置失败返回null.
 	 * */
-	public void setCenterDrawable(Drawable drawable) {
+	public ImageView setCenterDrawable(Drawable drawable) {
 		if(mActionBarView != null) {
 			ImageView actionBarCenterImage = (ImageView) mActionBarView.findViewById(R.id.app_common_actionbar_center_iv);
 			if(actionBarCenterImage != null) {
+				if(drawable == null) {
+					actionBarCenterImage.setImageDrawable(null);
+					actionBarCenterImage.setOnClickListener(null);
+					actionBarCenterImage.setVisibility(View.GONE);
+					return null;
+				}
 				actionBarCenterImage.setVisibility(View.VISIBLE);//可能为不可见
 				actionBarCenterImage.setImageDrawable(drawable);
+				return actionBarCenterImage;
 			}
 		}
+		return null;
 	}
 	
 	/**
@@ -108,15 +131,19 @@ public abstract class BaseActivity extends Activity{
 	 * </p>
 	 * 
 	 * @param title 要设置的内容,如果为null相当于""
+	 * 
+	 * @return 设置成功返回设置的TextView控件,设置失败返回null.
 	 * */
-	public void setCenterTitle(String title) {
+	public TextView setCenterTitle(String title) {
 		if(mActionBarView != null) {
 			TextView actionBarCenterTitle = (TextView) mActionBarView.findViewById(R.id.app_common_actionbar_center_tv);
 			if(actionBarCenterTitle != null) {
 				actionBarCenterTitle.setVisibility(View.VISIBLE);//可能为不可见
 				actionBarCenterTitle.setText(title);
+				return actionBarCenterTitle;
 			}
 		}
+		return null;
 	}
 	
 	/**
@@ -125,15 +152,25 @@ public abstract class BaseActivity extends Activity{
 	 * </p>
 	 * 
 	 * @param drawable 要设置的图片
+	 * 
+	 * @return 设置成功返回设置的ImageView控件,设置失败返回null.
 	 * */
-	public void setRightDrawable(Drawable drawable) {
+	public ImageView setRightDrawable(Drawable drawable) {
 		if(mActionBarView != null) {
 			ImageView actionBarRightImage = (ImageView) mActionBarView.findViewById(R.id.app_common_actionbar_right_iv);
 			if(actionBarRightImage != null) {
+				if(drawable == null) {
+					actionBarRightImage.setImageDrawable(null);
+					actionBarRightImage.setOnClickListener(null);
+					actionBarRightImage.setVisibility(View.GONE);
+					return null;
+				}
 				actionBarRightImage.setVisibility(View.VISIBLE);//可能为不可见
 				actionBarRightImage.setImageDrawable(drawable);
+				return actionBarRightImage;
 			}
 		}
+		return null;
 	}
 	
 	/**
@@ -142,15 +179,19 @@ public abstract class BaseActivity extends Activity{
 	 * </p>
 	 * 
 	 * @param title 要设置的内容,如果为null相当于""
+	 * 
+	 * @return 设置成功返回设置的TextView控件,设置失败返回null.
 	 * */
-	public void setRightTitle(String title) {
+	public TextView setRightTitle(String title) {
 		if(mActionBarView != null) {
 			TextView actionBarRightTitle = (TextView) mActionBarView.findViewById(R.id.app_common_actionbar_right_tv);
 			if(actionBarRightTitle != null) {
 				actionBarRightTitle.setVisibility(View.VISIBLE);//可能为不可见
 				actionBarRightTitle.setText(title);
+				return actionBarRightTitle;
 			}
 		}
+		return null;
 	}
 	
 	@Override

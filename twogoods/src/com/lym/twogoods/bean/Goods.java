@@ -2,6 +2,8 @@ package com.lym.twogoods.bean;
 
 import com.j256.ormlite.field.DatabaseField;
 
+import cn.bmob.v3.BmobObject;
+
 /**
  * <p>
  * 	商品信息实体类
@@ -12,7 +14,7 @@ import com.j256.ormlite.field.DatabaseField;
  * 
  * @author 麦灿标
  * */
-public class Goods {
+public class Goods extends BmobObject{
 
 	/** id,主键自增 */
 	@DatabaseField(generatedId = true)

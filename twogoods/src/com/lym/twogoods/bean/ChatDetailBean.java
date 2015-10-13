@@ -3,6 +3,8 @@ package com.lym.twogoods.bean;
 import com.j256.ormlite.field.DatabaseField;
 import com.lym.twogoods.config.ChatConfiguration;
 
+import cn.bmob.v3.BmobObject;
+
 /**
  * <p>
  * 	一条聊天记录实体类,对应本地数据库的chat_detail表
@@ -10,7 +12,7 @@ import com.lym.twogoods.config.ChatConfiguration;
  * 
  * @author 麦灿标
  * */
-public class ChatDetailBean {
+public class ChatDetailBean extends BmobObject{
 
 	/** id 主键,自增 */
 	@DatabaseField

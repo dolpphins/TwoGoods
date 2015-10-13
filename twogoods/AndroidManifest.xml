@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         
-        <!-- 主界面 -->
+        <!-- 主界面Activity -->
         <activity 
             android:name="com.lym.twogoods.ui.MainActivity">
             <intent-filter>
@@ -22,7 +22,77 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
+        <!-- 发布商品Activity -->
+        <activity 
+            android:name="com.lym.twogoods.publish.ui.PublishGoodsActivity">
+            
+        </activity>
+        <!-- 搜索商品Activity -->
+        <activity 
+            android:name="com.lym.twogoods.index.ui.GoodsSearchActivity">
+            
+        </activity>
+        <!-- 商品详情Activity -->
+        <activity 
+            android:name="com.lym.twogoods.index.ui.GoodsDetailActivity">
+            
+        </activity>
+        <!-- 聊天Activity -->
+        <activity 
+            android:name="com.lym.twogoods.message.ui.ChatActivity">
+            
+        </activity>
+        <!-- 我发布的商品Activity -->
+        <activity 
+            android:name="com.lym.twogoods.mine.ui.MinePublishActivity">
+            
+        </activity>
+        <!-- 我关注的商品Activity -->
+		<activity 
+		    android:name="com.lym.twogoods.mine.ui.MineFocusActivity">
+		    
+		</activity>
+		<!-- 选择城市Activity -->
+		<activity
+		     android:name="com.lym.twogoods.nearby.ui.SelectCityActivity">
+		    
+		</activity>
+		<!-- 添加图片Activity -->
+		<activity 
+		    android:name="com.lym.twogoods.ui.AddPictureActivity">
+		    
+		</activity>
+		<!-- 个人更多信息Activity -->
+		<activity 
+		    android:name="com.lym.twogoods.ui.PersonalityInfoActivity">
+		    
+		</activity>
+		<!-- 设置Activity -->
+		<activity 
+		    android:name="com.lym.twogoods.ui.SettingsActivity">
+		    
+		</activity>
+		<!-- 店铺详情Activity -->
+		<activity 
+		    android:name="com.lym.twogoods.ui.StoreDetailActivity">
+		    
+		</activity>
+		<!-- 意见反馈Activity -->
+		<activity 
+		    android:name="com.lym.twogoods.ui.FeedbackActivity">
+		    
+		</activity>
+		
+		<!-- 网络状态改变广播接收者 -->
+		<receiver
+		    android:name="com.lym.twogoods.receiver.NetworkBroadcastReceiver"
+		    android:exported="false"
+		    android:enabled="true">
+		    <intent-filter>
+		        <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+		    </intent-filter>
+		</receiver>
+		
     </application>
 
 </manifest>

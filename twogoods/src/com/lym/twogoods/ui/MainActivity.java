@@ -5,12 +5,14 @@ import com.lym.twogoods.fragment.IndexFragment;
 import com.lym.twogoods.fragment.MessageFragment;
 import com.lym.twogoods.fragment.MineFragment;
 import com.lym.twogoods.fragment.NearbyFragment;
-import com.lym.twogoods.test.mcb.OrmDatabaseHelperTest;
+import com.lym.twogoods.index.ui.GoodsSearchActivity;
+import com.lym.twogoods.publish.ui.PublishGoodsActivity;
 import com.lym.twogoods.ui.base.BottomDockFragmentActivity;
-import com.lym.twogoods.utils.SharePreferenceManager;
 import com.lym.twogoods.viewholder.TabViewHolder;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +27,14 @@ import android.widget.TextView;
 public class MainActivity extends BottomDockFragmentActivity implements View.OnClickListener{
 
 	private final static String TAG = "MainActivity";
+	
+//	/**
+//	 * <p>底部Tab枚举类</p>
+//	 * */
+//	private static enum Tab {
+//		
+//		INDEX,NEARBY,PUBLISH,MESSAGE,MINE
+//	}
 	
 	/** Tab数 */
 	private final int tabCount = 4;
@@ -44,7 +54,7 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 	
 	/** 当前选择Tab索引 */
 	private int currentTabIndex;
-
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +65,14 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		//开始时显示首页
 		resetTab(0);
 		showSelectTabFragment(0);
+		//初始化ActionBar
+		setActionBar(0);
 	}
 	
 	@Override
 	public View onCreateBottomView() {
-		Log.i(TAG, "333");
 		mTabView = getLayoutInflater().inflate(R.layout.app_main_bottomdock_tab, null);
-		Log.i(TAG, "444");
 		setTabClickEvent();
-		Log.i(TAG, "555");
 		return mTabView;
 	}
 	
@@ -133,7 +142,8 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		//点击底部发布
 		case R.id.publish_btn:
 			//特殊处理,开启Activity
-			
+			Intent intent = new Intent(this, PublishGoodsActivity.class);
+			startActivity(intent);
 			break;
 		//点击底部Tab消息
 		case R.id.tab_message_btn:
@@ -152,6 +162,8 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 				resetTab(selectTabIndex);
 				//显示对应的Fragment
 				showSelectTabFragment(selectTabIndex);
+				//重新设置ActionBar
+				setActionBar(selectTabIndex);
 			}
 		}
 	}
@@ -169,4 +181,67 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		showFragment(mTabFragments[selectTabIndex]);
 	}
 	
+	private void setActionBar(int index) {
+		//主页
+		if(index == 0) {
+			Drawable indexSearchIcon = getResources().getDrawable(R.drawable.index_search_icon); 
+			ImageView indexSearchIconIv = setRightDrawable(indexSearchIcon);
+			if(indexSearchIconIv != null) {
+				if(!setClickEventForImageView(indexSearchIconIv, new IndexActionBarSearchIconClickListener())) {
+					Log.w(TAG, "set click event for index actionbar search icon fail");
+				}
+			}
+		//附近
+		} else if(index == 1){
+			Drawable nearbySearchIcon = getResources().getDrawable(R.drawable.index_search_icon);//跟主页搜索图标一样 
+			ImageView nearbySearchIconIv = setRightDrawable(nearbySearchIcon);
+			if(nearbySearchIconIv != null) {
+				if(!setClickEventForImageView(nearbySearchIconIv, new NearByActionBarSearchIconClickListener())) {
+					Log.w(TAG, "set click event for nearby actionbar search icon fail");
+				}
+			}
+		} else {
+			setRightDrawable(null);
+		}
+	}
+	
+	//设置成功返回true,设置失败返回false
+	private boolean setClickEventForImageView(ImageView iv, View.OnClickListener l) {
+		if(iv == null || l == null) {
+			return false;
+		}
+		iv.setOnClickListener(l);
+		return true;
+	}
+	
+	
+	/**
+	 * <p>
+	 * 	首页ActionBar右边搜索图标点击事件监听类
+	 * </p>
+	 * */
+	private class IndexActionBarSearchIconClickListener implements View.OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(MainActivity.this, GoodsSearchActivity.class);
+			startActivity(intent);
+			//可以设置动画
+		}
+	}
+	
+	/**
+	 * <p>
+	 * 	附近ActionBar右边搜索图标点击事件监听类
+	 * </p>
+	 * */
+	private class NearByActionBarSearchIconClickListener implements View.OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(MainActivity.this, GoodsSearchActivity.class);
+			startActivity(intent);
+			//可以设置动画
+		}
+	}
 }
