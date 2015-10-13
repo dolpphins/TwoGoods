@@ -3,12 +3,13 @@ package com.lym.twogoods.utils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Date;
-
+/**
+ * 与文件操作相关的工具类
+ * 
+ * @author yao
+ *
+ * */
 public class FileUtil {
-	public FileUtil()
-	{
-		
-	}
 	
 	 /** 
      * 创建文件夹，如果文件夹存在则不进行创建。 

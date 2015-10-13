@@ -7,6 +7,13 @@ import java.util.Date;
 import android.annotation.SuppressLint;
 
 @SuppressLint("SimpleDateFormat")
+
+/**
+ * 与时间操作相关的工具类
+ * 
+ * @author yao
+ *
+ * */
 public class TimeUtil {
 	
 	public final static String FORMAT_YEAR = "yyyy";
