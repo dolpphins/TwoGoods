@@ -17,7 +17,12 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
-
+/**
+ * 与图片操作相关的工具类
+ * 
+ * @author yao
+ *
+ * */
 public class ImageUtil {
 
 	/**
