@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/et_register_erhuo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/app_register_left_right_margin"
+        android:layout_marginRight="@dimen/app_register_left_right_margin"
+        android:layout_marginTop="@dimen/app_register_parenttop"
+        android:background="@drawable/edittext_circle_shape"
+        android:hint="@string/register_erhuo" />
+
+    <EditText
+        android:id="@+id/et_register_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_register_password_again"
+        android:layout_below="@+id/et_register_phone"
+        android:layout_marginTop="@dimen/app_register_margintop"
+        android:background="@drawable/edittext_circle_shape"
+        android:hint="@string/get_code"/>
+
+    <ImageButton
+        android:id="@+id/btn_register_code_get"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/et_register_code"
+        android:layout_alignRight="@+id/et_register_phone"
+        android:layout_alignTop="@+id/et_register_code"
+        android:layout_toRightOf="@+id/et_register_code" />
+
+    <Button
+        android:id="@+id/btn_register_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_register_code"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/app_register_margintop"
+        android:background="@drawable/edittext_circle_shape"
+        android:text="@string/register" />
+
+    <EditText
+        android:id="@+id/et_register_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_register_erhuo"
+        android:layout_alignRight="@+id/et_register_erhuo"
+        android:layout_below="@+id/et_register_erhuo"
+        android:layout_marginTop="@dimen/app_register_margintop"
+        android:background="@drawable/edittext_circle_shape"
+        android:hint="@string/password"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/et_register_password_again"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_register_password"
+        android:layout_alignRight="@+id/et_register_password"
+        android:layout_below="@+id/et_register_password"
+        android:layout_marginTop="@dimen/app_register_margintop"
+        android:background="@drawable/edittext_circle_shape"
+        android:hint="@string/register_password_again"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/et_register_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_register_code"
+        android:layout_alignRight="@+id/et_register_password_again"
+        android:layout_below="@+id/et_register_password_again"
+        android:layout_marginTop="@dimen/app_register_margintop"
+        android:background="@drawable/edittext_circle_shape"
+        android:hint="@string/phone"/>
+
+</RelativeLayout>

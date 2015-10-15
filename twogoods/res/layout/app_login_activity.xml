@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/et_login_erhuo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/app_register_left_right_margin"
+        android:layout_marginTop="@dimen/margintop"
+        android:background="@drawable/edittext_circle_shape"
+        android:hint="@string/login_erhuo" />
+
+    <EditText
+        android:id="@+id/et_login_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_login_erhuo"
+        android:layout_alignRight="@+id/et_login_erhuo"
+        android:layout_below="@+id/et_login_erhuo"
+        android:layout_marginTop="@dimen/margintop"
+        android:background="@drawable/edittext_circle_shape"
+        android:hint="@string/password"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/et_login_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_login_password"
+        android:layout_alignRight="@+id/btn_login_land"
+        android:layout_below="@+id/et_login_password"
+        android:layout_marginTop="@dimen/margintop"
+        android:hint="@string/get_code"
+        android:background="@drawable/edittext_circle_shape" />
+
+    <ImageButton
+        android:id="@+id/btn_login_code_get"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_login_land"
+        android:layout_alignRight="@+id/et_login_password"
+        android:layout_alignTop="@+id/et_login_code"
+        android:layout_toRightOf="@+id/btn_login_land"
+        android:hint="@string/code_get" />
+
+    <Button
+        android:id="@+id/btn_login_land"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_login_code"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margintop"
+        android:background="@drawable/edittext_circle_shape"
+        android:text="@string/login" />
+
+    <Button
+        android:id="@+id/btn_login_forget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_login_land"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/background_white"
+        android:text="@string/login_forget_password" />
+
+</RelativeLayout>

@@ -70,6 +70,44 @@
     
     
     <!-- lyw -->
+    <!-- app_login_choice -->
+    <string name="login_direct">游客</string>
+    <string name="login">登录</string>
+    <!-- app_login -->
+    <string name="login_erhuo">贰货号/手机号码</string>
+    <string name="password">密码</string>
+    <string name="get_code">获取验证码</string>
+    <string name="code_get">获取验证码</string>
+    <string name="login_forget_password">忘记密码？</string>
+    <!-- app_register -->
+    <string name="register_erhuo">起个好听的贰货号吧</string>
+    <string name="register_password_again">再次输入密码</string>
+    <string name="phone">手机号码</string>
+    <string name="register">注册</string>
+    <string name="reset_password">重置密码</string>
+    <string name="verification">验证</string>
+	<string name="new_password">请输入新的密码</string>
+	<string name="new_password_again">再次输入密码</string>
+	<string name="confirm">确定</string>
+	<string name="publish">发布</string>
+	<string name="publish_description">请描述你的贰货（200字内）</string>
+	<string name="publish_sort">选择分类</string>
+	<string name="publish_tel">联系方式</string>
+	<string name="publish_price">贰货价格</string>
+	<string name="publish_date">选择期限</string>
+	<string name="publish_position">位置</string>
+	<string name="guangzhou">广州</string>
+	<string name="mine_scan">浏览数</string>
+	<string name="mine_introduction">简介</string>
+	<string name="mine_publish">我发布的贰货</string>
+	<string name="mine_focus">我关注的贰货</string>
+	<string name="mine_description">简介</string>
+	<string name="setting">设置</string>
+	<string name="mine_out">退出</string>
+	<string name="mine_detail">个人信息</string>
+	<string name="sex">性别</string>
+	<string name="mine_declaration">我的贰货宣言</string>
+	<string name="male">男</string>
     
     
     
@@ -88,24 +126,10 @@
     
     
     
+  
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+   
     
     
     
