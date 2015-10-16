@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	App启动页面布局
+	
+	author:龙宇文
+ -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,23 +11,23 @@
 
     <Button
         android:id="@+id/btn_login_choice_direct"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_marginBottom="@dimen/app_login_choice_bottomheight"
-        android:layout_marginLeft="@dimen/app_login_choice_left_right_margin"
+        android:layout_marginLeft="@dimen/app_login_choice_marRight"
+        android:layout_marginRight="@dimen/app_login_choice_marleft"
         android:background="@drawable/edittext_circle_shape"
         android:text="@string/login_direct" />
 
     <Button
         android:id="@+id/btn_login_choice_login"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/app_login_choice_bottomheight"
-        android:layout_marginRight="@dimen/app_login_choice_left_right_margin"
+        android:layout_marginLeft="@dimen/app_login_choice_marleft"
+        android:layout_marginRight="@dimen/app_login_choice_marRight"
         android:background="@drawable/edittext_circle_shape"
         android:text="@string/login" />
 

@@ -57,8 +57,10 @@
 	<!-- lyw_publish -->
 	<dimen name="margintop">30dp</dimen>
 	<!-- app_login_choice-->
-	<dimen name="app_login_choice_bottomheight">50dip</dimen>
+	<dimen name="app_login_choice_bottomheight">100dip</dimen>
 	<dimen name="app_login_choice_left_right_margin">35dp</dimen>
+	<dimen name="app_login_choice_marRight">55dp</dimen>
+	<dimen name="app_login_choice_marleft">270dp</dimen>
 	<!-- app_login -->
 	<!-- app_register -->
 	<dimen name="app_register_parenttop">60dp</dimen>

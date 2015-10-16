@@ -77,7 +77,6 @@
     <string name="login_erhuo">贰货号/手机号码</string>
     <string name="password">密码</string>
     <string name="get_code">获取验证码</string>
-    <string name="code_get">获取验证码</string>
     <string name="login_forget_password">忘记密码？</string>
     <!-- app_register -->
     <string name="register_erhuo">起个好听的贰货号吧</string>

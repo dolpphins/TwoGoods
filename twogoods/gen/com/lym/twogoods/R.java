@@ -43,19 +43,21 @@ public final class R {
          */
         public static final int app_login_choice_bottomheight=0x7f05000a;
         public static final int app_login_choice_left_right_margin=0x7f05000b;
+        public static final int app_login_choice_marRight=0x7f05000c;
+        public static final int app_login_choice_marleft=0x7f05000d;
         public static final int app_main_bottomdock_tab_paddingBottom=0x7f050008;
         /**  公共底部Tab 
          */
         public static final int app_main_bottomdock_tab_paddingTop=0x7f050007;
-        public static final int app_register_left_right_margin=0x7f05000e;
-        public static final int app_register_margintop=0x7f05000d;
+        public static final int app_register_left_right_margin=0x7f050010;
+        public static final int app_register_margintop=0x7f05000f;
         /**  app_login 
  app_register 
          */
-        public static final int app_register_parenttop=0x7f05000c;
+        public static final int app_register_parenttop=0x7f05000e;
         /**  app_reset_password 
          */
-        public static final int app_reset_passwrod_left_right_marigin=0x7f05000f;
+        public static final int app_reset_passwrod_left_right_marigin=0x7f050011;
         /**  mcb 
  lyw 
  lyw_publish 
@@ -204,10 +206,10 @@ public final class R {
         public static final int btn_login_forget=0x7f08000b;
         public static final int btn_login_land=0x7f080009;
         public static final int btn_new_password_confirm=0x7f080017;
-        public static final int btn_register_code_get=0x7f08001c;
-        public static final int btn_register_register=0x7f08001d;
-        public static final int btn_reset_password_code_get=0x7f080021;
-        public static final int btn_reset_password_verification=0x7f080022;
+        public static final int btn_register_code_get=0x7f08001d;
+        public static final int btn_register_register=0x7f08001b;
+        public static final int btn_reset_password_code_get=0x7f080022;
+        public static final int btn_reset_password_verification=0x7f080021;
         public static final int et_login_code=0x7f080008;
         public static final int et_login_erhuo=0x7f080006;
         public static final int et_login_password=0x7f080007;
@@ -217,7 +219,7 @@ public final class R {
         public static final int et_register_erhuo=0x7f080018;
         public static final int et_register_password=0x7f08001e;
         public static final int et_register_password_again=0x7f08001a;
-        public static final int et_register_phone=0x7f08001b;
+        public static final int et_register_phone=0x7f08001c;
         public static final int et_reset_password__phone=0x7f080020;
         public static final int et_reset_password_code=0x7f08001f;
         public static final int publish_btn=0x7f080010;
@@ -256,10 +258,9 @@ public final class R {
         /**  common string 
          */
         public static final int app_name=0x7f060000;
-        public static final int code_get=0x7f060010;
-        public static final int confirm=0x7f06001a;
+        public static final int confirm=0x7f060019;
         public static final int get_code=0x7f06000f;
-        public static final int guangzhou=0x7f060022;
+        public static final int guangzhou=0x7f060021;
         /**  底部Tab 
          */
         public static final int home=0x7f060007;
@@ -272,39 +273,39 @@ public final class R {
         /**  app_login 
          */
         public static final int login_erhuo=0x7f06000d;
-        public static final int login_forget_password=0x7f060011;
-        public static final int male=0x7f06002d;
+        public static final int login_forget_password=0x7f060010;
+        public static final int male=0x7f06002c;
         public static final int message=0x7f060009;
         public static final int mine=0x7f06000a;
-        public static final int mine_declaration=0x7f06002c;
-        public static final int mine_description=0x7f060027;
-        public static final int mine_detail=0x7f06002a;
-        public static final int mine_focus=0x7f060026;
-        public static final int mine_introduction=0x7f060024;
-        public static final int mine_out=0x7f060029;
-        public static final int mine_publish=0x7f060025;
-        public static final int mine_scan=0x7f060023;
+        public static final int mine_declaration=0x7f06002b;
+        public static final int mine_description=0x7f060026;
+        public static final int mine_detail=0x7f060029;
+        public static final int mine_focus=0x7f060025;
+        public static final int mine_introduction=0x7f060023;
+        public static final int mine_out=0x7f060028;
+        public static final int mine_publish=0x7f060024;
+        public static final int mine_scan=0x7f060022;
         public static final int nearby=0x7f060008;
-        public static final int new_password=0x7f060018;
-        public static final int new_password_again=0x7f060019;
+        public static final int new_password=0x7f060017;
+        public static final int new_password_again=0x7f060018;
         public static final int password=0x7f06000e;
-        public static final int phone=0x7f060014;
-        public static final int publish=0x7f06001b;
-        public static final int publish_date=0x7f060020;
-        public static final int publish_description=0x7f06001c;
-        public static final int publish_position=0x7f060021;
-        public static final int publish_price=0x7f06001f;
-        public static final int publish_sort=0x7f06001d;
-        public static final int publish_tel=0x7f06001e;
-        public static final int register=0x7f060015;
+        public static final int phone=0x7f060013;
+        public static final int publish=0x7f06001a;
+        public static final int publish_date=0x7f06001f;
+        public static final int publish_description=0x7f06001b;
+        public static final int publish_position=0x7f060020;
+        public static final int publish_price=0x7f06001e;
+        public static final int publish_sort=0x7f06001c;
+        public static final int publish_tel=0x7f06001d;
+        public static final int register=0x7f060014;
         /**  app_register 
          */
-        public static final int register_erhuo=0x7f060012;
-        public static final int register_password_again=0x7f060013;
-        public static final int reset_password=0x7f060016;
-        public static final int setting=0x7f060028;
-        public static final int sex=0x7f06002b;
-        public static final int verification=0x7f060017;
+        public static final int register_erhuo=0x7f060011;
+        public static final int register_password_again=0x7f060012;
+        public static final int reset_password=0x7f060015;
+        public static final int setting=0x7f060027;
+        public static final int sex=0x7f06002a;
+        public static final int verification=0x7f060016;
         public static final int xlistview_footer_hint_normal=0x7f060005;
         public static final int xlistview_footer_hint_ready=0x7f060006;
         public static final int xlistview_header_hint_loading=0x7f060003;

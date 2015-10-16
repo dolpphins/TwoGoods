@@ -2,6 +2,7 @@ package com.lym.twogoods.ui;
 
 import cn.bmob.v3.Bmob;
 
+import com.lym.twogoods.AccessTokenKeeper;
 import com.lym.twogoods.R;
 
 import android.app.Activity;
@@ -12,9 +13,14 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+/**
+ * <p>App启动Activity</p>
+ * 
+ * @author 龙宇文
+ **/
 public class LaunchActivity extends Activity {
 
-	/* 定义两个选择button */
+	// 定义两个选择button 
 	private Button btn_login_choice_direct;
 	private Button btn_login_choice_login;
 
@@ -24,7 +30,7 @@ public class LaunchActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		// 初始化Bmob SDK
-		Bmob.initialize(this, "a916910462ff1fd612901efee5e41e51");
+		Bmob.initialize(this, AccessTokenKeeper.Bmob_ApplicationID);
 		setContentView(R.layout.app_login_choice_activity);
 
 		init();

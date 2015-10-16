@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	App登录页面布局
+	
+	author:龙宇文
+ -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -38,7 +43,7 @@
         android:hint="@string/get_code"
         android:background="@drawable/edittext_circle_shape" />
 
-    <ImageButton
+    <Button
         android:id="@+id/btn_login_code_get"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,7 +51,7 @@
         android:layout_alignRight="@+id/et_login_password"
         android:layout_alignTop="@+id/et_login_code"
         android:layout_toRightOf="@+id/btn_login_land"
-        android:hint="@string/code_get" />
+        android:text="@string/get_code" />
 
     <Button
         android:id="@+id/btn_login_land"

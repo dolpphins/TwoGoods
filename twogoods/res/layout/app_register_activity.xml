@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	App注册页面布局
+	
+	author:龙宇文
+ -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,19 +27,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/et_register_password_again"
+        android:layout_alignRight="@+id/btn_register_register"
         android:layout_below="@+id/et_register_phone"
         android:layout_marginTop="@dimen/app_register_margintop"
         android:background="@drawable/edittext_circle_shape"
-        android:hint="@string/get_code"/>
+        android:hint="@string/get_code" />
 
-    <ImageButton
+    <Button
         android:id="@+id/btn_register_code_get"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/et_register_code"
         android:layout_alignRight="@+id/et_register_phone"
         android:layout_alignTop="@+id/et_register_code"
-        android:layout_toRightOf="@+id/et_register_code" />
+        android:layout_toRightOf="@+id/btn_register_register"
+        android:text="@string/get_code" />
 
     <Button
         android:id="@+id/btn_register_register"

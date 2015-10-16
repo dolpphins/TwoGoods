@@ -13,7 +13,17 @@ import cn.bmob.v3.listener.UpdateListener;
 import com.lym.twogoods.R;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.ui.base.BackActivity;
+import com.lym.twogoods.utils.EncryptHelper;
+import com.lym.twogoods.utils.NetworkHelper;
+import com.lym.twogoods.utils.StringUtil;
 
+/**
+ * <p>
+ * App重置密码Activity
+ * </p>
+ * 
+ * @author 龙宇文
+ **/
 public class NewPasswordActivity extends BackActivity {
 
 	// 定义布局控件
@@ -25,11 +35,10 @@ public class NewPasswordActivity extends BackActivity {
 	private Intent intent;
 
 	// Bmob查询
-	private boolean update ;
+	private boolean update;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.app_new_password_activity);
 
@@ -50,11 +59,19 @@ public class NewPasswordActivity extends BackActivity {
 		setCenterTitle("重置密码");
 	}
 
+	/**
+	 * <p>
+	 * 修改Bmob数据
+	 * </p>
+	 * 
+	 * @author 龙宇文
+	 **/
 	private void resetPassword() {
 		if (et_new_password_password.getText().toString()
 				.equals(et_new_password_again.getText().toString())) {
 			User user = new User();
-			user.setGUID(et_new_password_password.getText().toString());
+			user.setPassword(EncryptHelper.getMD5(et_new_password_password
+					.getText().toString()));
 			user.update(this, getIntent().getStringExtra("id"),
 					new UpdateListener() {
 
@@ -75,17 +92,38 @@ public class NewPasswordActivity extends BackActivity {
 		}
 	}
 
+	/**
+	 * <p>
+	 * 点击事件
+	 * </p>
+	 * 
+	 * @author 龙宇文
+	 **/
 	private void clickEvent() {
 		btn_new_password_confirm.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				resetPassword();
-				if (update) {
-					intent = new Intent(NewPasswordActivity.this,
-							LoginActivity.class);
-					startActivity(intent);
-					finish();
+				// 判断网络是否可用
+				if (NetworkHelper.isMobileDataEnable(getApplicationContext())
+						|| NetworkHelper
+								.isWifiDataEnable(getApplicationContext())) {
+					//检测密码的合法性
+					if (StringUtil.isPassword(et_new_password_password.getText().toString())) {
+						if (StringUtil.isPassword(et_new_password_again.getText().toString())) {
+							resetPassword();
+							if (update) {
+								intent = new Intent(NewPasswordActivity.this,
+										LoginActivity.class);
+								startActivity(intent);
+								finish();
+							}
+						}else {
+							Toast.makeText(getApplicationContext(), "密码格式不对", Toast.LENGTH_SHORT).show();
+						}
+					}else {
+						Toast.makeText(getApplicationContext(), "密码格式不对", Toast.LENGTH_SHORT).show();
+					}
 				}
 			}
 		});
