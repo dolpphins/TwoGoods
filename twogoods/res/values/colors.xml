@@ -19,13 +19,13 @@
     
     
     <!-- mcb -->
-    
-    
-    
-    
-    
-    
-    
+    <color name="index_fragment_head_textColor">#898181</color>
+    <color name="index_fragment_head_separator_color">#cccccc</color>
+    <color name="index_fragment_head_background_color">#e8e8e8</color>
+    <color name="index_fragment_head_gridview_textColor">#898181</color>         <!-- 分类GridView中Item文字颜色 -->
+    <color name="index_fragment_head_category_bottomline_color">#cccccc</color>  <!-- 分类下拉布局底部线颜色 -->
+    <color name="index_fragment_head_sort_bottomline_color">#cccccc</color>      <!-- 排序下拉布局底部线颜色 -->
+    <color name="index_fragment_head_listview_textColor">#898181</color>         <!-- 排序GridView中Item文字颜色 -->
     
     
     

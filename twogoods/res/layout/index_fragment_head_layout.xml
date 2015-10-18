@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	首页fragment头部布局
+
+	@author 麦灿标
+ -->
+
+<LinearLayout 
+     xmlns:android="http://schemas.android.com/apk/res/android"
+	 android:layout_width="match_parent"
+	 android:layout_height="match_parent"
+	 android:orientation="vertical"
+	 android:background="@color/index_fragment_head_background_color">
+	 
+	 <LinearLayout
+	  android:baselineAligned="false"
+	  android:layout_width="match_parent"
+	  android:layout_height="match_parent"
+	  android:orientation="horizontal"
+	  android:paddingTop="@dimen/index_fragment_head_paddingTop"
+	  android:paddingBottom="@dimen/index_fragment_head_paddingBottom">
+	  
+	  <!-- 分类 -->
+	<LinearLayout 
+	    android:id="@+id/index_fragment_head_category"
+	    android:layout_width="0dip"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="1"
+	    android:orientation="horizontal"
+	    android:gravity="center">
+	    <TextView 
+	        android:id="@+id/index_fragment_head_category_tv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/index_fragment_head_category"
+	        android:textSize="@dimen/index_fragment_head_textSize"
+	        android:textColor="@color/index_fragment_head_textColor"
+	        android:paddingRight="@dimen/index_fragment_head_tv_marginRight"
+	        android:paddingEnd="@dimen/index_fragment_head_tv_marginRight"/>
+	    <ImageView 
+	        android:id="@+id/index_fragment_head_category_iv"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:src="@drawable/index_fragment_head_arrow"
+	        android:contentDescription="@null"/>
+	</LinearLayout>
+	
+	<!-- 中间分隔线 -->
+	<TextView 
+	    android:layout_width="1dip"
+	    android:layout_height="match_parent"
+	    android:background="@color/index_fragment_head_separator_color"/>
+	
+	<!-- 排序 -->
+		<LinearLayout 
+		    android:id="@+id/index_fragment_head_sort"
+		    android:layout_width="0dip"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:orientation="horizontal"
+		    android:gravity="center">
+		    <TextView 
+		        android:id="@+id/index_fragment_head_sort_tv"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/index_fragment_head_sort"
+		        android:textSize="@dimen/index_fragment_head_textSize"
+		        android:textColor="@color/index_fragment_head_textColor"
+		        android:paddingRight="@dimen/index_fragment_head_tv_marginRight"
+		        android:paddingEnd="@dimen/index_fragment_head_tv_marginRight"/>
+		    <ImageView 
+		        android:id="@+id/index_fragment_head_sort_iv"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:src="@drawable/index_fragment_head_arrow"
+		        android:contentDescription="@null"/>
+		</LinearLayout>
+	</LinearLayout>
+	   
+	   	<!-- 底部分隔线 -->
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	        android:background="@color/index_fragment_head_separator_color"/>
+    
+</LinearLayout>
+
+

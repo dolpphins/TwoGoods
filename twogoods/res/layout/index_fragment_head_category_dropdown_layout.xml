@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	首页头部点击分类弹出的下拉布局
+
+	@author 麦灿标
+ -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    	
+    <GridView 
+        android:id="@+id/index_fragment_head_category_dropdown_gv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:paddingTop="@dimen/index_fragment_head_category_gridview_paddingTop"
+    	android:paddingBottom="@dimen/index_fragment_head_category_gridview_paddingBottom"
+    	android:paddingLeft="@dimen/index_fragment_head_category_gridview_paddingLeft"
+    	android:paddingStart="@dimen/index_fragment_head_category_gridview_paddingLeft"
+    	android:paddingRight="@dimen/index_fragment_head_category_gridview_paddingRight"
+    	android:paddingEnd="@dimen/index_fragment_head_category_gridview_paddingRight"/>
+    
+    <TextView 
+       	android:layout_width="match_parent"
+       	android:layout_height="1dip"
+       	android:background="@color/index_fragment_head_category_bottomline_color"/>
+
+</LinearLayout>

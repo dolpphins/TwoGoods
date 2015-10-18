@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	App所有商品列表ListView的Item通用布局文件
+
+	@author 麦灿标
+ -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:baselineAligned="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="vertical" >
     
+
 </LinearLayout>

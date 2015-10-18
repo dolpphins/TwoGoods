@@ -15,28 +15,29 @@
     <string name="nearby">附近</string>
     <string name="message">消息</string>
     <string name="mine">我的</string>
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    <!-- 商品分类 -->
+    <string name="category_all">全部</string>
+    <string name="electric_appliance">家用电器</string>
+    <string name="electric_product">电子产品</string>
+    <string name="clothing">男装女装</string>
+    <string name="vehicle">交通工具</string>
+    <string name="decoration">鞋包配饰</string>
+    <string name="book">书籍文体</string>
+    <string name="household">居家用品</string>
+    <string name="others">其它</string>
     
     
     
     
     <!-- mcb -->
-    
-    
-    
-    
-    
-    
-    
-    
+    <!-- 首页Fragment头部文字 -->
+    <string name="index_fragment_head_category">分类</string>
+    <string name="index_fragment_head_sort">排序</string>
+    <!-- 排序方式 -->
+    <string name="newst_publish">最新发布</string>
+    <string name="price_asc">价格从低到高</string>
+    <string name="most_focus">最多关注</string>
+    <string name="most_browse">最多浏览</string>
     
     
     

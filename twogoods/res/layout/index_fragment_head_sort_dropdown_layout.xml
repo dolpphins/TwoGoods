@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	首页Fragment头部点击排序时弹出的下拉布局
+
+	@author 麦灿标
+ -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <ListView 
+        android:id="@+id/index_fragment_head_sort_dropdown_lv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    
+    <TextView 
+       	android:layout_width="match_parent"
+       	android:layout_height="1dip"
+       	android:background="@color/index_fragment_head_category_bottomline_color"/>
+
+</LinearLayout>

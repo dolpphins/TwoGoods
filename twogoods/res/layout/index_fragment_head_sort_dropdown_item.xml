@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	首页Fragment头部排序下拉布局ListView每个Item布局.
+
+	@author 麦灿标
+ -->
+
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    
+    <TextView 
+	    android:id="@+id/index_fragment_head_sort_name"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+		android:textSize="@dimen/index_fragment_head_listview_textSize"
+	    android:textColor="@color/index_fragment_head_listview_textColor"
+	    android:layout_marginTop="@dimen/index_fragment_head_sort_item_marginTop"
+	    android:layout_marginBottom="@dimen/index_fragment_head_sort_item_marginBottom"
+	    android:layout_marginLeft="@dimen/index_fragment_head_sort_item_marginLeft"
+	    android:layout_marginStart="@dimen/index_fragment_head_sort_item_marginLeft"
+	    android:layout_marginRight="@dimen/index_fragment_head_sort_item_marginRight"
+	    android:layout_marginEnd="@dimen/index_fragment_head_sort_item_marginRight"/>
+    
+</RelativeLayout>

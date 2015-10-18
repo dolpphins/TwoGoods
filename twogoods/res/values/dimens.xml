@@ -26,21 +26,24 @@
     
     
     <!-- mcb -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    <dimen name="index_fragment_head_textSize">16sp</dimen>
+    <dimen name="index_fragment_head_paddingTop">10dip</dimen>
+    <dimen name="index_fragment_head_paddingBottom">10dip</dimen>
+    <dimen name="index_fragment_head_tv_marginRight">5dip</dimen>
+    <dimen name="index_fragment_head_gridview_textSize">16sp</dimen>
+    <dimen name="index_fragment_head_category_item_marginTop">8dip</dimen>
+    <dimen name="index_fragment_head_category_item_marginBottom">8dip</dimen>
+    <dimen name="index_fragment_head_category_item_marginLeft">10dip</dimen>
+    <dimen name="index_fragment_head_category_item_marginRight">10dip</dimen>
+    <dimen name="index_fragment_head_category_gridview_paddingTop">8dip</dimen>
+    <dimen name="index_fragment_head_category_gridview_paddingBottom">8dip</dimen>
+    <dimen name="index_fragment_head_category_gridview_paddingLeft">10dip</dimen>
+    <dimen name="index_fragment_head_category_gridview_paddingRight">10dip</dimen>
+    <dimen name="index_fragment_head_listview_textSize">16sp</dimen>
+    <dimen name="index_fragment_head_sort_item_marginTop">8dip</dimen>
+    <dimen name="index_fragment_head_sort_item_marginBottom">8dip</dimen>
+    <dimen name="index_fragment_head_sort_item_marginLeft">15dip</dimen>
+    <dimen name="index_fragment_head_sort_item_marginRight">15dip</dimen>
     
     
     
