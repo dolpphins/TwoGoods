@@ -92,7 +92,7 @@ public class StringUtil {
 	  
 	    
 	    /**
-	     *  判断一个字符串是否为合格的验证码.验证码是四位字母或者数字  </p>
+	     *  判断一个字符串是否为合格的验证码.验证码是六位字母或者数字  </p>
 	     *  
 	     * @param pswd 被判断的字符
 	     * 
@@ -104,7 +104,7 @@ public class StringUtil {
 	        if (isEmpty(pswd)) {  
 	            return false;  
 	        }  
-	        String regExp = "^[a-zA-Z0-9]{4}$";  
+	        String regExp = "^[a-zA-Z0-9]{6}$";  
 	        Pattern p = Pattern.compile(regExp); 
 	        Matcher m = p.matcher(pswd);  
 	        return m.find();  

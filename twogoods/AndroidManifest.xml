@@ -6,95 +6,97 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
-    
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" ></uses-permission>
-
+    <!-- 添加上网权限 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.WAKE_LOCK" >
+    </uses-permission>
+    <!-- 添加上网权限/ -->
     <application
         android:name="com.lym.twogoods.TwoGoodsApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        
-        <!-- 主界面Activity -->
-        <activity 
-            android:name="com.lym.twogoods.ui.MainActivity">
+
+        <!-- 登录方式选择界面Activity -->
+        <activity android:name="com.lym.twogoods.ui.LaunchActivity" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- 账号登录 界面Activity -->
+        <activity android:name="com.lym.twogoods.ui.LoginActivity" >
+        </activity>
+        <!-- 注册界面Activity -->
+        <activity android:name="com.lym.twogoods.ui.RegisterActivity" >
+        </activity>
+        <!-- 重置密码界面Activity -->
+        <activity android:name="com.lym.twogoods.ui.ResetPasswordActivity" >
+        </activity>
+        <!-- 新的密码界面Activity -->
+        <activity android:name="com.lym.twogoods.ui.NewPasswordActivity" >
+        </activity>
+
+        <!-- 主界面Activity -->
+        <activity android:name="com.lym.twogoods.ui.MainActivity" >
+        </activity>
         <!-- 发布商品Activity -->
-        <activity 
-            android:name="com.lym.twogoods.publish.ui.PublishGoodsActivity">
-            
+        <activity android:name="com.lym.twogoods.publish.ui.PublishGoodsActivity" >
         </activity>
         <!-- 搜索商品Activity -->
-        <activity 
-            android:name="com.lym.twogoods.index.ui.GoodsSearchActivity">
-            
+        <activity android:name="com.lym.twogoods.index.ui.GoodsSearchActivity" >
         </activity>
         <!-- 商品详情Activity -->
-        <activity 
-            android:name="com.lym.twogoods.index.ui.GoodsDetailActivity">
-            
+        <activity android:name="com.lym.twogoods.index.ui.GoodsDetailActivity" >
         </activity>
         <!-- 聊天Activity -->
-        <activity 
-            android:name="com.lym.twogoods.message.ui.ChatActivity">
-            
+        <activity android:name="com.lym.twogoods.message.ui.ChatActivity" >
         </activity>
         <!-- 我发布的商品Activity -->
-        <activity 
-            android:name="com.lym.twogoods.mine.ui.MinePublishActivity">
-            
+        <activity android:name="com.lym.twogoods.mine.ui.MinePublishActivity" >
         </activity>
         <!-- 我关注的商品Activity -->
-		<activity 
-		    android:name="com.lym.twogoods.mine.ui.MineFocusActivity">
-		    
-		</activity>
-		<!-- 选择城市Activity -->
-		<activity
-		     android:name="com.lym.twogoods.nearby.ui.SelectCityActivity">
-		    
-		</activity>
-		<!-- 添加图片Activity -->
-		<activity 
-		    android:name="com.lym.twogoods.ui.AddPictureActivity">
-		    
-		</activity>
-		<!-- 个人更多信息Activity -->
-		<activity 
-		    android:name="com.lym.twogoods.ui.PersonalityInfoActivity">
-		    
-		</activity>
-		<!-- 设置Activity -->
-		<activity 
-		    android:name="com.lym.twogoods.ui.SettingsActivity">
-		    
-		</activity>
-		<!-- 店铺详情Activity -->
-		<activity 
-		    android:name="com.lym.twogoods.ui.StoreDetailActivity">
-		    
-		</activity>
-		<!-- 意见反馈Activity -->
-		<activity 
-		    android:name="com.lym.twogoods.ui.FeedbackActivity">
-		    
-		</activity>
-		
-		<!-- 网络状态改变广播接收者 -->
-		<receiver
-		    android:name="com.lym.twogoods.receiver.NetworkBroadcastReceiver"
-		    android:exported="false"
-		    android:enabled="true">
-		    <intent-filter>
-		        <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-		    </intent-filter>
-		</receiver>
-		
+        <activity android:name="com.lym.twogoods.mine.ui.MineFocusActivity" >
+        </activity>
+        <!-- 选择城市Activity -->
+        <activity android:name="com.lym.twogoods.nearby.ui.SelectCityActivity" >
+        </activity>
+        <!-- 添加图片Activity -->
+        <activity android:name="com.lym.twogoods.ui.AddPictureActivity" >
+        </activity>
+        <!-- 个人更多信息Activity -->
+        <activity android:name="com.lym.twogoods.ui.PersonalityInfoActivity" >
+        </activity>
+        <!-- 设置Activity -->
+        <activity android:name="com.lym.twogoods.ui.SettingsActivity" >
+        </activity>
+        <!-- 店铺详情Activity -->
+        <activity android:name="com.lym.twogoods.ui.StoreDetailActivity" >
+        </activity>
+        <!-- 意见反馈Activity -->
+        <activity android:name="com.lym.twogoods.ui.FeedbackActivity" >
+        </activity>
+
+        <!-- 网络状态改变广播接收者 -->
+        <receiver
+            android:name="com.lym.twogoods.receiver.NetworkBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -8,19 +8,19 @@ package com.lym.twogoods;
 public class AccessTokenKeeper {
 
 	/** Bmob Application ID */
-	public final static String Bmob_ApplicationID = "def751f982f5028d1ceae0b1ac42ebfb";
+	public final static String Bmob_ApplicationID = "afe59efdd85cd738717c7f12dff40451";
 	
 	/** Bmob RESET API Key */
-	public final static String Bmob_ResetApiKey = "fb757b4e95cf528f6a980a074fd5956f";
+	public final static String Bmob_ResetApiKey = "4f6cf8331ff0ef85a2f670109500bc6c";
 	
 	/** Bmob Master Key */
-	public final static String Bmob_MasterKey = "10e3baa1e1fd67f1a22a912581b0f995";
+	public final static String Bmob_MasterKey = "9a3a3a9c97659dc18519fe4184f0615a";
 	
 	/** Bmob Access Key */
-	public final static String Bmob_AccessKey = "55877784c6df824da706518980211c91";
+	public final static String Bmob_AccessKey = "923e878b0a6281af52b428fb3ecd8b8d";
 	
 	/** Bmob Secret Key */
-	public final static String Bmob_SecretKey = "1430f5d458c6d7a6";
+	public final static String Bmob_SecretKey = "b2c9fd3aff0fe01f";
 	
 	/** Bmob file Secret Key */
 	public final static String Bmob_File_SecretKey = "lymtwogoods";

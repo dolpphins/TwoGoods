@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	App启动页面布局
+	
+	author:龙宇文
+ -->
+<LinearLayout	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    
+    <Button android:id="@+id/btn_login_choice_direct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_direct"
+        android:layout_marginLeft="@dimen/app_login_choice_marRight_Left"
+        android:layout_marginRight="@dimen/app_login_choice_marRight_Left"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/app_login_choice_marTop"
+        style="?android:attr/buttonBarButtonStyle"
+        android:background="@drawable/edittext_circle_shape"
+        />
+    
+     <Button android:id="@+id/btn_login_choice_login"
+        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/app_login_choice_marRight_Left"
+        android:layout_marginRight="@dimen/app_login_choice_marRight_Left"
+        android:layout_marginTop="@dimen/app_login_choice_marTop"
+        android:text="@string/login"
+        style="?android:attr/buttonBarButtonStyle"
+        android:background="@drawable/edittext_circle_shape"
+        />
+</LinearLayout>

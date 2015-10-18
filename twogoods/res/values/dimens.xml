@@ -57,14 +57,18 @@
     
     
 	<!-- lyw -->
-	
-	
-	
-	
-	
-	
-	
-	
+	<!-- lyw_publish -->
+	<dimen name="margintop">30dp</dimen>
+	<!-- app_login_choice-->
+	<dimen name="app_login_choice_marRight_Left">30dp</dimen>
+	<dimen name="app_login_choice_marTop">450dp</dimen>
+	<!-- app_login -->
+	<!-- app_register -->
+	<dimen name="app_register_parenttop">60dp</dimen>
+	<dimen name="app_register_margintop">20dp</dimen>
+	<dimen name="app_register_left_right_margin">30dp</dimen>
+	<!-- app_reset_password -->
+	<dimen name="app_reset_passwrod_left_right_marigin">50dp</dimen>
 	
 	
 	
