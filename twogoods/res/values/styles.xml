@@ -16,5 +16,40 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <!-- yjf -->
+    
+    <!-- 自定义dialog样式 -->
+    <style name="messageDialog"  parent="@android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>   
+    </style>
+    
+    
+    <style name="Message_Smile_avadar">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+    
+    <style name="Message_Smile_Black">
+        <item name="android:textColor">@color/base_color_text_black</item>
+    </style>
 
 </resources>

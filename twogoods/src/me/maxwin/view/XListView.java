@@ -359,6 +359,7 @@ public class XListView extends ListView implements OnScrollListener {
 
 	public void setXListViewListener(IXListViewListener l) {
 		mListViewListener = l;
+		System.out.println(134);
 	}
 
 	/**
