@@ -41,23 +41,21 @@ public final class R {
         public static final int app_coomon_actionbar_paddingRight=0x7f050001;
         /**  app_login_choice
          */
-        public static final int app_login_choice_bottomheight=0x7f05000a;
-        public static final int app_login_choice_left_right_margin=0x7f05000b;
-        public static final int app_login_choice_marRight=0x7f05000c;
-        public static final int app_login_choice_marleft=0x7f05000d;
+        public static final int app_login_choice_marRight_Left=0x7f05000a;
+        public static final int app_login_choice_marTop=0x7f05000b;
         public static final int app_main_bottomdock_tab_paddingBottom=0x7f050008;
         /**  公共底部Tab 
          */
         public static final int app_main_bottomdock_tab_paddingTop=0x7f050007;
-        public static final int app_register_left_right_margin=0x7f050010;
-        public static final int app_register_margintop=0x7f05000f;
+        public static final int app_register_left_right_margin=0x7f05000e;
+        public static final int app_register_margintop=0x7f05000d;
         /**  app_login 
  app_register 
          */
-        public static final int app_register_parenttop=0x7f05000e;
+        public static final int app_register_parenttop=0x7f05000c;
         /**  app_reset_password 
          */
-        public static final int app_reset_passwrod_left_right_marigin=0x7f050011;
+        public static final int app_reset_passwrod_left_right_marigin=0x7f05000f;
         /**  mcb 
  lyw 
  lyw_publish 

@@ -180,6 +180,8 @@ public class ResetPasswordActivity extends BackActivity {
 			public void done(BmobException ex) {
 				if (ex == null) {
 					codeVerify = true;
+				}else {
+					codeVerify=false;
 				}
 			}
 		});

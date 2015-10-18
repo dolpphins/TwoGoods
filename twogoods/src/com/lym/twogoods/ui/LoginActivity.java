@@ -206,7 +206,7 @@ public class LoginActivity extends BackActivity {
 					Intent intent = new Intent(LoginActivity.this,
 							ResetPasswordActivity.class);
 					startActivity(intent);
-				}else {
+				} else {
 					Toast.makeText(getApplicationContext(), "当前网络不佳",
 							Toast.LENGTH_SHORT).show();
 				}
@@ -305,6 +305,8 @@ public class LoginActivity extends BackActivity {
 			public void done(BmobException ex) {
 				if (ex == null) {
 					codeVerify = true;
+				} else {
+					codeVerify = false;
 				}
 			}
 		});
@@ -318,9 +320,10 @@ public class LoginActivity extends BackActivity {
 	 * @author 龙宇文
 	 **/
 	private void writeSharePreference() {
-		sSpManager.putString(this, "username", et_login_erhuo.getText()
-				.toString());
-		sSpManager.putString(this, "password",
+		sSpManager.putString(this, "loginmessage(MD5).xml", MODE_PRIVATE,
+				"username", et_login_erhuo.getText().toString());
+		sSpManager.putString(this, "loginmessage(MD5).xml", MODE_PRIVATE,
+				"password",
 				EncryptHelper.getMD5(et_login_password.getText().toString()));
 	}
 

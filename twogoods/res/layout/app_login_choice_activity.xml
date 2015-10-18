@@ -4,31 +4,32 @@
 	
 	author:龙宇文
  -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout	xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <Button
-        android:id="@+id/btn_login_choice_direct"
-        android:layout_width="fill_parent"
+    android:orientation="horizontal">
+    
+    <Button android:id="@+id/btn_login_choice_direct"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/app_login_choice_bottomheight"
-        android:layout_marginLeft="@dimen/app_login_choice_marRight"
-        android:layout_marginRight="@dimen/app_login_choice_marleft"
+        android:text="@string/login_direct"
+        android:layout_marginLeft="@dimen/app_login_choice_marRight_Left"
+        android:layout_marginRight="@dimen/app_login_choice_marRight_Left"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/app_login_choice_marTop"
+        style="?android:attr/buttonBarButtonStyle"
         android:background="@drawable/edittext_circle_shape"
-        android:text="@string/login_direct" />
-
-    <Button
-        android:id="@+id/btn_login_choice_login"
-        android:layout_width="fill_parent"
+        />
+    
+     <Button android:id="@+id/btn_login_choice_login"
+        android:layout_width="wrap_content"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/app_login_choice_bottomheight"
-        android:layout_marginLeft="@dimen/app_login_choice_marleft"
-        android:layout_marginRight="@dimen/app_login_choice_marRight"
+        android:layout_marginLeft="@dimen/app_login_choice_marRight_Left"
+        android:layout_marginRight="@dimen/app_login_choice_marRight_Left"
+        android:layout_marginTop="@dimen/app_login_choice_marTop"
+        android:text="@string/login"
+        style="?android:attr/buttonBarButtonStyle"
         android:background="@drawable/edittext_circle_shape"
-        android:text="@string/login" />
-
-</RelativeLayout>
+        />
+</LinearLayout>

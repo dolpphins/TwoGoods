@@ -51,7 +51,6 @@ public class LaunchActivity extends Activity {
 				Intent intent = new Intent(LaunchActivity.this,
 						MainActivity.class);
 				startActivity(intent);
-				finish();
 			}
 		});
 
@@ -62,7 +61,6 @@ public class LaunchActivity extends Activity {
 				Intent intent = new Intent(LaunchActivity.this,
 						LoginActivity.class);
 				startActivity(intent);
-				finish();
 			}
 		});
 

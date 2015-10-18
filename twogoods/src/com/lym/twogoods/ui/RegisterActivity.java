@@ -228,6 +228,8 @@ public class RegisterActivity extends BackActivity {
 					public void done(BmobException ex) {
 						if (ex == null) {
 							codeVerify = true;
+						} else {
+							codeVerify = false;
 						}
 					}
 				});
@@ -265,12 +267,14 @@ public class RegisterActivity extends BackActivity {
 	 * @author 龙宇文
 	 **/
 	private void writeSharePreference() {
-		sSpManager.putString(this, "username", et_register_erhuo.getText()
-				.toString());
+
+		sSpManager.putString(this, "loginmessage(MD5).xml", MODE_PRIVATE,
+				"username", et_register_erhuo.getText().toString());
 		sSpManager
-				.putString(this, "password", EncryptHelper
-						.getMD5(et_register_password.getText().toString()));
-		sSpManager.putString(this, "phone", et_register_phone.getText()
-				.toString());
+				.putString(this, "loginmessage(MD5).xml", MODE_PRIVATE,
+						"password", EncryptHelper.getMD5(et_register_password
+								.getText().toString()));
+		sSpManager.putString(this, "loginmessage(MD5).xml", MODE_PRIVATE,
+				"phone", et_register_phone.getText().toString());
 	}
 }
