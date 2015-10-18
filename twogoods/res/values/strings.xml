@@ -135,7 +135,12 @@
     
     
     <!-- yjf -->
+    <string name="chat_picture">图片</string>
+    <string name="chat_location">位置</string>
+    <string name="chat_voice">语音</string>
     
+    <string name="voice_up_tips">手指上滑,取消发送</string>
+    <string name="action_settings">Settings</string>
     
     
     

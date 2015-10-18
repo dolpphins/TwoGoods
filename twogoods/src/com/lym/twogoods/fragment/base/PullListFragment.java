@@ -36,7 +36,7 @@ public abstract class PullListFragment extends BaseListFragment
 		mListView.setPullRefreshEnable(true);
 		
 		mMode = Mode.BOTH;
-		
+		System.out.println(678);
 		//设置上拉加载及下拉刷新监听器
 		mListView.setXListViewListener(this);
 		mListView.setOnScrollListener(this);

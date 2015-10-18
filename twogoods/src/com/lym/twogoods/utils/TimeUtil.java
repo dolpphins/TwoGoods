@@ -47,7 +47,6 @@ public class TimeUtil {
 	public static String getDescriptionTimeFromTimestamp(long timestamp) {
 		long currentTime = System.currentTimeMillis();
 		long timeGap = (currentTime - timestamp) / 1000;// 与现在时间相差秒数
-		//System.out.println("timeGap: " + timeGap);
 		String timeStr = null;
 		if (timeGap > YEAR) {
 			timeStr = timeGap / YEAR + "年前";
@@ -92,6 +91,8 @@ public class TimeUtil {
 	 * @author yao
 	 */
  	public static String dateToString(Date data, String formatType) {
+ 		if(formatType==null)
+ 			formatType = FORMAT_DATE_TIME;
  		return new SimpleDateFormat(formatType).format(data);
  	}
  	
@@ -120,6 +121,8 @@ public class TimeUtil {
 	 * @author yao
 	 */
  	public static Date stringToDate(String strTime, String formatType){
+ 		if(formatType==null)
+ 			formatType = FORMAT_DATE_TIME;
  		SimpleDateFormat formatter = new SimpleDateFormat(formatType);
  		Date date = null;
  		try {
@@ -135,7 +138,7 @@ public class TimeUtil {
 	 * long转换为Date类型
 	 * @param currentTime要转换的long类型的时间
 	 * @param formatType要转换的时间格式yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日 HH时mm分ss秒
-	 * @return
+	 * @return 
 	 * 
 	 * @author yao
 	 */
@@ -156,6 +159,8 @@ public class TimeUtil {
 	 * @author yao
 	 */
  	public static long stringToLong(String strTime, String formatType){
+ 		if(formatType==null)
+ 			formatType = FORMAT_DATE_TIME;
  		Date date = stringToDate(strTime, formatType); // String类型转成date类型
  		if (date == null) {
  			return 0;
@@ -176,7 +181,7 @@ public class TimeUtil {
  	}
  	
  	/**
-	 * 获取当前时间
+	 * 获取当前时间 默认格式是yy-MM-dd HH:mm
 	 * @return
 	 * 
 	 * @author yao
@@ -199,7 +204,8 @@ public class TimeUtil {
 		return format.format(new Date(time));
 	}
 
-	/** 获取聊天时间：因为sdk的时间默认到秒故应该乘1000
+	/** 
+	  * 获取聊天时间：因为sdk的时间默认到秒故应该乘1000
 	  * @Title: getChatTime
 	  * @Description: TODO
 	  * @param  timesamp
@@ -237,13 +243,13 @@ public class TimeUtil {
 	}
 	
 	/**
-	 * 获取当前时间的毫秒
+	 * 获取当前时间，单位是毫秒
 	 * @return
 	 * 
 	 * @author yao
 	 */
 	
-	public Long getCurrentMilliSecond()
+	public static Long getCurrentMilliSecond()
 	{
 		Long time;
 		Date date = new Date();

@@ -90,7 +90,9 @@
 	
 	<!-- yjf -->
 	
-	
+	<dimen name="message_list_item_height">70dip</dimen>
+	<dimen name="message_base_scrollview_top_height">50.0dip</dimen>
+	<dimen name="tab_padding_left_right">40dp</dimen>
 	
 	
 	
