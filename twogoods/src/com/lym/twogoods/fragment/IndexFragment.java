@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lym.twogoods.R;
+import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.config.GoodsCategory;
 import com.lym.twogoods.config.GoodsCategory.Category;
 import com.lym.twogoods.fragment.base.HeaderPullListFragment;
+import com.lym.twogoods.index.adapter.IndexGoodsListAdapter;
 import com.lym.twogoods.index.manager.GoodsSortManager;
 import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 
@@ -76,7 +78,10 @@ public class IndexFragment extends HeaderPullListFragment{
 	/**
 	 * 商品列表 
 	 * */
-	
+	//商品ListView适配器
+	private IndexGoodsListAdapter mAdapter;
+	//
+	private List<Goods> mGoodsList;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -212,6 +217,9 @@ public class IndexFragment extends HeaderPullListFragment{
 		//注意第二三个参数不要搞错
 		sortAdapter = new ArrayAdapter<String>(mAttachActivity, R.layout.index_fragment_head_sort_dropdown_item,
 				R.id.index_fragment_head_sort_name, sortData);
+		
+		mGoodsList = new ArrayList<Goods>();
+		mAdapter = new IndexGoodsListAdapter(mAttachActivity, mGoodsList);
 	}
 	
 	private void initView() {

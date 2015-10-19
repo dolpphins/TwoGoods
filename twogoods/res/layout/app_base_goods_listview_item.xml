@@ -11,5 +11,77 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
+    <!-- 顶部布局 -->
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!-- 头像 -->
+        <ImageView
+            android:id="@+id/base_goods_listview_item_headpic" 
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:contentDescription="@null"/>
+        <!-- 用户名 -->
+        <TextView 
+            android:id="@+id/base_goods_listview_item_username" 
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_toRightOf="@id/base_goods_listview_item_headpic"
+        	android:layout_toEndOf="@id/base_goods_listview_item_headpic"
+        	android:layout_alignTop="@id/base_goods_listview_item_headpic"/>
+        <!-- 发布时间 -->
+        <TextView 
+            android:id="@+id/base_goods_listview_item_publishtime" 
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_toRightOf="@id/base_goods_listview_item_headpic"
+        	android:layout_toEndOf="@id/base_goods_listview_item_headpic"
+        	android:layout_alignBottom="@id/base_goods_listview_item_headpic"/>
+        <!-- 发布位置-->
+        <TextView 
+            android:id="@+id/base_goods_listview_item_publishlocation" 
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_toRightOf="@id/base_goods_listview_item_publishtime"
+        	android:layout_toEndOf="@id/base_goods_listview_item_publishtime"
+        	android:layout_alignBottom="@id/base_goods_listview_item_publishtime"/>
+        
+        <!-- 价格 -->
+        <TextView
+            android:id="@+id/base_goods_listview_item_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@id/base_goods_listview_item_headpic"/>
+        <!-- 操作，默认为gone -->
+        <TextView
+            android:id="@+id/base_goods_listview_item_operation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@id/base_goods_listview_item_headpic"/>
+        
+        
+    </RelativeLayout>
+    
+    <!-- 商品描述 -->
+    <TextView 
+        android:id="@+id/base_goods_listview_item_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
+    <!-- 左右可滑动图片 -->
+    <GridView
+        android:id="@+id/base_goods_listview_item_pictures" 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    
 </LinearLayout>
+
+
+
+
+
+
