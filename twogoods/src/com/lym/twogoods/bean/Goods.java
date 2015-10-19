@@ -1,6 +1,7 @@
 package com.lym.twogoods.bean;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.lym.twogoods.config.UserConfiguration;
 
 import cn.bmob.v3.BmobObject;
 
@@ -30,7 +31,7 @@ public class Goods extends BmobObject{
 	
 	/** 头像本地缓存存放位置,如果没有则是默认头像存放位置 
 	 *  格式为:路径+GUID_head_pic.jpg,默认头像路
-	 *  径格式:路径+default_head_pic.jpg.
+	 *  径格式:路径+{@link UserConfiguration#USER_DEFAULT_HEAD_NAME}
 	 * */
 	@DatabaseField
 	private String head_url;

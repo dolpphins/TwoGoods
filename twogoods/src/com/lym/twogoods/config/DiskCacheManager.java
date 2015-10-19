@@ -1,10 +1,14 @@
 package com.lym.twogoods.config;
 
+import android.content.Context;
 import android.os.Environment;
 
 /**
  * <p>
  * 	持久性缓存管理类
+ * </p>
+ * <p>
+ * 	单例模式
  * </p>
  * 
  * @author 麦灿标
@@ -12,28 +16,52 @@ import android.os.Environment;
 public class DiskCacheManager {
 
 	/** 磁盘缓存基本路径 */
-	private final static String sBaseDiskCachePath;
+	private String sBaseDiskCachePath;
 	
 	/** 头像缓存子目录 */
-	private final static String sHeadPictureCachePath = "/user/header";
+	private final String sHeadPictureCachePath = "/user/header";
 	
 	/** 商品图片缓存子目录 */
-	private final static String sGoodsPictureCachePath = "/goods/picture";
+	private final String sGoodsPictureCachePath = "/goods/picture";
 	
 	/** 商品语音缓存子目录 */
-	private final static String sGoodsVoiceCachePath = "/goods/voice";
+	private final String sGoodsVoiceCachePath = "/goods/voice";
 	
 	/** 聊天图片缓存子目录 */
-	private final static String sChatPictureCachePath = "/chat/picture";
+	private final String sChatPictureCachePath = "/chat/picture";
 	
 	/** 聊天语音缓存子目录 */
-	private final static String sChatVoiceCachePath = "/chat/voice";
+	private final String sChatVoiceCachePath = "/chat/voice";
 	
-	static {
-		if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-			sBaseDiskCachePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-		} else {
-			sBaseDiskCachePath = Environment.getDataDirectory().getAbsolutePath() + "/cache";
+	private static DiskCacheManager diskCacheManager = new DiskCacheManager();
+	
+	private Object lock = new Object();
+	
+	private DiskCacheManager(){}
+	
+	/**
+	 * <p>
+	 * 	获取DiskCacheManager唯一实例
+	 * </p>
+	 * 
+	 * @return DiskCacheManager唯一实例
+	 * */
+	public static DiskCacheManager getInstance(Context context) {
+		diskCacheManager.initBaseDiskCachePath(context);
+		return diskCacheManager;
+	}
+	
+	private void initBaseDiskCachePath(Context context) {
+		if(sBaseDiskCachePath == null) {
+			synchronized (lock) {
+				if(sBaseDiskCachePath == null) {
+					if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+						sBaseDiskCachePath = context.getExternalCacheDir().getAbsolutePath();
+					} else {
+						sBaseDiskCachePath = context.getCacheDir().getAbsolutePath();
+					}
+				}
+			}
 		}
 	}
 	
@@ -44,7 +72,7 @@ public class DiskCacheManager {
 	 * 
 	 * @return 磁盘缓存基本路径
 	 * */
-	public static String getBaseDiskCachePath() {
+	public String getBaseDiskCachePath() {
 		return sBaseDiskCachePath;
 	}
 	
@@ -55,7 +83,7 @@ public class DiskCacheManager {
 	 * 
 	 * @return 用户头像缓存路径
 	 * */
-	public static String getUserHeadPictureCachePath() {
+	public String getUserHeadPictureCachePath() {
 		return sBaseDiskCachePath + sHeadPictureCachePath;
 	}
 	
@@ -66,7 +94,7 @@ public class DiskCacheManager {
 	 * 
 	 * @return 商品图片缓存路径
 	 * */
-	public static String getGoodsPictureCachePath() {
+	public String getGoodsPictureCachePath() {
 		return sBaseDiskCachePath + sGoodsPictureCachePath;
 	}
 	
@@ -77,7 +105,7 @@ public class DiskCacheManager {
 	 * 
 	 * @return 商品语音缓存路径
 	 * */
-	public static String getGoodsVoiceCachePath() {
+	public String getGoodsVoiceCachePath() {
 		return sBaseDiskCachePath + sGoodsVoiceCachePath;
 	}
 	
@@ -88,7 +116,7 @@ public class DiskCacheManager {
 	 * 
 	 * @return 聊天图片缓存路径
 	 * */
-	public static String getChatPictureCachePath() {
+	public String getChatPictureCachePath() {
 		return sBaseDiskCachePath + sChatPictureCachePath;
 	}
 	
@@ -99,7 +127,7 @@ public class DiskCacheManager {
 	 * 
 	 * @return 聊天语音缓存路径
 	 * */
-	public static String getChatVoiceCachePath() {
+	public String getChatVoiceCachePath() {
 		return sBaseDiskCachePath + sChatVoiceCachePath;
 	}
 	
