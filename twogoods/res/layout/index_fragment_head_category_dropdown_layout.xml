@@ -6,10 +6,11 @@
 	@author 麦灿标
  -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.lym.twogoods.index.widget.DropdownLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@color/index_fragment_head_category_dropdown_backgroundColor">
     	
     <GridView 
         android:id="@+id/index_fragment_head_category_dropdown_gv"
@@ -28,4 +29,4 @@
        	android:layout_height="1dip"
        	android:background="@color/index_fragment_head_category_bottomline_color"/>
 
-</LinearLayout>
+</com.lym.twogoods.index.widget.DropdownLinearLayout>

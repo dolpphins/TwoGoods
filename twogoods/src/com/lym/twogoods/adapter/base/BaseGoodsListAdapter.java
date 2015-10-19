@@ -4,11 +4,16 @@ import java.util.List;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.bean.Goods;
+import com.lym.twogoods.bean.PictureThumbnailSpecification;
+import com.lym.twogoods.screen.GoodsScreen;
+import com.lym.twogoods.utils.ImageUtil;
 import com.lym.twogoods.utils.TimeUtil;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +34,15 @@ import android.widget.TextView;
  * */
 public class BaseGoodsListAdapter extends BaseAdapter{
 
-	private Context mContext;
+	private final static String TAG = "BaseGoodsListAdapter";
+	
+	private Activity mActivity;
 	
 	private List<Goods> mGoodsList;
 	
-	public BaseGoodsListAdapter(Context context, List<Goods> goodsList) {
+	public BaseGoodsListAdapter(Activity at, List<Goods> goodsList) {
 		super();
-		mContext = context;
+		mActivity = at;
 		mGoodsList = goodsList;
 		
 		
@@ -43,6 +50,7 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 	
 	@Override
 	public int getCount() {
+		Log.i(TAG, "count:" + mGoodsList.size());
 		if(mGoodsList != null) {
 			return mGoodsList.size();
 		}
@@ -67,7 +75,7 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 		
 		ItemViewHolder viewHolder = new ItemViewHolder();
 		if(convertView == null) {
-			convertView = LayoutInflater.from(mContext).inflate(R.layout.app_base_goods_listview_item, null);
+			convertView = LayoutInflater.from(mActivity).inflate(R.layout.app_base_goods_listview_item, null);
 			
 			viewHolder.base_goods_listview_item_headpic = (ImageView) convertView.findViewById(R.id.base_goods_listview_item_headpic);
 			viewHolder.base_goods_listview_item_username = (TextView) convertView.findViewById(R.id.base_goods_listview_item_username);
@@ -100,9 +108,11 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 		if(viewHolder == null || item == null) {
 			return;
 		}
-		//之后要换成直接调用工具类ImageUtil方法
+//		//之后要换成直接调用工具类ImageUtil方法
 		String path = item.getHead_url();
-		Bitmap bm = BitmapFactory.decodeFile(path);
+//		Bitmap bm = BitmapFactory.decodeFile(path);
+		PictureThumbnailSpecification specification = GoodsScreen.getUserHeadPictureThumbnailSpecification(mActivity);
+		Bitmap bm = ImageUtil.getImageThumbnail(path, specification.getWidth(), specification.getHeight());
 		
 		//头像
 		viewHolder.base_goods_listview_item_headpic.setImageBitmap(bm);
@@ -112,8 +122,8 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 		viewHolder.base_goods_listview_item_publishtime.setText(TimeUtil.getDescriptionTimeFromTimestamp(item.getPublish_time()));
 		//发布位置
 		viewHolder.base_goods_listview_item_publishlocation.setText(item.getPublish_location());
-		//价格
-		viewHolder.base_goods_listview_item_price.setText(item.getPrice());
+		//价格,注意要转换为字符串
+		viewHolder.base_goods_listview_item_price.setText("￥" + item.getPrice());
 		//商品描述
 		viewHolder.base_goods_listview_item_description.setText(item.getDescription());
 		//左右可滑动图片

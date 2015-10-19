@@ -9,7 +9,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:padding="@dimen/app_base_goods_listview_item_padding">
     
     <!-- 顶部布局 -->
     <RelativeLayout 
@@ -20,7 +21,9 @@
             android:id="@+id/base_goods_listview_item_headpic" 
             android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
-        	android:contentDescription="@null"/>
+        	android:contentDescription="@null"
+        	android:layout_marginRight="@dimen/app_base_goods_listview_item_headpicture_marginRight"
+        	android:layout_marginEnd="@dimen/app_base_goods_listview_item_headpicture_marginRight"/>
         <!-- 用户名 -->
         <TextView 
             android:id="@+id/base_goods_listview_item_username" 
@@ -36,7 +39,9 @@
         	android:layout_height="wrap_content"
         	android:layout_toRightOf="@id/base_goods_listview_item_headpic"
         	android:layout_toEndOf="@id/base_goods_listview_item_headpic"
-        	android:layout_alignBottom="@id/base_goods_listview_item_headpic"/>
+        	android:layout_alignBottom="@id/base_goods_listview_item_headpic"
+        	android:layout_marginRight="@dimen/app_base_goods_listview_item_publishtime_marginRight"
+        	android:layout_marginEnd="@dimen/app_base_goods_listview_item_publishtime_marginRight"/>
         <!-- 发布位置-->
         <TextView 
             android:id="@+id/base_goods_listview_item_publishlocation" 
@@ -70,7 +75,10 @@
     <TextView 
         android:id="@+id/base_goods_listview_item_description"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/app_base_goods_listview_item_dscription_marginTop"
+        android:layout_marginBottom="@dimen/app_base_goods_listview_item_dscription_marginBottom"
+        android:textSize="@dimen/app_base_goods_listview_item_dscription_textSize"/>
 
     <!-- 左右可滑动图片 -->
     <GridView

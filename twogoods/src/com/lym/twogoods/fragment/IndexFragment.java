@@ -9,8 +9,12 @@ import com.lym.twogoods.config.GoodsCategory;
 import com.lym.twogoods.config.GoodsCategory.Category;
 import com.lym.twogoods.fragment.base.HeaderPullListFragment;
 import com.lym.twogoods.index.adapter.IndexGoodsListAdapter;
+import com.lym.twogoods.index.interf.DropDownAble;
 import com.lym.twogoods.index.manager.GoodsSortManager;
 import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
+import com.lym.twogoods.index.widget.DropdownLinearLayout;
+import com.lym.twogoods.index.widget.MaskLayer;
+import com.lym.twogoods.test.mcb.GoodsData;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +26,8 @@ import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -34,10 +40,12 @@ import android.widget.ListView;
  * 
  * @author 麦灿标
  * */
-public class IndexFragment extends HeaderPullListFragment{
+public class IndexFragment extends HeaderPullListFragment implements DropDownAble {
 
 	private final static String TAG = "IndexFragment";
 	
+	//外层帧布局
+	private FrameLayout frameLayout;
 	
 	/**
 	 * 头部
@@ -54,7 +62,7 @@ public class IndexFragment extends HeaderPullListFragment{
 	private GridView index_fragment_head_category_dropdown_gv;
 	private ArrayAdapter<String> categoryAdapter;
 	private List<String> categoryData;
-	private View categoryDropdownLayout;
+	private DropdownLinearLayout categoryDropdownLayout;
 	//标记是否正在显示分类下拉布局
 	private boolean isShowingCategoryLayout;
 	//分类下拉布局高度
@@ -68,20 +76,29 @@ public class IndexFragment extends HeaderPullListFragment{
 	private ListView index_fragment_head_sort_dropdown_lv;
 	private ArrayAdapter<String> sortAdapter;
 	private List<String> sortData;
-	private View sortDropdownLayout;
+	private DropdownLinearLayout sortDropdownLayout;
 	//标记是否正在显示排序下拉布局
 	private boolean isShowingSortLayout;
 	//排序下拉布局高度
 	private int mSortDropdownLayoutHeight;
+	
+	/**
+	 * 遮罩层
+	 * */
+	private MaskLayer maskLayer;
 	
 	
 	/**
 	 * 商品列表 
 	 * */
 	//商品ListView适配器
-	private IndexGoodsListAdapter mAdapter;
-	//
-	private List<Goods> mGoodsList;
+	private IndexGoodsListAdapter mListViewAdapter;
+	//商品数据List
+	private List<Goods> mGoodsList = new ArrayList<Goods>();
+	//当前分类
+	private Category goodsCategory;
+	//当前分类对应的Item View对象
+	private View currentCategoryItemView;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -105,14 +122,17 @@ public class IndexFragment extends HeaderPullListFragment{
 		
 		ViewGroup wrapper = (ViewGroup) super.onCreateView(inflater, container, savedInstanceState);
 		//外层帧布局
-		FrameLayout frameLayout = new FrameLayout(mAttachActivity);
+		frameLayout = new FrameLayout(mAttachActivity);
 		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		frameLayout.setLayoutParams(params);
 		
+		//遮罩层
+		maskLayer = new MaskLayer(mAttachActivity);
+		maskLayer.setOnTouchDropDownAbleListener(this);
 		//分类下拉布局
-		categoryDropdownLayout = inflater.inflate(R.layout.index_fragment_head_category_dropdown_layout, null);
+		categoryDropdownLayout = (DropdownLinearLayout) inflater.inflate(R.layout.index_fragment_head_category_dropdown_layout, null);
 		//排序下拉布局
-		sortDropdownLayout = inflater.inflate(R.layout.index_fragment_head_sort_dropdown_layout, null);
+		sortDropdownLayout = (DropdownLinearLayout) inflater.inflate(R.layout.index_fragment_head_sort_dropdown_layout, null);
 		
 		//真正的头部
 		realHead = inflater.inflate(R.layout.index_fragment_head_layout, null);
@@ -121,6 +141,10 @@ public class IndexFragment extends HeaderPullListFragment{
 		categoryDropdownLayout.setLayoutParams(lp);
 		sortDropdownLayout.setLayoutParams(lp);
 		realHead.setLayoutParams(lp);
+		LayoutParams maskLp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		maskLayer.setLayoutParams(maskLp);
+		maskLayer.hide();//隐藏遮罩层
+		
 		//隐藏头部下拉布局
 		hideDropdownView();
 		categoryDropdownLayout.setAlpha(0);//默认不可见
@@ -139,13 +163,16 @@ public class IndexFragment extends HeaderPullListFragment{
 		initView();
 		
 		frameLayout.addView(wrapper);
+		frameLayout.addView(maskLayer);
 		frameLayout.addView(categoryDropdownLayout);
 		frameLayout.addView(sortDropdownLayout);
 		frameLayout.addView(realHead);
 		
-		//设置点击事件
+		//为头部设置点击事件
 		setOnclickForHeadLayout();
-		 
+		//为ListView设置事件
+		setOnclickForListView();
+		
 		return frameLayout;
 	}
 	
@@ -163,7 +190,7 @@ public class IndexFragment extends HeaderPullListFragment{
 						lp.setMargins(0, mRealHeadHeight, 0, 0);
 						categoryDropdownLayout.setLayoutParams(lp);
 						//开始执行隐藏动画
-						hideHeadDropdownLayoutAnimation(categoryDropdownLayout);
+						hideHeadDropdownLayoutAnimation(categoryDropdownLayout, -mCategoryDropdownLayoutHeight);
 						isShowingCategoryLayout = false;
 					}
 				}
@@ -184,7 +211,7 @@ public class IndexFragment extends HeaderPullListFragment{
 						lp.setMargins(0, mRealHeadHeight, 0, 0);
 						sortDropdownLayout.setLayoutParams(lp);
 						//开始执行隐藏动画
-						hideHeadDropdownLayoutAnimation(sortDropdownLayout);
+						hideHeadDropdownLayoutAnimation(sortDropdownLayout, -mSortDropdownLayoutHeight);
 						isShowingSortLayout = false;
 					}
 				}
@@ -218,14 +245,23 @@ public class IndexFragment extends HeaderPullListFragment{
 		sortAdapter = new ArrayAdapter<String>(mAttachActivity, R.layout.index_fragment_head_sort_dropdown_item,
 				R.id.index_fragment_head_sort_name, sortData);
 		
-		mGoodsList = new ArrayList<Goods>();
-		mAdapter = new IndexGoodsListAdapter(mAttachActivity, mGoodsList);
+		
+		List<Goods> tempList = GoodsData.getGoodsData(mAttachActivity);
+		mGoodsList.addAll(tempList);
+		mListViewAdapter = new IndexGoodsListAdapter(mAttachActivity, mGoodsList);
 	}
 	
 	private void initView() {
 
 		index_fragment_head_category_dropdown_gv.setAdapter(categoryAdapter);
+		//分类默认为所有
+		goodsCategory = Category.ALL;
+		currentCategoryItemView = ((ViewGroup)index_fragment_head_category_dropdown_gv.getChildAt(0)).getChildAt(0);
+		setCategoryItemStatus(currentCategoryItemView, true);
+		
 		index_fragment_head_sort_dropdown_lv.setAdapter(sortAdapter);
+		
+		mListView.setAdapter(mListViewAdapter);
 	}
 	
 	
@@ -240,7 +276,7 @@ public class IndexFragment extends HeaderPullListFragment{
 					//预处理
 					if(isShowingSortLayout) {
 						filpUpArrowAnimation(index_fragment_head_sort_iv);
-						hideDropdownAnimation(sortDropdownLayout);
+						hideDropdownAnimation(sortDropdownLayout, -mSortDropdownLayoutHeight);
 						isShowingSortLayout = false;
 					}
 					
@@ -248,13 +284,17 @@ public class IndexFragment extends HeaderPullListFragment{
 						//箭头从上到下翻转动画
 						filpDownArrowAnimation(index_fragment_head_category_iv);
 						//显示分类下拉布局动画
-						showDropdownAnimation(categoryDropdownLayout);
+						showDropdownAnimation(categoryDropdownLayout, -mCategoryDropdownLayoutHeight);
+						//显示遮罩层
+						maskLayer.show();
 						isShowingCategoryLayout = true;
 					} else {
 						//箭头从下到上翻转动画
 						filpUpArrowAnimation(index_fragment_head_category_iv);
 						//隐藏分类下拉布局动画
-						hideDropdownAnimation(categoryDropdownLayout);
+						hideDropdownAnimation(categoryDropdownLayout, -mCategoryDropdownLayoutHeight);
+						//隐藏遮罩层
+						maskLayer.hide();
 						isShowingCategoryLayout = false;
 					}
 				}
@@ -270,7 +310,7 @@ public class IndexFragment extends HeaderPullListFragment{
 					//预处理
 					if(isShowingCategoryLayout) {
 						filpUpArrowAnimation(index_fragment_head_category_iv);
-						hideDropdownAnimation(categoryDropdownLayout);
+						hideDropdownAnimation(categoryDropdownLayout, -mCategoryDropdownLayoutHeight);
 						isShowingCategoryLayout = false;
 					}
 					
@@ -278,27 +318,46 @@ public class IndexFragment extends HeaderPullListFragment{
 						//箭头从上到下翻转动画
 						filpDownArrowAnimation(index_fragment_head_sort_iv);
 						//显示分类下拉布局动画
-						showDropdownAnimation(sortDropdownLayout);
+						showDropdownAnimation(sortDropdownLayout, -mSortDropdownLayoutHeight);
+						//显示遮罩层
+						maskLayer.show();
 						isShowingSortLayout = true;
 					} else {
 						//箭头从下到上翻转动画
 						filpUpArrowAnimation(index_fragment_head_sort_iv);
 						//隐藏分类下拉布局动画
-						hideDropdownAnimation(sortDropdownLayout);
+						hideDropdownAnimation(sortDropdownLayout, -mSortDropdownLayoutHeight);
+						//隐藏遮罩层
+						maskLayer.hide();
 						isShowingSortLayout = false;
 					}
+				}
+			});
+		}
+		
+		//分类下拉布局GridView
+		if(index_fragment_head_category_dropdown_gv != null) {
+			index_fragment_head_category_dropdown_gv.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					setCategoryItemStatus(currentCategoryItemView, false);
+					view = ((ViewGroup)view).getChildAt(0);
+					currentCategoryItemView = view;
+					setCategoryItemStatus(currentCategoryItemView, true);
 				}
 			});
 		}
 	}
 	
 	//初始隐藏头部下拉布局动画
-	private void hideHeadDropdownLayoutAnimation(View v) {
+	private void hideHeadDropdownLayoutAnimation(View v, int offset) {
 		if(v != null) {
-			TranslateAnimation tranAnim = new TranslateAnimation(0, 0, 0, -mCategoryDropdownLayoutHeight);
+			TranslateAnimation tranAnim = new TranslateAnimation(0, 0, 0, offset);
 			tranAnim.setDuration(1);
 			tranAnim.setFillAfter(true);
 			v.startAnimation(tranAnim);
+			((DropdownLinearLayout)v).requestAllowDispatchTouchEvent(false);//设置不允许分发事件
 		}
 	}
 
@@ -323,25 +382,53 @@ public class IndexFragment extends HeaderPullListFragment{
 	}
 	
 	//头部下拉布局显示动画
-	private void showDropdownAnimation(View v) {
+	private void showDropdownAnimation(View v, int offset) {
 		if(v != null) {
+			v.setVisibility(View.VISIBLE);
 			//先设置透明度为1.0完全不透明
 			v.setAlpha(1.0f);
 			
-			TranslateAnimation tranAnim = new TranslateAnimation(0, 0, -mCategoryDropdownLayoutHeight, 0);
+			TranslateAnimation tranAnim = new TranslateAnimation(0, 0, offset, 0);
 			tranAnim.setFillAfter(true);
 			tranAnim.setDuration(300);
 			v.startAnimation(tranAnim);
+			((DropdownLinearLayout)v).requestAllowDispatchTouchEvent(true);//设置允许分发事件
 		}
 	}
 	
 	//头部下拉布局隐藏动画
-	private void hideDropdownAnimation(View v) {
+	private void hideDropdownAnimation(View v, int offset) {
 		if(v != null) {
-			TranslateAnimation tranAnim = new TranslateAnimation(0, 0, 0, -mCategoryDropdownLayoutHeight);
+			TranslateAnimation tranAnim = new TranslateAnimation(0, 0, 0, offset);
 			tranAnim.setFillAfter(true);
 			tranAnim.setDuration(300);
 			v.startAnimation(tranAnim);
+			((DropdownLinearLayout)v).requestAllowDispatchTouchEvent(false);//设置不允许分发事件
+		}
+	}
+	
+	@Override
+	public void hideAllDropdownAnimation() {
+		if(isShowingCategoryLayout) {
+			filpUpArrowAnimation(index_fragment_head_category_iv);
+			hideDropdownAnimation(categoryDropdownLayout, -mCategoryDropdownLayoutHeight);
+			isShowingCategoryLayout = false;
+		}
+		if(isShowingSortLayout) {
+			filpUpArrowAnimation(index_fragment_head_sort_iv);
+			hideDropdownAnimation(sortDropdownLayout, -mSortDropdownLayoutHeight);
+			isShowingSortLayout = false;
+		}
+	}
+	
+	private void setCategoryItemStatus(View v, boolean isSelected) {
+		if(v == null) {
+			return;
+		}
+		if(isSelected) {
+			v.setBackground(getResources().getDrawable(R.drawable.index_fragment_head_category_item_background_sel));
+		} else {
+			v.setBackground(getResources().getDrawable(R.drawable.index_fragment_head_category_item_background_nor));
 		}
 	}
 	
@@ -366,4 +453,17 @@ public class IndexFragment extends HeaderPullListFragment{
 	public boolean isShowingSortLayout() {
 		return isShowingSortLayout;
 	}
+	
+	private void setOnclickForListView() {
+		mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				System.out.println("onItemClick");
+				
+			}
+		});
+	}
+	
+	
 }
