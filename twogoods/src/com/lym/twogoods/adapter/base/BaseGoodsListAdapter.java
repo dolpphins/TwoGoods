@@ -1,5 +1,6 @@
 package com.lym.twogoods.adapter.base;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.lym.twogoods.R;
@@ -127,7 +128,14 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 		//商品描述
 		viewHolder.base_goods_listview_item_description.setText(item.getDescription());
 		//左右可滑动图片
-		
+		List<String> pictureUrlList = new ArrayList<String>();
+		int pictureCount = item.getPic_num();
+		for(int i = 0; i < pictureCount; i++) {
+			String s = item.getPic_baseurl() + item.getPic_prefix();
+			pictureUrlList.add(s);
+		}
+		GoodsPictureListAdapter adapter = new GoodsPictureListAdapter(mActivity, pictureUrlList);
+		viewHolder.base_goods_listview_item_pictures.setAdapter(adapter);
 	}
 	
 	/**

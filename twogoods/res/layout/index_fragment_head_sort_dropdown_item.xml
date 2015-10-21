@@ -24,4 +24,16 @@
 	    android:layout_marginRight="@dimen/index_fragment_head_sort_item_marginRight"
 	    android:layout_marginEnd="@dimen/index_fragment_head_sort_item_marginRight"/>
     
+    	<ImageView 
+    	    android:id="@+id/index_fragment_head_sort_icon"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_alignParentRight="true"
+    	    android:layout_alignParentEnd="true"
+    	    android:layout_centerVertical="true"
+    	    android:layout_marginRight="@dimen/index_fragment_head_sort_item_icon_marginRight"
+    	    android:layout_marginEnd="@dimen/index_fragment_head_sort_item_icon_marginRight"
+    	    android:src="@drawable/index_sort_sel_icon"
+    	    android:contentDescription="@null"
+    	    android:visibility="invisible"/>
 </RelativeLayout>

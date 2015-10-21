@@ -8,7 +8,9 @@ import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.config.GoodsCategory;
 import com.lym.twogoods.config.GoodsCategory.Category;
 import com.lym.twogoods.fragment.base.HeaderPullListFragment;
+import com.lym.twogoods.index.adapter.CategoryGridViewAdapter;
 import com.lym.twogoods.index.adapter.IndexGoodsListAdapter;
+import com.lym.twogoods.index.adapter.SortListViewAdapter;
 import com.lym.twogoods.index.interf.DropDownAble;
 import com.lym.twogoods.index.manager.GoodsSortManager;
 import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
@@ -28,7 +30,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -60,8 +61,8 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 	private LinearLayout index_fragment_head_category;
 	private ImageView index_fragment_head_category_iv;
 	private GridView index_fragment_head_category_dropdown_gv;
-	private ArrayAdapter<String> categoryAdapter;
-	private List<String> categoryData;
+	private CategoryGridViewAdapter categoryAdapter;
+	private List<Category> categoryData;
 	private DropdownLinearLayout categoryDropdownLayout;
 	//标记是否正在显示分类下拉布局
 	private boolean isShowingCategoryLayout;
@@ -74,8 +75,8 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 	private LinearLayout index_fragment_head_sort;
 	private ImageView index_fragment_head_sort_iv;
 	private ListView index_fragment_head_sort_dropdown_lv;
-	private ArrayAdapter<String> sortAdapter;
-	private List<String> sortData;
+	private SortListViewAdapter sortAdapter;
+	private List<GoodsSort> sortData;
 	private DropdownLinearLayout sortDropdownLayout;
 	//标记是否正在显示排序下拉布局
 	private boolean isShowingSortLayout;
@@ -96,9 +97,12 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 	//商品数据List
 	private List<Goods> mGoodsList = new ArrayList<Goods>();
 	//当前分类
-	private Category goodsCategory;
-	//当前分类对应的Item View对象
-	private View currentCategoryItemView;
+	private Category mCurrentCategory;
+	private int mCategoryPosition;
+	//
+	private GoodsSort mCurrentGoodsSort;
+	private int mGoodsSortPosition;
+
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -223,28 +227,39 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 	
 	private void initData() {
 		//分类下拉布局数据
-		categoryData = new ArrayList<String>();
+		categoryData = new ArrayList<Category>();
 		Category[] categorys = GoodsCategory.Category.values();
 		if(categorys != null) {
+			int i = 0;
 			for(Category c : categorys) {
-				categoryData.add(GoodsCategory.getString(mAttachActivity, c));
+				categoryData.add(c);
+				if(c.equals(Category.ALL)) {
+					mCurrentCategory = Category.ALL;
+					mCategoryPosition = i;
+				}
+				i++;
 			}
 		}
-		categoryAdapter = new ArrayAdapter<String>(mAttachActivity, R.layout.index_fragment_head_category_dropdown_item,
-				R.id.index_fragment_head_category_name, categoryData);
+		categoryAdapter = new CategoryGridViewAdapter(mAttachActivity, categoryData);
+		categoryAdapter.setDefaultSelectedCategory(mCurrentCategory);//分类默认为所有
 		
 		//排序下拉布局数据
-		sortData = new ArrayList<String>();
+		sortData = new ArrayList<GoodsSortManager.GoodsSort>();
 		GoodsSort[] sorts = GoodsSort.values();
 		if(sorts != null) {
+			int i = 0;
 			for(GoodsSort g : sorts) {
-				sortData.add(GoodsSortManager.getString(mAttachActivity, g));
+				sortData.add(g);
+				if(GoodsSort.NEWEST_PUBLISH.equals(g)) {
+					mGoodsSortPosition = i;
+					mCurrentGoodsSort = g;
+				}
+				i++;
 			}
 		}
 		//注意第二三个参数不要搞错
-		sortAdapter = new ArrayAdapter<String>(mAttachActivity, R.layout.index_fragment_head_sort_dropdown_item,
-				R.id.index_fragment_head_sort_name, sortData);
-		
+		sortAdapter = new SortListViewAdapter(mAttachActivity, sortData);
+		sortAdapter.setDefaultGoodsSort(mCurrentGoodsSort);
 		
 		List<Goods> tempList = GoodsData.getGoodsData(mAttachActivity);
 		mGoodsList.addAll(tempList);
@@ -254,13 +269,7 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 	private void initView() {
 
 		index_fragment_head_category_dropdown_gv.setAdapter(categoryAdapter);
-		//分类默认为所有
-		goodsCategory = Category.ALL;
-		currentCategoryItemView = ((ViewGroup)index_fragment_head_category_dropdown_gv.getChildAt(0)).getChildAt(0);
-		setCategoryItemStatus(currentCategoryItemView, true);
-		
 		index_fragment_head_sort_dropdown_lv.setAdapter(sortAdapter);
-		
 		mListView.setAdapter(mListViewAdapter);
 	}
 	
@@ -341,10 +350,34 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					setCategoryItemStatus(currentCategoryItemView, false);
-					view = ((ViewGroup)view).getChildAt(0);
-					currentCategoryItemView = view;
-					setCategoryItemStatus(currentCategoryItemView, true);
+					categoryAdapter.setCategoryItemStatus(mCategoryPosition, false); 
+					mCategoryPosition = position;
+					mCurrentCategory = categoryAdapter.getCurrentCategory(mCategoryPosition);
+					categoryAdapter.setCategoryItemStatus(mCategoryPosition, true);
+					
+					filpUpArrowAnimation(index_fragment_head_category_iv);
+					hideDropdownAnimation(categoryDropdownLayout, -mCategoryDropdownLayoutHeight);
+					isShowingCategoryLayout = false;
+					maskLayer.hide();
+				}
+			});
+		}
+		
+		//
+		if( index_fragment_head_sort_dropdown_lv != null ) {
+			index_fragment_head_sort_dropdown_lv.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+					sortAdapter.setItemStatus(mGoodsSortPosition, false);
+					mGoodsSortPosition = position;
+					mCurrentGoodsSort = sortAdapter.getCurrentGoodsSort(mGoodsSortPosition);
+					sortAdapter.setItemStatus(mGoodsSortPosition, true);
+					
+					filpUpArrowAnimation(index_fragment_head_sort_iv);
+					hideDropdownAnimation(sortDropdownLayout, -mSortDropdownLayoutHeight);
+					isShowingSortLayout = false;
+					maskLayer.hide();
 				}
 			});
 		}
@@ -418,17 +451,6 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 			filpUpArrowAnimation(index_fragment_head_sort_iv);
 			hideDropdownAnimation(sortDropdownLayout, -mSortDropdownLayoutHeight);
 			isShowingSortLayout = false;
-		}
-	}
-	
-	private void setCategoryItemStatus(View v, boolean isSelected) {
-		if(v == null) {
-			return;
-		}
-		if(isSelected) {
-			v.setBackground(getResources().getDrawable(R.drawable.index_fragment_head_category_item_background_sel));
-		} else {
-			v.setBackground(getResources().getDrawable(R.drawable.index_fragment_head_category_item_background_nor));
 		}
 	}
 	

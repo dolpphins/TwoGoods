@@ -19,19 +19,19 @@ public class DiskCacheManager {
 	private String sBaseDiskCachePath;
 	
 	/** 头像缓存子目录 */
-	private final String sHeadPictureCachePath = "/user/header";
+	private final String sHeadPictureCachePath = "/user/header/";
 	
 	/** 商品图片缓存子目录 */
-	private final String sGoodsPictureCachePath = "/goods/picture";
+	private final String sGoodsPictureCachePath = "/goods/picture/";
 	
 	/** 商品语音缓存子目录 */
-	private final String sGoodsVoiceCachePath = "/goods/voice";
+	private final String sGoodsVoiceCachePath = "/goods/voice/";
 	
 	/** 聊天图片缓存子目录 */
-	private final String sChatPictureCachePath = "/chat/picture";
+	private final String sChatPictureCachePath = "/chat/picture/";
 	
 	/** 聊天语音缓存子目录 */
-	private final String sChatVoiceCachePath = "/chat/voice";
+	private final String sChatVoiceCachePath = "/chat/voice/";
 	
 	private static DiskCacheManager diskCacheManager = new DiskCacheManager();
 	

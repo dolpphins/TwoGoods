@@ -44,7 +44,7 @@
     <dimen name="index_fragment_head_sort_item_marginBottom">8dip</dimen>
     <dimen name="index_fragment_head_sort_item_marginLeft">15dip</dimen>
     <dimen name="index_fragment_head_sort_item_marginRight">15dip</dimen>
-    
+    <dimen name="index_fragment_head_sort_item_icon_marginRight">15dip</dimen>
     
     
     
