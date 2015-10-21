@@ -78,11 +78,9 @@ public class MessageFragment extends PullListFragment implements
 		mSharePreferenceManager = SharePreferenceManager.getInstance();
 		setMode(Mode.PULLDOWN);
 		setAdapter();
-		System.out.println("ref initView");
 		
 		mListView.setOnItemClickListener(this);
 		mListView.setOnItemLongClickListener(this);
-		System.out.println("ref"+getMode());
 	}
 
 	
