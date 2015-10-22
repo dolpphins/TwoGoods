@@ -20,7 +20,7 @@
     <dimen name="app_base_goods_listview_item_dscription_marginBottom">10dip</dimen>
     <dimen name="app_base_goods_listview_item_publishtime_marginRight">10dip</dimen>
     <dimen name="app_base_goods_listview_item_dscription_textSize">16sp</dimen>
-    
+    <dimen name="app_base_goods_listview_item_picture_interval">10dip</dimen>
     
     
     
@@ -45,7 +45,7 @@
     <dimen name="index_fragment_head_sort_item_marginLeft">15dip</dimen>
     <dimen name="index_fragment_head_sort_item_marginRight">15dip</dimen>
     <dimen name="index_fragment_head_sort_item_icon_marginRight">15dip</dimen>
-    
+                  
     
     
     

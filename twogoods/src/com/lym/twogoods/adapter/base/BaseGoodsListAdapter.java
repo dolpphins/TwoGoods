@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -85,7 +86,7 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 			viewHolder.base_goods_listview_item_price = (TextView) convertView.findViewById(R.id.base_goods_listview_item_price);
 			viewHolder.base_goods_listview_item_operation = (TextView) convertView.findViewById(R.id.base_goods_listview_item_operation);
 			viewHolder.base_goods_listview_item_description = (TextView) convertView.findViewById(R.id.base_goods_listview_item_description);
-			viewHolder.base_goods_listview_item_pictures = (GridView) convertView.findViewById(R.id.base_goods_listview_item_pictures);
+			viewHolder.base_goods_gridview_item_pictures = (GridView) convertView.findViewById(R.id.base_goods_gridview_item_pictures);
 			
 			convertView.setTag(viewHolder);
 		}
@@ -112,8 +113,8 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 //		//之后要换成直接调用工具类ImageUtil方法
 		String path = item.getHead_url();
 //		Bitmap bm = BitmapFactory.decodeFile(path);
-		PictureThumbnailSpecification specification = GoodsScreen.getUserHeadPictureThumbnailSpecification(mActivity);
-		Bitmap bm = ImageUtil.getImageThumbnail(path, specification.getWidth(), specification.getHeight());
+		PictureThumbnailSpecification headPictureThumbnailSpecification = GoodsScreen.getUserHeadPictureThumbnailSpecification(mActivity);
+		Bitmap bm = ImageUtil.getImageThumbnail(path, headPictureThumbnailSpecification.getWidth(), headPictureThumbnailSpecification.getHeight());
 		
 		//头像
 		viewHolder.base_goods_listview_item_headpic.setImageBitmap(bm);
@@ -131,11 +132,15 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 		List<String> pictureUrlList = new ArrayList<String>();
 		int pictureCount = item.getPic_num();
 		for(int i = 0; i < pictureCount; i++) {
-			String s = item.getPic_baseurl() + item.getPic_prefix();
+			String s = item.getPic_baseurl() + item.getPic_prefix() + "_" + i + ".jpg";
 			pictureUrlList.add(s);
 		}
 		GoodsPictureListAdapter adapter = new GoodsPictureListAdapter(mActivity, pictureUrlList);
-		viewHolder.base_goods_listview_item_pictures.setAdapter(adapter);
+		PictureThumbnailSpecification goodsPictureThumbnailSpecification = GoodsScreen.getGoodsPictureThumbnailSpecification(mActivity);
+		LayoutParams params = viewHolder.base_goods_gridview_item_pictures.getLayoutParams();
+		params.width = goodsPictureThumbnailSpecification.getWidth() * pictureUrlList.size();
+		viewHolder.base_goods_gridview_item_pictures.setNumColumns(pictureUrlList.size());
+		viewHolder.base_goods_gridview_item_pictures.setAdapter(adapter);
 	}
 	
 	/**
@@ -176,7 +181,7 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 		public TextView base_goods_listview_item_description;
 		
 		/** 左右可滑动图片 */
-		public GridView base_goods_listview_item_pictures;
+		public GridView base_goods_gridview_item_pictures;
 	}
 }
 

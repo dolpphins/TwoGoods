@@ -70,6 +70,7 @@ public final class R {
         /**  商品列表Item 
          */
         public static final int app_base_goods_listview_item_padding=0x7f060009;
+        public static final int app_base_goods_listview_item_picture_interval=0x7f06000f;
         public static final int app_base_goods_listview_item_publishtime_marginRight=0x7f06000d;
         public static final int app_common_actionbar_centerTextSize=0x7f060005;
         public static final int app_common_actionbar_leftTextSize=0x7f060004;
@@ -83,51 +84,51 @@ public final class R {
         public static final int app_coomon_actionbar_paddingRight=0x7f060001;
         /**  app_login_choice
          */
-        public static final int app_login_choice_marRight_Left=0x7f060023;
-        public static final int app_login_choice_marTop=0x7f060024;
+        public static final int app_login_choice_marRight_Left=0x7f060024;
+        public static final int app_login_choice_marTop=0x7f060025;
         public static final int app_main_bottomdock_tab_paddingBottom=0x7f060008;
         /**  公共底部Tab 
          */
         public static final int app_main_bottomdock_tab_paddingTop=0x7f060007;
-        public static final int app_register_left_right_margin=0x7f060027;
-        public static final int app_register_margintop=0x7f060026;
+        public static final int app_register_left_right_margin=0x7f060028;
+        public static final int app_register_margintop=0x7f060027;
         /**  app_login 
  app_register 
          */
-        public static final int app_register_parenttop=0x7f060025;
+        public static final int app_register_parenttop=0x7f060026;
         /**  app_reset_password 
          */
-        public static final int app_reset_passwrod_left_right_marigin=0x7f060028;
-        public static final int index_fragment_head_category_gridview_paddingBottom=0x7f060019;
-        public static final int index_fragment_head_category_gridview_paddingLeft=0x7f06001a;
-        public static final int index_fragment_head_category_gridview_paddingRight=0x7f06001b;
-        public static final int index_fragment_head_category_gridview_paddingTop=0x7f060018;
-        public static final int index_fragment_head_category_item_marginBottom=0x7f060015;
-        public static final int index_fragment_head_category_item_marginLeft=0x7f060016;
-        public static final int index_fragment_head_category_item_marginRight=0x7f060017;
-        public static final int index_fragment_head_category_item_marginTop=0x7f060014;
-        public static final int index_fragment_head_gridview_textSize=0x7f060013;
-        public static final int index_fragment_head_listview_textSize=0x7f06001c;
-        public static final int index_fragment_head_paddingBottom=0x7f060011;
-        public static final int index_fragment_head_paddingTop=0x7f060010;
-        public static final int index_fragment_head_sort_item_icon_marginRight=0x7f060021;
-        public static final int index_fragment_head_sort_item_marginBottom=0x7f06001e;
-        public static final int index_fragment_head_sort_item_marginLeft=0x7f06001f;
-        public static final int index_fragment_head_sort_item_marginRight=0x7f060020;
-        public static final int index_fragment_head_sort_item_marginTop=0x7f06001d;
+        public static final int app_reset_passwrod_left_right_marigin=0x7f060029;
+        public static final int index_fragment_head_category_gridview_paddingBottom=0x7f06001a;
+        public static final int index_fragment_head_category_gridview_paddingLeft=0x7f06001b;
+        public static final int index_fragment_head_category_gridview_paddingRight=0x7f06001c;
+        public static final int index_fragment_head_category_gridview_paddingTop=0x7f060019;
+        public static final int index_fragment_head_category_item_marginBottom=0x7f060016;
+        public static final int index_fragment_head_category_item_marginLeft=0x7f060017;
+        public static final int index_fragment_head_category_item_marginRight=0x7f060018;
+        public static final int index_fragment_head_category_item_marginTop=0x7f060015;
+        public static final int index_fragment_head_gridview_textSize=0x7f060014;
+        public static final int index_fragment_head_listview_textSize=0x7f06001d;
+        public static final int index_fragment_head_paddingBottom=0x7f060012;
+        public static final int index_fragment_head_paddingTop=0x7f060011;
+        public static final int index_fragment_head_sort_item_icon_marginRight=0x7f060022;
+        public static final int index_fragment_head_sort_item_marginBottom=0x7f06001f;
+        public static final int index_fragment_head_sort_item_marginLeft=0x7f060020;
+        public static final int index_fragment_head_sort_item_marginRight=0x7f060021;
+        public static final int index_fragment_head_sort_item_marginTop=0x7f06001e;
         /**  mcb 
          */
-        public static final int index_fragment_head_textSize=0x7f06000f;
-        public static final int index_fragment_head_tv_marginRight=0x7f060012;
+        public static final int index_fragment_head_textSize=0x7f060010;
+        public static final int index_fragment_head_tv_marginRight=0x7f060013;
         /**  lyw 
  lyw_publish 
          */
-        public static final int margintop=0x7f060022;
-        public static final int message_base_scrollview_top_height=0x7f06002a;
+        public static final int margintop=0x7f060023;
+        public static final int message_base_scrollview_top_height=0x7f06002b;
         /**  yjf 
          */
-        public static final int message_list_item_height=0x7f060029;
-        public static final int tab_padding_left_right=0x7f06002b;
+        public static final int message_list_item_height=0x7f06002a;
+        public static final int tab_padding_left_right=0x7f06002c;
     }
     public static final class drawable {
         public static final int add_emotion_icon=0x7f020000;
@@ -293,10 +294,10 @@ public final class R {
         public static final int app_common_actionbar_right_tv=0x7f09000c;
         public static final int app_decorview_bottom_tab=0x7f09001c;
         public static final int app_decorview_content=0x7f09001b;
+        public static final int base_goods_gridview_item_pictures=0x7f090007;
         public static final int base_goods_listview_item_description=0x7f090006;
         public static final int base_goods_listview_item_headpic=0x7f090000;
         public static final int base_goods_listview_item_operation=0x7f090005;
-        public static final int base_goods_listview_item_pictures=0x7f090007;
         public static final int base_goods_listview_item_price=0x7f090004;
         public static final int base_goods_listview_item_publishlocation=0x7f090003;
         public static final int base_goods_listview_item_publishtime=0x7f090002;

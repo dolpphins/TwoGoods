@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lym.twogoods.bean.Goods;
-import com.lym.twogoods.config.DiskCacheManager;
 import com.lym.twogoods.config.UserConfiguration;
+import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.utils.DatabaseHelper;
 
 import android.content.Context;
-import android.database.DatabaseUtils;
 
 public class GoodsData {
 
@@ -24,6 +23,9 @@ public class GoodsData {
 		item1.setPrice(123);
 		item1.setPublish_location("广州市天河区");
 		item1.setPublish_time(System.currentTimeMillis() - 7200);
+		item1.setPic_baseurl(DiskCacheManager.getInstance(context).getGoodsPictureCachePath());
+		item1.setPic_prefix("abc");
+		item1.setPic_num(5);
 		
 		Goods item2 = new Goods();
 		item2.setUsername("user1");
@@ -33,6 +35,9 @@ public class GoodsData {
 		item2.setPrice(123);
 		item2.setPublish_location("广州市天河区");
 		item2.setPublish_time(System.currentTimeMillis() - 7200);
+		item2.setPic_baseurl(DiskCacheManager.getInstance(context).getGoodsPictureCachePath());
+		item2.setPic_prefix("abc");
+		item2.setPic_num(2);
 		
 		Goods item3 = new Goods();
 		item3.setUsername("user1");
@@ -51,11 +56,29 @@ public class GoodsData {
 		item4.setPrice(123);
 		item4.setPublish_location("广州市天河区");
 		item4.setPublish_time(System.currentTimeMillis() - 7200);
+		item4.setPic_baseurl(DiskCacheManager.getInstance(context).getGoodsPictureCachePath());
+		item4.setPic_prefix("abc");
+		item4.setPic_num(6);
 		
 		goodsList.add(item1);
 		goodsList.add(item2);
 		goodsList.add(item3);
 		goodsList.add(item4);
+		
+		for(int i = 0; i < 10; i++) {
+			Goods item = new Goods();
+			item.setUsername("user1");
+			item.setDescription("小米手机");
+			item.setGUID(DatabaseHelper.getUUID().toString());
+			item.setHead_url(DiskCacheManager.getInstance(context).getUserHeadPictureCachePath() + "/" + UserConfiguration.USER_DEFAULT_HEAD_NAME);
+			item.setPrice(123);
+			item.setPublish_location("广州市天河区");
+			item.setPublish_time(System.currentTimeMillis() - 7200);
+			item.setPic_baseurl(DiskCacheManager.getInstance(context).getGoodsPictureCachePath());
+			item.setPic_prefix("abc");
+			item.setPic_num(6);
+			goodsList.add(item);
+		}
 		
 		return goodsList;
 	}

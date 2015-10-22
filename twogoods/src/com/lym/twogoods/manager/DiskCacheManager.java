@@ -1,4 +1,4 @@
-package com.lym.twogoods.config;
+package com.lym.twogoods.manager;
 
 import android.content.Context;
 import android.os.Environment;

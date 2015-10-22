@@ -17,12 +17,12 @@ public class GoodsScreen {
 
 	/**
 	 * <p>
-	 * 	获取用户头像缩略图信息,包括宽高等信息.
+	 * 	获取用户头像缩略图规格,包括宽高等信息.
 	 * </p>
 	 * 
 	 * @param at
 	 * 
-	 * @return 用户头像缩略图信息
+	 * @return 用户头像缩略图规格
 	 * */
 	public static PictureThumbnailSpecification getUserHeadPictureThumbnailSpecification(Activity at) {
 		if(at == null) {
@@ -31,6 +31,25 @@ public class GoodsScreen {
 		PictureThumbnailSpecification specification = new PictureThumbnailSpecification();
 		specification.setWidth(ImageUtil.dp2px(at, 45));
 		specification.setHeight(ImageUtil.dp2px(at, 45));
+		return specification;
+	}
+	
+	/**
+	 * <p>
+	 * 	获取商品列表图片缩略图规格
+	 * </p>
+	 * 
+	 *  @param at
+	 *  
+	 *  @return 商品列表图片缩略图规格
+	 * */
+	public static PictureThumbnailSpecification getGoodsPictureThumbnailSpecification(Activity at) {
+		if(at == null) {
+			return null;
+		}
+		PictureThumbnailSpecification specification = new PictureThumbnailSpecification();
+		specification.setWidth(ImageUtil.dp2px(at, 100));
+		specification.setHeight(ImageUtil.dp2px(at, 100));
 		return specification;
 	}
 }
