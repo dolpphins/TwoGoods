@@ -24,6 +24,30 @@ import android.media.ThumbnailUtils;
  * @author yao
  *
  * */
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.media.ExifInterface;
+import android.media.ThumbnailUtils;
+/**
+ * 与图片操作相关的工具类
+ * 
+ * @author yao
+ *
+ * */
 public class ImageUtil {
 
 	/**
@@ -44,10 +68,32 @@ public class ImageUtil {
 	}
 
 	/**
+	 * 获取给定路径的图片
+	 * 
+	 * @param imagePath 图片所在的完整路径和文件名
+	 * 
+	 * @return 如果imagPath指定的文件为空或者不能转化Bitmap,返回null;否则返回bitmap
+	 * 
+	 * @author yao
+	 */
+	
+	
+	public static Bitmap getImage(String imagePath)
+	{
+		Bitmap bitmap = null;
+		bitmap = BitmapFactory.decodeFile(imagePath);
+		return bitmap;
+	}
+
+	
+	/**
 	 * 获取指定路径下的图片的指定大小的缩略图 getImageThumbnail
 	 * 
+	 * @param imagePath 完整的图片所在路径和图片名字。
+	 * @param width 被缩放后的width,
+	 * @param height 被缩放后的height
+	 * 
 	 * @return Bitmap
-	 * @throws
 	 * 
 	 * @author yao
 	 */
@@ -81,32 +127,44 @@ public class ImageUtil {
 				ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
 		return bitmap;
 	}
+	
+	public static void saveBitmap(String dirpath, String filename,
+			Bitmap bitmap,boolean isdelete) {
+		saveBitmap(dirpath, filename, bitmap);
+	}
 
 	/**
-	 * saveBitmap
+	 * 保存位图到指定的目录里并且给文件命名
 	 * 
-	 * @param @param filename---完整的路径格式-包含目录以及文件名
-	 * @param @param bitmap
-	 * @param @param isDelete --是否只留一张
+	 * @param  dirpath---完整的路径
+	 * @param  filename bitmap文件的名字
+	 * @param  bitmap 需要被存储的位图
 	 * @return void
-	 * @throws
 	 * @author yao
 	 */
 	public static void saveBitmap(String dirpath, String filename,
-			Bitmap bitmap, boolean isDelete) {
+			Bitmap bitmap) {
 		File dir = new File(dirpath);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
 
-		File file = new File(dirpath, filename);
-		// 若存在即删除-默认只保留一张
-		if (isDelete) {
-			if (file.exists()) {
-				file.delete();
-			}
-		}
-
+		String path = dirpath+File.separator+filename;
+		saveBitmap(path, bitmap);
+	}
+	
+	/**
+	 * 保存位图到指定的路径
+	 * 
+	 * @param imagepath 路径和名字
+	 * @param bitmap 要被保存的位图
+	 * 
+	 * @author yao
+	 */
+	public static void saveBitmap(String imagepath,Bitmap bitmap) {
+		File file = new File(imagepath);
+		if(file.exists())
+			file.delete();
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
@@ -115,6 +173,7 @@ public class ImageUtil {
 				e.printStackTrace();
 			}
 		}
+		
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(file);
@@ -136,53 +195,25 @@ public class ImageUtil {
 		}
 	}
 	
-	/**
-	 * getFile
-	 * 
-	 * @param @param filePath---完整的路径格式-包含目录
-	 * @param @param fileName 文件名
-	 * @return void
-	 * @throws
-	 * @author yao
-	 */
-
-	public static File getFile(String filePath, String fileName) {
-		File file = null;
-		makeRootDirectory(filePath);
-		try {
-			file = new File(filePath + fileName);
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return file;
-	}
 
 	public static void makeRootDirectory(String filePath) {
 		File file = null;
-		try {
 			file = new File(filePath);
 			if (!file.exists()) {
 				file.mkdirs();
 			}
-		} catch (Exception e) {
-
-		}
+		
 	}
 
 	/**
 	 * 
 	 * 读取图片属性：旋转的角度
 	 * @param path 图片绝对路径
+	 * 
 	 * @return degree旋转的角度
 	 * 
 	 * @author yao
-	 */
-
+	 **/
 	public static int readPictureDegree(String path) {
 		int degree = 0;
 		try {
@@ -208,9 +239,10 @@ public class ImageUtil {
 
 	}
 
-	/** 旋转图片一定角度
-	  * rotaingImageView
-	  * @return Bitmap
+	/** 将图片旋转指定的角度
+	  * @param angle 旋转的角度
+	  * @param bitmap 要旋转的位图
+	  * @return 旋转后的Bitmap
 	  * @throws
 	  * 
 	  * @author yao
@@ -261,9 +293,9 @@ public class ImageUtil {
 	/**
 	 * 将图片转化为圆形头像 
 	 * 
-	 * @Title: toRoundBitmap
-	 * @throws
+	 * @param bitmap 要被转化的位图
 	 * 
+	 * @return 转化后得到的位图
 	 * @author yao
 	 */
 	public static Bitmap toRoundBitmap(Bitmap bitmap) {
