@@ -39,6 +39,7 @@
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
             android:layout_weight="1.0"
+            android:onClick="toAction"
             android:background="@drawable/message_chat_base_edit_input"
             android:imeOptions="flagNoExtractUi"
             android:minHeight="@dimen/tab_padding_left_right"
@@ -50,6 +51,7 @@
             android:layout_height="30dp"
             android:background="@drawable/message_btn_chat_send_selector"
             android:gravity="center"
+            android:onClick="toAction"
             android:textColor="@color/base_color_text_black" >
         </Button>
         
@@ -88,6 +90,7 @@
             android:visibility="gone" >
 
             <ImageView
+                android:onClick="toAction"
                 android:src="@drawable/message_chat_record"
                 android:id="@+id/message_chat_record"
                 android:layout_width="match_parent"
