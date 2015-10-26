@@ -85,16 +85,24 @@
         <LinearLayout
             android:id="@+id/chat_layout_voice_content"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="150dp"
             android:orientation="vertical"
             android:visibility="gone" >
 
             <ImageView
                 android:onClick="toAction"
+                android:paddingTop="15dip"
                 android:src="@drawable/message_chat_record"
                 android:id="@+id/message_chat_record"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="120dip"
+                android:paddingBottom="15dip" />
+            <TextView
+                android:gravity="center_horizontal"
+                android:text="@string/chat_send_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dip" />
         </LinearLayout>
 
         <include

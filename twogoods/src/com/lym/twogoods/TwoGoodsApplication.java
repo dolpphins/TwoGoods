@@ -2,6 +2,7 @@ package com.lym.twogoods;
 
 import com.lym.twogoods.config.DiskCacheManager;
 import com.lym.twogoods.config.UserConfiguration;
+import com.lym.twogoods.utils.FileUtil;
 import com.lym.twogoods.utils.ImageUtil;
 
 import android.app.Application;
@@ -30,9 +31,20 @@ public class TwoGoodsApplication extends Application{
 	
 	//进行一些准备工作
 	private void prepare() {
+		//创建文件夹
+		DiskCacheManager dcm = DiskCacheManager.getInstance(this);
+		try {
+			FileUtil.createFolder(dcm.getChatPictureCachePath());
+			FileUtil.createFolder(dcm.getChatVoiceCachePath());
+			FileUtil.createFolder(dcm.getGoodsPictureCachePath());
+			FileUtil.createFolder(dcm.getGoodsVoiceCachePath());
+			FileUtil.createFolder(dcm.getUserHeadPictureCachePath());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		//复制默认头像到相应的缓存目录中
 		Bitmap defaultHeadBmp = BitmapFactory.decodeResource(getResources(), UserConfiguration.USER_DEFAULT_HEAD);
-		ImageUtil.saveBitmap(DiskCacheManager.getInstance(this).getUserHeadPictureCachePath(),
+		ImageUtil.saveBitmap(dcm.getUserHeadPictureCachePath(),
 				UserConfiguration.USER_DEFAULT_HEAD_NAME, defaultHeadBmp, true);
 
 	}

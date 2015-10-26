@@ -49,5 +49,9 @@
     <style name="Message_Smile_Black">
         <item name="android:textColor">@color/base_color_text_black</item>
     </style>
+    <style name="anim_popup_dir">
+        <item name="android:windowEnterAnimation">@anim/message_chat_slide_in</item>
+        <item name="android:windowExitAnimation">@anim/message_chat_slide_out</item>
+    </style>
 
 </resources>

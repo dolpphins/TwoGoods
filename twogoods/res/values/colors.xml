@@ -26,8 +26,8 @@
     <color name="index_fragment_head_category_bottomline_color">#cccccc</color>  <!-- 分类下拉布局底部线颜色 -->
     <color name="index_fragment_head_sort_bottomline_color">#cccccc</color>      <!-- 排序下拉布局底部线颜色 -->
     <color name="index_fragment_head_listview_textColor">#898181</color>         <!-- 排序GridView中Item文字颜色 -->
-    
-    
+    <color name="index_fragment_head_category_dropdown_backgroundColor">#ffffff</color>  <!-- 分类下拉布局背景yanse -->
+    <color name="index_fragment_head_sort_dropdown_backgroundColor">#ffffff</color>  <!-- 排序下拉布局背景yanse -->
     
     
     

@@ -11,6 +11,8 @@ public final class R {
     public static final class anim {
         public static final int index_fragment_head_arrow_flip_down=0x7f040000;
         public static final int index_fragment_head_arrow_flip_up=0x7f040001;
+        public static final int message_chat_slide_in=0x7f040002;
+        public static final int message_chat_slide_out=0x7f040003;
     }
     public static final class attr {
     }
@@ -25,11 +27,11 @@ public final class R {
         /**  Tab选项文字选中颜色 
          */
         public static final int app_tab_top_separator=0x7f050003;
-        /**  排序GridView中Item文字颜色 
+        /**  排序下拉布局背景yanse 
  lyw 
  yjf 
          */
-        public static final int base_color_text_black=0x7f05000c;
+        public static final int base_color_text_black=0x7f05000e;
         /**  ActionBar背景颜色 
          */
         public static final int color_bottom_text_normal=0x7f050001;
@@ -40,6 +42,9 @@ public final class R {
         /**  分类GridView中Item文字颜色 
          */
         public static final int index_fragment_head_category_bottomline_color=0x7f050009;
+        /**  排序GridView中Item文字颜色 
+         */
+        public static final int index_fragment_head_category_dropdown_backgroundColor=0x7f05000c;
         public static final int index_fragment_head_gridview_textColor=0x7f050008;
         /**  排序下拉布局底部线颜色 
          */
@@ -48,15 +53,26 @@ public final class R {
         /**  分类下拉布局底部线颜色 
          */
         public static final int index_fragment_head_sort_bottomline_color=0x7f05000a;
+        /**  分类下拉布局背景yanse 
+         */
+        public static final int index_fragment_head_sort_dropdown_backgroundColor=0x7f05000d;
         /**  Tab背景颜色 
  mcb 
          */
         public static final int index_fragment_head_textColor=0x7f050005;
-        public static final int msg_chat_bg=0x7f05000e;
-        public static final int msg_emote_divider=0x7f05000d;
-        public static final int transparent=0x7f05000f;
+        public static final int msg_chat_bg=0x7f050010;
+        public static final int msg_emote_divider=0x7f05000f;
+        public static final int transparent=0x7f050011;
     }
     public static final class dimen {
+        public static final int app_base_goods_listview_item_dscription_marginBottom=0x7f06000c;
+        public static final int app_base_goods_listview_item_dscription_marginTop=0x7f06000b;
+        public static final int app_base_goods_listview_item_dscription_textSize=0x7f06000e;
+        public static final int app_base_goods_listview_item_headpicture_marginRight=0x7f06000a;
+        /**  商品列表Item 
+         */
+        public static final int app_base_goods_listview_item_padding=0x7f060009;
+        public static final int app_base_goods_listview_item_publishtime_marginRight=0x7f06000d;
         public static final int app_common_actionbar_centerTextSize=0x7f060005;
         public static final int app_common_actionbar_leftTextSize=0x7f060004;
         public static final int app_common_actionbar_rightTextSize=0x7f060006;
@@ -69,50 +85,51 @@ public final class R {
         public static final int app_coomon_actionbar_paddingRight=0x7f060001;
         /**  app_login_choice
          */
-        public static final int app_login_choice_marRight_Left=0x7f06001c;
-        public static final int app_login_choice_marTop=0x7f06001d;
+        public static final int app_login_choice_marRight_Left=0x7f060023;
+        public static final int app_login_choice_marTop=0x7f060024;
         public static final int app_main_bottomdock_tab_paddingBottom=0x7f060008;
         /**  公共底部Tab 
          */
         public static final int app_main_bottomdock_tab_paddingTop=0x7f060007;
-        public static final int app_register_left_right_margin=0x7f060020;
-        public static final int app_register_margintop=0x7f06001f;
+        public static final int app_register_left_right_margin=0x7f060027;
+        public static final int app_register_margintop=0x7f060026;
         /**  app_login 
  app_register 
          */
-        public static final int app_register_parenttop=0x7f06001e;
+        public static final int app_register_parenttop=0x7f060025;
         /**  app_reset_password 
          */
-        public static final int app_reset_passwrod_left_right_marigin=0x7f060021;
-        public static final int index_fragment_head_category_gridview_paddingBottom=0x7f060013;
-        public static final int index_fragment_head_category_gridview_paddingLeft=0x7f060014;
-        public static final int index_fragment_head_category_gridview_paddingRight=0x7f060015;
-        public static final int index_fragment_head_category_gridview_paddingTop=0x7f060012;
-        public static final int index_fragment_head_category_item_marginBottom=0x7f06000f;
-        public static final int index_fragment_head_category_item_marginLeft=0x7f060010;
-        public static final int index_fragment_head_category_item_marginRight=0x7f060011;
-        public static final int index_fragment_head_category_item_marginTop=0x7f06000e;
-        public static final int index_fragment_head_gridview_textSize=0x7f06000d;
-        public static final int index_fragment_head_listview_textSize=0x7f060016;
-        public static final int index_fragment_head_paddingBottom=0x7f06000b;
-        public static final int index_fragment_head_paddingTop=0x7f06000a;
-        public static final int index_fragment_head_sort_item_marginBottom=0x7f060018;
-        public static final int index_fragment_head_sort_item_marginLeft=0x7f060019;
-        public static final int index_fragment_head_sort_item_marginRight=0x7f06001a;
-        public static final int index_fragment_head_sort_item_marginTop=0x7f060017;
+        public static final int app_reset_passwrod_left_right_marigin=0x7f060028;
+        public static final int index_fragment_head_category_gridview_paddingBottom=0x7f060019;
+        public static final int index_fragment_head_category_gridview_paddingLeft=0x7f06001a;
+        public static final int index_fragment_head_category_gridview_paddingRight=0x7f06001b;
+        public static final int index_fragment_head_category_gridview_paddingTop=0x7f060018;
+        public static final int index_fragment_head_category_item_marginBottom=0x7f060015;
+        public static final int index_fragment_head_category_item_marginLeft=0x7f060016;
+        public static final int index_fragment_head_category_item_marginRight=0x7f060017;
+        public static final int index_fragment_head_category_item_marginTop=0x7f060014;
+        public static final int index_fragment_head_gridview_textSize=0x7f060013;
+        public static final int index_fragment_head_listview_textSize=0x7f06001c;
+        public static final int index_fragment_head_paddingBottom=0x7f060011;
+        public static final int index_fragment_head_paddingTop=0x7f060010;
+        public static final int index_fragment_head_sort_item_icon_marginRight=0x7f060021;
+        public static final int index_fragment_head_sort_item_marginBottom=0x7f06001e;
+        public static final int index_fragment_head_sort_item_marginLeft=0x7f06001f;
+        public static final int index_fragment_head_sort_item_marginRight=0x7f060020;
+        public static final int index_fragment_head_sort_item_marginTop=0x7f06001d;
         /**  mcb 
          */
-        public static final int index_fragment_head_textSize=0x7f060009;
-        public static final int index_fragment_head_tv_marginRight=0x7f06000c;
+        public static final int index_fragment_head_textSize=0x7f06000f;
+        public static final int index_fragment_head_tv_marginRight=0x7f060012;
         /**  lyw 
  lyw_publish 
          */
-        public static final int margintop=0x7f06001b;
-        public static final int message_base_scrollview_top_height=0x7f060023;
+        public static final int margintop=0x7f060022;
+        public static final int message_base_scrollview_top_height=0x7f06002a;
         /**  yjf 
          */
-        public static final int message_list_item_height=0x7f060022;
-        public static final int tab_padding_left_right=0x7f060024;
+        public static final int message_list_item_height=0x7f060029;
+        public static final int tab_padding_left_right=0x7f06002b;
     }
     public static final class drawable {
         public static final int add_emotion_icon=0x7f020000;
@@ -223,49 +240,57 @@ public final class R {
         public static final int edittext_circle_shape=0x7f020069;
         public static final int ic_launcher=0x7f02006a;
         public static final int index_fragment_head_arrow=0x7f02006b;
-        public static final int index_fragment_head_category_item_background=0x7f02006c;
-        public static final int index_search_icon=0x7f02006d;
-        public static final int location_icon=0x7f02006e;
-        public static final int message_base_comment_emo_bar=0x7f02006f;
-        public static final int message_base_horizontal_line=0x7f020070;
-        public static final int message_btn_chat_add_selector=0x7f020071;
-        public static final int message_btn_chat_emo_selector=0x7f020072;
-        public static final int message_btn_chat_send_selector=0x7f020073;
-        public static final int message_chat_add_location_normal=0x7f020074;
-        public static final int message_chat_add_location_press=0x7f020075;
-        public static final int message_chat_add_location_selector=0x7f020076;
-        public static final int message_chat_add_normal=0x7f020077;
-        public static final int message_chat_add_picture_normal=0x7f020078;
-        public static final int message_chat_add_picture_press=0x7f020079;
-        public static final int message_chat_add_picture_selector=0x7f02007a;
-        public static final int message_chat_add_press=0x7f02007b;
-        public static final int message_chat_add_voice_selector=0x7f02007c;
-        public static final int message_chat_base_edit_input=0x7f02007d;
-        public static final int message_chat_emo_normal=0x7f02007e;
-        public static final int message_chat_emo_press=0x7f02007f;
-        public static final int message_chat_record=0x7f020080;
-        public static final int message_chat_send_n=0x7f020081;
-        public static final int message_chat_send_p=0x7f020082;
-        public static final int message_chat_top_voice_bg=0x7f020083;
-        public static final int message_list_name_color_selector=0x7f020084;
-        public static final int message_list_newmessage2=0x7f020085;
-        public static final int message_list_text_color_selector=0x7f020086;
-        public static final int publish_btn=0x7f020087;
-        public static final int tab_home_btn=0x7f020088;
-        public static final int tab_home_normal_button=0x7f020089;
-        public static final int tab_home_pressed_button=0x7f02008a;
-        public static final int tab_message_btn=0x7f02008b;
-        public static final int tab_message_normal_button=0x7f02008c;
-        public static final int tab_message_pressed_button=0x7f02008d;
-        public static final int tab_mine_btn=0x7f02008e;
-        public static final int tab_mine_normal_button=0x7f02008f;
-        public static final int tab_mine_pressed_button=0x7f020090;
-        public static final int tab_near_normal_button=0x7f020091;
-        public static final int tab_near_pressed_button=0x7f020092;
-        public static final int tab_nearby_btn=0x7f020093;
-        public static final int tab_textcolor=0x7f020094;
-        public static final int user_default_head=0x7f020095;
-        public static final int xlistview_arrow=0x7f020096;
+        public static final int index_fragment_head_category_item_background_nor=0x7f02006c;
+        public static final int index_fragment_head_category_item_background_sel=0x7f02006d;
+        public static final int index_search_icon=0x7f02006e;
+        public static final int index_sort_sel_icon=0x7f02006f;
+        public static final int location_icon=0x7f020070;
+        public static final int message_base_comment_emo_bar=0x7f020071;
+        public static final int message_base_horizontal_line=0x7f020072;
+        public static final int message_btn_chat_add_selector=0x7f020073;
+        public static final int message_btn_chat_emo_selector=0x7f020074;
+        public static final int message_btn_chat_send_selector=0x7f020075;
+        public static final int message_chat_add_location_normal=0x7f020076;
+        public static final int message_chat_add_location_press=0x7f020077;
+        public static final int message_chat_add_location_selector=0x7f020078;
+        public static final int message_chat_add_normal=0x7f020079;
+        public static final int message_chat_add_picture_normal=0x7f02007a;
+        public static final int message_chat_add_picture_press=0x7f02007b;
+        public static final int message_chat_add_picture_selector=0x7f02007c;
+        public static final int message_chat_add_press=0x7f02007d;
+        public static final int message_chat_add_voice_selector=0x7f02007e;
+        public static final int message_chat_base_edit_input=0x7f02007f;
+        public static final int message_chat_camera=0x7f020080;
+        public static final int message_chat_dir_choose=0x7f020081;
+        public static final int message_chat_emo_normal=0x7f020082;
+        public static final int message_chat_emo_press=0x7f020083;
+        public static final int message_chat_pic_dir=0x7f020084;
+        public static final int message_chat_picture_unselected=0x7f020085;
+        public static final int message_chat_pictures_no=0x7f020086;
+        public static final int message_chat_pictures_selected=0x7f020087;
+        public static final int message_chat_record=0x7f020088;
+        public static final int message_chat_send_n=0x7f020089;
+        public static final int message_chat_send_p=0x7f02008a;
+        public static final int message_chat_top_voice_bg=0x7f02008b;
+        public static final int message_list_name_color_selector=0x7f02008c;
+        public static final int message_list_newmessage2=0x7f02008d;
+        public static final int message_list_text_color_selector=0x7f02008e;
+        public static final int publish_btn=0x7f02008f;
+        public static final int tab_home_btn=0x7f020090;
+        public static final int tab_home_normal_button=0x7f020091;
+        public static final int tab_home_pressed_button=0x7f020092;
+        public static final int tab_message_btn=0x7f020093;
+        public static final int tab_message_normal_button=0x7f020094;
+        public static final int tab_message_pressed_button=0x7f020095;
+        public static final int tab_mine_btn=0x7f020096;
+        public static final int tab_mine_normal_button=0x7f020097;
+        public static final int tab_mine_pressed_button=0x7f020098;
+        public static final int tab_near_normal_button=0x7f020099;
+        public static final int tab_near_pressed_button=0x7f02009a;
+        public static final int tab_nearby_btn=0x7f02009b;
+        public static final int tab_textcolor=0x7f02009c;
+        public static final int user_default_head=0x7f02009d;
+        public static final int xlistview_arrow=0x7f02009e;
     }
     public static final class id {
         public static final int app_common_actionbar_center_iv=0x7f09000b;
@@ -294,10 +319,10 @@ public final class R {
         public static final int btn_register_register=0x7f090023;
         public static final int btn_reset_password_code_get=0x7f09002a;
         public static final int btn_reset_password_verification=0x7f090029;
-        public static final int chat_layout_add_content=0x7f090042;
-        public static final int chat_layout_emo_content=0x7f09003e;
-        public static final int chat_layout_more=0x7f09003d;
-        public static final int chat_layout_voice_content=0x7f090040;
+        public static final int chat_layout_add_content=0x7f090043;
+        public static final int chat_layout_emo_content=0x7f09003f;
+        public static final int chat_layout_more=0x7f09003e;
+        public static final int chat_layout_voice_content=0x7f090041;
         public static final int et_login_code=0x7f090010;
         public static final int et_login_erhuo=0x7f09000e;
         public static final int et_login_password=0x7f09000f;
@@ -310,49 +335,61 @@ public final class R {
         public static final int et_register_phone=0x7f090024;
         public static final int et_reset_password__phone=0x7f090028;
         public static final int et_reset_password_code=0x7f090027;
+        public static final int id_bottom_ly=0x7f09004b;
+        public static final int id_choose_dir=0x7f09004c;
+        public static final int id_dir_item_count=0x7f090049;
+        public static final int id_dir_item_image=0x7f090047;
+        public static final int id_dir_item_name=0x7f090048;
+        public static final int id_gridView=0x7f09004a;
+        public static final int id_item_image=0x7f090044;
+        public static final int id_item_select=0x7f090045;
+        public static final int id_list_dir=0x7f090046;
+        public static final int id_total_count=0x7f09004d;
         public static final int index_fragment_head_category=0x7f09002d;
         public static final int index_fragment_head_category_dropdown_gv=0x7f09002c;
         public static final int index_fragment_head_category_iv=0x7f09002f;
         public static final int index_fragment_head_category_name=0x7f09002b;
         public static final int index_fragment_head_category_tv=0x7f09002e;
         public static final int index_fragment_head_sort=0x7f090030;
-        public static final int index_fragment_head_sort_dropdown_lv=0x7f090034;
+        public static final int index_fragment_head_sort_dropdown_lv=0x7f090035;
+        public static final int index_fragment_head_sort_icon=0x7f090034;
         public static final int index_fragment_head_sort_iv=0x7f090032;
         public static final int index_fragment_head_sort_name=0x7f090033;
         public static final int index_fragment_head_sort_tv=0x7f090031;
-        public static final int item=0x7f090044;
-        public static final int item_dialog_list_lv=0x7f090043;
-        public static final int message_chat_btn_add=0x7f090039;
-        public static final int message_chat_btn_emo=0x7f09003a;
-        public static final int message_chat_btn_send=0x7f09003c;
-        public static final int message_chat_edit_user_comment=0x7f09003b;
-        public static final int message_chat_mListView=0x7f090035;
-        public static final int message_chat_pager_emo=0x7f09003f;
-        public static final int message_chat_record=0x7f090041;
-        public static final int message_chat_tv_location=0x7f090038;
-        public static final int message_chat_tv_picture=0x7f090036;
-        public static final int message_chat_tv_voice=0x7f090037;
-        public static final int message_list_iv_recent_avatar=0x7f090045;
-        public static final int message_list_iv_recent_avatar_head=0x7f090046;
-        public static final int message_list_tv_recent_msg=0x7f090049;
-        public static final int message_list_tv_recent_name=0x7f090048;
-        public static final int message_list_tv_recent_time=0x7f09004a;
-        public static final int message_list_tv_recent_unread=0x7f090047;
+        public static final int item=0x7f090050;
+        public static final int item_dialog_list_lv=0x7f09004f;
+        public static final int message_chat_btn_add=0x7f09003a;
+        public static final int message_chat_btn_emo=0x7f09003b;
+        public static final int message_chat_btn_send=0x7f09003d;
+        public static final int message_chat_edit_user_comment=0x7f09003c;
+        public static final int message_chat_mListView=0x7f090036;
+        public static final int message_chat_pager_emo=0x7f090040;
+        public static final int message_chat_record=0x7f090042;
+        public static final int message_chat_take_photo_iv=0x7f09004e;
+        public static final int message_chat_tv_location=0x7f090039;
+        public static final int message_chat_tv_picture=0x7f090037;
+        public static final int message_chat_tv_voice=0x7f090038;
+        public static final int message_list_iv_recent_avatar=0x7f090051;
+        public static final int message_list_iv_recent_avatar_head=0x7f090052;
+        public static final int message_list_tv_recent_msg=0x7f090055;
+        public static final int message_list_tv_recent_name=0x7f090054;
+        public static final int message_list_tv_recent_time=0x7f090056;
+        public static final int message_list_tv_recent_unread=0x7f090053;
         public static final int publish_btn=0x7f090018;
         public static final int tab_home_btn=0x7f090016;
         public static final int tab_message_btn=0x7f090019;
         public static final int tab_mine_btn=0x7f09001a;
         public static final int tab_nearby_btn=0x7f090017;
-        public static final int xlistview_footer_content=0x7f09004b;
-        public static final int xlistview_footer_hint_textview=0x7f09004d;
-        public static final int xlistview_footer_progressbar=0x7f09004c;
-        public static final int xlistview_header_arrow=0x7f090053;
-        public static final int xlistview_header_content=0x7f09004e;
-        public static final int xlistview_header_hint_textview=0x7f090050;
-        public static final int xlistview_header_progressbar=0x7f090054;
-        public static final int xlistview_header_text=0x7f09004f;
-        public static final int xlistview_header_time=0x7f090052;
-        public static final int xlistview_header_time_tip=0x7f090051;
+        public static final int xlistview_footer_content=0x7f090057;
+        public static final int xlistview_footer_hint_textview=0x7f090059;
+        public static final int xlistview_footer_progressbar=0x7f090058;
+        public static final int xlistview_header_arrow=0x7f09005f;
+        public static final int xlistview_header_content=0x7f09005a;
+        public static final int xlistview_header_hint_textview=0x7f09005c;
+        public static final int xlistview_header_progressbar=0x7f090060;
+        public static final int xlistview_header_text=0x7f09005b;
+        public static final int xlistview_header_time=0x7f09005e;
+        public static final int xlistview_header_time_tip=0x7f09005d;
     }
     public static final class layout {
         public static final int app_base_goods_listview_item=0x7f030000;
@@ -376,11 +413,16 @@ public final class R {
         public static final int message_chat_activity=0x7f030012;
         public static final int message_chat_add_content=0x7f030013;
         public static final int message_chat_bottom_bar=0x7f030014;
-        public static final int message_dialog=0x7f030015;
-        public static final int message_dialog_item=0x7f030016;
-        public static final int message_list_item_conversation=0x7f030017;
-        public static final int xlistview_footer=0x7f030018;
-        public static final int xlistview_header=0x7f030019;
+        public static final int message_chat_grid_item=0x7f030015;
+        public static final int message_chat_list_dir=0x7f030016;
+        public static final int message_chat_list_dir_item=0x7f030017;
+        public static final int message_chat_send_local_picture=0x7f030018;
+        public static final int message_chat_take_photo=0x7f030019;
+        public static final int message_dialog=0x7f03001a;
+        public static final int message_dialog_item=0x7f03001b;
+        public static final int message_list_item_conversation=0x7f03001c;
+        public static final int xlistview_footer=0x7f03001d;
+        public static final int xlistview_header=0x7f03001e;
     }
     public static final class string {
         public static final int action_settings=0x7f070040;
@@ -391,10 +433,14 @@ public final class R {
         /**  商品分类 
          */
         public static final int category_all=0x7f07000b;
+        public static final int chat_finish_camera=0x7f070044;
         public static final int chat_location=0x7f07003d;
         /**  yjf 
          */
         public static final int chat_picture=0x7f07003c;
+        public static final int chat_select_picture=0x7f070042;
+        public static final int chat_send_picture=0x7f070043;
+        public static final int chat_send_voice=0x7f070041;
         public static final int chat_voice=0x7f07003e;
         public static final int clothing=0x7f07000e;
         public static final int confirm=0x7f070028;
@@ -500,6 +546,7 @@ public final class R {
         public static final int AppTheme=0x7f080001;
         public static final int Message_Smile_Black=0x7f080004;
         public static final int Message_Smile_avadar=0x7f080003;
+        public static final int anim_popup_dir=0x7f080005;
         /**  yjf 
  自定义dialog样式 
          */

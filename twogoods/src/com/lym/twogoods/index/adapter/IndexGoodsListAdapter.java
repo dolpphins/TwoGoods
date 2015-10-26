@@ -5,7 +5,7 @@ import java.util.List;
 import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
 import com.lym.twogoods.bean.Goods;
 
-import android.content.Context;
+import android.app.Activity;
 
 /**
  * <p>
@@ -16,8 +16,8 @@ import android.content.Context;
  * */
 public class IndexGoodsListAdapter extends BaseGoodsListAdapter{
 
-	public IndexGoodsListAdapter(Context context, List<Goods> goodsList) {
-		super(context, goodsList);
+	public IndexGoodsListAdapter(Activity at, List<Goods> goodsList) {
+		super(at, goodsList);
 	}
 
 }

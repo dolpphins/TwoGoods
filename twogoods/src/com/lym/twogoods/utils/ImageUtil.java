@@ -29,7 +29,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import com.lym.twogoods.screen.BaseScreen;
+
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -49,6 +52,95 @@ import android.media.ThumbnailUtils;
  *
  * */
 public class ImageUtil {
+	
+	
+	 /**
+	   * @description 计算图片的压缩比率
+	   *
+	   * @param options 参数
+	   * @param reqWidth 目标的宽度
+	   * @param reqHeight 目标的高度
+	   * @retrue 缩放比
+	   */
+	  private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+	    // 源图片的高度和宽度
+	    final int height = options.outHeight;
+	    final int width = options.outWidth;
+	    int inSampleSize = 1;
+	    if (height > reqHeight || width > reqWidth) {
+	      // 计算出实际宽高和目标宽高的比率
+	      final int halfHeight = height / 2;
+	      final int halfWidth = width / 2;
+	      while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
+	        inSampleSize *= 2;
+	      }
+	    }
+	    return inSampleSize;
+	  }
+	  /**
+	   * @description 通过传入的bitmap，进行压缩，得到符合标准的bitmap
+	   *
+	   * @param src
+	   * @param dstWidth
+	   * @param dstHeight
+	   * 
+	   * @return 缩放后的bitmap
+	   * 
+	   * @author yao
+	   */
+	  private static Bitmap createScaleBitmap(Bitmap src, int dstWidth, int dstHeight, int inSampleSize) {
+	    //如果inSampleSize是2的倍数，也就说这个src已经是我们想要的缩略图了，直接返回即可。
+	    if (inSampleSize % 2 == 0) {
+	      return src;
+	    }
+	    // 如果是放大图片，filter决定是否平滑，如果是缩小图片，filter无影响，我们这里是缩小图片，所以直接设置为false
+	    Bitmap dst = Bitmap.createScaledBitmap(src, dstWidth, dstHeight, false);
+	    if (src != dst) { // 如果没有缩放，那么不回收
+	      src.recycle(); // 释放Bitmap的native像素数组
+	    }
+	    return dst;
+	  }
+	  /**
+	   * @description 从Resources中加载图片
+	   *
+	    * @param res 项目资源。
+		 * @param width 被缩放后的width,
+		 * @param height 被缩放后的height
+		 * 
+		 * @return Bitmap
+		 * 
+		 * @author yao
+	   */
+	  public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
+	    final BitmapFactory.Options options = new BitmapFactory.Options();
+	    options.inJustDecodeBounds = true; // 设置成了true,不占用内存，只获取bitmap宽高
+	    BitmapFactory.decodeResource(res, resId, options); // 读取图片长款
+	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight); // 调用上面定义的方法计算inSampleSize值
+	    // 使用获取到的inSampleSize值再次解析图片
+	    options.inJustDecodeBounds = false;
+	    Bitmap src = BitmapFactory.decodeResource(res, resId, options); // 载入一个稍大的缩略图
+	    return createScaleBitmap(src, reqWidth, reqHeight, options.inSampleSize); // 进一步得到目标大小的缩略图
+	  }
+	  	/**
+	  	 * 获取指定路径下的图片的指定大小的缩略图 
+		 * 
+		 * @param imagePath 完整的图片所在路径和图片名字。
+		 * @param width 被缩放后的width,
+		 * @param height 被缩放后的height
+		 * 
+		 * @return Bitmap
+		 * 
+		 * @author yao
+		 */
+	  public static Bitmap decodeSampledBitmapFromFile(String pathName, int reqWidth, int reqHeight) {
+	    final BitmapFactory.Options options = new BitmapFactory.Options();
+	    options.inJustDecodeBounds = true;
+	    BitmapFactory.decodeFile(pathName, options);
+	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+	    options.inJustDecodeBounds = false;
+	    Bitmap src = BitmapFactory.decodeFile(pathName, options);
+	    return createScaleBitmap(src, reqWidth, reqHeight, options.inSampleSize);
+	  }
 
 	/**
 	 * 回收垃圾 recycle
@@ -68,7 +160,11 @@ public class ImageUtil {
 	}
 
 	/**
-	 * 获取给定路径的图片
+	 * <p>
+	 * 获取给定路径的图片.考虑到需适应ImageView的大小,不建议使用这个方法获取bitmap.建议调用getImageThumbnail
+	 * 或者decodeSampledBitmapFromFile来适应ImageView的大小。具体实现:先获取ImageView的宽高,作为getImageThumbnail和
+	 * decodeSampledBitmapFromFile函数的相应参数,从而进行适应大小.
+	 * </p>
 	 * 
 	 * @param imagePath 图片所在的完整路径和文件名
 	 * 
@@ -81,13 +177,27 @@ public class ImageUtil {
 	public static Bitmap getImage(String imagePath)
 	{
 		Bitmap bitmap = null;
-		bitmap = BitmapFactory.decodeFile(imagePath);
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		// 获取这个图片的宽和高，注意此处的bitmap为null
+		bitmap = BitmapFactory.decodeFile(imagePath, options);
+		options.inJustDecodeBounds = false; // 设为 false
+		int h = options.outHeight;
+		int w = options.outWidth;
+		options.inSampleSize = 1;
+		// 重新读入图片，读取缩放后的bitmap，注意这次要把options.inJustDecodeBounds 设为 false
+		bitmap = BitmapFactory.decodeFile(imagePath, options);
+		
+		bitmap = ThumbnailUtils.extractThumbnail(bitmap, w, h,
+				ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
 		return bitmap;
 	}
+	
 
 	
 	/**
-	 * 获取指定路径下的图片的指定大小的缩略图 getImageThumbnail
+	 * 获取指定路径下的图片的指定大小的缩略图 getImageThumbnail，功能通过decodeSampledBitmapFromFile(
+	 * imagePath, width, height)实现
 	 * 
 	 * @param imagePath 完整的图片所在路径和图片名字。
 	 * @param width 被缩放后的width,
@@ -99,34 +209,18 @@ public class ImageUtil {
 	 */
 	public static Bitmap getImageThumbnail(String imagePath, int width,
 			int height) {
-		Bitmap bitmap = null;
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		// 获取这个图片的宽和高，注意此处的bitmap为null
-		bitmap = BitmapFactory.decodeFile(imagePath, options);
-		options.inJustDecodeBounds = false; // 设为 false
-		// 计算缩放比
-		int h = options.outHeight;
-		int w = options.outWidth;
-		int beWidth = w / width;
-		int beHeight = h / height;
-		int be = 1;
-		if (beWidth < beHeight) {
-			be = beWidth;
-		} else {
-			be = beHeight;
-		}
-		if (be <= 0) {
-			be = 1;
-		}
-		options.inSampleSize = be;
-		// 重新读入图片，读取缩放后的bitmap，注意这次要把options.inJustDecodeBounds 设为 false
-		bitmap = BitmapFactory.decodeFile(imagePath, options);
-		// 利用ThumbnailUtils来创建缩略图，这里要指定要缩放哪个Bitmap对象
-		bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height,
-				ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
-		return bitmap;
+		return decodeSampledBitmapFromFile(imagePath, width, height);
 	}
+	
+	/**
+	 * 保存图片到指定路径。功能通过调用saveBitmap(String dirpath, String filename,
+	 *		Bitmap bitmap)实现
+	 * @param dirpath  图片的路径
+	 * @param  filename bitmap文件的名字
+	 * @param  bitmap 需要被存储的位图
+	 * @param isdelete 待拓展的参数,现在true和false结果都一样
+	 * 
+	 */
 	
 	public static void saveBitmap(String dirpath, String filename,
 			Bitmap bitmap,boolean isdelete) {

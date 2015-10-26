@@ -14,12 +14,12 @@ public class FileUtil {
 	
 	 /** 
      * 创建文件夹，如果文件夹存在则不进行创建。 
-     * @param path 
-     * @throws Exception 
+     * @param 要创建的文件夹路径 
+     * 
      * 
      *  @author yao
      */  
-    public static void createFolder(String path) throws Exception{  
+    public static void createFolder(String path) {  
         path = separatorReplace(path);  
         File folder = new File(path);  
         if(folder.isDirectory()){  
@@ -30,32 +30,15 @@ public class FileUtil {
         folder.mkdirs();  
     }  
       
-    /** 
-     * 创建一个新的文件夹，如果文件夹存在，则删除后再创建。 
-     * @param path 
-     * @throws Exception 
-     * 
-     * @author yao
-     */  
-    public static void createNewFolder(String path) throws Exception{  
-        path = separatorReplace(path);  
-        File folder = new File(path);  
-        if(folder.isDirectory()){  
-            deleteFolder(path);  
-        }else if(folder.isFile()){  
-            deleteFile(path);  
-        }  
-        folder.mkdirs();  
-    }  
+    
       
     /** 
      * 创建一个文件，如果文件存在则不进行创建。 
-     * @param path 
-     * @throws Exception 
+     * @param path 文件的路径
      * 
      * @author yao
      */  
-    public static File createFile(String path) throws Exception{  
+    public static File createFile(String path) {  
         path = separatorReplace(path);  
         File file = new File(path);  
         if(file.isFile()){  
@@ -65,25 +48,7 @@ public class FileUtil {
         }  
         return createFile(file);  
     }  
-      
-    /** 
-     * 创建一个新文件，如果存在同名的文件或文件夹将会删除该文件或文件夹， 
-     * 如果父目录不存在则创建父目录。 
-     * @param path 
-     * @throws Exception 
-     * 
-     * @author yao
-     */  
-    public static File createNewFile(String path) throws Exception{  
-        path = separatorReplace(path);  
-        File file = new File(path);  
-        if(file.isFile()){  
-            deleteFile(path);  
-        }else if(file.isDirectory()){  
-            deleteFolder(path);  
-        }  
-        return createFile(file);  
-    }  
+    
       
     /** 
      * 分隔符替换 
@@ -314,10 +279,10 @@ public class FileUtil {
     public static File getFile(String path){  
         path = separatorReplace(path);                
         File file = new File(path);  
-        if(!file.isFile()){ 
-        	return null;
+        if(file.isFile()){ 
+        	return file;
         }  
-        return file;  
+        return null;  
     }  
       
     /** 
@@ -332,10 +297,10 @@ public class FileUtil {
     public static File getFolder(String path) {  
         path = separatorReplace(path);                
         File folder = new File(path);  
-        if(!folder.isDirectory()){ 
-        	return null;
+        if(folder.isDirectory()){ 
+        	return folder;
         }  
-        return folder;  
+        return null;  
     }  
       
     /** 
