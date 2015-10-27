@@ -24,6 +24,9 @@ public class ChatConfiguration {
 	/** 消息类型:语音 */
 	public final static int TYPE_MESSAGE_VOICE = 3;
 	
+	/** 消息类型:位置*/
+	public final static int TYPE_MESSAGE_LOCATION = 4;
+	
 	
 	/**
 	 * 消息发送方向

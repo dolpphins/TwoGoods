@@ -39,6 +39,7 @@
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
             android:layout_weight="1.0"
+            android:onClick="toAction"
             android:background="@drawable/message_chat_base_edit_input"
             android:imeOptions="flagNoExtractUi"
             android:minHeight="@dimen/tab_padding_left_right"
@@ -50,6 +51,7 @@
             android:layout_height="30dp"
             android:background="@drawable/message_btn_chat_send_selector"
             android:gravity="center"
+            android:onClick="toAction"
             android:textColor="@color/base_color_text_black" >
         </Button>
         
@@ -83,15 +85,47 @@
         <LinearLayout
             android:id="@+id/chat_layout_voice_content"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="150dp"
             android:orientation="vertical"
             android:visibility="gone" >
-
-            <ImageView
-                android:src="@drawable/message_chat_record"
-                android:id="@+id/message_chat_record"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+			 <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="120dp"
+	            android:weightSum="3"
+	            android:orientation="horizontal" >
+	            <TextView
+	                android:id="@+id/message_chat_finish_recond_tip_tv"
+	                android:layout_weight="1"
+	                android:layout_gravity="center_horizontal"
+	                android:text="@string/chat_finish_recond_send"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:visibility="invisible"/>
+	            <ImageView
+	                android:layout_gravity="center"
+	                android:layout_weight="1"
+	                android:paddingTop="5dip"
+	                android:src="@drawable/message_chat_record"
+	                android:id="@+id/message_chat_record"
+	                android:layout_width="match_parent"
+	                android:layout_height="120dip"
+	                android:paddingBottom="5dip" />
+	            <ImageView
+	                android:layout_weight="1"
+	                android:src="@drawable/message_chat_reconding_audio1"
+	                android:id="@+id/message_chat_show_is_recording_iv"
+	                android:layout_width="wrap_content"
+	                android:visibility="invisible"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_horizontal" />
+	         </LinearLayout>
+            <TextView
+                android:id="@+id/message_chat_recond_press_tip"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/chat_send_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dip" />
         </LinearLayout>
 
         <include

@@ -1,7 +1,10 @@
 package com.lym.twogoods.fragment;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import me.maxwin.view.XListView;
 import android.content.Intent;
@@ -19,7 +22,11 @@ import cn.bmob.im.bean.BmobChatUser;
 import cn.bmob.im.bean.BmobRecent;
 import cn.bmob.im.db.BmobDB;
 
+import com.j256.ormlite.dao.Dao;
 import com.lym.twogoods.R;
+import com.lym.twogoods.bean.ChatSnapshot;
+import com.lym.twogoods.bean.User;
+import com.lym.twogoods.db.OrmDatabaseHelper;
 import com.lym.twogoods.fragment.base.PullListFragment;
 import com.lym.twogoods.message.MessageDialog;
 import com.lym.twogoods.message.MessageDialog.MyItemOnClickListener;
@@ -86,9 +93,8 @@ public class MessageFragment extends PullListFragment implements
 	
 	protected void setAdapter() {
 	
-//		 adapter = new MessageAdapter(getActivity(),
-//				R.layout.message_list_item_conversation,BmobDB.
-//				create(getActivity()).queryRecents());
+	/*	 adapter = new MessageAdapter(getActivity(),
+				R.layout.message_list_item_conversation,queryRecent());*/
 		int images[] = {R.drawable.user_default_head,R.drawable.user_default_head,
 				R.drawable.user_default_head,R.drawable.user_default_head,
 				R.drawable.user_default_head};
@@ -97,19 +103,48 @@ public class MessageFragment extends PullListFragment implements
 		super.setAdapter(adapter);
 	}
 	
+	/**
+	 *查询全部最近的消息
+	 * @return
+	 */
+	public List<ChatSnapshot> queryRecent()
+	{
+		List<ChatSnapshot> list = null;
+		OrmDatabaseHelper helper = new OrmDatabaseHelper(getActivity());
+		Dao<ChatSnapshot,Integer> mChatDao = helper.getChatSnapshotDao();
+		Map<String, Object>map = new HashMap<String, Object>();
+		map.put("username", getCurrentErHuoHao());
+		try {
+			list = mChatDao.queryForFieldValues(map);
+		} catch (SQLException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	private String getCurrentErHuoHao() {
+		// TODO 自动生成的方法存根
+		return null;
+	}
+	
+	private User getCurrentUser()
+	{
+		User user = null;
+		return user;
+	}
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		BmobRecent recent = adapter.getItem(position);
+		ChatSnapshot recent = adapter.getItem(position);
 		showDeleteDialog(recent);
 		return true;
 	}
 	
-	public void showDeleteDialog(final BmobRecent recent) {
+	public void showDeleteDialog(final ChatSnapshot recent) {
 		
-		final List<BmobRecent> list = BmobDB.create(getActivity()).queryRecents();
-		
+		final List<ChatSnapshot>list = queryRecent();
 		dialogTips = new ArrayList<String>();
 		dialogTips.add("删除会话");
 		dialogTips.add("消息置顶");
@@ -121,11 +156,12 @@ public class MessageFragment extends PullListFragment implements
 			@Override
 			public void itemOnClick(int position) {
 				
-				BmobRecent mBmobRecent = list.get(position);
+				ChatSnapshot mChatSnapshot = list.get(position);
 				
-				adapter.remove(mBmobRecent); // 此处只是模仿数据删除，如果mTestList用的是数据库的数据或者是别的，需先删除数据库，否则下次进入程序还是会出现删除的数据
+				adapter.remove(mChatSnapshot); // 此处只是模仿数据删除，如果mTestList用的是数据库的数据或者是别的，需先删除数据库，否则下次进入程序还是会出现删除的数据
 				
-				BmobDB.create(getActivity()).deleteRecent(mBmobRecent.getTargetid());
+				
+				//BmobDB.create(getActivity()).deleteRecent(mChatSnapshot.getOther_username()());
 				adapter.notifyDataSetChanged();
 				
 				mDialog.cancel();
@@ -137,17 +173,20 @@ public class MessageFragment extends PullListFragment implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-//		
-//		BmobRecent recent = adapter.getItem(position);
-//		//重置未读消息
-//		BmobDB.create(getActivity()).resetUnread(recent.getTargetid());
-//		//组装聊天对象
-//		BmobChatUser user = new BmobChatUser();
-//		user.setAvatar(recent.getAvatar());
-//		user.setNick(recent.getNick());
-//		user.setUsername(recent.getUserName());
-//		user.setObjectId(recent.getTargetid());
+	
+		/*BmobRecent recent = adapter.getItem(position);
+		//重置未读消息
+		BmobDB.create(getActivity()).resetUnread(recent.getTargetid());
+		//组装聊天对象
+		BmobChatUser user = new BmobChatUser();
+		user.setAvatar(recent.getAvatar());
+		user.setNick(recent.getNick());
+		user.setUsername(recent.getUserName());
+		user.setObjectId(recent.getTargetid());*/
+		
 		Intent intent = new Intent(getActivity(), ChatActivity.class);
+//		intent.putExtra("user", user);
+//		User user = ;
 //		intent.putExtra("user", user);
 		startActivity(intent);
 	}
