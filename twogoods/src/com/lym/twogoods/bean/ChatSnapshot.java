@@ -37,6 +37,8 @@ public class ChatSnapshot extends BmobObject{
 	/** 最后一条消息内容,类型为文字为文字内容,图片或语音为url */
 	@DatabaseField
 	private String last_message;
+	/**用户头像的url*/
+	private String head_url;
 	
 	/** 最后一条消息类型,默认为{@link ChatConfiguration#TYPE_MESSAGE_UNKNOWN} */
 	@DatabaseField
@@ -97,7 +99,14 @@ public class ChatSnapshot extends BmobObject{
 	public void setLast_message_type(int last_message_type) {
 		this.last_message_type = last_message_type;
 	}
-	
+	public void setHead_url(String head_url)
+	{
+		this.head_url = head_url;
+	}
+	public String getHead_url()
+	{
+		return this.head_url;
+	}
 	
 	
 }

@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -28,6 +30,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import com.lym.twogoods.screen.BaseScreen;
 
@@ -57,7 +62,7 @@ public class ImageUtil {
 	 /**
 	   * @description 计算图片的压缩比率
 	   *
-	   * @param options 参数
+	   * @param options 原图片的参数
 	   * @param reqWidth 目标的宽度
 	   * @param reqHeight 目标的高度
 	   * @retrue 缩放比
@@ -158,6 +163,65 @@ public class ImageUtil {
 		}
 		System.gc();
 	}
+	
+	/**
+	 * 从网上获取图片，返回图片在指定大小缩放后的bitmap。调用decodeUrl2InputStreamFromNet
+	 * 和decodeUrl2InputStreamFromNet来实现
+	 * @param url 图片的url
+	 * @return 网络图片的bitmap
+	 */
+	public static Bitmap decodeBitmapFromNet(String url,int width,int height)
+	{
+		InputStream is = decodeUrl2InputStreamFromNet(url);
+		return getBitmapThumbnail(is,width,height);
+	}
+	
+	/**
+	 * 从网上获取图片，返回图片的InputStream。
+	 * @param url 图片的url
+	 * @return 网络图片的InputStream
+	 * @author yao
+	 */
+	private static InputStream decodeUrl2InputStreamFromNet(String url)
+	{
+		URL myFileUrl = null; 
+		InputStream is = null;
+		try { 
+			myFileUrl = new URL(url); 
+		} catch (MalformedURLException e) { 
+			e.printStackTrace(); 
+		} 
+		try { 
+			HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection(); 
+			conn.setDoInput(true); 
+			conn.connect(); 
+			is = conn.getInputStream(); 
+		} catch (IOException e) { 
+			e.printStackTrace(); 
+		}
+		return is;
+	}
+	
+	
+	/**
+	 * 获得图片inputStream在缩放到指定大小后的bitmap
+	 * @param is 图片的输入流
+	 * @param width 要缩放到的宽度
+	 * @param height 要缩放到的高度
+	 * @author yao
+	 */
+	private static Bitmap getBitmapThumbnail(InputStream is,int width,int height)
+	{
+		if(is==null)
+			return null;
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+	    options.inJustDecodeBounds = true;
+		Bitmap bt = null;
+		bt = BitmapFactory.decodeStream(is, null, options);
+		options.inSampleSize = calculateInSampleSize(options, width, height);
+	    options.inJustDecodeBounds = false;
+	    return createScaleBitmap(bt, width, height, options.inSampleSize);
+	}
 
 	/**
 	 * <p>
@@ -172,8 +236,6 @@ public class ImageUtil {
 	 * 
 	 * @author yao
 	 */
-	
-	
 	public static Bitmap getImage(String imagePath)
 	{
 		Bitmap bitmap = null;
@@ -193,7 +255,6 @@ public class ImageUtil {
 		return bitmap;
 	}
 	
-
 	
 	/**
 	 * 获取指定路径下的图片的指定大小的缩略图 getImageThumbnail，功能通过decodeSampledBitmapFromFile(
