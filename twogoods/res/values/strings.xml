@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
 
     <!-- common string -->
     <string name="app_name">twogoods</string>
@@ -91,9 +91,24 @@
 	<string name="confirm">确定</string>
 	<string name="publish">发布</string>
 	<string name="publish_description">请描述你的贰货（200字内）</string>
+	<string name="publish_voice_description">已语音</string>
+	<string name="publish_text_number">200</string>
 	<string name="publish_sort">选择分类</string>
+	<string-array name="publish_sort_array">
+	    <item >家用电器</item>
+	    <item >电子产品</item>
+	    <item >男装女装</item>
+	    <item >交通工具</item>
+	    <item >鞋包配饰</item>
+	    <item >书籍文体</item>
+	    <item >居家用品</item>
+	    <item >其它</item>
+	</string-array>
 	<string name="publish_tel">联系方式</string>
+	<string name="publish_tel_hint">给个联系方式呗</string>
 	<string name="publish_price">贰货价格</string>
+	<string name="publish_price_hint">你还没标价呢</string>
+	<string name="yuan">元</string>
 	<string name="publish_date">选择期限</string>
 	<string name="publish_position">位置</string>
 	<string name="guangzhou">广州</string>
@@ -108,6 +123,7 @@
 	<string name="sex">性别</string>
 	<string name="mine_declaration">我的贰货宣言</string>
 	<string name="male">男</string>
+    <string name="tian">天</string>
     
     
     
