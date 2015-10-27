@@ -106,6 +106,8 @@
         <!-- 意见反馈Activity -->
         <activity android:name="com.lym.twogoods.ui.FeedbackActivity" >
         </activity>
+        <activity android:name="com.lym.twogoods.ui.DisplayPicturesActivity">
+        </activity>
 
         <!-- 网络状态改变广播接收者 -->
         <receiver

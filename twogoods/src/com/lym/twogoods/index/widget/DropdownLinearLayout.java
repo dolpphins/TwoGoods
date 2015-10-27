@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
  * */
 public class DropdownLinearLayout extends LinearLayout {
 
-	private final static String TAG = "MyLinearLayout";
+	private final static String TAG = "DropdownLinearLayout";
 	
 	private boolean mAllowDispatchTouchEvent = false;
 	
@@ -25,7 +25,6 @@ public class DropdownLinearLayout extends LinearLayout {
 	
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		Log.i(TAG, "onInterceptTouchEvent");
 		return mAllowDispatchTouchEvent;
 	}
 	

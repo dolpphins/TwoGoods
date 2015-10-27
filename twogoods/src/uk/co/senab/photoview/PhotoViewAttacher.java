@@ -140,6 +140,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private OnViewTapListener mViewTapListener;
     private OnLongClickListener mLongClickListener;
     private OnScaleChangeListener mScaleChangeListener;
+    private OnViewFlingListener mViewFlingListener;
 
     private int mIvTop, mIvRight, mIvBottom, mIvLeft;
     private FlingRunnable mCurrentFlingRunnable;
@@ -181,6 +182,15 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                         if (null != mLongClickListener) {
                             mLongClickListener.onLongClick(getImageView());
                         }
+                    }
+                    
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                    	if(mViewFlingListener != null) {
+                    		return mViewFlingListener.onFling(e1, e2, velocityX, velocityY);
+                    	} else {
+                    		return super.onFling(e1, e2, velocityX, velocityY);
+                    	}
                     }
                 });
 
@@ -602,6 +612,16 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     public OnViewTapListener getOnViewTapListener() {
         return mViewTapListener;
     }
+    
+    @Override
+    public void setOnViewFlingListener(OnViewFlingListener onViewFlingListener) {
+    	mViewFlingListener = onViewFlingListener;
+    }
+    
+    @Override
+    public OnViewFlingListener getOnViewFlingListener() {
+    	return mViewFlingListener;
+    }
 
     @Override
     public void setScale(float scale) {
@@ -1007,6 +1027,26 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          * @param y    - where the user tapped from the top of the View.
          */
         void onViewTap(View view, float x, float y);
+    }
+    
+    /**
+     * Fling事件接口
+     * 
+     * @author 麦灿标
+     * */
+    public static interface OnViewFlingListener {
+    	
+    	/**
+    	 * 当有fling事件是调用
+    	 * 
+    	 * @param e1
+    	 * @param e2
+    	 * @param velocityX
+    	 * @param velocityY
+    	 * @return 
+    	 * 
+    	 * */
+    	boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY);
     }
 
     private class AnimatedZoomRunnable implements Runnable {

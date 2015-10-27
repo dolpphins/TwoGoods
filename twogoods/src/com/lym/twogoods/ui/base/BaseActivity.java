@@ -194,6 +194,26 @@ public abstract class BaseActivity extends Activity{
 		return null;
 	}
 	
+	/**
+	 * <p>设置ActionBar背景颜色</p>
+	 * 
+	 * @param color 要设置的颜色
+	 * 
+	 * @return 设置成功返回true,设置失败返回false.
+	 * */
+	public boolean setActionBarColor(int color) {
+		if(mActionBarView != null) {
+			try {
+				mActionBarView.setBackgroundColor(color);
+				return true;
+			} catch(Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		return false;
+	}
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();

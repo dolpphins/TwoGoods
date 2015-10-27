@@ -27,6 +27,7 @@ import android.widget.ImageView;
 
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
+import uk.co.senab.photoview.PhotoViewAttacher.OnViewFlingListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
 
 public class PhotoView extends ImageView implements IPhotoView {
@@ -304,4 +305,14 @@ public class PhotoView extends ImageView implements IPhotoView {
         init();
         super.onAttachedToWindow();
     }
+
+	@Override
+	public void setOnViewFlingListener(OnViewFlingListener onViewFlingListener) {
+		mAttacher.setOnViewFlingListener(onViewFlingListener);
+	}
+
+	@Override
+	public OnViewFlingListener getOnViewFlingListener() {
+		return mAttacher.getOnViewFlingListener();
+	}
 }
