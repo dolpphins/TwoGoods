@@ -346,4 +346,18 @@ public interface IPhotoView {
      * @param onScaleChangeListener OnScaleChangeListener instance
      */
     void setOnScaleChangeListener(PhotoViewAttacher.OnScaleChangeListener onScaleChangeListener);
+    
+    /**
+     * 设置OnViewFlingListener监听器
+     * 
+     * @param onViewFlingListener 要设置的监听器
+     * */
+    void setOnViewFlingListener(PhotoViewAttacher.OnViewFlingListener onViewFlingListener);
+    
+    /**
+     * 获取OnViewFlingListener监听器
+     * 
+     * @return 返回OnViewFlingListener监听器,如果之前没有设置则返回null
+     * */
+    PhotoViewAttacher.OnViewFlingListener getOnViewFlingListener();
 }

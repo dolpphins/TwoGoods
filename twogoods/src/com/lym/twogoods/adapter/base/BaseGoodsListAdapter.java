@@ -7,18 +7,20 @@ import com.lym.twogoods.R;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.PictureThumbnailSpecification;
 import com.lym.twogoods.screen.GoodsScreen;
+import com.lym.twogoods.ui.DisplayPicturesActivity;
 import com.lym.twogoods.utils.ImageUtil;
 import com.lym.twogoods.utils.TimeUtil;
 
 import android.app.Activity;
-import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -129,18 +131,28 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 		//商品描述
 		viewHolder.base_goods_listview_item_description.setText(item.getDescription());
 		//左右可滑动图片
-		List<String> pictureUrlList = new ArrayList<String>();
+		final ArrayList<String> picturesUrlList = new ArrayList<String>();
 		int pictureCount = item.getPic_num();
 		for(int i = 0; i < pictureCount; i++) {
 			String s = item.getPic_baseurl() + item.getPic_prefix() + "_" + i + ".jpg";
-			pictureUrlList.add(s);
+			picturesUrlList.add(s);
 		}
-		GoodsPictureListAdapter adapter = new GoodsPictureListAdapter(mActivity, pictureUrlList);
+		GoodsPictureListAdapter adapter = new GoodsPictureListAdapter(mActivity, picturesUrlList);
 		PictureThumbnailSpecification goodsPictureThumbnailSpecification = GoodsScreen.getGoodsPictureThumbnailSpecification(mActivity);
 		LayoutParams params = viewHolder.base_goods_gridview_item_pictures.getLayoutParams();
-		params.width = goodsPictureThumbnailSpecification.getWidth() * pictureUrlList.size();
-		viewHolder.base_goods_gridview_item_pictures.setNumColumns(pictureUrlList.size());
+		params.width = goodsPictureThumbnailSpecification.getWidth() * picturesUrlList.size();
+		viewHolder.base_goods_gridview_item_pictures.setNumColumns(picturesUrlList.size());
 		viewHolder.base_goods_gridview_item_pictures.setAdapter(adapter);
+		//点击事件
+		viewHolder.base_goods_gridview_item_pictures.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(mActivity, DisplayPicturesActivity.class);
+				intent.putStringArrayListExtra("picturesUrlList", picturesUrlList);
+				mActivity.startActivity(intent);
+			}
+		});
 	}
 	
 	/**
@@ -153,7 +165,6 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 	 * */
 	protected void setCustomContent(ItemViewHolder viewHolder) {
 	}
-
 	
 	
 	@SuppressWarnings("unused")
