@@ -54,7 +54,6 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 	
 	@Override
 	public int getCount() {
-		Log.i(TAG, "count:" + mGoodsList.size());
 		if(mGoodsList != null) {
 			return mGoodsList.size();
 		}
@@ -77,8 +76,9 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
-		ItemViewHolder viewHolder = new ItemViewHolder();
+		ItemViewHolder viewHolder = null;
 		if(convertView == null) {
+			viewHolder = new ItemViewHolder();
 			convertView = LayoutInflater.from(mActivity).inflate(R.layout.app_base_goods_listview_item, null);
 			
 			viewHolder.base_goods_listview_item_headpic = (ImageView) convertView.findViewById(R.id.base_goods_listview_item_headpic);
@@ -106,6 +106,7 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 		setCustomContent(viewHolder);
 		
 		return convertView;
+		//return LayoutInflater.from(mActivity).inflate(R.layout.app_base_goods_listview_item, null);
 	}
 	
 	private void setItemContent(ItemViewHolder viewHolder, Goods item) {

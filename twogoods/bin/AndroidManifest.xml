@@ -77,7 +77,7 @@
         <activity android:name="com.lym.twogoods.index.ui.GoodsSearchActivity" >
         </activity>
         <!-- 商品详情Activity -->
-        <activity android:name="com.lym.twogoods.index.ui.GoodsDetailActivity" >
+        <activity android:name="com.lym.twogoods.ui.GoodsDetailActivity" >
         </activity>
         <!-- 聊天Activity -->
         <activity android:name="com.lym.twogoods.message.ui.ChatActivity" >

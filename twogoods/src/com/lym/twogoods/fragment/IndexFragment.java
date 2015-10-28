@@ -17,7 +17,9 @@ import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.index.widget.DropdownLinearLayout;
 import com.lym.twogoods.index.widget.MaskLayer;
 import com.lym.twogoods.test.mcb.GoodsData;
+import com.lym.twogoods.ui.GoodsDetailActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,10 +32,13 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 /**
@@ -109,8 +114,6 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 		super.onCreate(savedInstanceState);
 		
 		initData();
-		
-		
 	}
 	
 	@Override
@@ -482,7 +485,8 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				System.out.println("onItemClick");
-				
+				Intent intent = new Intent(mAttachActivity, GoodsDetailActivity.class);
+				startActivity(intent);
 			}
 		});
 	}

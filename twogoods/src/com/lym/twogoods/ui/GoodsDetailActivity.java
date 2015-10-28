@@ -1,4 +1,4 @@
-package com.lym.twogoods.index.ui;
+package com.lym.twogoods.ui;
 
 import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
 
@@ -15,7 +15,6 @@ public class GoodsDetailActivity extends BottomDockBackFragmentActivity{
 
 	@Override
 	public View onCreateBottomView() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

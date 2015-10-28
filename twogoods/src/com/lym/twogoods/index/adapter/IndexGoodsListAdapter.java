@@ -19,5 +19,4 @@ public class IndexGoodsListAdapter extends BaseGoodsListAdapter{
 	public IndexGoodsListAdapter(Activity at, List<Goods> goodsList) {
 		super(at, goodsList);
 	}
-
 }
