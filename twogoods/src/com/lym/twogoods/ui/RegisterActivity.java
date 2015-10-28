@@ -15,6 +15,7 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.VerifySMSCodeListener;
 
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.ui.base.BackActivity;
 import com.lym.twogoods.utils.DatabaseHelper;
@@ -249,6 +250,8 @@ public class RegisterActivity extends BackActivity {
 			public void onSuccess() {
 				Toast.makeText(getApplicationContext(), "添加数据成功",
 						Toast.LENGTH_SHORT).show();
+				//保存当前用户信息
+				UserInfoManager.getInstance().setmCurrent(user_data);
 			}
 
 			@Override
