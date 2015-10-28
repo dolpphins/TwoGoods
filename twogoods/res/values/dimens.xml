@@ -102,9 +102,9 @@
 	<dimen name="message_base_scrollview_top_height">50.0dip</dimen>
 	<dimen name="tab_padding_left_right">40dp</dimen>
 	
+	<dimen name="message_margin_chat_top">5.0dip</dimen>
 	
-	
-	
+	<dimen name="base_scrollview_top_height">50.0dip</dimen>
 	
 	
 	
