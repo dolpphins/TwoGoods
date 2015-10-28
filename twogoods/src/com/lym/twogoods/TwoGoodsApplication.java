@@ -45,6 +45,7 @@ public class TwoGoodsApplication extends Application{
 			FileUtil.createFolder(dcm.getGoodsPictureCachePath());
 			FileUtil.createFolder(dcm.getGoodsVoiceCachePath());
 			FileUtil.createFolder(dcm.getUserHeadPictureCachePath());
+			FileUtil.createFolder(dcm.getDefaultPictureCachePath());
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

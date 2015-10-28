@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -20,6 +20,9 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
+import android.os.Build;
+import android.text.TextUtils;
+
 /**
  * 与图片操作相关的工具类
  * 
@@ -174,6 +177,23 @@ public class ImageUtil {
 	{
 		InputStream is = decodeUrl2InputStreamFromNet(url);
 		return getBitmapThumbnail(is,width,height);
+	}
+	
+	/**
+	 * 通过网络url获取图片
+	 *
+	 * @param url 要获取的图片url
+	 * 
+	 * @param 获取成功返回一幅位图,获取失败返回null.
+	 *  
+	 * @author 麦灿标
+	 * */
+	public static Bitmap decodeBitmapFromNet(String url) {
+		if(TextUtils.isEmpty(url)) {
+			return null;
+		}
+		InputStream is = decodeUrl2InputStreamFromNet(url);
+		return BitmapFactory.decodeStream(is);//如果is为null那么decodeStream方法会返回null
 	}
 	
 	/**
@@ -542,4 +562,29 @@ public class ImageUtil {
         return (int) (pxValue / scale + 0.5f);  
     }  
 
+    /**
+     * <p>获取Bitmap大小,该方法为版本兼容的.</p>
+     * 
+     * @param bitmap 指定的位图,注意不可为null.
+     * 
+     * @return 如果bitmap为null那么将返回-1,否则返回指定位图的大小,单位为字节.
+     * 
+     * @author 麦灿标
+     * */
+    @SuppressLint("NewApi")
+	public static int sizeOfBitmap(Bitmap bitmap) {
+    	if(bitmap == null) {
+    		return -1;
+    	}
+    	//API 19及以上版本
+    	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+    		return bitmap.getAllocationByteCount();
+    	//API 12 ~ API 18
+    	} else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+    		return bitmap.getByteCount();
+    	//API 12以下
+    	} else {
+    		return bitmap.getRowBytes() * bitmap.getHeight();
+    	}
+    }
 }
