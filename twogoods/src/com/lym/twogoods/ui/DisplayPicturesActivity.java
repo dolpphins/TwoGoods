@@ -74,8 +74,7 @@ public class DisplayPicturesActivity extends BackActivity implements MultiPictur
 			//String[] params = (String[]) picturesUrlList.toArray();//报类转型异常
 			String[] params = new String[picturesUrlList.size()];
 			for(int i = 0; i < picturesUrlList.size(); i++) {
-				//params[i] = picturesUrlList.get(i);
-				params[i] = "http://img5.imgtn.bdimg.com/it/u=2779252904,2878228327&fm=21&gp=0.jpg";//测试使用
+				params[i] = picturesUrlList.get(i);
 			}
 			MultiPicturesAsyncTaskExecutor executor = new MultiPicturesAsyncTaskExecutor(this);
 			executor.setOnMultiPicturesAsyncTaskListener(this);
