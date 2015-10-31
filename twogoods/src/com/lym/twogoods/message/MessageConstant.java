@@ -1,5 +1,8 @@
 package com.lym.twogoods.message;
 
+
+
+/**与消息模块相关的消息参数，主要用于handler处理数据*/
 public class MessageConstant {
 
 	public static final int REQUESTCODE_UPLOADAVATAR_CAMERA = 1;//拍照修改头像
@@ -16,6 +19,11 @@ public class MessageConstant {
 	public static final int REQUESTCODE_TAKE_CAMERA = 0x000001;//拍照
 	public static final int REQUESTCODE_TAKE_LOCAL = 0x000002;//本地图片
 	public static final int REQUESTCODE_TAKE_LOCATION = 0x000003;//位置
+	
+	
+	public static final int START_RECORD= 0;     // 开始录音
+	public static final int FINISH_RECORD = 1;      //录音完毕
+	public static final int ABANDON_RECORD = 2;      //录音完毕
 	
 	public static final String EXTRA_STRING = "extra_string";
 	

@@ -107,6 +107,5 @@ public class ChatSnapshot extends BmobObject{
 	{
 		return this.head_url;
 	}
-	
-	
+
 }

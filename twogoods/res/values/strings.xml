@@ -162,7 +162,8 @@
     <string name="chat_send_picture">发送</string>
     <string name="chat_finish_camera">完成</string>
     
-    <string name="chat_finish_recond_send">松手发送语音</string>
+    <string name="chat_finish_record_send">松开手指发送语音</string>
+    <string name="chat_finish_record_abandon">向上滑动放弃录音</string>
     <string name="chat_add_avator">头像</string>
     
     

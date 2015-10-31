@@ -33,6 +33,9 @@ public class DiskCacheManager {
 	/** 聊天语音缓存子目录 */
 	private final String sChatVoiceCachePath = "/chat/voice/";
 	
+	/** 默认图片缓存目录 */
+	private final String defaultPictureCachePath = "/default/pictures/";
+	
 	private static DiskCacheManager diskCacheManager = new DiskCacheManager();
 	
 	private Object lock = new Object();
@@ -129,6 +132,17 @@ public class DiskCacheManager {
 	 * */
 	public String getChatVoiceCachePath() {
 		return sBaseDiskCachePath + sChatVoiceCachePath;
+	}
+	
+	/**
+	 * <p>
+	 * 	获取图片缓存默认存放路径
+	 * </p>
+	 * 
+	 * @return 图片缓存默认存放路径
+	 * */
+	public String getDefaultPictureCachePath() {
+		return sBaseDiskCachePath + defaultPictureCachePath;
 	}
 	
 }

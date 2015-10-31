@@ -4,20 +4,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lym.twogoods.R;
+import com.lym.twogoods.async.MultiPicturesAsyncTask;
+import com.lym.twogoods.async.MultiPicturesAsyncTaskExecutor;
+import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.ui.base.BackActivity;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class DisplayPicturesActivity extends BackActivity {
+/**
+ * <p>
+ * 	查看图片Activity
+ * </p>
+ * <p>
+ * 	该Activity图片加载完默认磁盘缓存路径为{@link DiskCacheManager#getDefaultPictureCachePath()},你可以通过
+ * 	传递你自定义的缓存路径来定义自己的缓存路径,代码如:<pre>intent.putString("diskCachePath",path);</pre>
+ * </p>
+ * 
+ * @author 麦灿标
+ * */
+public class DisplayPicturesActivity extends BackActivity implements MultiPicturesAsyncTask.OnMultiPicturesAsyncTaskListener,
+													OnPageChangeListener {
 
 	private final static String TAG = "DisplayPicturesActivity";
 	
@@ -45,8 +66,25 @@ public class DisplayPicturesActivity extends BackActivity {
 
 		if(picturesUrlList != null) {
 			Log.i(TAG, "picturesUrlList size is:" + picturesUrlList.size());
+			app_dispaly_pictures_viewpager.setOnPageChangeListener(this);
 			app_dispaly_pictures_viewpager.setAdapter(new PicturesViewPagerAdapter());
+			setTitleTip(0);
 			createImageViews();
+			//开始获取图片
+			//String[] params = (String[]) picturesUrlList.toArray();//报类转型异常
+			String[] params = new String[picturesUrlList.size()];
+			for(int i = 0; i < picturesUrlList.size(); i++) {
+				params[i] = picturesUrlList.get(i);
+			}
+			MultiPicturesAsyncTaskExecutor executor = new MultiPicturesAsyncTaskExecutor(this);
+			executor.setOnMultiPicturesAsyncTaskListener(this);
+			String diskCachePath = getIntent().getStringExtra("diskCachePath");
+			if(TextUtils.isEmpty(diskCachePath)) {
+				//查看商品图片缓存目录
+				diskCachePath = DiskCacheManager.getInstance(this).getDefaultPictureCachePath();
+			}
+			executor.setDiskCacheDir(diskCachePath);
+			executor.execute(params);
 		}
 		
 	
@@ -67,6 +105,33 @@ public class DisplayPicturesActivity extends BackActivity {
 			mWrapLayouts[i].addView(mImageViews[i]);
 			PhotoViewAttacher attacher = new PhotoViewAttacher(mImageViews[i]);
 			photoViewAttacherList.add(attacher);
+		}
+	}
+	
+	@Override
+	public void onPageScrollStateChanged(int arg0) {}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {}
+
+	@Override
+	public void onPageSelected(int position) {
+		setTitleTip(position);
+	}
+	
+	//注意position从0开始
+	private void setTitleTip(int position) {
+		int index = 0;
+		if(picturesUrlList.size() > 0) {
+			index = position + 1;
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(index);
+		sb.append("/");
+		sb.append(picturesUrlList.size());
+		TextView tv = setCenterTitle(sb.toString());
+		if(tv != null) {
+			tv.setTextColor(Color.parseColor("#ffffff"));
 		}
 	}
 	
@@ -98,6 +163,29 @@ public class DisplayPicturesActivity extends BackActivity {
 		}
 		
 	}
-	
-	
+
+
+	@Override
+	public void onPreExecute(int position) {
+		Animation anim = AnimationUtils.loadAnimation(this, R.anim.display_pictures_loading_anim);
+		mImageViews[position].startAnimation(anim);
+	}
+
+	@Override
+	public void onProgressUpdate(int position, Integer... values) {
+	}
+
+	@Override
+	public void onPostExecute(int position, Bitmap result) {
+		//清除动画
+		mImageViews[position].clearAnimation();
+		//获取图片成功
+		if(result != null) {
+			LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			mImageViews[position].setLayoutParams(params);
+			mImageViews[position].setImageBitmap(result);
+		} else {
+			mImageViews[position].setImageBitmap(null);
+		}
+	}
 }

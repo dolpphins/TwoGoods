@@ -1,4 +1,4 @@
-package com.lym.twogoods.message.ui;
+package com.lym.twogoods.ui;
 
 import java.util.ArrayList;
 
@@ -20,11 +20,13 @@ import com.lym.twogoods.ui.base.BackFragmentActivity;
 
 
 /**
- * <p>在调用SendPictureActivity的Activity中,重写onActivityResult方法，拿到resultCode，
- * 如果等于MessageConstant.SEND_CAMERA_PIC,说明发送的是相机拍的相片。通过data.getExtras().
- * getString("picture")就可以拿到图片在本地的路径;如果等于MessageConstant.SEND_LOCAL_PIC
+ * <p>在调用SendPictureActivity的Activity中,重写onActivityResult方法，拿到resultCode.</p>
+ * <p>如果resultCode等于MessageConstant.SEND_CAMERA_PIC,说明发送的是相机拍的相片。通过data.getExtras().
+ * getString("picture")就可以拿到图片在本地的路径;</p>
+ * <p>如果等于MessageConstant.SEND_LOCAL_PIC
  * 说明发送的本地相片。通过data.getExtras().getStringArrayList("pictures")就可以拿到要发送
- * 的本地图片路径的ArrayList。一次最多只能发多少张需要由调用者设置。通过intent.putExtra(String name,
+ * 的本地图片路径的ArrayList。</p>
+ * <p>一次最多只能发多少张需要由调用者设置。通过intent.putExtra(String name,
  *  int value)来设置,函数参数中的name的值 必须等于"picCount",value的值调用者决定.具体实现看ChatActivity
  *  中的代码</p>
  * 

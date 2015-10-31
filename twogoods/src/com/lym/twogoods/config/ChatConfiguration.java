@@ -28,14 +28,5 @@ public class ChatConfiguration {
 	public final static int TYPE_MESSAGE_LOCATION = 4;
 	
 	
-	/**
-	 * 消息发送方向
-	 * */
-	
-	/** 我接收到的 */
-	public final static int DIRECTION_I_RECEIVE = 0;
-	
-	/** 我发出的 */
-	public final static int DIRECTION_I_SEND = 1;
 	
 }

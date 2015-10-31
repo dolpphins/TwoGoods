@@ -26,6 +26,9 @@ public class ChatDetailBean extends BmobObject{
 	@DatabaseField
 	private String username;
 	
+	/**发送状态，可判断是否成功发送*/
+	private Boolean status;
+	
 	/** 对方用户名 */
 	@DatabaseField
 	private String other_username;
@@ -34,17 +37,9 @@ public class ChatDetailBean extends BmobObject{
 	@DatabaseField
 	private int message_type = ChatConfiguration.TYPE_MESSAGE_UNKNOWN;
 	
-	/** 消息,如果是本文,那么为文本内容;如果为图片,那么为图片的url(本地),如果为语音,那么为语音的url(本地) */
+	/** 消息,如果是本文,那么为文本内容;如果为图片,那么为图片的url(网络),如果为语音,那么为语音的url(网络) */
 	@DatabaseField
 	private String message;
-	
-	/** 图片或语音的url(网络),如果该消息为文本则该字段为空 */
-	@DatabaseField
-	private String network_url;
-	
-	/** 标记是我发出的,还是我接收到的,默认为我接收到的{@link ChatConfiguration#DIRECTION_I_RECEIVE} */
-	@DatabaseField
-	private int direction = ChatConfiguration.DIRECTION_I_RECEIVE;
 	
 	/** 发送时间,格式:时间戳 */
 	@DatabaseField 
@@ -98,22 +93,6 @@ public class ChatDetailBean extends BmobObject{
 		this.message = message;
 	}
 
-	public String getNetwork_url() {
-		return network_url;
-	}
-
-	public void setNetwork_url(String network_url) {
-		this.network_url = network_url;
-	}
-
-	public int getDirection() {
-		return direction;
-	}
-
-	public void setDirection(int direction) {
-		this.direction = direction;
-	}
-
 	public long getPublish_time() {
 		return publish_time;
 	}
@@ -122,7 +101,13 @@ public class ChatDetailBean extends BmobObject{
 		this.publish_time = publish_time;
 	}
 	
+	public void setStatus(Boolean s)
+	{
+		this.status = s;
+	}
 	
-	
-	
+	public Boolean getStatus()
+	{
+		return status;
+	}
 }
