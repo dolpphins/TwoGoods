@@ -45,10 +45,10 @@
     <dimen name="index_fragment_head_sort_item_marginLeft">15dip</dimen>
     <dimen name="index_fragment_head_sort_item_marginRight">15dip</dimen>
     <dimen name="index_fragment_head_sort_item_icon_marginRight">15dip</dimen>
-                  
-    
-    
-    
+    <dimen name="app_goods_details_write_comment_padding">5dip</dimen>              
+    <dimen name="app_goods_detail_write_comment_edittext_marginLeft">5dip</dimen>
+    <dimen name="app_goods_detail_write_comment_edittext_marginRight">5dip</dimen>
+    <dimen name="app_goods_details_write_comment_top_padding">5dip</dimen>              
     
     
     
