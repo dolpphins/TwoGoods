@@ -10,7 +10,7 @@ import com.lym.twogoods.R;
 import com.lym.twogoods.fragment.base.BaseFragment;
 import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.message.ImageFloder;
-import com.lym.twogoods.message.MessageConstant;
+import com.lym.twogoods.message.MessageConfig;
 import com.lym.twogoods.message.adapter.ImageAdapter;
 import com.lym.twogoods.message.adapter.MyAdapter;
 import com.lym.twogoods.message.view.ListImageDirPopupWindow;
@@ -103,14 +103,14 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 		public void handleMessage(android.os.Message msg)
 		{
 			switch(msg.what){
-			case MessageConstant.FINISH_LOAD:
+			case MessageConfig.FINISH_LOAD:
 				mProgressDialog.dismiss();
 				// 为View绑定数据
 				data2View();
 				// 初始化展示文件夹的popupWindw
 				initListDirPopupWindw();
 				break;
-			case MessageConstant.OPEN_CAMERA:
+			case MessageConfig.OPEN_CAMERA:
 				selectImageFromCamera();
 				break;
 			}
@@ -156,7 +156,7 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 		Uri imageUri = Uri.fromFile(file);
 		openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 		getActivity().startActivityForResult(openCameraIntent,
-				MessageConstant.OPEN_CAMERA);
+				MessageConfig.OPEN_CAMERA);
 	}
 	
 	
@@ -331,7 +331,7 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 				mImageFloders.add(floder);
 				// 通知Handler扫描图片完成
 				Message msg = new Message();
-				msg.what = MessageConstant.FINISH_LOAD;
+				msg.what = MessageConfig.FINISH_LOAD;
 				mHandler.sendMessage(msg);
 	
 			}

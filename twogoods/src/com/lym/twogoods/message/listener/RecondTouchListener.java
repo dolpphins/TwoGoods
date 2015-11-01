@@ -14,10 +14,9 @@ import android.view.animation.ScaleAnimation;
 import android.widget.Toast;
 
 import com.lym.twogoods.manager.DiskCacheManager;
-import com.lym.twogoods.message.MessageConstant;
+import com.lym.twogoods.message.MessageConfig;
 import com.lym.twogoods.utils.FileUtil;
 import com.lym.twogoods.utils.TimeUtil;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 
 public class RecondTouchListener implements View.OnTouchListener {
 	
@@ -65,7 +64,7 @@ public class RecondTouchListener implements View.OnTouchListener {
 				filename = DiskCacheManager.getInstance(mContext).getChatVoiceCachePath()+TimeUtil.getCurrentMilliSecond()+count+".amr";
 				audioFile = FileUtil.createFile(filename); 
 				Message msg = new Message();
-				msg.what = MessageConstant.START_RECORD;
+				msg.what = MessageConfig.START_RECORD;
 				mHandler.sendMessage(msg);
 				
 				//设置音频来源（MIC表示麦克风）  
@@ -88,7 +87,7 @@ public class RecondTouchListener implements View.OnTouchListener {
 		case MotionEvent.ACTION_MOVE: //滑动手指时
 				if (event.getY() < 0) {
 					Message msg = new Message();
-					msg.what = MessageConstant.ABANDON_RECORD;
+					msg.what = MessageConfig.ABANDON_RECORD;
 					mHandler.sendMessage(msg);
 					audioFile.delete();
 				} else {
@@ -100,7 +99,7 @@ public class RecondTouchListener implements View.OnTouchListener {
 			v.setPressed(false);
 			count++;
 			Message msg = new Message();
-			msg.what = MessageConstant.FINISH_RECORD;
+			msg.what = MessageConfig.FINISH_RECORD;
 			Bundle data = new Bundle();
 			data.putString("filename", filename);
 			msg.setData(data);
