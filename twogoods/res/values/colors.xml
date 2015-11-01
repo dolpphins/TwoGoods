@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-       
+    <color name="white">#ffffff</color>   
     <!-- common -->
     	<!-- ActionBar -->
     <color name="app_common_actionbar_bg">#18b4ed</color>    <!-- ActionBar背景颜色 -->
@@ -29,8 +29,8 @@
     <color name="index_fragment_head_category_dropdown_backgroundColor">#ffffff</color>  <!-- 分类下拉布局背景yanse -->
     <color name="index_fragment_head_sort_dropdown_backgroundColor">#ffffff</color>  <!-- 排序下拉布局背景yanse -->
     <color name="index_goods_detail_price_textColor">#ff0000</color>
-    
-    
+    <color name="index_goods_search_history_tip_textColor">#999999</color>
+    <color name="index_goods_search_history_listview_dividerColor">#d2d2d2</color>
     
     
     

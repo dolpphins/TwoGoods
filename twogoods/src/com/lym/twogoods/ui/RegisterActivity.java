@@ -21,7 +21,7 @@ import com.lym.twogoods.ui.base.BackActivity;
 import com.lym.twogoods.utils.DatabaseHelper;
 import com.lym.twogoods.utils.EncryptHelper;
 import com.lym.twogoods.utils.NetworkHelper;
-import com.lym.twogoods.utils.SharePreferenceManager;
+import com.lym.twogoods.utils.SharePreferencesManager;
 import com.lym.twogoods.utils.StringUtil;
 
 /**
@@ -46,7 +46,7 @@ public class RegisterActivity extends BackActivity {
 	private User user_data;
 
 	// 本地存储
-	private SharePreferenceManager sSpManager;
+	private SharePreferencesManager sSpManager;
 	// 验证码是否验证成功
 	private boolean codeVerify = false;
 
@@ -74,7 +74,7 @@ public class RegisterActivity extends BackActivity {
 		user_data = new User();
 
 		// SharedPreferences的初始化
-		sSpManager = SharePreferenceManager.getInstance();
+		sSpManager = SharePreferencesManager.getInstance();
 	}
 
 	/**

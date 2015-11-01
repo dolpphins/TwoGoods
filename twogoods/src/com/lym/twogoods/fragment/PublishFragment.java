@@ -18,7 +18,7 @@ import com.lym.twogoods.fragment.base.BaseFragment;
 import com.lym.twogoods.screen.DisplayUtils;
 import com.lym.twogoods.utils.DatabaseHelper;
 import com.lym.twogoods.utils.SensitiveUtils;
-import com.lym.twogoods.utils.SharePreferenceManager;
+import com.lym.twogoods.utils.SharePreferencesManager;
 
 import android.app.ActionBar.LayoutParams;
 import android.graphics.drawable.Drawable;
@@ -86,7 +86,7 @@ public class PublishFragment extends BaseFragment {
 
 	// 货品信息相关
 	private Goods goodsBean;
-	private SharePreferenceManager sSpManager;
+	private SharePreferencesManager sSpManager;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -144,7 +144,7 @@ public class PublishFragment extends BaseFragment {
 
 		// 货品信息相关
 		goodsBean = new Goods();
-		sSpManager = SharePreferenceManager.getInstance();
+		sSpManager = SharePreferencesManager.getInstance();
 	}
 
 	/*

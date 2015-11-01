@@ -33,7 +33,7 @@ import com.lym.twogoods.message.MessageDialog.MyItemOnClickListener;
 import com.lym.twogoods.message.adapter.MessageAdapter;
 import com.lym.twogoods.message.adapter.TestAdapter;
 import com.lym.twogoods.message.ui.ChatActivity;
-import com.lym.twogoods.utils.SharePreferenceManager;
+import com.lym.twogoods.utils.SharePreferencesManager;
 import com.lym.twogoods.utils.TimeUtil;
 
 
@@ -51,7 +51,7 @@ public class MessageFragment extends PullListFragment implements
 	
 	private MessageAdapter adapter;
 	/*用来保存上一次刷新的时间*/
-	private SharePreferenceManager mSharePreferenceManager;
+	private SharePreferencesManager mSharePreferenceManager;
 	
 	private List<String> dialogTips;
 	
@@ -82,7 +82,7 @@ public class MessageFragment extends PullListFragment implements
 	
 
 	private void initView() {
-		mSharePreferenceManager = SharePreferenceManager.getInstance();
+		mSharePreferenceManager = SharePreferencesManager.getInstance();
 		setMode(Mode.PULLDOWN);
 		setAdapter();
 		

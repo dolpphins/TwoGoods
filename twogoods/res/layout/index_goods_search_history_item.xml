@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	搜索界面历史记录列表Item布局
+	
+	@author 麦灿标
+ -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+    <TextView
+        android:id="@+id/index_goods_search_history_item_tv"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+    	android:textSize="@dimen/index_goods_search_history_textSize"
+	    android:layout_marginTop="@dimen/index_goods_search_history_marginTop"
+	    android:layout_marginBottom="@dimen/index_goods_search_history_marginBottom"/>
+</LinearLayout>

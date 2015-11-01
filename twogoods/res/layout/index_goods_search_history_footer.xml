@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	搜索界面历史列表底部布局
+
+	@author 麦灿标
+ -->
+
+
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <!-- <TextView 
+	    android:layout_width="match_parent"
+    	android:layout_height="1dip"
+    	android:background="@color/index_goods_search_history_listview_dividerColor"/>  -->
+    <RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:paddingTop="@dimen/index_goods_search_history_footer_paddingTop"
+	    android:paddingBottom="@dimen/index_goods_search_history_footer_paddingBottom">
+	    <TextView
+	        android:id="@+id/index_goods_search_history_clear" 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerHorizontal="true"
+	        android:drawableLeft="@drawable/goods_search_history_clear_icon"
+	        android:drawableStart="@drawable/goods_search_history_clear_icon"
+	        android:text="@string/clear_search_history"
+	        android:gravity="center_vertical"
+	        android:drawablePadding="@dimen/index_goods_search_history_clear_drawablePadding"/>
+	
+	</RelativeLayout>
+    
+</LinearLayout>
+
+
