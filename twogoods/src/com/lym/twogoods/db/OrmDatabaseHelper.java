@@ -209,10 +209,12 @@ public class OrmDatabaseHelper extends OrmLiteSqliteOpenHelper{
 	 * @return 获取成功返回相应的Dao,获取失败返回null
 	 * */
 	public Dao<ChatSnapshot, Integer> getChatSnapshotDao() {
-		if(chatDetailBeanDAO == null) {
+		if(chatSnapshotDAO == null) {
 			try {
 				chatSnapshotDAO = getDao(ChatSnapshot.class);
+				System.out.println(chatDetailBeanDAO);
 			} catch(Exception e) {
+				System.out.println("getChatSnapshotDao()");
 				e.printStackTrace();
 			}
 		}

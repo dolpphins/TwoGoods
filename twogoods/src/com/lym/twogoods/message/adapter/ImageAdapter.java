@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.lym.twogoods.R;
-import com.lym.twogoods.message.MessageConstant;
+import com.lym.twogoods.message.MessageConfig;
 import com.lym.twogoods.message.viewHolder.ViewHolder;
 
 import android.content.Context;
@@ -95,7 +95,7 @@ public class ImageAdapter extends BaseAdapter
 					// TODO 自动生成的方法存根
 					Toast.makeText(mContext, "点击了拍照", Toast.LENGTH_LONG).show();
 					Message message = new Message();
-					message.what = MessageConstant.OPEN_CAMERA;
+					message.what = MessageConfig.OPEN_CAMERA;
 					mHandler.sendMessage(message);
 				}
 			});

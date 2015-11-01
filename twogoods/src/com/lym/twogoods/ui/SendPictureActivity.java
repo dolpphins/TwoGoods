@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lym.twogoods.R;
-import com.lym.twogoods.message.MessageConstant;
+import com.lym.twogoods.message.MessageConfig;
 import com.lym.twogoods.message.fragment.CameraFragment;
 import com.lym.twogoods.message.fragment.PictureFragment;
 import com.lym.twogoods.ui.base.BackActivity;
@@ -104,7 +104,7 @@ public class SendPictureActivity extends BackFragmentActivity{
     	Intent data=new Intent();  
        
         data.putExtra("picture", picPath);
-        setResult(MessageConstant.SEND_CAMERA_PIC, data);  
+        setResult(MessageConfig.SEND_CAMERA_PIC, data);  
         //关闭掉这个Activity  
         this.finish();
 	}
@@ -129,7 +129,7 @@ public class SendPictureActivity extends BackFragmentActivity{
 	        data.putStringArrayListExtra("pictures", value);
 	    }
         //请求代码可以自己设置，这里设置成20  
-        setResult(MessageConstant.SEND_LOCAL_PIC, data);  
+        setResult(MessageConfig.SEND_LOCAL_PIC, data);  
         //关闭掉这个Activity  
         this.finish();
         
@@ -139,7 +139,7 @@ public class SendPictureActivity extends BackFragmentActivity{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
-		case MessageConstant.OPEN_CAMERA:
+		case MessageConfig.OPEN_CAMERA:
 			showFragment(mCameraFragment);
 			
 			mCameraFragment.setImageDir(PictureFragment.localCameraDir);

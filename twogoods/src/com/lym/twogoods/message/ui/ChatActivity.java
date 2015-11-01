@@ -34,19 +34,18 @@ import com.j256.ormlite.dao.Dao;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.ChatDetailBean;
+import com.lym.twogoods.bean.ChatSnapshot;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.ChatConfiguration;
 import com.lym.twogoods.db.OrmDatabaseHelper;
-import com.lym.twogoods.manager.DiskCacheManager;
-import com.lym.twogoods.message.MessageConstant;
+import com.lym.twogoods.message.MessageConfig;
 import com.lym.twogoods.message.fragment.ChatFragment;
 import com.lym.twogoods.message.listener.RecondTouchListener;
 import com.lym.twogoods.message.view.EmoticonsEditText;
 import com.lym.twogoods.ui.SendPictureActivity;
 import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
 import com.lym.twogoods.utils.DatabaseHelper;
-import com.lym.twogoods.utils.FileUtil;
-import com.lym.twogoods.utils.TimeUtil;
+
 
 
 /**
@@ -75,8 +74,8 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	/**正在录音的动画*/
 	private ImageView iv_showIsReconding;
 	/**按下开始录音提示和正在录音的提示*/
-	private LinearLayout tv_recondPressTip;
-	private TextView tv_finish_recond_tip;
+	private TextView tv_recondPressTip;
+	private LinearLayout tv_finish_recond_tip;
 	
 	
 	private int SEND_PICTURE = 0;
@@ -90,9 +89,11 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	private OrmDatabaseHelper mOrmDatabaseHelper;
 	/**聊天表*/
 	private Dao<ChatDetailBean, Integer> mChatDetailDao;
-	
+	//private Dao<ChatSnapshot,Integer>mChatSnapshotDao;
+	/**录音监听器*/
 	private RecondTouchListener mRecondTouchListener;
-	
+	/**最近的一天聊天信息*/
+	private ChatDetailBean mChatDetailBean;
 	
 	/**消息的总页数*/
 	int MsgPagerNum;	
@@ -110,20 +111,20 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		{
 			switch(msg.what){
 			//开始录音
-			case MessageConstant.START_RECORD:
+			case MessageConfig.START_RECORD:
 				iv_showIsReconding.setVisibility(View.VISIBLE);
 				tv_recondPressTip.setVisibility(View.INVISIBLE);
 				tv_finish_recond_tip.setVisibility(View.VISIBLE);
 				break;
 			//放弃录音
-			case MessageConstant.ABANDON_RECORD:
+			case MessageConfig.ABANDON_RECORD:
 				Toast.makeText(ChatActivity.this, "放弃录音", Toast.LENGTH_LONG).show();
 				iv_showIsReconding.setVisibility(View.INVISIBLE);
 				tv_recondPressTip.setVisibility(View.INVISIBLE);
 				tv_finish_recond_tip.setVisibility(View.INVISIBLE);
 				break;
 			//结束录音	
-			case MessageConstant.FINISH_RECORD:
+			case MessageConfig.FINISH_RECORD:
 				iv_showIsReconding.setVisibility(View.INVISIBLE);
 				tv_recondPressTip.setVisibility(View.VISIBLE);
 				tv_finish_recond_tip.setVisibility(View.INVISIBLE);
@@ -160,6 +161,8 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		currentUser = mUserInfoManager.getmCurrent();
 		mOrmDatabaseHelper = new OrmDatabaseHelper(this);
 		mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
+		//得到第一次聊天信息的对象
+		mChatDetailBean = new ChatDetailBean();
 		setCenterTitle("与yao聊天");
 		initFragment();
 		initBottom();
@@ -193,8 +196,8 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		
 		//初始化跟录音相关的控件
 		iv_showIsReconding = (ImageView) bottomView.findViewById(R.id.message_chat_show_is_recording_iv);
-		tv_recondPressTip = (LinearLayout)bottomView.findViewById(R.id.message_chat_recond_press_tip);
-		tv_finish_recond_tip = (TextView) bottomView.findViewById(R.id.message_chat_finish_recond_tip_tv);
+		tv_recondPressTip = (TextView)bottomView.findViewById(R.id.message_chat_recond_press_tip);
+		tv_finish_recond_tip = (LinearLayout) bottomView.findViewById(R.id.message_chat_finish_recond_tip_tv);
 		iv_recondVoice = (ImageView) bottomView.findViewById(R.id.message_chat_record);
 		//给录音控件设置触摸事件
 		mRecondTouchListener = new RecondTouchListener(ChatActivity.this,mHandler);
@@ -306,7 +309,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	 */
 	private void sendTextMessage() {
 		// TODO 自动生成的方法存根
-		final ChatDetailBean mChatDetailBean = new ChatDetailBean();
+		//mChatDetailBean = new ChatDetailBean();
 		String username = "1234567123456";
 		//String username = currentUser.getUsername();
 		mChatDetailBean.setUsername(username);
@@ -314,7 +317,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		mChatDetailBean.setMessage(edit_user_comment.getText().toString());
 		mChatDetailBean.setOther_username("15603005669");
 		mChatDetailBean.setMessage_type(ChatConfiguration.TYPE_MESSAGE_TEXT);
-		mChatDetailBean.setStatus(true);
+		mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_SUCCEED);
 		mChatDetailBean.setPublish_time(System.currentTimeMillis());
 		mChatDetailBean.save(this, new SaveListener() {
 			
@@ -333,7 +336,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 			@Override
 			public void onFailure(int arg0, String arg1) {
 				//如果消息发送到服务器上面的数据库失败，则将消息的status设置为false，然后插入到本地数据库
-				mChatDetailBean.setStatus(false);
+				mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
 				try {
 					mChatDetailDao.create(mChatDetailBean);
 				} catch (SQLException e) {
@@ -400,7 +403,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	//把数据传到数据库
 	private void sendPicture2Db()
 	{
-		final ChatDetailBean mChatDetailBean = new ChatDetailBean();
+		//mChatDetailBean = new ChatDetailBean();
 		String username = "1234567123456";
 		//String username = currentUser.getUsername();
 		mChatDetailBean.setUsername(username);
@@ -408,7 +411,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		mChatDetailBean.setMessage(url);
 		mChatDetailBean.setOther_username("15603005669");
 		mChatDetailBean.setMessage_type(ChatConfiguration.TYPE_MESSAGE_PICTURE);
-		mChatDetailBean.setStatus(true);
+		mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_SUCCEED);
 		mChatDetailBean.setPublish_time(System.currentTimeMillis());
 		mChatDetailBean.save(this, new SaveListener() {
 			
@@ -427,7 +430,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 			@Override
 			public void onFailure(int arg0, String arg1) {
 				// TODO 自动生成的方法存根
-				mChatDetailBean.setStatus(false);
+				mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
 				try {
 					mChatDetailDao.create(mChatDetailBean);
 				} catch (SQLException e) {
@@ -495,7 +498,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	 */
 	private void sendVoice2Db() {
 		// TODO 自动生成的方法存根
-		final ChatDetailBean mChatDetailBean = new ChatDetailBean();
+		//mChatDetailBean = new ChatDetailBean();
 		String username = "1234567123456";
 		//String username = currentUser.getUsername();
 		mChatDetailBean.setUsername(username);
@@ -503,7 +506,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		mChatDetailBean.setMessage(url);
 		mChatDetailBean.setOther_username("15603005669");
 		mChatDetailBean.setMessage_type(ChatConfiguration.TYPE_MESSAGE_VOICE);
-		mChatDetailBean.setStatus(true);
+		mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_SUCCEED);
 		mChatDetailBean.setPublish_time(System.currentTimeMillis());
 		mChatDetailBean.save(this, new SaveListener() {
 			
@@ -521,7 +524,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 			@Override
 			public void onFailure(int arg0, String arg1) {
 				// TODO 自动生成的方法存根
-				mChatDetailBean.setStatus(false);
+				mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
 				try {
 					System.out.println("bmob将语音插入到服务器的数据库失败");
 					mChatDetailDao.create(mChatDetailBean);
@@ -540,12 +543,12 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		// TODO 自动生成的方法存根
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (resultCode) {
-		case MessageConstant.SEND_CAMERA_PIC:
+		case MessageConfig.SEND_CAMERA_PIC:
 			String picPath = data.getExtras().getString("picture");
 			Toast.makeText(this, picPath, Toast.LENGTH_LONG).show();
 			sendPictureMessage(picPath);
 			break;
-		case MessageConstant.SEND_LOCAL_PIC:
+		case MessageConfig.SEND_LOCAL_PIC:
 			ArrayList<String> pics = data.getExtras().getStringArrayList("pictures");
 			Toast.makeText(this, "共发送本地图片"+pics.size()+"张", Toast.LENGTH_LONG).show();
 			for(String pic:pics)
@@ -558,23 +561,6 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		
 	} 
 	
-	private void showEditEmoState(boolean isEmo) {
-		// TODO 自动生成的方法存根
-		edit_user_comment.requestFocus();
-		if (isEmo) {
-			moreLinearLayout.setVisibility(View.VISIBLE);
-			//layout_more.setVisibility(View.VISIBLE);
-			emoLinearLayout.setVisibility(View.VISIBLE);
-			addLinearLayout.setVisibility(View.GONE);
-			hideSoftInputView();
-		} else {
-			moreLinearLayout.setVisibility(View.GONE);
-			showSoftInputView();
-		}
-	}
-
-
-
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		
@@ -611,6 +597,24 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 						.showSoftInput(edit_user_comment, 0);
 		}
 	}
+	
+	private void showEditEmoState(boolean isEmo) {
+		// TODO 自动生成的方法存根
+		edit_user_comment.requestFocus();
+		if (isEmo) {
+			moreLinearLayout.setVisibility(View.VISIBLE);
+			//layout_more.setVisibility(View.VISIBLE);
+			emoLinearLayout.setVisibility(View.VISIBLE);
+			addLinearLayout.setVisibility(View.GONE);
+			hideSoftInputView();
+		} else {
+			moreLinearLayout.setVisibility(View.GONE);
+			showSoftInputView();
+		}
+	}
+
+	
+	
 	@Override
 	protected void onStart() {
 		// TODO 自动生成的方法存根
@@ -653,9 +657,79 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	protected void onDestroy() {
 		// TODO 自动生成的方法存根
 		super.onDestroy();
+		//如果有发送消息则更新消息列表
+		if(mChatDetailBean.getMessage_type()!=ChatConfiguration.TYPE_MESSAGE_UNKNOWN)
+			refreshRecent();
 		//释放录音的资源
 		mRecondTouchListener.release();
 		System.out.println("11111"+"onDestroy()");
 	}
 	
+	
+	/**
+	 * 刷新消息列表
+	 */
+	private void refreshRecent() {
+		
+		final Dao<ChatSnapshot, Integer> mChatSnapshotDao = mOrmDatabaseHelper.getChatSnapshotDao();
+		if(mChatSnapshotDao==null)
+			System.out.println("bmob  mChatSnapshotDao==null");
+		
+		final ChatSnapshot mChatSnapshot = new ChatSnapshot();
+		int type = mChatDetailBean.getMessage_type();
+		
+		switch (type) {
+		case ChatConfiguration.TYPE_MESSAGE_TEXT:
+			String last_message = mChatDetailBean.getMessage();
+			mChatSnapshot.setLast_message(last_message);
+			break;
+		case ChatConfiguration.TYPE_MESSAGE_PICTURE:
+			mChatSnapshot.setLast_message("[图片]");
+			break;
+		case ChatConfiguration.TYPE_MESSAGE_VOICE:
+			mChatSnapshot.setLast_message("[语音]");	
+			break;
+		case ChatConfiguration.TYPE_MESSAGE_LOCATION:
+			mChatSnapshot.setLast_message("[位置]");	
+			break;
+		default:
+			break;
+		}
+		String other_username = mChatDetailBean.getOther_username();
+		mChatSnapshot.setOther_username(other_username);
+		
+		mChatSnapshot.setLast_time(mChatDetailBean.getPublish_time());
+		mChatSnapshot.setUnread_num(0);
+		mChatSnapshot.setLast_message_type(type);
+		mChatSnapshot.save(this,new SaveListener() {
+			
+			@Override
+			public void onSuccess() {
+				// TODO 自动生成的方法存根
+				try {
+					mChatSnapshotDao.create(mChatSnapshot);
+					System.out.println("bmob将数据插入到本地数据库中");
+				} catch (Exception e) {
+					// TODO 自动生成的 catch 块
+					System.out.println("bmob将数据插入到本地数据库失败");
+					e.printStackTrace();
+					System.out.println("bmob将数据插入到本地数据库失败");
+				}
+			}
+			
+			@Override
+			public void onFailure(int arg0, String arg1) {
+				// TODO 自动生成的方法存根
+				mChatSnapshot.setlast_message_status(MessageConfig.SEND_MESSAGE_FAILED);
+				try {
+					mChatSnapshotDao.create(mChatSnapshot);
+					System.out.println("bmob将数据插入到本地数据库中");
+				} catch (SQLException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+					System.out.println("bmob将最近一条消息插入到ChatSnapshot表中失败");
+				}
+			}
+		});
+	}
 }

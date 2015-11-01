@@ -27,7 +27,7 @@ public class ChatDetailBean extends BmobObject{
 	private String username;
 	
 	/**发送状态，可判断是否成功发送*/
-	private Boolean status;
+	private int last_message_status;
 	
 	/** 对方用户名 */
 	@DatabaseField
@@ -101,13 +101,13 @@ public class ChatDetailBean extends BmobObject{
 		this.publish_time = publish_time;
 	}
 	
-	public void setStatus(Boolean s)
+	public void setLast_Message_Status(int s)
 	{
-		this.status = s;
+		this.last_message_status = s;
 	}
 	
-	public Boolean getStatus()
+	public int getLast_Message_Status()
 	{
-		return status;
+		return last_message_status;
 	}
 }

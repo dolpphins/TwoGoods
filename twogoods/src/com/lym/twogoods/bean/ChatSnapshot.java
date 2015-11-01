@@ -37,8 +37,10 @@ public class ChatSnapshot extends BmobObject{
 	/** 最后一条消息内容,类型为文字为文字内容,图片或语音为url */
 	@DatabaseField
 	private String last_message;
-	/**用户头像的url*/
+	/**聊天对象头像的url*/
 	private String head_url;
+	/**消息发送状态，有发送成功，发送失败和正在发送中三种状态*/
+	private int last_message_status; 
 	
 	/** 最后一条消息类型,默认为{@link ChatConfiguration#TYPE_MESSAGE_UNKNOWN} */
 	@DatabaseField
@@ -106,6 +108,14 @@ public class ChatSnapshot extends BmobObject{
 	public String getHead_url()
 	{
 		return this.head_url;
+	}
+	public void setlast_message_status(int status)
+	{
+		this.last_message_status = status;
+	}
+	public int getlast_message_status()
+	{
+		return this.last_message_status;
 	}
 
 }

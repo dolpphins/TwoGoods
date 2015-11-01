@@ -22,6 +22,7 @@ import com.lym.twogoods.R;
 import com.lym.twogoods.bean.ChatDetailBean;
 import com.lym.twogoods.config.ChatConfiguration;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
@@ -125,6 +126,7 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 			final TextView tv_voice_length = ViewHolder.get(convertView, R.id.tv_voice_length);
 			
 			//点击头像进入个人资料
+			
 			/*String avatar = item.get;
 			if(avatar!=null && !avatar.equals("")){//加载头像-为了不每次都加载头像
 				ImageLoader.getInstance().displayImage(avatar, iv_avatar, ImageLoadOptions.getOptions(),animateFirstListener);
