@@ -14,7 +14,7 @@ import com.lym.twogoods.bean.User;
 import com.lym.twogoods.ui.base.BackActivity;
 import com.lym.twogoods.utils.EncryptHelper;
 import com.lym.twogoods.utils.NetworkHelper;
-import com.lym.twogoods.utils.SharePreferenceManager;
+import com.lym.twogoods.utils.SharePreferencesManager;
 import com.lym.twogoods.utils.StringUtil;
 
 import android.content.Intent;
@@ -48,7 +48,7 @@ public class LoginActivity extends BackActivity {
 	private TextView actionbarRightTextView;
 
 	// 定义存储数据
-	private SharePreferenceManager sSpManager;
+	private SharePreferencesManager sSpManager;
 	// 定义变量来看是否查找成功。
 	private BmobQuery<User> bmobQuery;
 	private boolean find_succeed = false;
@@ -75,7 +75,7 @@ public class LoginActivity extends BackActivity {
 		btn_login_forget = (Button) findViewById(R.id.btn_login_forget);
 
 		// 存储数据相关
-		sSpManager = SharePreferenceManager.getInstance();
+		sSpManager = SharePreferencesManager.getInstance();
 	}
 
 	/**

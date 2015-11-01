@@ -17,12 +17,12 @@ import android.text.TextUtils;
  * 
  * @author 麦灿标
  * */
-public class SharePreferenceManager {
+public class SharePreferencesManager {
 
 	private final static String TAG = "SharePreferenceManager";
 	
 	/** SharePreferenceManager唯一实例对象 */
-	private static SharePreferenceManager sSpManager = new SharePreferenceManager();
+	private static SharePreferencesManager sSpManager = new SharePreferencesManager();
 	
 	/** 默认的SharePreferences文件名 */
 	private final String defaultSpName = "default_sharepreferences";
@@ -57,7 +57,7 @@ public class SharePreferenceManager {
 	 * 
 	 * @return 返回SharePreferenceManager唯一实例对象
 	 * */
-	public static SharePreferenceManager getInstance() {
+	public static SharePreferencesManager getInstance() {
 		return sSpManager;
 	}
 	
@@ -556,8 +556,8 @@ public class SharePreferenceManager {
 			return false;
 		}
 		if(mode != Context.MODE_PRIVATE
-				|| mode != Context.MODE_WORLD_READABLE
-				|| mode != Context.MODE_WORLD_WRITEABLE) {
+				&& mode != Context.MODE_WORLD_READABLE
+				&& mode != Context.MODE_WORLD_WRITEABLE) {
 			return false;
 		}
 		//不允许存空键
@@ -1099,6 +1099,84 @@ public class SharePreferenceManager {
 	 * */
 	public Map<String, ?> getLoactionAll(Context context) {
 		return getAll(context, locationSpName, locationSpMode);
+	}
+	
+	/**
+	 * <p>
+	 * 	移除指定的SharePreferences文件中相应键的值
+	 * </p>
+	 * 
+	 * @param context 上下文
+	 * @param name SharePreferences文件名
+	 * @param mode 创建SharePreferences时选择的模式
+	 * @param key 指定的键
+	 * 
+	 * @return 移除成功返回true,失败返回false.
+	 * */
+	public boolean removeValue(Context context, String name, int mode, String key) {
+		if(!checkParameters(context, name, mode, key)) {
+			return false;
+		}
+		SharedPreferences sp = context.getSharedPreferences(name, mode);
+		Editor editor = sp.edit();
+		editor.remove(key);
+		return editor.commit();
+	}
+	
+	/**
+	 * <p>
+	 * 	移除默认SharePreferences文件指定键的值
+	 * </p>
+	 * 
+	 * @param context 上下文
+	 * @param key 指定的键
+	 * 
+	 * @return 移除成功返回true,失败返回false.
+	 * */
+	public boolean removeValue(Context context, String key) {
+		return removeValue(context, defaultSpName, defaultSpMode, key);
+	}
+	
+	/**
+	 * <p>
+	 * 	移除设置SharePreferences文件指定键的值
+	 * </p>
+	 * 
+	 * @param context 上下文
+	 * @param key 指定的键
+	 * 
+	 * @return 移除成功返回true,失败返回false.
+	 * */
+	public boolean removeSettingValue(Context context, String key) {
+		return removeValue(context, settingsSpName, settingsSpMode, key);
+	}
+	
+	/**
+	 * <p>
+	 * 	移除登录SharePreferences文件指定键的值
+	 * </p>
+	 * 
+	 * @param context 上下文
+	 * @param key 指定的键
+	 * 
+	 * @return 移除成功返回true,失败返回false.
+	 * */
+	public boolean removeLoginValue(Context context, String key) {
+		return removeValue(context, loginSpName, loginSpMode, key);
+	}
+	
+	/**
+	 * <p>
+	 * 	移除位置SharePreferences文件指定键的值
+	 * </p>
+	 * 
+	 * @param context 上下文
+	 * @param key 指定的键
+	 * 
+	 * @return 移除成功返回true,失败返回false.
+	 * */
+	public boolean removeLocationValue(Context context, String key) {
+		return removeValue(context, locationSpName, locationSpMode, key);
 	}
 	
 }

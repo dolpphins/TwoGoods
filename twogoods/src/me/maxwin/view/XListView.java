@@ -12,6 +12,8 @@ import com.lym.twogoods.R;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -64,7 +66,8 @@ public class XListView extends ListView implements OnScrollListener {
 														// load more.
 	private final static float OFFSET_RADIO = 1.8f; // support iOS like pull
 													// feature.
-
+	
+	
 	/**
 	 * @param context
 	 */
@@ -274,7 +277,7 @@ public class XListView extends ListView implements OnScrollListener {
 		if (mLastY == -1) {
 			mLastY = ev.getRawY();
 		}
-
+		
 		switch (ev.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			mLastY = ev.getRawY();
@@ -333,7 +336,12 @@ public class XListView extends ListView implements OnScrollListener {
 		}
 		super.computeScroll();
 	}
-
+	
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent ev) {
+		return false;//为解决与ViewPager滚动冲突,暂时返回false
+	}
+	
 	@Override
 	public void setOnScrollListener(OnScrollListener l) {
 		mScrollListener = l;
@@ -378,7 +386,6 @@ public class XListView extends ListView implements OnScrollListener {
 
 		public void onLoadMore();
 	}
-	
 	
 	
 	//扩展方法

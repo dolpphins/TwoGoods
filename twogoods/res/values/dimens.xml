@@ -76,20 +76,20 @@
     <dimen name="index_goods_detail_username_textSize">16sp</dimen> 
     <dimen name="index_goods_detail_publish_time_marginLeft">5dip</dimen>
 	<dimen name="index_goods_detail_phone_marginTop">5dip</dimen>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	<dimen name="index_goods_search_header_padding">10dip</dimen>
+	<dimen name="index_goods_search_search_button_marginLeft">5dip</dimen>
+	<dimen name="index_goods_search_edittext_textSize">18sp</dimen>
+	<dimen name="index_goods_search_search_button_textSize">18sp</dimen>
+	<dimen name="index_goods_search_history_textSize">16sp</dimen>
+	<dimen name="index_goods_search_history_marginTop">10dip</dimen>
+	<dimen name="index_goods_search_history_marginBottom">10dip</dimen>
+	<dimen name="index_goods_search_history_tip_marginTop">10dip</dimen>
+	<dimen name="index_goods_search_history_tip_marginBottom">5dip</dimen>
+	<dimen name="index_goods_search_history_footer_paddingTop">20dip</dimen>
+	<dimen name="index_goods_search_history_footer_paddingBottom">20dip</dimen>
+	<dimen name="index_goods_search_history_clear_drawablePadding">10dip</dimen>
+	<dimen name="index_goods_search_input_delete_marginLeft">5dip</dimen>
+	<dimen name="index_goods_search_input_delete_marginRight">5dip</dimen>
 	
 	
 	

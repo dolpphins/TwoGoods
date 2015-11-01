@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	搜索商品界面头部布局
+
+	@author 麦灿标
+ -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:orientation="vertical">
+    
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="horizontal"
+	    android:padding="@dimen/index_goods_search_header_padding">
+	    
+        <RelativeLayout 
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1000"
+            android:background="@drawable/index_goods_search_input_bg">
+            <!-- 搜索图标 -->
+            <TextView 
+                android:id="@+id/index_goods_search_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/index_goods_search_icon"
+                android:layout_centerVertical="true"/>
+            <!-- 删除输入内容图标 -->
+            <TextView 
+                android:id="@+id/index_goods_search_input_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:background="@drawable/goods_search_input_delete"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/index_goods_search_input_delete_marginLeft"
+                android:layout_marginStart="@dimen/index_goods_search_input_delete_marginLeft"
+                android:layout_marginRight="@dimen/index_goods_search_input_delete_marginRight"
+                android:layout_marginEnd="@dimen/index_goods_search_input_delete_marginRight"
+                android:visibility="invisible"/>
+            <!-- 输入框 -->
+            <EditText
+		        android:id="@+id/index_goods_search_edittext"
+		        android:layout_width="match_parent" 
+		        android:layout_height="wrap_content"
+		        android:layout_toRightOf="@id/index_goods_search_icon"
+		        android:layout_toEndOf="@id/index_goods_search_icon"
+		        android:layout_toLeftOf="@id/index_goods_search_input_delete"
+		        android:layout_toStartOf="@id/index_goods_search_input_delete"
+		        android:layout_centerVertical="true"
+		        android:hint="@string/index_goods_search_edittext_hint"
+		        android:textSize="@dimen/index_goods_search_edittext_textSize"
+		        android:maxLength="20"
+		        android:background="@drawable/index_goods_search_edittext_bg"/>
+            
+        </RelativeLayout>
+        
+	    <TextView 
+	        android:id="@+id/index_goods_search_button"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:clickable="true"
+	        android:text="@string/search"
+	        android:layout_gravity="center_vertical"
+	        android:textSize="@dimen/index_goods_search_search_button_textSize"
+	        android:layout_marginLeft="@dimen/index_goods_search_search_button_marginLeft"
+	        android:layout_marginStart="@dimen/index_goods_search_search_button_marginLeft"/>
+	
+	</LinearLayout>
+    
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#ccc"/>
+    
+</LinearLayout>

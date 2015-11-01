@@ -23,15 +23,19 @@ import android.support.v4.view.ViewPager.LayoutParams;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import me.maxwin.view.XListView;
 
 
 /**
@@ -120,6 +124,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 			//强制设置高度
 			int height = (int) (DisplayUtils.getScreenWidthPixels(mAttachActivity) / GoodsConfiguration.GOODS_PICTURE_SCALE);
 			mPicturesViewPager.requestForceHeight(height);
+			//mPicturesViewPager.requestDisallowInterceptTouchEvent(true);
 			mPicturesViewPager.setAdapter(adapter);
 		}
 		
@@ -282,6 +287,5 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		/** 举报 */
 		private TextView index_goods_detail_report;
 	}
-	
 
 }

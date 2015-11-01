@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	搜索界面历史记录列表ListView头部提示布局
+
+	@author 麦灿标
+ -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/history_record"
+        android:textColor="@color/index_goods_search_history_tip_textColor"
+        android:layout_marginTop="@dimen/index_goods_search_history_tip_marginTop"
+        android:layout_marginBottom="@dimen/index_goods_search_history_tip_marginBottom"/>
+	<TextView 
+	    android:layout_width="match_parent"
+    	android:layout_height="1dip"
+    	android:background="@color/index_goods_search_history_listview_dividerColor"/>
+</LinearLayout>

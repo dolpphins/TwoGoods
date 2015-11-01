@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	搜索界面搜索输入框背景
+
+	@author 麦灿标
+ -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+	<solid 
+	    android:color="@color/white"/>
+</shape>

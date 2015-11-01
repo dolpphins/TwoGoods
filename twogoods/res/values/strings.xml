@@ -41,12 +41,12 @@
     <!-- 查看商品详情页面 -->
     <string name="write_comment_hint">请输入评论</string>
     <string name="goods_detail">商品详情</string>
-    
-    
-    
-    
-    
-    
+    <!-- 搜索 -->
+    <string name="search_goods">搜贰货</string>
+    <string name="search">搜索</string>
+    <string name="index_goods_search_edittext_hint">请输入关键字</string>
+    <string name="history_record">历史记录</string>
+    <string name="clear_search_history">清除搜索记录</string>
     
     
     
