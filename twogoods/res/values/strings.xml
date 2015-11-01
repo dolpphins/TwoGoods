@@ -38,9 +38,9 @@
     <string name="price_asc">价格从低到高</string>
     <string name="most_focus">最多关注</string>
     <string name="most_browse">最多浏览</string>
-    
-    
-    
+    <!-- 查看商品详情页面 -->
+    <string name="write_comment_hint">请输入评论</string>
+    <string name="goods_detail">商品详情</string>
     
     
     

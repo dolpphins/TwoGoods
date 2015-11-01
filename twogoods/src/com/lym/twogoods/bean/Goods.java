@@ -1,7 +1,10 @@
 package com.lym.twogoods.bean;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.j256.ormlite.field.DatabaseField;
-import com.lym.twogoods.config.UserConfiguration;
 
 import cn.bmob.v3.BmobObject;
 
@@ -15,7 +18,9 @@ import cn.bmob.v3.BmobObject;
  * 
  * @author 麦灿标
  * */
-public class Goods extends BmobObject{
+public class Goods extends BmobObject implements Serializable{
+
+	private static final long serialVersionUID = 3731877939602913080L;
 
 	/** id,主键自增 */
 	@DatabaseField(generatedId = true)
@@ -29,10 +34,7 @@ public class Goods extends BmobObject{
 	@DatabaseField
 	private String username;
 	
-	/** 头像本地缓存存放位置,如果没有则是默认头像存放位置 
-	 *  格式为:路径+GUID_head_pic.jpg,默认头像路
-	 *  径格式:路径+{@link UserConfiguration#USER_DEFAULT_HEAD_NAME}
-	 * */
+	/** 该用户头像存放在网络服务器上的可访问url */
 	@DatabaseField
 	private String head_url;
 	
@@ -60,18 +62,10 @@ public class Goods extends BmobObject{
 	@DatabaseField
 	private String description;
 	
-	/** 图片数,默认为0 */
+	/** 商品图片网络可访问url集合 */
 	@DatabaseField
-	private int pic_num = 0;
-	
-	/** 图片前缀 */
-	@DatabaseField
-	private String pic_prefix;
-	
-	/** 图片基本路径 */
-	@DatabaseField
-	private String pic_baseurl;
-	
+	private ArrayList<String> picturesUrlList;
+
 	/** 关注数,默认为0 */
 	@DatabaseField
 	private int focus_num = 0;
@@ -84,7 +78,7 @@ public class Goods extends BmobObject{
 	@DatabaseField
 	private int browse_num = 0;
 	
-	/** 语音所在路径 */
+	/** 语音在网络服务器上的可访问url */
 	@DatabaseField
 	private String voice_url;
 	
@@ -184,30 +178,6 @@ public class Goods extends BmobObject{
 		this.description = description;
 	}
 
-	public int getPic_num() {
-		return pic_num;
-	}
-
-	public void setPic_num(int pic_num) {
-		this.pic_num = pic_num;
-	}
-
-	public String getPic_prefix() {
-		return pic_prefix;
-	}
-
-	public void setPic_prefix(String pic_prefix) {
-		this.pic_prefix = pic_prefix;
-	}
-
-	public String getPic_baseurl() {
-		return pic_baseurl;
-	}
-
-	public void setPic_baseurl(String pic_baseurl) {
-		this.pic_baseurl = pic_baseurl;
-	}
-
 	public int getFocus_num() {
 		return focus_num;
 	}
@@ -271,6 +241,15 @@ public class Goods extends BmobObject{
 	public void setUpdate_time(long update_time) {
 		this.update_time = update_time;
 	}
+	
+	public ArrayList<String> getPictureUrlList() {
+		return picturesUrlList;
+	}
+
+	public void setPictureUrlList(ArrayList<String> picturesUrlList) {
+		this.picturesUrlList = picturesUrlList;
+	}
+	
 }
 
 

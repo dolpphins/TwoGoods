@@ -10,7 +10,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:padding="@dimen/app_base_goods_listview_item_padding">
+    android:padding="@dimen/app_base_goods_listview_item_padding"
+    android:descendantFocusability="blocksDescendants">  <!-- 该属性解决ListView点击Item获取不了焦点问题 -->
     
     <!-- 顶部布局 -->
     <RelativeLayout 
@@ -78,7 +79,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/app_base_goods_listview_item_dscription_marginTop"
         android:layout_marginBottom="@dimen/app_base_goods_listview_item_dscription_marginBottom"
-        android:textSize="@dimen/app_base_goods_listview_item_dscription_textSize"/>
+        android:textSize="@dimen/app_base_goods_listview_item_dscription_textSize"
+        android:maxLines="3"/>
 
     <!-- 左右可滑动图片 -->
     <HorizontalScrollView 

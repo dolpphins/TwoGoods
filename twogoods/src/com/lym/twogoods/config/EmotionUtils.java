@@ -6,6 +6,10 @@ import java.util.Map;
 
 import com.lym.twogoods.R;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 /**
  * 表情配置文件工具类
  * 
@@ -13,7 +17,7 @@ import com.lym.twogoods.R;
  * 
  * */
 public class EmotionUtils implements Serializable {
-
+	
 	public static Map<String, Integer> emojiMap;
 	static {
 		emojiMap = new HashMap<String, Integer>();

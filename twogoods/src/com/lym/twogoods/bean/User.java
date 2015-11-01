@@ -47,10 +47,7 @@ public class User extends BmobObject {
 	@DatabaseField
 	private String declaration;
 
-	/**
-	 * 头像本地缓存存放位置,如果没有则是默认头像存放位置 格式为:路径+GUID_head_pic.jpg,默认头像路
-	 * 径格式:路径+default_head_pic.jpg.
-	 * */
+	/** 该用户头像网络可访问url */
 	@DatabaseField
 	private String head_url;
 

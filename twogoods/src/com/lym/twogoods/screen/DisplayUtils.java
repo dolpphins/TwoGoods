@@ -1,4 +1,4 @@
-package com.lym.twogoods.utils;
+package com.lym.twogoods.screen;
 
 import android.app.Activity;
 import android.content.Context;

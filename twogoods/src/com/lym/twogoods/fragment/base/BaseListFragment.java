@@ -41,7 +41,6 @@ public abstract class BaseListFragment extends BaseFragment {
 	//子类可以重写该方法自定义ListView配置
 	protected void configListView() {
 		//不可上拉加载
-		System.out.println(999);
 		mListView.setPullLoadEnable(false);
 		//不可下拉刷新
 		mListView.setPullRefreshEnable(false);
