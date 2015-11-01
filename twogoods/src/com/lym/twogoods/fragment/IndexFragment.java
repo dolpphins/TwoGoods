@@ -21,6 +21,7 @@ import com.lym.twogoods.ui.GoodsDetailActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -484,8 +485,17 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				System.out.println("onItemClick");
+				Log.i(TAG, "onItemClick position:" + position);
+				//注意position从1开始
 				Intent intent = new Intent(mAttachActivity, GoodsDetailActivity.class);
+				intent.putExtra("goods", mGoodsList.get(position - 1));
+//				ArrayList<String> picturesUrlList = new ArrayList<String>();
+//				picturesUrlList.add("http://cdn.pcbeta.attachment.inimc.com/data/attachment/forum/201312/31/181215p0jnzo60mp0oenz0.jpg");
+//				picturesUrlList.add("http://download.pchome.net/wallpaper/pic-1853-4-1024x768.jpg");
+//				picturesUrlList.add("http://img2.imgtn.bdimg.com/it/u=2110278011,3816929467&fm=21&gp=0.jpg");
+//				picturesUrlList.add("http://img5.imgtn.bdimg.com/it/u=1457497701,2659227830&fm=21&gp=0.jpg");
+//				picturesUrlList.add("http://img3.imgtn.bdimg.com/it/u=4028451469,3760090854&fm=21&gp=0.jpg");
+//				intent.putStringArrayListExtra("picturesUrlList", picturesUrlList);
 				startActivity(intent);
 			}
 		});

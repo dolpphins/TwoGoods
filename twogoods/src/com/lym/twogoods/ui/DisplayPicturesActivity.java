@@ -31,6 +31,10 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * 	查看图片Activity
  * </p>
  * <p>
+ * 	你必须使用<pre>intent.putStringArrayListExtra("picturesUrlList",list);</pre>
+ * 	传递要显示的图片的网络url过来.
+ * </p>
+ * <p>
  * 	该Activity图片加载完默认磁盘缓存路径为{@link DiskCacheManager#getDefaultPictureCachePath()},你可以通过
  * 	传递你自定义的缓存路径来定义自己的缓存路径,代码如:<pre>intent.putString("diskCachePath",path);</pre>
  * </p>
@@ -41,9 +45,7 @@ public class DisplayPicturesActivity extends BackActivity implements MultiPictur
 													OnPageChangeListener {
 
 	private final static String TAG = "DisplayPicturesActivity";
-	
-	private final float FLING_BOUND = 5000.0f;
-	
+		
 	//数据集
 	private List<String> picturesUrlList;
 	//PhotoViewAttacher集合
@@ -65,7 +67,6 @@ public class DisplayPicturesActivity extends BackActivity implements MultiPictur
 		picturesUrlList = getIntent().getStringArrayListExtra("picturesUrlList");
 
 		if(picturesUrlList != null) {
-			Log.i(TAG, "picturesUrlList size is:" + picturesUrlList.size());
 			app_dispaly_pictures_viewpager.setOnPageChangeListener(this);
 			app_dispaly_pictures_viewpager.setAdapter(new PicturesViewPagerAdapter());
 			setTitleTip(0);

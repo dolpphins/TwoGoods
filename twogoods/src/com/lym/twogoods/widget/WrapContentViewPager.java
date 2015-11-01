@@ -19,6 +19,9 @@ public class WrapContentViewPager extends ViewPager {
 
 	private final static String TAG = "WrapContentViewPager";
 	
+	/** 强制设置的高度,-1表示没有设置 */
+	private int mRequestHeight = -1;
+	
 	public WrapContentViewPager(Context context) {
 		this(context, null);
 	}
@@ -40,10 +43,28 @@ public class WrapContentViewPager extends ViewPager {
 	        int h = child.getMeasuredHeight();
 	        if(h > height) height = h;//寻找最大高度的子View
 	    }
-	    heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
 
+	    if(mRequestHeight >= 0) {
+	    	height = mRequestHeight;
+	    }
+	    heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+	  
 	    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
 
+	/**
+	 * <p>
+	 * 	强制设置ViewPager的高度
+	 * </p>
+	 * 
+	 * @param height 要设置的高度,注意必须大于0
+	 * */
+	public void requestForceHeight(int height) {
+		if(height < 0) {
+			return;
+		}
+		mRequestHeight = height;
+		requestLayout();
+	}
 	
 }

@@ -175,8 +175,10 @@ public class PicturesAsyncTask extends BaseAsyncTask<String, Integer, Bitmap>{
 		if(url == null || bitmap == null) {
 			return false;
 		}
-		//该方法会返回先前该key的value(没有则返回null)
-		memoryCache.put(url, bitmap);
+		//不存在才放入内存缓存
+		if(memoryCache.get(url) == null) {
+			memoryCache.put(url, bitmap);
+		}
 		return true;
 	}
 	

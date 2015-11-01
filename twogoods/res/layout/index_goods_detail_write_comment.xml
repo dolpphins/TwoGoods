@@ -17,7 +17,9 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="@dimen/app_goods_details_write_comment_top_padding">
+        android:padding="@dimen/app_goods_details_write_comment_top_padding"
+        android:focusable="true"                     
+        android:focusableInTouchMode="true">       <!-- 阻止EditText默认获取焦点 -->
         <ImageView 
             android:id="@+id/app_goods_detail_write_comment_add_emotion_icon_iv"
 		    android:layout_width="wrap_content"
@@ -35,14 +37,14 @@
 		    android:layout_marginStart="@dimen/app_goods_detail_write_comment_edittext_marginLeft"
 		    android:layout_marginRight="@dimen/app_goods_detail_write_comment_edittext_marginRight"
 		    android:layout_marginEnd="@dimen/app_goods_detail_write_comment_edittext_marginRight"
-		    android:background="@drawable/app_goods_detail_write_comment_input_bg"
+		    android:background="@drawable/index_goods_detail_write_comment_input_bg"
 		    android:maxLength="200"/>  <!-- 最大字符数为200,注意与maxEms的区别 -->
  		
 		<ImageView 
 		    android:id="@+id/app_goods_detail_write_comment_send"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:src="@drawable/app_goods_detail_write_comment_send_selector"
+		    android:src="@drawable/index_goods_detail_write_comment_send_selector"
 		    android:contentDescription="@null"
 		    android:clickable="true"/>
     </LinearLayout>
@@ -52,12 +54,12 @@
         android:layout_height="1dip"
         android:background="#cccccc"/>
     
-	<!-- 表情布局ViewPager -->
+	<!-- 表情布局ViewPager --> <!-- 暂时使用visibility="gone" 优化可考虑使用ViewStub -->
 	<com.lym.twogoods.widget.WrapContentViewPager
 	    android:id="@+id/app_goods_detail_write_comment_emotion_viewpager"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    />
+	    android:visibility="gone"/>
 	<LinearLayout 
 	    android:id="@+id/app_goods_detail_write_comment_viewpager_tip"
 	    android:layout_width="wrap_content"

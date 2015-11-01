@@ -23,9 +23,10 @@ public class GoodsData {
 		item1.setPrice(123);
 		item1.setPublish_location("广州市天河区");
 		item1.setPublish_time(System.currentTimeMillis() - 7200);
-		item1.setPic_baseurl(DiskCacheManager.getInstance(context).getGoodsPictureCachePath());
-		item1.setPic_prefix("abc");
-		item1.setPic_num(5);
+		ArrayList<String> picturesUrlList = new ArrayList<String>();
+		picturesUrlList.add("http://img3.imgtn.bdimg.com/it/u=4031489709,1229250988&fm=21&gp=0.jpg");
+		picturesUrlList.add("http://img3.imgtn.bdimg.com/it/u=2350191774,2043707413&fm=21&gp=0.jpg");
+		item1.setPictureUrlList(picturesUrlList);
 		
 		Goods item2 = new Goods();
 		item2.setUsername("user1");
@@ -35,9 +36,12 @@ public class GoodsData {
 		item2.setPrice(123);
 		item2.setPublish_location("广州市天河区");
 		item2.setPublish_time(System.currentTimeMillis() - 7200);
-		item2.setPic_baseurl(DiskCacheManager.getInstance(context).getGoodsPictureCachePath());
-		item2.setPic_prefix("abc");
-		item2.setPic_num(2);
+		picturesUrlList = new ArrayList<String>();
+		picturesUrlList.add("http://img4.imgtn.bdimg.com/it/u=4184347257,1846405169&fm=21&gp=0.jpg");
+		picturesUrlList.add("http://fun.datang.net/uploadpic/c34fab3ba8b04dc2a47e73e622926a6f.jpg");
+		picturesUrlList.add("http://img3.imgtn.bdimg.com/it/u=2372246127,2834803378&fm=21&gp=0.jpg");
+		picturesUrlList.add("http://img0.imgtn.bdimg.com/it/u=646289101,591518669&fm=21&gp=0.jpg");
+		item2.setPictureUrlList(picturesUrlList);
 		
 		Goods item3 = new Goods();
 		item3.setUsername("user1");
@@ -56,29 +60,14 @@ public class GoodsData {
 		item4.setPrice(123);
 		item4.setPublish_location("广州市天河区");
 		item4.setPublish_time(System.currentTimeMillis() - 7200);
-		item4.setPic_baseurl(DiskCacheManager.getInstance(context).getGoodsPictureCachePath());
-		item4.setPic_prefix("abc");
-		item4.setPic_num(6);
+		picturesUrlList = new ArrayList<String>();
+		picturesUrlList.add("http://img4.imgtn.bdimg.com/it/u=3231325652,4269613482&fm=21&gp=0.jpg");
+		item4.setPictureUrlList(picturesUrlList);
 		
 		goodsList.add(item1);
 		goodsList.add(item2);
 		goodsList.add(item3);
 		goodsList.add(item4);
-		
-		for(int i = 0; i < 10; i++) {
-			Goods item = new Goods();
-			item.setUsername("user1");
-			item.setDescription("小米手机");
-			item.setGUID(DatabaseHelper.getUUID().toString());
-			item.setHead_url(DiskCacheManager.getInstance(context).getUserHeadPictureCachePath() + "/" + UserConfiguration.USER_DEFAULT_HEAD_NAME);
-			item.setPrice(123);
-			item.setPublish_location("广州市天河区");
-			item.setPublish_time(System.currentTimeMillis() - 7200);
-			item.setPic_baseurl(DiskCacheManager.getInstance(context).getGoodsPictureCachePath());
-			item.setPic_prefix("abc");
-			item.setPic_num(6);
-			goodsList.add(item);
-		}
 		
 		return goodsList;
 	}

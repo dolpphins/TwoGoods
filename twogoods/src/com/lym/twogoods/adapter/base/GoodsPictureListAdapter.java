@@ -54,7 +54,7 @@ public class GoodsPictureListAdapter extends BaseAdapter{
 		return position;
 	}
 
-	@Override
+	@Override  
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		ImageView iv = new ImageView(mAcitity);
@@ -85,7 +85,7 @@ public class GoodsPictureListAdapter extends BaseAdapter{
 				.considerExifParams(true)
 				.build();
 		
-		imageLoader.displayImage("http://img0.imgtn.bdimg.com/it/u=2842329199,2275368441&fm=21&gp=0.jpg", imageView, options);
+		imageLoader.displayImage(url, imageView, options);
 	}
 	
 }

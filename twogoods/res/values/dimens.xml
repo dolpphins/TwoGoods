@@ -25,6 +25,18 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <!-- mcb -->
     <dimen name="index_fragment_head_textSize">16sp</dimen>
     <dimen name="index_fragment_head_paddingTop">10dip</dimen>
@@ -49,13 +61,82 @@
     <dimen name="app_goods_detail_write_comment_edittext_marginLeft">5dip</dimen>
     <dimen name="app_goods_detail_write_comment_edittext_marginRight">5dip</dimen>
     <dimen name="app_goods_details_write_comment_top_padding">5dip</dimen>              
-    
-    
-    
-    
-    
-    
-    
+    <dimen name="index_goods_detail_share_listview_item_padding">10dip</dimen>
+    <dimen name="index_goods_detail_message_padding">10dip</dimen>
+    <dimen name="index_goods_detail_description_marginBottom">5dip</dimen>
+    <dimen name="index_goods_detail_price_textSize">18sp</dimen>
+    <dimen name="index_goods_detail_price_marginTop">5dip</dimen>
+    <dimen name="index_goods_detail_price_marginBottom">5dip</dimen>       
+    <dimen name="index_goods_detail_fouse_num_marginBottom">10dip</dimen>  
+    <dimen name="index_goods_detail_head_picture_marginTop">5dip</dimen> 
+    <dimen name="index_goods_detail_head_picture_marginRight">5dip</dimen>
+    <dimen name="index_goods_detail_head_picture_marginBottom">5dip</dimen> 
+    <dimen name="index_goods_detail_publish_time_marginRight">10dip</dimen>
+    <dimen name="index_goods_detail_username_marginLeft">5dip</dimen> 
+    <dimen name="index_goods_detail_username_textSize">16sp</dimen> 
+    <dimen name="index_goods_detail_publish_time_marginLeft">5dip</dimen>
+	<dimen name="index_goods_detail_phone_marginTop">5dip</dimen>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	<!-- lyw -->
 	<!-- lyw_publish -->
 	<dimen name="margintop">30dp</dimen>
@@ -96,11 +177,56 @@
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	<!-- yjf -->
 	
 	<dimen name="message_list_item_height">70dip</dimen>
 	<dimen name="message_base_scrollview_top_height">50.0dip</dimen>
 	<dimen name="tab_padding_left_right">40dp</dimen>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
