@@ -7,6 +7,7 @@ import com.lym.twogoods.bean.PictureThumbnailSpecification;
 import com.lym.twogoods.screen.GoodsScreen;
 import com.lym.twogoods.manager.UniversalImageLoaderConfigurationManager;
 import com.lym.twogoods.manager.UniversalImageLoaderManager;
+import com.lym.twogoods.manager.UniversalImageLoaderOptionManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -76,14 +77,7 @@ public class GoodsPictureListAdapter extends BaseAdapter{
 				.getGoodsListPictureThumbnailImageLoaderConfiguration(mAcitity.getApplicationContext());
 		ImageLoader imageLoader = UniversalImageLoaderManager.getImageLoader(configuration);
 		
-		DisplayImageOptions options = new DisplayImageOptions.Builder()
-				.showImageOnLoading(R.drawable.common_m1)
-				.showImageForEmptyUri(R.drawable.common_m10)
-				.showImageOnFail(R.drawable.common_m11)
-				.cacheInMemory(true)
-				.cacheOnDisk(true)
-				.considerExifParams(true)
-				.build();
+		DisplayImageOptions options = UniversalImageLoaderOptionManager.getGoodsListDisplayImageOption();
 		
 		imageLoader.displayImage(url, imageView, options);
 	}

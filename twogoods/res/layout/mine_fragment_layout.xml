@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	我的Fragment布局
+
+	@author 麦灿标
+ -->
+
+<ScrollView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none">
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        
+        
+	    <!-- 头部  -->
+	    <RelativeLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:paddingTop="@dimen/mine_fragment_layout_paddingTop"
+		    android:paddingBottom="@dimen/mine_fragment_layout_paddingBottom"
+		    android:paddingLeft="@dimen/mine_fragment_layout_paddingLeft"
+		    android:paddingStart="@dimen/mine_fragment_layout_paddingLeft"
+		    android:paddingRight="@dimen/mine_fragment_layout_paddingRight"
+		    android:paddingEnd="@dimen/mine_fragment_layout_paddingRight"
+		    android:background="@drawable/mine_layout_bg">
+		    
+		    <!-- 更多 -->
+		    <TextView 
+		        android:id="@+id/mine_more"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/mine_more"
+		        android:layout_alignParentRight="true"
+		        android:layout_alignParentEnd="true"
+		        android:textSize="@dimen/mine_more_textSize"
+		        android:textColor="@color/white"
+		        android:layout_marginRight="@dimen/mine_more_marginRight"
+		        android:layout_marginEnd="@dimen/mine_more_marginRight"/>
+			<!-- 头像 -->
+			<com.lym.twogoods.widget.CircleImageView 
+			    android:id="@+id/mine_head_picture"
+			    android:layout_width="100dip"
+		        android:layout_height="100dip"
+		        android:layout_centerHorizontal="true"
+		        android:src="@drawable/user_default_head"
+		        android:contentDescription="@null"
+		        android:layout_marginTop="@dimen/mine_head_picture_marginTop"/>
+			<!-- 贰货号 -->
+			<TextView 
+			    android:id="@+id/mine_username"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_centerHorizontal="true"
+			    android:layout_below="@id/mine_head_picture"
+			    android:layout_marginTop="@dimen/mine_username_marginTop"
+			    android:textColor="@color/white"
+			    android:textSize="@dimen/mine_username_textSize"/>
+			<!-- 浏览数 -->
+			<TextView 
+			    android:id="@+id/mine_browse_num"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_centerHorizontal="true"
+			    android:layout_below="@id/mine_username"
+			    android:layout_marginTop="@dimen/mine_browse_num_marginTop"
+			    android:textColor="@color/white"
+			    android:textSize="@dimen/mine_browse_num_textSize"/>
+			<!-- 简介 -->
+			<TextView
+			    android:id="@+id/mine_description" 
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_below="@id/mine_browse_num"
+			    android:textSize="@dimen/mine_description_textSize"
+				android:layout_marginTop="@dimen/mine_description_marginTop"
+				android:layout_marginBottom="@dimen/mine_description_marginBottom"/>
+		    
+		<!--  <TextView 
+			    android:layout_width="match_parent"
+			    android:layout_height="1dip"
+			    android:background="#ccc"
+			    android:layout_alignParentBottom="true"/> -->
+			
+		</RelativeLayout>
+		    
+	    <!-- 我发布的贰货 -->
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	        android:background="#ccc"
+	        android:layout_marginTop="@dimen/mine_publish_goods_marginTop"/>
+	    <RelativeLayout 
+	        android:id="@+id/mine_publish_goods"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/mine_list_item_paddingLeft"
+	        android:paddingStart="@dimen/mine_list_item_paddingLeft"
+	        android:paddingRight="@dimen/mine_list_item_paddingRight"
+	        android:paddingEnd="@dimen/mine_list_item_paddingRight"
+	        android:paddingTop="@dimen/mine_list_item_paddingTop"
+	        android:paddingBottom="@dimen/mine_list_item_paddingBottom"
+	        android:background="@drawable/mine_list_item_selector"
+	        android:clickable="true">
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:text="@string/mine_publish_goods"
+	            android:textSize="@dimen/mine_list_item_textSize"/>
+	    </RelativeLayout>
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	        android:background="#ccc"/>
+	    
+	    <!-- 我关注的贰货 -->
+	    <RelativeLayout 
+	        android:id="@+id/mine_focus_goods"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/mine_list_item_paddingLeft"
+	        android:paddingStart="@dimen/mine_list_item_paddingLeft"
+	        android:paddingRight="@dimen/mine_list_item_paddingRight"
+	        android:paddingEnd="@dimen/mine_list_item_paddingRight"
+	        android:paddingTop="@dimen/mine_list_item_paddingTop"
+	        android:paddingBottom="@dimen/mine_list_item_paddingBottom"
+	        android:background="@drawable/mine_list_item_selector"
+	        android:clickable="true">
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:text="@string/mine_focus_goods"
+	            android:textSize="@dimen/mine_list_item_textSize"/>
+	    </RelativeLayout>
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	        android:background="#ccc"/>
+	    
+	    <!-- 设置 -->
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	        android:background="#ccc"
+	        android:layout_marginTop="@dimen/mine_settings_item_marginTop"/>
+	    <RelativeLayout
+	        android:id="@+id/mine_settings" 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/mine_list_item_paddingLeft"
+	        android:paddingStart="@dimen/mine_list_item_paddingLeft"
+	        android:paddingRight="@dimen/mine_list_item_paddingRight"
+	        android:paddingEnd="@dimen/mine_list_item_paddingRight"
+	        android:paddingTop="@dimen/mine_list_item_paddingTop"
+	        android:paddingBottom="@dimen/mine_list_item_paddingBottom"
+	        android:background="@drawable/mine_list_item_selector"
+	        android:clickable="true">
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:text="@string/settings"
+	            android:textSize="@dimen/mine_list_item_textSize"/>
+	    </RelativeLayout>
+		<TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	        android:background="#ccc"/>
+		    
+		<TextView
+		    android:id="@+id/mine_exit_button" 
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:text="@string/exit_account"
+		    android:clickable="true"
+		    android:textSize="@dimen/mine_exit_button_textSize"
+		    android:textColor="@color/white"
+		    android:background="@drawable/mine_exit_button_bg_selector"
+		    android:gravity="center_horizontal"
+		    android:layout_marginLeft="@dimen/mine_exit_button_marginLeft"
+		    android:layout_marginStart="@dimen/mine_exit_button_marginLeft"
+		    android:layout_marginRight="@dimen/mine_exit_button_marginRight"
+		    android:layout_marginEnd="@dimen/mine_exit_button_marginRight"
+		    android:layout_marginTop="@dimen/mine_exit_button_marginTop"
+		    android:layout_marginBottom="@dimen/mine_exit_button_marginBottom"/>
+		
+		
+    </LinearLayout>
+</ScrollView>

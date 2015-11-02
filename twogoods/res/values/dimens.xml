@@ -90,33 +90,33 @@
 	<dimen name="index_goods_search_history_clear_drawablePadding">10dip</dimen>
 	<dimen name="index_goods_search_input_delete_marginLeft">5dip</dimen>
 	<dimen name="index_goods_search_input_delete_marginRight">5dip</dimen>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	<!-- 我的 -->
+	<dimen name="mine_fragment_layout_paddingTop">20dip</dimen>
+	<dimen name="mine_fragment_layout_paddingBottom">20dip</dimen>
+	<dimen name="mine_fragment_layout_paddingLeft">10dip</dimen>
+	<dimen name="mine_fragment_layout_paddingRight">10dip</dimen>
+	<dimen name="mine_more_textSize">18sp</dimen>
+	<dimen name="mine_username_marginTop">10dip</dimen>
+	<dimen name="mine_browse_num_marginTop">10dip</dimen>
+	<dimen name="mine_username_textSize">16sp</dimen>
+	<dimen name="mine_description_textSize">16sp</dimen>
+	<dimen name="mine_browse_num_textSize">16sp</dimen>
+	<dimen name="mine_head_picture_marginTop">10dip</dimen>
+	<dimen name="mine_description_marginTop">10dip</dimen>
+	<dimen name="mine_description_marginBottom">10dip</dimen>
+	<dimen name="mine_more_marginRight">5dip</dimen>
+	<dimen name="mine_list_item_paddingLeft">10dip</dimen>
+	<dimen name="mine_list_item_paddingRight">10dip</dimen>
+	<dimen name="mine_list_item_paddingTop">10dip</dimen>
+	<dimen name="mine_list_item_paddingBottom">10dip</dimen>
+	<dimen name="mine_settings_item_marginTop">20dip</dimen>
+	<dimen name="mine_list_item_textSize">18sp</dimen>
+	<dimen name="mine_exit_button_textSize">20sp</dimen>
+	<dimen name="mine_exit_button_marginLeft">50dip</dimen>
+	<dimen name="mine_exit_button_marginRight">50dip</dimen>
+	<dimen name="mine_exit_button_marginTop">25dip</dimen>
+	<dimen name="mine_exit_button_marginBottom">25dip</dimen>
+	<dimen name="mine_publish_goods_marginTop">10dip</dimen>
 	
 	
 	
