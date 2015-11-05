@@ -6,6 +6,7 @@ import com.lym.twogoods.fragment.MessageFragment;
 import com.lym.twogoods.fragment.MineFragment;
 import com.lym.twogoods.fragment.NearbyFragment;
 import com.lym.twogoods.index.ui.GoodsSearchActivity;
+import com.lym.twogoods.nearby.ui.SelectCityActivity;
 import com.lym.twogoods.publish.ui.PublishGoodsActivity;
 import com.lym.twogoods.ui.base.BottomDockFragmentActivity;
 import com.lym.twogoods.viewholder.TabViewHolder;
@@ -137,6 +138,8 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 			break;
 		//点击底部Tab附近
 		case R.id.tab_nearby_btn:
+			Intent intent1 = new Intent(this, SelectCityActivity.class);
+			startActivity(intent1);
 			selectTabIndex = 1;
 			break;
 		//点击底部发布

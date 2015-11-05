@@ -98,7 +98,7 @@ public class LoginActivity extends BackActivity {
 							.toString())) {
 						phone = et_login_erhuo.getText().toString();
 						BmobSMS.requestSMSCode(getApplicationContext(),
-								et_login_erhuo.getText().toString(), "登陆验证",
+								et_login_erhuo.getText().toString(), "登录验证",
 								new RequestSMSCodeListener() {
 
 									@Override
@@ -117,7 +117,7 @@ public class LoginActivity extends BackActivity {
 							.getText().toString())) {
 						phone = usernameToPhone();
 						BmobSMS.requestSMSCode(getApplicationContext(), phone,
-								"登陆验证", new RequestSMSCodeListener() {
+								"登录验证", new RequestSMSCodeListener() {
 
 									@Override
 									public void done(Integer smsId,
@@ -216,7 +216,7 @@ public class LoginActivity extends BackActivity {
 
 	private void initActionbar() {
 		// 设置actionbar样式
-		setCenterTitle("登陆");
+		setCenterTitle("登录");
 
 		actionbarRightTextView = setRightTitle("注册");
 		actionbarRightTextView.setOnClickListener(new OnClickListener() {

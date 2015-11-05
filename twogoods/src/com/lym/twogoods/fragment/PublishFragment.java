@@ -10,25 +10,30 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
+import com.lym.twogoods.adapter.EmotionGridViewAdapter;
+import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
 import com.lym.twogoods.adapter.PublishEmotionGvAdapter;
 import com.lym.twogoods.adapter.PublishEmotionPagerAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.config.EmotionUtils;
 import com.lym.twogoods.fragment.base.BaseFragment;
+import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.screen.DisplayUtils;
 import com.lym.twogoods.utils.DatabaseHelper;
 import com.lym.twogoods.utils.SensitiveUtils;
 import com.lym.twogoods.utils.SharePreferencesManager;
+import com.lym.twogoods.widget.WrapContentViewPager;
 
 import android.app.ActionBar.LayoutParams;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +72,7 @@ public class PublishFragment extends BaseFragment {
 	private ImageView iv_publish_fragment_add_photo;
 	private ImageView iv_publish_fragment_add_smile;
 	private ImageView iv_publish_fragment_add_voice;
-	private ViewPager vp_publish_fragement_emoji;
+	private WrapContentViewPager vp_publish_fragement_emoji;
 	private LinearLayout ll_publish_fragment_emoji;
 	private Button btn_publish_fragment_position;
 
@@ -76,6 +81,7 @@ public class PublishFragment extends BaseFragment {
 
 	// 定义适配器
 	private PublishEmotionPagerAdapter publishEmotionPagerAdapter;
+	// private EmotionGridViewAdapter emotionGridViewAdapter;
 
 	// 定位相关
 	private boolean isFirst = false;
@@ -87,6 +93,7 @@ public class PublishFragment extends BaseFragment {
 	// 货品信息相关
 	private Goods goodsBean;
 	private SharePreferencesManager sSpManager;
+	private EmotionViewPagerAdapter emotionViewPagerAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -125,7 +132,7 @@ public class PublishFragment extends BaseFragment {
 				.findViewById(R.id.iv_publish_fragment_add_smile);
 		iv_publish_fragment_add_voice = (ImageView) view
 				.findViewById(R.id.iv_publish_fragment_add_voice);
-		vp_publish_fragement_emoji = (ViewPager) view
+		vp_publish_fragement_emoji = (WrapContentViewPager) view
 				.findViewById(R.id.vp_publish_fragment_emoji);
 		btn_publish_fragment_position = (Button) view
 				.findViewById(R.id.btn_publish_fragment_position);
@@ -187,11 +194,12 @@ public class PublishFragment extends BaseFragment {
 				.createFromResource(getActivity(), R.array.publish_sort_array,
 						android.R.layout.simple_spinner_item);
 		sortaAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_item);
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		sp_publish_fragment_sort.setAdapter(sortaAdapter);
+
 		// 设置价格内容
 		for (int i = 0; i < 30; i++) {
-			items.add((i + 1)+"");
+			items.add((i + 1) + "");
 		}
 		ArrayAdapter<String> dateAdapter = new ArrayAdapter<String>(
 				getActivity(), android.R.layout.simple_spinner_item, items);
@@ -249,10 +257,10 @@ public class PublishFragment extends BaseFragment {
 	 * @author 龙宇文
 	 **/
 	private void getGoodsData() {
-		// goodsBean.setUsername(sSpManager.getStringSet(getActivity(),
-		// "loginmessage(MD5).xml", MODE_PRIVATE, key, defValue))
 		goodsBean.setDescription(et_publish_fragment_description.getText()
 				.toString());
+		Log.v("getGoodsData",et_publish_fragment_description.getText()
+				.toString() );
 		goodsBean.setCategory(sp_publish_fragment_sort.getSelectedItem()
 				.toString());
 		goodsBean.setPhone(et_publish_fragment_tel.getText().toString());
@@ -266,7 +274,10 @@ public class PublishFragment extends BaseFragment {
 				.getText().toString());
 		goodsBean.setLocation_latitude(String.valueOf(latitude));
 		goodsBean.setLocation_longitude(String.valueOf(longitude));
-
+		// 上传头像
+		// goodsBean.setHead_url(sSpManager.getString(getActivity(), name, mode,
+		// key, defValue))
+		goodsBean.setHead_url(UserInfoManager.getInstance().getmCurrent().getHead_url());
 	}
 
 	/*
@@ -274,21 +285,24 @@ public class PublishFragment extends BaseFragment {
 	 * 发布商品到服务器上
 	 */
 	public void publishGoods() {
-		getGoodsData();
-		goodsBean.save(getActivity(), new SaveListener() {
+		if (judgeDescription() && judgeGoods()) {
+			getGoodsData();
+			goodsBean.save(getActivity(), new SaveListener() {
 
-			@Override
-			public void onSuccess() {
-				Toast.makeText(getActivity(), "发布成功", Toast.LENGTH_SHORT)
-						.show();
-			}
+				@Override
+				public void onSuccess() {
+					Toast.makeText(getActivity(), "发布成功", Toast.LENGTH_SHORT)
+							.show();
+				}
 
-			@Override
-			public void onFailure(int arg0, String arg1) {
-				Toast.makeText(getActivity(), "发布失败", Toast.LENGTH_SHORT)
-						.show();
-			}
-		});
+				@Override
+				public void onFailure(int arg0, String arg1) {
+					Toast.makeText(getActivity(), "发布失败", Toast.LENGTH_SHORT)
+							.show();
+					Log.v("publishGoods", arg1);
+				}
+			});
+		}
 	}
 
 	/*
@@ -311,12 +325,30 @@ public class PublishFragment extends BaseFragment {
 	}
 
 	/*
+	 * 判断货品描述是否正确
+	 */
+	public boolean judgeGoods() {
+		if ((et_publish_fragment_description.getText() != null)
+				&& (sp_publish_fragment_sort.getSelectedItem() != null)
+				&& (et_publish_fragment_tel.getText() != null)
+				&& (et_publish_fragment_price.getText() != null)
+				&& (sp_publish_fragment_date.getSelectedItem() != null)
+				&& (tv_publish_fragment_position_set.getText() != null)) {
+			return true;
+		} else {
+			Toast.makeText(getActivity(), "你发布的商品信息不全哦", Toast.LENGTH_SHORT)
+					.show();
+			return false;
+		}
+	}
+
+	/*
 	 * 
 	 * 初始化表情面板内容
 	 */
 	private void initEmotion() {
 		// 设置面板的宽高，间隔
-		int screenWidth = DisplayUtils.getScreenWidthPixels(getActivity());
+		/*int screenWidth = DisplayUtils.getScreenWidthPixels(getActivity());
 		int spacing = DisplayUtils.dp2px(getActivity(), 8);
 		int itemWidth = (screenWidth - spacing * 8) / 7;
 		int gvHeight = itemWidth * 3 + spacing * 4;
@@ -338,12 +370,13 @@ public class PublishFragment extends BaseFragment {
 			GridView gv = createEmotionGridView(emotionNames, screenWidth,
 					spacing, itemWidth, gvHeight);
 			gvs.add(gv);
-		}
-		publishEmotionPagerAdapter = new PublishEmotionPagerAdapter(gvs);
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+		}*/
+		//publishEmotionPagerAdapter = new PublishEmotionPagerAdapter(gvs);
+		emotionViewPagerAdapter=new EmotionViewPagerAdapter(getActivity(),et_publish_fragment_description);
+		/*LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 				screenWidth, gvHeight);
-		ll_publish_fragment_emoji.setLayoutParams(params);
-		vp_publish_fragement_emoji.setAdapter(publishEmotionPagerAdapter);
+		ll_publish_fragment_emoji.setLayoutParams(params);*/
+		vp_publish_fragement_emoji.setAdapter(emotionViewPagerAdapter);
 	}
 
 	/*
