@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.view.PagerAdapter;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -99,13 +100,17 @@ public class EmotionViewPagerAdapter extends PagerAdapter{
 					Drawable d = EmotionConfiguration.getEmotionDrawableOnPosition(mContext, pageIndex, position);
 					if(d != null) {
 						d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-						SpannableString ss = new SpannableString("*");
+						String emotionString = EmotionConfiguration.getEmotionStringOnPosition(pageIndex, position);
+						if(TextUtils.isEmpty(emotionString)) {
+							return;
+						}
+						SpannableString ss = new SpannableString(emotionString);
 						ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
-						ss.setSpan(span, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						//用Spannable.SPAN_INCLUSIVE_INCLUSIVE
+						ss.setSpan(span, 0, emotionString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 						mAttachEditText.getText().insert(mAttachEditText.getSelectionStart(), ss);
 					}
 				}
-				
 			}
 		});
 	}

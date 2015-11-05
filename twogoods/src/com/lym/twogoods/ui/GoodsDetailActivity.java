@@ -14,6 +14,8 @@ import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;

@@ -173,8 +173,7 @@ public class EmotionConfiguration {
 		if(!check(pageIndex, position)) {
 			return null;
 		}
-		int index = EMOTION_NUMBER_PER_PAGE * pageIndex + position;
-		String key = sEmotionList.get(index);
+		String key = getEmotionStringOnPosition(pageIndex, position);
 		if(TextUtils.isEmpty(key)) {
 			return null;
 		} else {
@@ -231,6 +230,24 @@ public class EmotionConfiguration {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * <p>
+	 * 	获取指定位置的表情字符串
+	 * </p>
+	 * 
+	 * @param pageIndex 页索引
+	 * @param position 页内位置
+	 * 
+	 * @return 获取成功返回相应的表情字符串,失败返回null.
+	 * */
+	public static String getEmotionStringOnPosition(int pageIndex, int position) {
+		if(check(pageIndex, position)) {
+			int index = EMOTION_NUMBER_PER_PAGE * pageIndex + position;
+			return sEmotionList.get(index);
+		}
+		return null;
 	}
 	
 	//检查位置数据合法性
