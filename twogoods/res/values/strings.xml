@@ -80,7 +80,8 @@
     <string name="get_code">获取验证码</string>
     <string name="login_forget_password">忘记密码？</string>
     <!-- app_register -->
-    <string name="register_erhuo">起个好听的贰货号吧</string>
+    <string name="register_erhuo">起个好听的贰货号吧（4到15个字母或汉字）</string>
+    <string name="register_password">密码（6到15个字母或者数字）</string>
     <string name="register_password_again">再次输入密码</string>
     <string name="phone">手机号码</string>
     <string name="register">注册</string>
@@ -124,7 +125,12 @@
 	<string name="mine_declaration">我的贰货宣言</string>
 	<string name="male">男</string>
     <string name="tian">天</string>
-    
+    <!-- nearby_select_city -->
+    <string name="nearby_select_city_input">请输入城市名吧</string>
+    <string name="nearby_select_city_current_position">当前位置:</string>
+    <string name="dingwei">定位</string>
+    <string name="hot_city">热门城市</string>
+    <string name="nearby_select_city_search">请输入关键字</string>
     
     
     

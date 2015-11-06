@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+
+热门城市表格格式
+author：龙宇文
+ -->
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:stretchColumns="*" >
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/tv_select_city_col1"
+            android:layout_width="1dip"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/tv_select_city_col2"
+            android:layout_width="1dip"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/tv_select_city_col3"
+            android:layout_width="1dip"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/tv_select_city_col4"
+            android:layout_width="1dip"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+    </TableRow>
+
+</TableLayout>

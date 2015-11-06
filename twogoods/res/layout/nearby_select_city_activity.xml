@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+	选择城市布局activity
+	author:龙宇文
+-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+        <!-- <EditText
+            android:id="@+id/et_select_city_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/nearby_select_city_margintop"
+            android:layout_marginRight="@dimen/nearby_select_city_marginright"
+            android:layout_marginLeft="@dimen/nearby_select_city_marginleft"
+            android:background="@drawable/edittext_circle_shape"
+            android:hint="@string/nearby_select_city_input" /> -->
+
+        <LinearLayout
+            android:id="@+id/ll_select_city_current_position"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/nearby_select_city_margintop"
+            android:layout_marginLeft="@dimen/nearby_select_city_marginleft"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/nearby_select_city_position_textsize"
+                android:text="@string/nearby_select_city_current_position" />
+
+            <TextView
+                android:id="@+id/tv_select_city_position_set"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout 
+            android:id="@+id/ll_select_city_division_current_locate"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nearby_select_city_division"
+            android:layout_marginTop="@dimen/nearby_select_city_margintop"
+            android:layout_below="@id/ll_select_city_current_position"
+            android:background="@color/division"
+            android:orientation="horizontal">
+            
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_select_city_dingwei" 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/nearby_select_city_margintop"
+            android:layout_alignLeft="@+id/ll_select_city_current_position"
+       		android:layout_below="@id/ll_select_city_division_current_locate"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+    			<TextView
+        			android:id="@+id/tv_select_city_locate"
+        			android:layout_width="wrap_content"
+        			android:layout_height="wrap_content"
+        			android:textSize="@dimen/nearby_select_city_dingwei_textsize"
+        			android:text="@string/dingwei" />
+
+    			<ImageButton
+    			    android:id="@+id/btn_select_city_deingwei"
+    			    android:layout_width="wrap_content"
+    			    android:layout_height="wrap_content"
+    			    android:background="@color/transparent"
+    			    android:src="@drawable/nearby_select_city_dingwei" />
+
+    </LinearLayout>
+    
+    <LinearLayout 
+            android:id="@+id/ll_select_city_division_locate_hotCity"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nearby_select_city_division"
+            android:layout_marginTop="@dimen/nearby_select_city_margintop"
+            android:layout_below="@id/ll_select_city_dingwei"
+            android:background="@color/division"
+            android:orientation="horizontal">
+        
+    </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_select_city_hot_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/ll_select_city_dingwei"
+            android:layout_below="@id/ll_select_city_division_locate_hotCity"
+            android:layout_marginTop="@dimen/nearby_select_city_margintop"
+            android:text="@string/hot_city" />
+		
+        <ListView
+            android:id="@+id/lv_select_city_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tv_select_city_hot_city"
+            android:layout_marginRight="@dimen/nearby_select_city_marginright"
+            android:layout_below="@id/tv_select_city_hot_city"
+            android:layout_marginTop="@dimen/nearby_select_city_margintop" >
+
+		</ListView>
+
+        <LinearLayout 
+            android:id="@+id/ll_select_city_pinyin_sort"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/lv_select_city_city"
+            android:orientation="vertical">
+            
+            <com.lym.twogoods.nearby.ui.SelectCityClearEditText
+                android:id="@+id/et_nearby_select_city_input" 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_circle_shape"
+                android:drawableLeft="@drawable/nearby_select_city_edittext_clear"
+                android:hint="@string/nearby_select_city_search"
+                android:singleLine="true"/>
+            <FrameLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                
+                <ListView 
+                    android:id="@+id/lv_nearby_select_city_position_sort"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"/>
+                <com.lym.twogoods.nearby.ui.SelectCityLetterView 
+                    android:id="@+id/lv_nearby_select_city_letter_sort"
+                    android:layout_width="@dimen/nearby_select_city_letter_sort_height"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center"/>
+            </FrameLayout>
+        </LinearLayout>
+</RelativeLayout>

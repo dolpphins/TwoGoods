@@ -14,11 +14,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- 添加上网权限/ -->
-    
+
+
     <!-- 百度地图相关权限 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
+
     <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
@@ -30,13 +33,15 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- 百度地图相关权限 -->
-    
+
+
     <!-- 文件系统相关权限 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <!--系统功能权限  -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 系统功能权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application
         android:name="com.lym.twogoods.TwoGoodsApplication"
         android:allowBackup="true"
@@ -90,7 +95,9 @@
         <activity android:name="com.lym.twogoods.mine.ui.MineFocusActivity" >
         </activity>
         <!-- 选择城市Activity -->
-        <activity android:name="com.lym.twogoods.nearby.ui.SelectCityActivity" >
+        <activity
+            android:name="com.lym.twogoods.nearby.ui.SelectCityActivity"
+            android:windowSoftInputMode="adjustPan" >
         </activity>
         <!-- 添加图片Activity -->
         <activity android:name="com.lym.twogoods.ui.AddPictureActivity" >
@@ -107,8 +114,9 @@
         <!-- 意见反馈Activity -->
         <activity android:name="com.lym.twogoods.ui.FeedbackActivity" >
         </activity>
-        <activity android:name="com.lym.twogoods.ui.DisplayPicturesActivity">
-        <!--发送图片ACtivity-->
+        <activity android:name="com.lym.twogoods.ui.DisplayPicturesActivity" >
+
+            <!-- 发送图片ACtivity -->
         </activity>
         <activity android:name="com.lym.twogoods.ui.SendPictureActivity" >
         </activity>
@@ -122,7 +130,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        
+
         <!-- 使用百度地图必须添加的service -->
         <service
             android:name="com.baidu.location.f"

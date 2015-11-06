@@ -40,6 +40,7 @@
         android:layout_alignBottom="@+id/et_register_code"
         android:layout_alignRight="@+id/et_register_phone"
         android:layout_alignTop="@+id/et_register_code"
+        android:background="@color/transparent"
         android:layout_toRightOf="@+id/btn_register_register"
         android:text="@string/get_code" />
 
@@ -62,7 +63,7 @@
         android:layout_below="@+id/et_register_erhuo"
         android:layout_marginTop="@dimen/app_register_margintop"
         android:background="@drawable/edittext_circle_shape"
-        android:hint="@string/password"
+        android:hint="@string/register_password"
         android:inputType="textPassword" />
 
     <EditText

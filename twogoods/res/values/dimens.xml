@@ -158,9 +158,17 @@
 	<dimen name="app_publish_fragment_sort_marginright">30dp</dimen>
 	<dimen name="app_publish_fragment_gridview_verticalspacing">15dp</dimen>
 	<dimen name="app_publish_fragment_gridview_horizontalspacing">15dp</dimen>
-	
-	
-	
+	<!-- nearby_select_city -->
+	<dimen name="nearby_select_city_division">1dp</dimen>
+	<dimen name="nearby_select_city_margintop">10dp</dimen>
+	<dimen name="nearby_select_city_marginleft">10dp</dimen>
+	<dimen name="nearby_select_city_marginright">10dp</dimen>
+	<dimen name="nearby_select_city_position_letter_top_letter_bottom">5dip</dimen>
+	<dimen name="nearby_select_city_position_name_top_bottom">10dip</dimen>
+	<dimen name="nearby_select_city_position_name_left">5dip</dimen>
+	<dimen name="nearby_select_city_letter_sort_height">30dip</dimen>
+	<dimen name="nearby_select_city_dingwei_textsize">20sp</dimen>
+	<dimen name="nearby_select_city_position_textsize">20sp</dimen>
 	
 	
 	

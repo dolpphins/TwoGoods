@@ -14,6 +14,7 @@
         android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
         android:layout_marginTop="@dimen/app_publish_fragment_margintop"
         android:background="@drawable/edittext_circle_shape"
+        android:gravity="top"
         android:hint="@string/publish_description"
         android:maxLength="200" />
 
@@ -150,7 +151,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/publish_position"
+            android:background="@color/transparent"
             android:textSize="@dimen/app_publish_fragment_textsize" />
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:src="@drawable/nearby_select_city_dingwei"
+            />
 
         <TextView
             android:id="@+id/tv_publish_fragment_position_set"
@@ -175,15 +183,15 @@
 
             <ImageView
                 android:id="@+id/iv_publish_fragment_add_photo"
+                android:background="@drawable/message_btn_chat_add_selector"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/publish_add_photo" />
+                android:layout_height="wrap_content" />
 
             <ImageView
                 android:id="@+id/iv_publish_fragment_add_smile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/publish_add_smile" />
+                android:src="@drawable/message_btn_chat_emo_selector" />
 
             <ImageView
                 android:id="@+id/iv_publish_fragment_add_voice"
@@ -192,6 +200,10 @@
                 android:src="@drawable/publish_voice" />
         </LinearLayout>
 
+        <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#cccccc"/>
         <LinearLayout
             android:id="@+id/ll_publish_fragment_emoji"
             android:layout_width="match_parent"
@@ -199,11 +211,11 @@
             android:visibility="gone"
             android:orientation="vertical" >
 
-            <android.support.v4.view.ViewPager
+            <com.lym.twogoods.widget.WrapContentViewPager
                 android:id="@+id/vp_publish_fragment_emoji"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
-            </android.support.v4.view.ViewPager>
+            </com.lym.twogoods.widget.WrapContentViewPager>
         </LinearLayout>
     </LinearLayout>
 

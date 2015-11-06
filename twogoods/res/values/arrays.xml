@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <!-- mcb -->
+
+
+    <!-- lyw -->
+    <string-array name="position">
+
+        <!-- 河南省 -->
+        <item>郑州市</item>
+        <item>洛阳市</item>
+        <item>焦作市 </item>
+        <item>商丘市</item>
+        <item>信阳市 </item>
+        <item>周口市</item>
+        <item>鹤壁市</item>
+        <item>安阳市</item>
+        <item>濮阳市</item>
+        <item>驻马店市</item>
+        <item>南阳市</item>
+        <item>开封市</item>
+        <item>漯河市</item>
+        <item>许昌市 </item>
+        <item>新乡市 </item>
+        <item>济源市 </item>
+        <item>灵宝市</item>
+        <item>偃师市</item>
+        <item>邓州市 </item>
+        <item>登封市 </item>
+        <item>三门峡市</item>
+        <item>新郑市</item>
+        <item>禹州市</item>
+        <item>巩义市</item>
+        <item>永城市</item>
+        <item>长葛市 </item>
+        <item>义马市</item>
+        <item>林州市</item>
+        <item>项城市 </item>
+        <item>汝州市</item>
+        <item>荥阳市</item>
+        <item>平顶山市</item>
+        <item>卫辉市 </item>
+        <item>辉县市 </item>
+        <item>舞钢市</item>
+        <item>新密市 </item>
+        <item>孟州市</item>
+        <item>沁阳市</item>
+        <item>郏县</item>
+ 		<!-- 安徽省 -->
+        <item>合肥市 </item>
+        <item>毫州市</item>
+        <item>芜湖市</item>
+        <item>马鞍山市 </item>
+        <item>池州市</item>
+        <item>黄山市</item>
+        <item>滁州市 </item>
+        <item>安庆市</item>
+        <item>淮南市</item>
+        <item>淮北市</item>
+        <item>蚌埠市</item>
+        <item>宿州市</item>
+        <item>宣城市 </item>
+        <item>六安市 </item>
+        <item>阜阳市</item>
+        <item>铜陵市</item>
+        <item>明光市 </item>
+        <item>天长市 </item>
+        <item>宁国市 </item>
+        <item>界首市</item>
+        <item>桐城市</item>
+ 		<!-- 福建省 -->
+        <item>福州市</item>
+        <item>厦门市</item>
+        <item>泉州市 </item>
+        <item>漳州市</item>
+        <item>南平市</item>
+        <item>三明市 </item>
+        <item>龙岩市 </item>
+        <item>莆田市</item>
+        <item>宁德市</item>
+        <item>建瓯市</item>
+        <item>武夷山市 </item>
+        <item>长乐市 </item>
+        <item>福清市 </item>
+        <item>晋江市</item>
+        <item>南安市</item>
+        <item>福安市</item>
+        <item>龙海市</item>
+        <item>邵武市</item>
+        <item>石狮市</item>
+        <item>福鼎市 </item>
+        <item>建阳市 </item>
+        <item>漳平市 </item>
+        <item>永安市</item>
+ 		<!-- 甘肃省 -->
+        <item>兰州市 </item>
+        <item>白银市</item>
+        <item>武威市</item>
+        <item>金昌市 </item>
+        <item>平凉市 </item>
+        <item>张掖市</item>
+        <item>嘉峪关市</item>
+        <item>酒泉市</item>
+        <item>庆阳市</item>
+        <item>定西市</item>
+        <item>陇南市</item>
+        <item>天水市</item>
+        <item>玉门市 </item>
+        <item>临夏市 </item>
+        <item>合作市 </item>
+        <item>敦煌市</item>
+        <item>甘南州</item>
+		<!-- 贵州省 -->
+        <item>贵阳市 </item>
+        <item>安顺市  </item>
+        <item>遵义市  </item>
+        <item>六盘水市  </item>
+        <item>兴义市  </item>
+        <item>都匀市  </item>
+        <item>凯里市  </item>
+        <item>毕节市  </item>
+        <item>清镇市 </item>
+        <item>铜仁市 </item>
+        <item>赤水市 </item>
+        <item>仁怀市 </item>
+        <item>福泉市 </item>
+ 		<!-- 海南省 -->
+        <item>海口市 </item>
+        <item>三亚市 </item>
+        <item>万宁市 </item>
+        <item>文昌市 </item>
+        <item>儋州市  </item>
+        <item>琼海市  </item>
+        <item>东方市  </item>
+        <item>五指山市 </item>
+ 		<!-- 河北省 -->
+        <item>石家庄市 </item>
+        <item>保定市  </item>
+        <item>唐山市  </item>
+        <item>邯郸市 </item>
+        <item>邢台市 </item>
+        <item>沧州市  </item>
+        <item>衡水市  </item>
+        <item>廊坊市  </item>
+        <item>承德市 </item>
+        <item>迁安市 </item>
+        <item>鹿泉市 </item>
+        <item>秦皇岛市 </item>
+        <item>南宫市 </item>
+        <item>任丘市 </item>
+        <item>叶城市 </item>
+        <item>辛集市 </item>
+        <item>涿州市  </item>
+        <item>定州市  </item>
+        <item>晋州市 </item>
+        <item>霸州市 </item>
+        <item>黄骅市 </item>
+        <item>遵化市 </item>
+        <item>张家口市 </item>
+        <item>沙河市 </item>
+        <item>三河市 </item>
+        <item>冀州市  </item>
+        <item>武安市 </item>
+        <item>河间市 </item>
+        <item>深州市 </item>
+        <item>新乐市 </item>
+        <item>泊头市  </item>
+        <item>安国市 </item>
+        <item>双滦区 </item>
+        <item>高碑店市 </item>
+ 		<!-- 黑龙江省 -->
+        <item>哈尔滨市 </item>
+        <item>伊春市 </item>
+        <item>牡丹江市 </item>
+        <item>大庆市 </item>
+        <item>鸡西市  </item>
+        <item>鹤岗市 </item>
+        <item>绥化市  </item>
+        <item>齐齐哈尔市 </item>
+        <item>黑河市  </item>
+        <item>富锦市  </item>
+        <item>虎林市  </item>
+        <item>密山市  </item>
+        <item>佳木斯市  </item>
+        <item>双鸭山市 </item>
+        <item>海林市  </item>
+        <item>铁力市  </item>
+        <item>北安市 </item>
+        <item>五大连池市  </item>
+        <item>阿城市  </item>
+        <item>尚志市 </item>
+        <item>五常市 </item>
+        <item>安达市 </item>
+        <item>七台河市 </item>
+        <item>绥芬河市  </item>
+        <item>双城市 </item>
+        <item>海伦市 </item>
+        <item>宁安市 </item>
+        <item>讷河市 </item>
+        <item>穆棱市  </item>
+        <item>同江市 </item>
+        <item>肇东市 </item>
+ 		<!-- 湖北省 -->
+        <item>武汉市  </item>
+        <item>荆门市 </item>
+        <item>咸宁市 </item>
+        <item>襄樊市 </item>
+        <item>荆州市  </item>
+        <item>黄石市 </item>
+        <item>宜昌市 </item>
+        <item>随州市 </item>
+        <item>鄂州市  </item>
+        <item>孝感市 </item>
+        <item>黄冈市 </item>
+        <item>十堰市 </item>
+        <item>枣阳市 </item>
+        <item>老河口市 </item>
+        <item>恩施市 </item>
+        <item>仙桃市 </item>
+        <item>天门市 </item>
+        <item>钟祥市 </item>
+        <item>潜江市  </item>
+        <item>麻城市  </item>
+        <item>洪湖市 </item>
+        <item>汉川市 </item>
+        <item>赤壁市 </item>
+        <item>松滋市 </item>
+        <item>丹江口市 </item>
+        <item>武穴市 </item>
+        <item>广水市 </item>
+        <item>石首市 </item>
+        <item>大冶市 </item>
+        <item>枝江市 </item>
+        <item>应城市 </item>
+        <item>宜城市 </item>
+        <item>当阳市 </item>
+        <item>安陆市 </item>
+        <item>宜都市 </item>
+        <item>利川市 </item>
+ 		<!-- 湖南省 -->
+        <item>长沙市 </item>
+        <item>郴州市 </item>
+        <item>益阳市 </item>
+        <item>娄底市 </item>
+        <item>株洲市 </item>
+        <item>衡阳市 </item>
+        <item>湘潭市 </item>
+        <item>岳阳市 </item>
+        <item>常德市 </item>
+        <item>邵阳市 </item>
+        <item>永州市 </item>
+        <item>张家界市 </item>
+        <item>怀化市 </item>
+        <item>浏阳市 </item>
+        <item>醴陵市 </item>
+        <item>湘乡市 </item>
+        <item>耒阳市 </item>
+        <item>沅江市 </item>
+        <item>涟源市 </item>
+        <item>常宁市 </item>
+        <item>吉首市 </item>
+        <item>津市市 </item>
+        <item>冷水江市 </item>
+        <item>临湘市 </item>
+        <item>汨罗市 </item>
+        <item>武冈市 </item>
+        <item>韶山市 </item>
+        <item>安化县 </item>
+        <item>湘西州 </item>
+ 		<!-- 吉林省 -->
+        <item>长春市 </item>
+        <item>吉林市 </item>
+        <item>通化市 </item>
+        <item>白城市 </item>
+        <item>四平市 </item>
+        <item>辽源市 </item>
+        <item>松原市 </item>
+        <item>白山市 </item>
+        <item>集安市 </item>
+        <item>梅河口市 </item>
+        <item>双辽市 </item>
+        <item>延吉市 </item>
+        <item>九台市 </item>
+        <item>桦甸市 </item>
+        <item>榆树市 </item>
+        <item>蛟河市 </item>
+        <item>磐石市 </item>
+        <item>大安市 </item>
+        <item>德惠市 </item>
+        <item>洮南市 </item>
+        <item>龙井市 </item>
+        <item>珲春市 </item>
+        <item>公主岭市 </item>
+        <item>图们市 </item>
+        <item>舒兰市  </item>
+        <item>和龙市  </item>
+        <item>临江市 </item>
+        <item>敦化市 </item>
+ 		<!-- 江苏省 -->
+        <item>南京市 </item>
+        <item>无锡市 </item>
+        <item>常州市 </item>
+        <item>扬州市 </item>
+        <item>徐州市 </item>
+        <item>苏州市 </item>
+        <item>连云港市  </item>
+        <item>盐城市 </item>
+        <item>淮安市 </item>
+        <item>宿迁市 </item>
+        <item>镇江市 </item>
+        <item>南通市 </item>
+        <item>泰州市 </item>
+        <item>兴化市 </item>
+        <item>东台市 </item>
+        <item>常熟市 </item>
+        <item>江阴市 </item>
+        <item>张家港市 </item>
+        <item>通州市 </item>
+        <item>宜兴市 </item>
+        <item>邳州市 </item>
+        <item>海门市 </item>
+        <item>大丰市  </item>
+        <item>溧阳市 </item>
+        <item>泰兴市 </item>
+        <item>如 市 </item>
+        <item>昆山市 </item>
+        <item>启东市 </item>
+        <item>江都市 </item>
+        <item>丹阳市 </item>
+        <item>吴江市 </item>
+        <item>靖江市 </item>
+        <item>扬中市 </item>
+        <item>新沂市 </item>
+        <item>仪征市 </item>
+        <item>太仓市  </item>
+        <item>姜堰市 </item>
+        <item>高邮市 </item>
+        <item>金坛市 </item>
+        <item>句容市 </item>
+        <item>灌南县 </item>
+ 		<!-- 江西省 -->
+        <item>南昌市 </item>
+        <item>赣州市 </item>
+        <item>上饶市 </item>
+        <item>宜春市 </item>
+        <item>景德镇市 </item>
+        <item>新余市 </item>
+        <item>九江市 </item>
+        <item>萍乡市 </item>
+        <item>抚州市 </item>
+        <item>鹰潭市 </item>
+        <item>吉安市 </item>
+        <item>丰城市 </item>
+        <item>樟树市 </item>
+        <item>德兴市 </item>
+        <item>瑞金市 </item>
+        <item>井冈山市 </item>
+        <item>高安市  </item>
+        <item>乐平市 </item>
+        <item>南康市 </item>
+        <item>贵溪市 </item>
+        <item>瑞昌市 </item>
+        <item>东乡县 </item>
+        <item>广丰县 </item>
+        <item>信州区 </item>
+        <item>三清山 </item>
+ 		<!-- 辽宁省 -->
+        <item>沈阳市 </item>
+        <item>葫芦岛市 </item>
+        <item>大连市 </item>
+        <item>盘锦市 </item>
+        <item>鞍山市 </item>
+        <item>铁岭市 </item>
+        <item>本溪市 </item>
+        <item>丹东市 </item>
+        <item>抚顺市 </item>
+        <item>锦州市 </item>
+        <item>辽阳市 </item>
+        <item>阜新市 </item>
+        <item>调兵山市 </item>
+        <item>朝阳市 </item>
+        <item>海城市 </item>
+        <item>北票市 </item>
+        <item>盖州市 </item>
+        <item>凤城市 </item>
+        <item>庄河市 </item>
+        <item>凌源市 </item>
+        <item>开原市 </item>
+        <item>兴城市 </item>
+        <item>新民市 </item>
+        <item>大石桥市 </item>
+        <item>东港市 </item>
+        <item>北宁市 </item>
+        <item>瓦房店市 </item>
+        <item>普兰店市 </item>
+        <item>凌海市  </item>
+        <item>灯塔市 </item>
+        <item>营口市 </item>
+ 		<!-- 青海省 -->
+        <item>西宁市 </item>
+        <item>格尔木市 </item>
+        <item>德令哈市 </item>
+ 		<!-- 山东省 -->
+        <item>济南市 </item>
+        <item>青岛市 </item>
+        <item>威海市 </item>
+        <item>潍坊市 </item>
+        <item>菏泽市 </item>
+        <item>济宁市 </item>
+        <item>莱芜市 </item>
+        <item>东营市 </item>
+        <item>烟台市 </item>
+        <item>淄博市 </item>
+        <item>枣庄市 </item>
+        <item>泰安市 </item>
+        <item>临沂市 </item>
+        <item>日照市 </item>
+        <item>德州市  </item>
+        <item>聊城市 </item>
+        <item>滨州市 </item>
+        <item>乐陵市 </item>
+        <item>兖州市 </item>
+        <item>诸城市 </item>
+        <item>邹城市 </item>
+        <item>滕州市  </item>
+        <item>肥城市 </item>
+        <item>新泰市 </item>
+        <item>胶州市  </item>
+        <item>胶南市  </item>
+        <item>即墨市 </item>
+        <item>龙口市 </item>
+        <item>平度市 </item>
+        <item>莱西市 </item>
+ 		<!-- 山西省 -->
+        <item>太原市 </item>
+        <item>大同市 </item>
+        <item>阳泉市 </item>
+        <item>长治市 </item>
+        <item>临汾市 </item>
+        <item>晋中市  </item>
+        <item>运城市  </item>
+        <item>忻州市 </item>
+        <item>朔州市 </item>
+        <item>吕梁市 </item>
+        <item>古交市 </item>
+        <item>高平市 </item>
+        <item>永济市 </item>
+        <item>孝义市 </item>
+        <item>侯马市 </item>
+        <item>霍州市 </item>
+        <item>介休市 </item>
+        <item>河津市 </item>
+        <item>汾阳市 </item>
+        <item>原平市 </item>
+        <item>潞城市 </item>
+ 		<!-- 陕西省 -->
+        <item>西安市 </item>
+        <item>咸阳市 </item>
+        <item>榆林市 </item>
+        <item>宝鸡市 </item>
+        <item>铜川市 </item>
+        <item>渭南市 </item>
+        <item>汉中市  </item>
+        <item>安康市 </item>
+        <item>商洛市 </item>
+        <item>延安市 </item>
+        <item>韩城市 </item>
+        <item>兴平市  </item>
+        <item>华阴市 </item>
+ 		<!-- 四川省 -->
+        <item>成都市 </item>
+        <item>广安市 </item>
+        <item>德阳市 </item>
+        <item>乐山市 </item>
+        <item>巴中市 </item>
+        <item>内江市 </item>
+        <item>宜宾市  </item>
+        <item>南充市 </item>
+        <item>都江堰市 </item>
+        <item>自贡市 </item>
+        <item>泸州市 </item>
+        <item>广元市 </item>
+        <item>达州市  </item>
+        <item>资阳市  </item>
+        <item>绵阳市  </item>
+        <item>眉山市 </item>
+        <item>遂宁市 </item>
+        <item>雅安市 </item>
+        <item>阆中市 </item>
+        <item>攀枝花市 </item>
+        <item>广汉市 </item>
+        <item>绵竹市 </item>
+        <item>万源市 </item>
+        <item>华蓥市 </item>
+        <item>江油市 </item>
+        <item>西昌市 </item>
+        <item>彭州市 </item>
+        <item>简阳市 </item>
+        <item>崇州市 </item>
+        <item>什邡市 </item>
+        <item>峨眉山市  </item>
+        <item>邛崃市  </item>
+        <item>双流县 </item>
+ 		<!-- 云南省 -->
+        <item>昆明市 </item>
+        <item>玉溪市 </item>
+        <item>大理市 </item>
+        <item>曲靖市 </item>
+        <item>昭通市 </item>
+        <item>保山市 </item>
+        <item>丽江市  </item>
+        <item>临沧市  </item>
+        <item>楚雄市 </item>
+        <item>开远市 </item>
+        <item>个旧市 </item>
+        <item>景洪市 </item>
+        <item>安宁市 </item>
+        <item>宣威市 </item>
+ 		<!-- 浙江省 -->
+        <item>杭州市 </item>
+        <item>宁波市 </item>
+        <item>绍兴市 </item>
+        <item>温州市 </item>
+        <item>台州市  </item>
+        <item>湖州市 </item>
+        <item>嘉兴市 </item>
+        <item>金华市 </item>
+        <item>舟山市 </item>
+        <item>衢州市 </item>
+        <item>丽水市 </item>
+        <item>余姚市 </item>
+        <item>乐清市 </item>
+        <item>临海市 </item>
+        <item>温岭市 </item>
+        <item>永康市  </item>
+        <item>瑞安市  </item>
+        <item>慈溪市 </item>
+        <item>义乌市 </item>
+        <item>上虞市 </item>
+        <item>诸暨市 </item>
+        <item>海宁市 </item>
+        <item>桐乡市 </item>
+        <item>兰溪市  </item>
+        <item>龙泉市  </item>
+        <item>建德市  </item>
+        <item>富德市 </item>
+        <item>富阳市 </item>
+        <item>平湖市 </item>
+        <item>东阳市 </item>
+        <item>东阳市 </item>
+        <item>嵊州市  </item>
+        <item>奉化市  </item>
+        <item>临安市  </item>
+        <item>江山市 </item>
+ 		<!-- 台湾省 -->
+        <item>台北市 </item>
+        <item>台南市 </item>
+        <item>台中市 </item>
+        <item>高雄市 </item>
+        <item>桃源市 </item>
+		<!-- 广东省 -->
+        <item>广州市 </item>
+        <item>深圳市 </item>
+        <item>珠海市 </item>
+        <item>汕头市 </item>
+        <item>佛山市 </item>
+        <item>韶关市 </item>
+        <item>湛江市 </item>
+        <item>肇庆市 </item>
+        <item>江门市  </item>
+        <item>茂名市  </item>
+        <item>惠州市  </item>
+        <item>梅州市 </item>
+        <item>汕尾市  </item>
+        <item>河源市  </item>
+        <item>阳江市  </item>
+        <item>清远市 </item>
+        <item>东莞市  </item>
+        <item>中山市 </item>
+        <item>潮州市  </item>
+        <item>揭阳市 </item>
+        <item>云浮市 </item>
+ 		<!-- 广西壮族自治区 -->
+        <item>南宁市 </item>
+        <item>贺州市 </item>
+        <item>玉林市 </item>
+        <item>桂林市 </item>
+        <item>柳州市 </item>
+        <item>梧州市  </item>
+        <item>北海市 </item>
+        <item>钦州市 </item>
+        <item>百色市 </item>
+        <item>防城港市 </item>
+        <item>贵港市  </item>
+        <item>河池市 </item>
+        <item>崇左市 </item>
+        <item>来宾市 </item>
+        <item>东兴市 </item>
+        <item>桂平市 </item>
+        <item>北流市 </item>
+        <item>岑溪市 </item>
+        <item>合山市 </item>
+        <item>凭祥市 </item>
+        <item>宜州市 </item>
+ 		<!-- 内蒙古自治区 -->
+        <item>呼和浩特市 </item>
+        <item>呼伦贝尔市 </item>
+        <item>赤峰市  </item>
+        <item>扎兰屯市 </item>
+        <item>鄂尔多斯市 </item>
+        <item>乌兰察布市 </item>
+        <item>巴彦淖尔市 </item>
+        <item>二连浩特市 </item>
+        <item>霍林郭勒市 </item>
+        <item>包头市  </item>
+        <item>乌海市  </item>
+        <item>阿尔山市 </item>
+        <item>乌兰浩特市 </item>
+        <item>锡林浩特市 </item>
+        <item>根河市 </item>
+        <item>满洲里市 </item>
+        <item>额尔古纳市  </item>
+        <item>牙克石市 </item>
+        <item>临河市 </item>
+        <item>丰镇市 </item>
+        <item>通辽市 </item>
+		<!-- 宁夏回族自治区 -->
+        <item>银川市 </item>
+        <item>固原市 </item>
+        <item>石嘴山市  </item>
+        <item>青铜峡市 </item>
+        <item>中卫市 </item>
+        <item>吴忠市 </item>
+        <item>灵武市 </item>
+ 		<!-- 西藏藏族自治区 -->
+        <item>拉萨市 </item>
+        <item>日喀则市 </item>
+ 		<!-- 新疆维吾尔自治区 -->
+        <item>乌鲁木齐市 </item>
+        <item>石河子市 </item>
+        <item>喀什市 </item>
+        <item>阿勒泰市 </item>
+        <item>阜康市 </item>
+        <item>库尔勒市  </item>
+        <item>阿克苏市 </item>
+        <item>阿拉尔市 </item>
+        <item>哈密市 </item>
+        <item>克拉玛依市 </item>
+        <item>昌吉市  </item>
+        <item>奎屯市  </item>
+        <item>米泉市  </item>
+        <item>和田市 </item>
+    </string-array>
+
+    <!-- yjf -->
+
+</resources>
