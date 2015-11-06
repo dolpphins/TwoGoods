@@ -29,6 +29,10 @@ public class MessageConfig {
 	public static final int SEND_MESSAGE_SUCCEED= 0;     // 消息发送成功
 	public static final int SEND_MESSAGE_FAILED = 1;     //消息发送失败
 	public static final int SEND_MESSAGE_ING = 2;        //正在发送
+	public static final int SEND_MESSAGE_START = 3;        //开始发送
+	public static final int SEND_MESSAGE_RECEIVERED = 4;        //对方已接收
+	
+	public static final int HIDE_BOTTOM = 10;        //隐藏底部布局
 	
 	public static final String EXTRA_STRING = "extra_string";
 	

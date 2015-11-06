@@ -1,6 +1,8 @@
 package com.lym.twogoods.message.adapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
@@ -18,30 +20,48 @@ import android.widget.TextView;
 
 
 
+import cn.bmob.im.BmobDownloadManager;
+
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.ChatDetailBean;
+import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.ChatConfiguration;
+import com.lym.twogoods.message.ImageLoadOptions;
+import com.lym.twogoods.message.MessageConfig;
+import com.lym.twogoods.message.listener.RecordPlayClickListener;
+import com.lym.twogoods.message.viewHolder.ViewHolder;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
+import com.lym.twogoods.ui.PersonalityInfoActivity;
+import com.lym.twogoods.utils.TimeUtil;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 
 public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 
-	//8种Item的类型
+		//8种Item的类型
 		//文本
-		private final int TYPE_RECEIVER_TXT = 0;
-		private final int TYPE_SEND_TXT = 1;
+		private final int TYPE_RECEIVER_TXT = 0; //接收的文本消息
+		private final int TYPE_SEND_TXT = 1;	//发送的文本消息
 		//图片
-		private final int TYPE_SEND_IMAGE = 2;
-		private final int TYPE_RECEIVER_IMAGE = 3;
+		private final int TYPE_SEND_IMAGE = 2;	//发送的图片消息
+		private final int TYPE_RECEIVER_IMAGE = 3;	//接收的图片消息
 		//位置
-		private final int TYPE_SEND_LOCATION = 4;
-		private final int TYPE_RECEIVER_LOCATION = 5;
-		//语音
-		private final int TYPE_SEND_VOICE =6;
-		private final int TYPE_RECEIVER_VOICE = 7;
+		private final int TYPE_SEND_LOCATION = 4;	//发送的位置消息
+		private final int TYPE_RECEIVER_LOCATION = 5;	//接收的位置消息
+		//语音	
+		private final int TYPE_SEND_VOICE =6;	//发送的语音消息
+		private final int TYPE_RECEIVER_VOICE = 7;	//接收的语音消息
 		
+		DisplayImageOptions options;
 		
+		private ImageLoadingListener animateFirstListener = new AnimateFirstDisplayListener();
 		
 		
 		//当前用户
@@ -49,15 +69,26 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 		
 		public MessageChatAdapter(Context context, List<ChatDetailBean> list) {
 			super(context, list);
-			// TODO 自动生成的构造函数存根
 			currentUserName = getCurrentUserName();
+			
+			options = new DisplayImageOptions.Builder()
+			.showImageForEmptyUri(R.drawable.ic_launcher)
+			.showImageOnFail(R.drawable.ic_launcher)
+			.resetViewBeforeLoading(true)
+			.cacheOnDisc(true)
+			.cacheInMemory(true)
+			.imageScaleType(ImageScaleType.EXACTLY)
+			.bitmapConfig(Bitmap.Config.RGB_565)
+			.considerExifParams(true)
+			.displayer(new FadeInBitmapDisplayer(300))
+			.build();
 		}
 		
 		
 		//获取当前用户的信息
 		private String getCurrentUserName() {
 			// TODO 自动生成的方法存根
-			return null;
+			return UserInfoManager.getInstance().getmCurrent().getUsername();
 		}
 
 
@@ -95,14 +126,14 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 						mInflater.inflate(R.layout.message_chat_item_sent_voice, null);
 			}else{//剩下默认的都是文本
 				return getItemViewType(position) == TYPE_RECEIVER_TXT ? 
-						mInflater.inflate(R.layout.message_chat_item_received_message, null) 
+						mInflater.inflate(R.layout.message_chat_item_received_text, null) 
 						:
-						mInflater.inflate(R.layout.message_chat_item_sent_message, null);
+						mInflater.inflate(R.layout.message_chat_item_sent_text, null);
 			}
 		}
 		
 		@Override
-		public View bindView(int position, View convertView, ViewGroup parent) {
+		public View bindView(final int position, View convertView, ViewGroup parent) {
 			// TODO 自动生成的方法存根
 			
 			final ChatDetailBean item = list.get(position);
@@ -112,7 +143,6 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 			//文本类型
 			ImageView iv_avatar = ViewHolder.get(convertView, R.id.iv_avatar);
 			final ImageView iv_fail_resend = ViewHolder.get(convertView, R.id.iv_fail_resend);//失败重发
-			final TextView tv_send_status = ViewHolder.get(convertView, R.id.tv_send_status);//发送状态
 			TextView tv_time = ViewHolder.get(convertView, R.id.tv_time);
 			TextView tv_message = ViewHolder.get(convertView, R.id.tv_message);
 			//图片
@@ -125,13 +155,16 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 			//语音长度
 			final TextView tv_voice_length = ViewHolder.get(convertView, R.id.tv_voice_length);
 			
-			//点击头像进入个人资料
-			
-			/*String avatar = item.get;
+			//点击头像进入个人资料,拿到缓存的
+			String avatar;
+			if(item.getUsername().equals(currentUserName))
+				avatar = UserInfoManager.getInstance().getmCurrent().getHead_url();
+			else
+				avatar = null;//需要获得对方的头像url
 			if(avatar!=null && !avatar.equals("")){//加载头像-为了不每次都加载头像
 				ImageLoader.getInstance().displayImage(avatar, iv_avatar, ImageLoadOptions.getOptions(),animateFirstListener);
 			}else{
-				iv_avatar.setImageResource(R.drawable.head);
+				iv_avatar.setImageResource(R.drawable.user_default_head);
 			}
 			
 			iv_avatar.setOnClickListener(new OnClickListener() {
@@ -139,63 +172,51 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 				@Override
 				public void onClick(View arg0) {
 					// TODO Auto-generated method stub
-					Intent intent =new Intent(mContext,SetMyInfoActivity.class);
+					Intent intent =new Intent(mContext,PersonalityInfoActivity.class);
 					if(getItemViewType(position) == TYPE_RECEIVER_TXT 
 							||getItemViewType(position) == TYPE_RECEIVER_IMAGE
 					        ||getItemViewType(position)==TYPE_RECEIVER_LOCATION
 					        ||getItemViewType(position)==TYPE_RECEIVER_VOICE){
 						intent.putExtra("from", "other");
-						intent.putExtra("username", item.getBelongUsername());
+						intent.putExtra("username", item.getUsername());
 					}else{
 						intent.putExtra("from", "me");
 					}
 					mContext.startActivity(intent);
 				}
-			});*/
+			});
 			
-			tv_time.setText(com.lym.twogoods.utils.TimeUtil.longToString(item.getPublish_time(),null));
+			tv_time.setText(TimeUtil.getDescriptionTimeFromTimestamp(item.getPublish_time()));
 			
-			/*if(getItemViewType(position)==TYPE_SEND_TXT
-//					||getItemViewType(position)==TYPE_SEND_IMAGE//图片单独处理
+			if(getItemViewType(position)==TYPE_SEND_TXT
 					||getItemViewType(position)==TYPE_SEND_LOCATION
 					||getItemViewType(position)==TYPE_SEND_VOICE){//只有自己发送的消息才有重发机制
-				//状态描述
-				if(item.getStatus()==BmobConfig.STATUS_SEND_SUCCESS){//发送成功
+				//发送状态描述
+				if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_SUCCEED){//发送成功
 					progress_load.setVisibility(View.INVISIBLE);
 					iv_fail_resend.setVisibility(View.INVISIBLE);
 					if(item.getMessage_type()==ChatConfiguration.TYPE_MESSAGE_VOICE){
-						tv_send_status.setVisibility(View.GONE);
 						tv_voice_length.setVisibility(View.VISIBLE);
-					}else{
-						tv_send_status.setVisibility(View.VISIBLE);
-						tv_send_status.setText("已发送");
-					}
-				}else if(item.getStatus()==BmobConfig.STATUS_SEND_FAIL){//服务器无响应或者查询失败等原因造成的发送失败，均需要重发
+				}else if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_FAILED){//服务器无响应或者查询失败等原因造成的发送失败，均需要重发
 					progress_load.setVisibility(View.INVISIBLE);
 					iv_fail_resend.setVisibility(View.VISIBLE);
-					tv_send_status.setVisibility(View.INVISIBLE);
-					if(item.getMsgType()==BmobConfig.TYPE_VOICE){
+					if(item.getMessage_type()==ChatConfiguration.TYPE_MESSAGE_VOICE){
 						tv_voice_length.setVisibility(View.GONE);
 					}
-				}else if(item.getStatus()==BmobConfig.STATUS_SEND_RECEIVERED){//对方已接收到
+				}else if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_RECEIVERED){//对方已接收到
 					progress_load.setVisibility(View.INVISIBLE);
 					iv_fail_resend.setVisibility(View.INVISIBLE);
-					if(item.getMsgType()==BmobConfig.TYPE_VOICE){
-						tv_send_status.setVisibility(View.GONE);
+					if(item.getMessage_type()==ChatConfiguration.TYPE_MESSAGE_VOICE){
 						tv_voice_length.setVisibility(View.VISIBLE);
-					}else{
-						tv_send_status.setVisibility(View.VISIBLE);
-						tv_send_status.setText("已阅读");
 					}
-				}else if(item.getStatus()==BmobConfig.STATUS_SEND_START){//开始上传
+				}else if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_START){//开始上传
 					progress_load.setVisibility(View.VISIBLE);
 					iv_fail_resend.setVisibility(View.INVISIBLE);
-					tv_send_status.setVisibility(View.INVISIBLE);
-					if(item.getMsgType()==BmobConfig.TYPE_VOICE){
+					if(item.getMessage_type()==ChatConfiguration.TYPE_MESSAGE_VOICE){
 						tv_voice_length.setVisibility(View.GONE);
 					}
 				}
-			}*/
+			}
 			//根据类型显示内容
 			final String text = item.getMessage();
 			switch (item.getMessage_type()) {
@@ -213,7 +234,10 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 			case  ChatConfiguration.TYPE_MESSAGE_PICTURE://图片类
 				try {
 					if (text != null && !text.equals("")) {//发送成功之后存储的图片类型的content和接收到的是不一样的
-						dealWithImage(position, progress_load, iv_fail_resend, tv_send_status, iv_picture, item);
+						dealWithImage(position, progress_load, iv_fail_resend, iv_picture, item);
+					}else
+					{
+						iv_picture.setImageResource(R.drawable.user_default_head);
 					}
 					iv_picture.setOnClickListener(new OnClickListener() {
 						
@@ -223,7 +247,7 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 							Intent intent =new Intent(mContext,DisplayPicturesActivity.class);
 							ArrayList<String> photos = new ArrayList<String>();
 							photos.add(getImageUrl(item));
-							intent.putStringArrayListExtra("photos", photos);
+							intent.putStringArrayListExtra("picturesUrlList", photos);
 							intent.putExtra("position", 0);
 							mContext.startActivity(intent);
 						}
@@ -234,27 +258,28 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 				break;
 				
 			
-			/*case  ChatConfiguration.TYPE_MESSAGE_VOICE://语音消息
+			case  ChatConfiguration.TYPE_MESSAGE_VOICE://语音消息
 				try {
 					if (text != null && !text.equals("")) {
 						tv_voice_length.setVisibility(View.VISIBLE);
 						String content = item.getMessage();
-						if (item.getUsername().equals(currentUserName)) {//发送的消息
-							if(item.getStatus()==BmobConfig.STATUS_SEND_RECEIVERED
-									||item.getStatus()==BmobConfig.STATUS_SEND_SUCCESS){//当发送成功或者发送已阅读的时候，则显示语音长度
+						
+						//发送的消息
+						if (item.getUsername().equals(currentUserName)) {
+							if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_SUCCEED){//当发送成功或者发送已阅读的时候，则显示语音长度
 								tv_voice_length.setVisibility(View.VISIBLE);
 								String length = content.split("&")[2];
 								tv_voice_length.setText(length+"\''");
 							}else{
 								tv_voice_length.setVisibility(View.INVISIBLE);
 							}
-						} else {//收到的消息
-							boolean isExists = BmobDownloadManager.checkTargetPathExist(currentObjectId,item);
+						} else {
+							//收到的消息
+							Boolean isExists = false;
 							if(!isExists){//若指定格式的录音文件不存在，则需要下载，因为其文件比较小，故放在此下载
 								String netUrl = content.split("&")[0];
 								final String length = content.split("&")[1];
 								
-								downloadTask.execute(netUrl);
 							}else{
 								String length = content.split("&")[2];
 								tv_voice_length.setText(length+"\''");
@@ -262,118 +287,112 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 						}
 					}
 					//播放语音文件
-					iv_voice.setOnClickListener(new NewRecordPlayClickListener(mContext,item,iv_voice));
+					iv_voice.setOnClickListener(new RecordPlayClickListener(mContext,item,iv_voice));
 				} catch (Exception e) {
-					
+					e.printStackTrace();
+					System.out.println("处理音频文件出现异常");
 				}
 				
-				break;*/
+				break;
 			default:
 				break;
 			}
-			return null;
 		}
+			return convertView;
 		
-		public static class ViewHolder {
-			public static <T extends View> T get(View view, int id) {
-				SparseArray<View> viewHolder = (SparseArray<View>) view.getTag();
-				if (viewHolder == null) {
-					viewHolder = new SparseArray<View>();
-					view.setTag(viewHolder);
-				}
-				View childView = viewHolder.get(id);
-				if (childView == null) {
-					childView = view.findViewById(id);
-					viewHolder.put(id, childView);
-				}
-				return (T) childView;
+	}
+		
+	/**
+	 * 用于在getView中获得相应的控件
+	 * @author yao
+	 *
+	 */
+	public static class ViewHolder {
+		public static <T extends View> T get(View view, int id) {
+			SparseArray<View> viewHolder = (SparseArray<View>) view.getTag();
+			if (viewHolder == null) {
+				viewHolder = new SparseArray<View>();
+				view.setTag(viewHolder);
 			}
+			View childView = viewHolder.get(id);
+			if (childView == null) {
+				childView = view.findViewById(id);
+				viewHolder.put(id, childView);
+			}
+			return (T) childView;
 		}
+	}
 		
 		
-		/** 获取图片的地址--
+		 /**
+		  *  获取图片的地址--
 		  * @Description: TODO
-		  * @param @param item
-		  * @param @return 
+		  * @param @param item一条消息
 		  * @return String
-		  * @throws
+		  * @author yao
 		  */
 		private String getImageUrl(ChatDetailBean item){
 			String showUrl = "";
-			String text = item.getMessage();
-			if(item.getUsername().equals(currentUserName)){//
-				if(text.contains("&")){
-					showUrl = text.split("&")[0];
-				}else{
-					showUrl = text;
-				}
+			String content = item.getMessage();
+			if(item.getUsername().equals(currentUserName)){
+				String path = "";//path是用户手机发送的本地图片的路径
+				//showUrl = "file://"+path;
+				showUrl = content;
 			}else{//如果是收到的消息，则需要从网络下载
-				showUrl = text;
+				showUrl = content;
 			}
 			return showUrl;
 		}
 		
 		
 		/** 处理图片
-		  * @Description: TODO
 		  * @param @param position
 		  * @param @param progress_load
 		  * @param @param iv_fail_resend
-		  * @param @param tv_send_status
-		  * @param @param iv_picture
+		  * @param @param iv_picture 显示图片的ImageView
 		  * @param @param item 
-		  * @return void
-		  * @throws
+		  * 
+		  * @author yao
 		  */
 		private void dealWithImage(int position,final ProgressBar progress_load,
-				ImageView iv_fail_resend,TextView tv_send_status,
-				ImageView iv_picture,ChatDetailBean item){
-			String text = item.getMessage();
-			/*if(getItemViewType(position)==TYPE_SEND_IMAGE){//发送的消息
-				if(item.getStatus()==BmobConfig.STATUS_SEND_START){
+				ImageView iv_fail_resend,ImageView iv_picture,ChatDetailBean item){
+			
+			String content = item.getMessage();
+			//发送的消息
+			if(getItemViewType(position)==TYPE_SEND_IMAGE){
+				if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_START){
 					progress_load.setVisibility(View.VISIBLE);
 					iv_fail_resend.setVisibility(View.INVISIBLE);
-					tv_send_status.setVisibility(View.INVISIBLE);
-				}else if(item.getStatus()==BmobConfig.STATUS_SEND_SUCCESS){
+				}else if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_SUCCEED){
 					progress_load.setVisibility(View.INVISIBLE);
 					iv_fail_resend.setVisibility(View.INVISIBLE);
-					tv_send_status.setVisibility(View.VISIBLE);
-					tv_send_status.setText("已发送");
-				}else if(item.getStatus()==BmobConfig.STATUS_SEND_FAIL){
+				
+				}else if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_FAILED){
 					progress_load.setVisibility(View.INVISIBLE);
 					iv_fail_resend.setVisibility(View.VISIBLE);
-					tv_send_status.setVisibility(View.INVISIBLE);
-				}else if(item.getStatus()==BmobConfig.STATUS_SEND_RECEIVERED){
+				}else if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_RECEIVERED){
 					progress_load.setVisibility(View.INVISIBLE);
 					iv_fail_resend.setVisibility(View.INVISIBLE);
-					tv_send_status.setVisibility(View.VISIBLE);
-					tv_send_status.setText("已阅读");
 				}
-//				如果是发送的图片的话，因为开始发送存储的地址是本地地址，发送成功之后存储的是本地地址+"&"+网络地址，因此需要判断下
+				//发送的图片，直接用本地地址展示，
 				String showUrl = "";
-				if(text.contains("&")){
-					showUrl = text.split("&")[0];
+				if(content.contains("&")){
+					showUrl = content.split("&")[0];
 				}else{
-					showUrl = text;
+					showUrl = content;
 				}
 				//为了方便每次都是取本地图片显示
 				ImageLoader.getInstance().displayImage(showUrl, iv_picture);
 			}else{
-				ImageLoader.getInstance().displayImage(text, iv_picture,options,new ImageLoadingListener() {
+				//接收的图片
+				ImageLoader.getInstance().displayImage(content, iv_picture,options,new ImageLoadingListener() {
 					
 					@Override
 					public void onLoadingStarted(String imageUri, View view) {
 						// TODO Auto-generated method stub
 						progress_load.setVisibility(View.VISIBLE);
 					}
-					
-					@Override
-					public void onLoadingFailed(String imageUri, View view,
-							FailReason failReason) {
-						// TODO Auto-generated method stub
-						progress_load.setVisibility(View.INVISIBLE);
-					}
-					
+	
 					@Override
 					public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 						// TODO Auto-generated method stub
@@ -385,8 +404,33 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 						// TODO Auto-generated method stub
 						progress_load.setVisibility(View.INVISIBLE);
 					}
+
+					@Override
+					public void onLoadingFailed(String arg0, View arg1,
+							FailReason arg2) {
+						// TODO 自动生成的方法存根
+						progress_load.setVisibility(View.INVISIBLE);
+					}
 				});
-			}*/
+			}
+		}
+		
+		
+		private static class AnimateFirstDisplayListener extends SimpleImageLoadingListener {
+
+			static final List<String> displayedImages = Collections.synchronizedList(new LinkedList<String>());
+
+			@Override
+			public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+				if (loadedImage != null) {
+					ImageView imageView = (ImageView) view;
+					boolean firstDisplay = !displayedImages.contains(imageUri);
+					if (firstDisplay) {
+						FadeInBitmapDisplayer.animate(imageView, 500);
+						displayedImages.add(imageUri);
+					}
+				}
+			}
 		}
 
 }

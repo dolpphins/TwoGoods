@@ -49,10 +49,7 @@ public class TwoGoodsApplication extends Application{
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		//复制默认头像到相应的缓存目录中
-		Bitmap defaultHeadBmp = BitmapFactory.decodeResource(getResources(), UserConfiguration.USER_DEFAULT_HEAD);
-		ImageUtil.saveBitmap(dcm.getUserHeadPictureCachePath(),
-				UserConfiguration.USER_DEFAULT_HEAD_NAME, defaultHeadBmp, true);
+		
 
 	}
 	

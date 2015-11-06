@@ -11,7 +11,7 @@ import com.lym.twogoods.R;
 public class UserConfiguration {
 
 	/** 用户默认头像drawable ID */
-	public final static int USER_DEFAULT_HEAD = R.drawable.user_default_head;
+	public final static String USER_DEFAULT_HEAD = "http://file.bmob.cn/M02/76/88/oYYBAFY8EtGAVKTJAAAEsgROwRM268.png";
 	
 	/** 用户默认头像名 */
 	public final static String USER_DEFAULT_HEAD_NAME = "default_head_pic.jpg";	

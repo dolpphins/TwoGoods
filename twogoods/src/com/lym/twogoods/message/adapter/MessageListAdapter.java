@@ -6,15 +6,18 @@ import java.util.List;
 import com.lym.twogoods.R;
 import com.lym.twogoods.bean.ChatSnapshot;
 import com.lym.twogoods.config.ChatConfiguration;
+import com.lym.twogoods.message.ImageLoadOptions;
 import com.lym.twogoods.message.fragment.ChatFragment;
 import com.lym.twogoods.message.viewHolder.MessageItemViewHolder;
 import com.lym.twogoods.utils.ImageUtil;
 import com.lym.twogoods.utils.TimeUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 import cn.bmob.im.bean.BmobRecent;
 import cn.bmob.im.config.BmobConfig;
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +26,18 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-public class MessageAdapter extends ArrayAdapter<ChatSnapshot> implements Filterable{
+/**
+ * 消息列表的适配器
+ * @author yao
+ *
+ */
+public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Filterable{
 
 	private LayoutInflater inflater;
 	private List<ChatSnapshot> mData;
 	private Context mContext;
 	
-	public MessageAdapter(Context context, int resource, List<ChatSnapshot> objects) {
+	public MessageListAdapter(Context context, int resource, List<ChatSnapshot> objects) {
 		super(context, resource, objects);
 		// TODO 自动生成的构造函数存根
 		mContext = context;
@@ -85,7 +92,7 @@ public class MessageAdapter extends ArrayAdapter<ChatSnapshot> implements Filter
 			view = inflater.inflate(R.layout.message_list_item_conversation, parent, false);
 			holder = new MessageItemViewHolder();
 			holder.avatar = (ImageView) view.findViewById(R.id.
-					message_list_iv_recent_avatar);
+					message_list_iv_recent_avatar_head);
 			holder.name = (TextView) view.findViewById(R.id.
 					message_list_tv_recent_name);
 			holder.newMessageTip = (TextView) view.findViewById(R.id.
@@ -109,15 +116,15 @@ public class MessageAdapter extends ArrayAdapter<ChatSnapshot> implements Filter
 		if(avatar!=null&& !avatar.equals("")){
 			iv_recent_avatar.setImageBitmap(ImageUtil.decodeBitmapFromNet(avatar,
 					iv_recent_avatar.getWidth() ,iv_recent_avatar.getHeight()));
-			/*ImageLoader.getInstance().displayImage(avatar, iv_recent_avatar, 
+			ImageLoader.getInstance().displayImage(avatar, iv_recent_avatar, 
 			ImageLoadOptions.getOptions());
 			Uri uri = Uri.parse(avatar);
-			iv_recent_avatar.setImageURI(uri);*/
+			iv_recent_avatar.setImageURI(uri);
 		}else{
 			iv_recent_avatar.setImageResource(R.drawable.user_default_head);
 		}
 		//iv_recent_avatar.setImageResource(R.drawable.user_default_head);
-		tv_recent_name.setText(item.getUsername());
+		tv_recent_name.setText(item.getOther_username());
 		tv_recent_time.setText(TimeUtil.getChatTime(item.getLast_time()));
 		if(item.getLast_message_type()==ChatConfiguration.TYPE_MESSAGE_TEXT){
 			//SpannableString spannableString = FaceTextUtils.toSpannableString(mContext, item.getMessage());
@@ -133,12 +140,11 @@ public class MessageAdapter extends ArrayAdapter<ChatSnapshot> implements Filter
 		}else if(item.getLast_message_type()==BmobConfig.TYPE_VOICE){
 			tv_recent_msg.setText("[语音]");
 		}
-		tv_recent_unread.setText(item.getUnread_num());
-		/*tv_recent_name.setText("yao");
-		tv_recent_msg .setText("hello");
-		tv_recent_time.setText("12:00");
-		tv_recent_unread.setText("1");*/
-				
+		if(item.getUnread_num()>0){
+			tv_recent_unread.setVisibility(View.VISIBLE);
+			tv_recent_unread.setText(item.getUnread_num());
+		}else
+			tv_recent_unread.setVisibility(View.GONE);
 		
 		return view;
 	}

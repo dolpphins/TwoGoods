@@ -18,20 +18,17 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 import cn.bmob.im.BmobChatManager;
 import cn.bmob.im.BmobUserManager;
-import cn.bmob.im.bean.BmobChatUser;
-import cn.bmob.im.bean.BmobRecent;
-import cn.bmob.im.db.BmobDB;
 
 import com.j256.ormlite.dao.Dao;
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.ChatSnapshot;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.db.OrmDatabaseHelper;
 import com.lym.twogoods.fragment.base.PullListFragment;
 import com.lym.twogoods.message.MessageDialog;
 import com.lym.twogoods.message.MessageDialog.MyItemOnClickListener;
-import com.lym.twogoods.message.adapter.MessageAdapter;
-import com.lym.twogoods.message.adapter.TestAdapter;
+import com.lym.twogoods.message.adapter.MessageListAdapter;
 import com.lym.twogoods.message.ui.ChatActivity;
 import com.lym.twogoods.utils.SharePreferencesManager;
 import com.lym.twogoods.utils.TimeUtil;
@@ -45,24 +42,27 @@ import com.lym.twogoods.utils.TimeUtil;
 
 public class MessageFragment extends PullListFragment implements 
 	OnItemClickListener,OnItemLongClickListener{
-	
-	public BmobUserManager userManager;
-	public BmobChatManager chatManager;
-	
-	private MessageAdapter adapter;
+
+	//xListView的adapter
+	private MessageListAdapter mMessageListAdapter;
 	/*用来保存上一次刷新的时间*/
 	private SharePreferencesManager mSharePreferenceManager;
 	
 	private List<String> dialogTips;
+	/**最近消息列表的全部信息*/
+	private List<ChatSnapshot> chatSnapshotList;
+	/**最近消息表*/
+	private Dao<ChatSnapshot,Integer> mChatSnapshotDao;
+	/**当前用户*/
+	private User currentUser;
+	
+	OrmDatabaseHelper mDatabaseHelper;
 	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO 自动生成的方法存根
 		super.onCreate(savedInstanceState);
-		userManager = BmobUserManager.getInstance(getActivity());
-		chatManager = BmobChatManager.getInstance(getActivity());
-		
 	}
 	
 	@Override
@@ -77,30 +77,58 @@ public class MessageFragment extends PullListFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		initView();
+		init();
 	}
 	
 
-	private void initView() {
+	private void init() {
 		mSharePreferenceManager = SharePreferencesManager.getInstance();
+		intiUser();
+		initData();
+		initView();
+	}
+	//初始化当前用户的信息
+	private void intiUser() {
+		// TODO 自动生成的方法存根
+		currentUser = UserInfoManager.getInstance().getmCurrent();
+	}
+
+	/**
+	 * 初始化mListView
+	 */
+	private void initView() {
+		
 		setMode(Mode.PULLDOWN);
 		setAdapter();
-		
 		mListView.setOnItemClickListener(this);
 		mListView.setOnItemLongClickListener(this);
 	}
 
-	
+	/**
+	 * 初始化消息列表的数据
+	 */
+	private void initData() {
+		mDatabaseHelper = new OrmDatabaseHelper(getActivity());
+		mChatSnapshotDao = mDatabaseHelper.getChatSnapshotDao();
+		chatSnapshotList = new ArrayList<ChatSnapshot>();
+		try {
+			chatSnapshotList = mChatSnapshotDao.queryForAll();
+		} catch (SQLException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		
+	}
+
 	protected void setAdapter() {
 	
-	/*	 adapter = new MessageAdapter(getActivity(),
-				R.layout.message_list_item_conversation,queryRecent());*/
-		int images[] = {R.drawable.user_default_head,R.drawable.user_default_head,
-				R.drawable.user_default_head,R.drawable.user_default_head,
-				R.drawable.user_default_head};
-		TestAdapter adapter = new TestAdapter(getActivity(), images);
-		 
-		super.setAdapter(adapter);
+//		int images[] = {R.drawable.user_default_head,R.drawable.user_default_head,
+//				R.drawable.user_default_head,R.drawable.user_default_head,
+//				R.drawable.user_default_head};
+//		TestAdapter adapter = new TestAdapter(getActivity(), images);
+		mMessageListAdapter = new MessageListAdapter(getActivity(), R.layout.message_list_item_conversation, chatSnapshotList);
+		
+		super.setAdapter(mMessageListAdapter);
 	}
 	
 	/**
@@ -123,21 +151,33 @@ public class MessageFragment extends PullListFragment implements
 		return list;
 	}
 	
-	private String getCurrentErHuoHao() {
-		// TODO 自动生成的方法存根
-		return null;
+	
+	/**
+	 * 获取当前用户名
+	 * @return
+	 */
+	public String getCurrentErHuoHao() {
+		if(currentUser==null)
+		{
+			currentUser = UserInfoManager.getInstance().getmCurrent();
+		}
+		return currentUser.getUsername();
 	}
 	
-	private User getCurrentUser()
+	public User getCurrentUser()
 	{
-		User user = null;
-		return user;
+		if(currentUser==null)
+		{
+			currentUser = UserInfoManager.getInstance().getmCurrent();
+		}
+			
+		return currentUser;
 	}
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		ChatSnapshot recent = adapter.getItem(position);
+		ChatSnapshot recent = mMessageListAdapter.getItem(position);
 		showDeleteDialog(recent);
 		return true;
 	}
@@ -158,11 +198,16 @@ public class MessageFragment extends PullListFragment implements
 				
 				ChatSnapshot mChatSnapshot = list.get(position);
 				
-				adapter.remove(mChatSnapshot); // 此处只是模仿数据删除，如果mTestList用的是数据库的数据或者是别的，需先删除数据库，否则下次进入程序还是会出现删除的数据
+				mMessageListAdapter.remove(mChatSnapshot); // 此处只是模仿数据删除，如果mTestList用的是数据库的数据或者是别的，需先删除数据库，否则下次进入程序还是会出现删除的数据
 				
-				
-				//BmobDB.create(getActivity()).deleteRecent(mChatSnapshot.getOther_username()());
-				adapter.notifyDataSetChanged();
+				try {
+					mChatSnapshotDao.delete(mChatSnapshot);
+				} catch (SQLException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+					System.out.println("从本地数据库中删除聊天失败");
+				}
+				mMessageListAdapter.notifyDataSetChanged();
 				
 				mDialog.cancel();
 			}
@@ -174,29 +219,25 @@ public class MessageFragment extends PullListFragment implements
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 	
-		/*BmobRecent recent = adapter.getItem(position);
-		//重置未读消息
-		BmobDB.create(getActivity()).resetUnread(recent.getTargetid());
-		//组装聊天对象
-		BmobChatUser user = new BmobChatUser();
-		user.setAvatar(recent.getAvatar());
-		user.setNick(recent.getNick());
-		user.setUsername(recent.getUserName());
-		user.setObjectId(recent.getTargetid());*/
-		
 		Intent intent = new Intent(getActivity(), ChatActivity.class);
-//		intent.putExtra("user", user);
-//		User user = ;
-//		intent.putExtra("user", user);
+		
+		ChatSnapshot chatSnapshot = (ChatSnapshot) mAdapter.getItem(position);
+		
+		User otherUser = new User();
+		otherUser.setUsername(chatSnapshot.getUsername());
+		otherUser.setHead_url(chatSnapshot.getHead_url());
+		
+		intent.putExtra("otherUser", otherUser);		
 		startActivity(intent);
 	}
 
+	/**判断当前fragment是否显示在屏幕上，如果显示，则刷新界面*/
 	private boolean ishidden;
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
 		this.ishidden = hidden;
-		if(!hidden){
+		if(!ishidden){
 			refreshMessage();
 		}
 	}
@@ -244,11 +285,11 @@ public class MessageFragment extends PullListFragment implements
 					int images[] = {R.drawable.user_default_head,R.drawable.user_default_head,
 							R.drawable.user_default_head,R.drawable.user_default_head,
 							R.drawable.user_default_head};
-					TestAdapter adapter = new TestAdapter(getActivity(), images);
+					//TestAdapter adapter = new TestAdapter(getActivity(), images);
 					
-//					adapter = new MessageAdapter(getActivity(), R.layout.message_list_item_conversation, 
-//							BmobDB.create(getActivity()).queryRecents());
-//					setAdapter(adapter);
+					mMessageListAdapter = new MessageListAdapter(getActivity(), 
+							R.layout.message_list_item_conversation, chatSnapshotList);
+					setAdapter(mMessageListAdapter);
 				}
 			});
 		} catch (Exception e) {

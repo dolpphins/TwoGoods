@@ -115,9 +115,8 @@
         <activity android:name="com.lym.twogoods.ui.FeedbackActivity" >
         </activity>
         <activity android:name="com.lym.twogoods.ui.DisplayPicturesActivity" >
-
-            <!-- 发送图片ACtivity -->
         </activity>
+        <!-- 发送图片ACtivity -->
         <activity android:name="com.lym.twogoods.ui.SendPictureActivity" >
         </activity>
 

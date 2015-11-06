@@ -12,7 +12,7 @@ import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.message.ImageFloder;
 import com.lym.twogoods.message.MessageConfig;
 import com.lym.twogoods.message.adapter.ImageAdapter;
-import com.lym.twogoods.message.adapter.MyAdapter;
+import com.lym.twogoods.message.adapter.PicturePathAdapter;
 import com.lym.twogoods.message.view.ListImageDirPopupWindow;
 import com.lym.twogoods.message.view.ListImageDirPopupWindow.OnImageDirSelected;
 
@@ -69,7 +69,7 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 
 	private GridView mGirdView;
 	
-	private MyAdapter adapter;
+	private PicturePathAdapter adapter;
 	private ImageAdapter mImageAdapter;
 	/**
 	 * 临时的辅助类，用于防止同一个文件夹的多次扫描
@@ -396,7 +396,7 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 			/**
 			 * 可以看到文件夹的路径和图片的路径分开保存，极大的减少了内存的消耗；
 			 */
-			adapter = new MyAdapter(getActivity().getApplicationContext(),selectedPics, mImgs,
+			adapter = new PicturePathAdapter(getActivity().getApplicationContext(),selectedPics, mImgs,
 					R.layout.message_chat_grid_item, mImgDir.getAbsolutePath());
 			mGirdView.setAdapter(adapter);
 			// mImageAdapter.notifyDataSetChanged();

@@ -136,13 +136,6 @@ public abstract class ChatBaseAdapter<E> extends BaseAdapter {
 		}
 	}
 
-	/**
-	 * 打Log ShowLog
-	 * @return void
-	 * @throws
-	 */
-	public void ShowLog(String msg) {
-		BmobLog.i(msg);
-	}
+	
 
 }

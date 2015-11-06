@@ -16,6 +16,4 @@ public class MessageItemViewHolder {
 	//新消息提醒
 	public TextView newMessageTip;
 	
-	
-
 }

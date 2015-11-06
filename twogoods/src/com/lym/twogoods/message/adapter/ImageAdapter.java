@@ -19,7 +19,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.Toast;
-
+/**
+ * 发送图片时的图片列表适配器
+ * @author yao
+ *
+ */
 public class ImageAdapter extends BaseAdapter
 {
 	protected LayoutInflater mInflater;

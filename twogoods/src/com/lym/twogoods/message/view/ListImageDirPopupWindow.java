@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.message.ImageFloder;
-import com.lym.twogoods.message.adapter.CommonAdapter;
+import com.lym.twogoods.message.adapter.PicturePathBaseAdapter;
 import com.lym.twogoods.message.viewHolder.ViewHolder;
 
 import android.view.View;
@@ -28,7 +28,7 @@ public class ListImageDirPopupWindow extends BasePopupWindowForListView<ImageFlo
 	public void initViews()
 	{
 		mListDir = (ListView) findViewById(R.id.id_list_dir);
-		mListDir.setAdapter(new CommonAdapter<ImageFloder>(context, mDatas,
+		mListDir.setAdapter(new PicturePathBaseAdapter<ImageFloder>(context, mDatas,
 				R.layout.message_chat_list_dir_item)
 		{
 			@Override

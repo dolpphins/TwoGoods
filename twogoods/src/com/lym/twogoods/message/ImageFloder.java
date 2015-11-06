@@ -1,5 +1,9 @@
 package com.lym.twogoods.message;
-
+/**
+ * 发送图片时选择图片的目录
+ * @author yao
+ *
+ */
 public class ImageFloder
 {
 	/*

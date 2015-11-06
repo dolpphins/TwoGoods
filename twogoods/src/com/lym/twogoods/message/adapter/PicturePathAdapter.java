@@ -13,8 +13,12 @@ import android.widget.Toast;
 import com.lym.twogoods.R;
 import com.lym.twogoods.message.viewHolder.ViewHolder;
 
-
-public class MyAdapter extends CommonAdapter<String>
+/**
+ * 在发送图片时图片路径选择的适配器,继承
+ * @author yao
+ *
+ */
+public class PicturePathAdapter extends PicturePathBaseAdapter<String>
 {
 
 	/**
@@ -27,7 +31,7 @@ public class MyAdapter extends CommonAdapter<String>
 	 */
 	public String mDirPath;
 
-	public MyAdapter(Context context, List<String>selectedPics,
+	public PicturePathAdapter(Context context, List<String>selectedPics,
 			List<String> mDatas, int itemLayoutId,String dirPath){
 		
 		super(context, mDatas, itemLayoutId);
