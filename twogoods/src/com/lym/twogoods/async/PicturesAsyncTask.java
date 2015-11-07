@@ -59,6 +59,13 @@ public class PicturesAsyncTask extends BaseAsyncTask<String, Integer, Bitmap>{
 	/** 磁盘缓存单文件最大大小,单位为字节 ,默认为20MB*/
 	private long maxDiskCacheSize = 20 * 1024 * 1024;
 	
+	private enum Source {
+		UNKNOWN, MEMORY, DISK, NETWORK
+	}
+	
+	/** 标记当前图片来自哪里 */
+	private Source mSource = Source.UNKNOWN;
+	
 	public PicturesAsyncTask(Context context) {
 		super(context);
 	}
@@ -133,7 +140,16 @@ public class PicturesAsyncTask extends BaseAsyncTask<String, Integer, Bitmap>{
 			if(bitmap == null) {
 				System.out.println("disk cache not exists");
 				bitmap = tryLoadfromNetwork(url);
+				if(bitmap == null) {
+					mSource = Source.UNKNOWN;//加载失败
+				} else {
+					mSource = Source.NETWORK;//来自网络
+				}
+			} else {
+				mSource = Source.DISK;//来自硬盘缓存
 			}
+		} else {
+			mSource = Source.MEMORY;//来自内存缓存
 		}
 		return bitmap;
 	}
@@ -187,13 +203,17 @@ public class PicturesAsyncTask extends BaseAsyncTask<String, Integer, Bitmap>{
 		if(url == null || bitmap == null) {
 			return false;
 		}
+		String key = generateDiskCacheKey(url);
+		//已经缓存到磁盘了,直接返回
+		if(existInDisk(key)) {
+			return false;
+		}
 		File f = new File(diskCacheDir);
 		if(!f.exists()) {
 			f.mkdirs();
 		}
 		try {
 			DiskLruCache diskLruCache = DiskLruCache.open(f, AppManager.getAppVersion(mContext), 1, maxDiskCacheSize);
-			String key = generateDiskCacheKey(url);
 			DiskLruCache.Editor editor = diskLruCache.edit(key);
 			OutputStream os = editor.newOutputStream(0);
 			boolean b = bitmap.compress(CompressFormat.JPEG, 100, os);
@@ -208,6 +228,25 @@ public class PicturesAsyncTask extends BaseAsyncTask<String, Integer, Bitmap>{
 	//由于DiskLruCache对key格式有要求,且需要对文件key进行一定的加密
 	private String generateDiskCacheKey(String url) {
 		return EncryptHelper.getMD5(url);
+	}
+	
+	//判断是否已缓存在磁盘中
+	private boolean existInDisk(String key) {
+		File f = new File(diskCacheDir);
+		if(!f.exists()) {
+			return false;
+		}
+		try {
+			DiskLruCache diskLruCache = DiskLruCache.open(f, AppManager.getAppVersion(mContext), 1, maxDiskCacheSize);
+			Snapshot snapshot = diskLruCache.get(key);
+			if(snapshot != null) {
+				return true;
+			}
+			return false;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }
 

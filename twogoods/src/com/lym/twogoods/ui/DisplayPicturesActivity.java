@@ -38,7 +38,10 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * 	该Activity图片加载完默认磁盘缓存路径为{@link DiskCacheManager#getDefaultPictureCachePath()},你可以通过
  * 	传递你自定义的缓存路径来定义自己的缓存路径,代码如:<pre>intent.putString("diskCachePath",path);</pre>
  * </p>
- * 
+ * <p>
+ * 	你也可以设置当前显示哪张图片,通过以下代码设置:
+ * 	<pre>intent.putExtra("currentIndex", currentIndex);</pre>
+ * </p>
  * @author 麦灿标
  * */
 public class DisplayPicturesActivity extends BackActivity implements MultiPicturesAsyncTask.OnMultiPicturesAsyncTaskListener,
@@ -65,11 +68,14 @@ public class DisplayPicturesActivity extends BackActivity implements MultiPictur
 		app_dispaly_pictures_viewpager = (ViewPager) findViewById(R.id.app_dispaly_pictures_viewpager);
 			
 		picturesUrlList = getIntent().getStringArrayListExtra("picturesUrlList");
-
+		
 		if(picturesUrlList != null) {
+			int currentIndex = getIntent().getIntExtra("currentIndex", 0);
 			app_dispaly_pictures_viewpager.setOnPageChangeListener(this);
 			app_dispaly_pictures_viewpager.setAdapter(new PicturesViewPagerAdapter());
-			setTitleTip(0);
+			app_dispaly_pictures_viewpager.setCurrentItem(currentIndex);
+			Log.i(TAG, "currentIndex:" + currentIndex);
+			setTitleTip(currentIndex);
 			createImageViews();
 			//开始获取图片
 			//String[] params = (String[]) picturesUrlList.toArray();//报类转型异常

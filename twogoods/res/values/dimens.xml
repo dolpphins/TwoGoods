@@ -91,20 +91,20 @@
 	<dimen name="index_goods_search_input_delete_marginLeft">5dip</dimen>
 	<dimen name="index_goods_search_input_delete_marginRight">5dip</dimen>
 	<!-- 我的 -->
-	<dimen name="mine_fragment_layout_paddingTop">20dip</dimen>
-	<dimen name="mine_fragment_layout_paddingBottom">20dip</dimen>
-	<dimen name="mine_fragment_layout_paddingLeft">10dip</dimen>
-	<dimen name="mine_fragment_layout_paddingRight">10dip</dimen>
-	<dimen name="mine_more_textSize">18sp</dimen>
-	<dimen name="mine_username_marginTop">10dip</dimen>
-	<dimen name="mine_browse_num_marginTop">10dip</dimen>
-	<dimen name="mine_username_textSize">16sp</dimen>
-	<dimen name="mine_description_textSize">16sp</dimen>
-	<dimen name="mine_browse_num_textSize">16sp</dimen>
-	<dimen name="mine_head_picture_marginTop">10dip</dimen>
-	<dimen name="mine_description_marginTop">10dip</dimen>
-	<dimen name="mine_description_marginBottom">10dip</dimen>
-	<dimen name="mine_more_marginRight">5dip</dimen>
+	<dimen name="user_detail_head_layout_paddingTop">20dip</dimen>
+	<dimen name="user_detail_head_layout_paddingBottom">20dip</dimen>
+	<dimen name="user_detail_head_layout_paddingLeft">10dip</dimen>
+	<dimen name="user_detail_head_layout_paddingRight">10dip</dimen>
+	<dimen name="user_detail_head_more_textSize">18sp</dimen>
+	<dimen name="user_detail_head_username_marginTop">10dip</dimen>
+	<dimen name="user_detail_head_browse_num_marginTop">10dip</dimen>
+	<dimen name="user_detail_head_username_textSize">16sp</dimen>
+	<dimen name="user_detail_head_description_textSize">16sp</dimen>
+	<dimen name="user_detail_head_browse_num_textSize">16sp</dimen>
+	<dimen name="user_detail_head_head_picture_marginTop">10dip</dimen>
+	<dimen name="user_detail_head_description_marginTop">10dip</dimen>
+	<dimen name="user_detail_head_description_marginBottom">10dip</dimen>
+	<dimen name="user_detail_head_more_marginRight">5dip</dimen>
 	<dimen name="mine_list_item_paddingLeft">10dip</dimen>
 	<dimen name="mine_list_item_paddingRight">10dip</dimen>
 	<dimen name="mine_list_item_paddingTop">10dip</dimen>
@@ -117,9 +117,9 @@
 	<dimen name="mine_exit_button_marginTop">25dip</dimen>
 	<dimen name="mine_exit_button_marginBottom">25dip</dimen>
 	<dimen name="mine_publish_goods_marginTop">10dip</dimen>
-	
-	
-	
+	<dimen name="user_detail_more_list_item_padding">10dip</dimen>
+	<dimen name="user_detail_more_list_item_username_marginLeft">10dip</dimen>
+	<dimen name="user_detail_more_list_item_username_textSize">18sp</dimen>
 	
 	
 	

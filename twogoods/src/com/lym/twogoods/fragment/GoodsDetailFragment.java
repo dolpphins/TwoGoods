@@ -30,6 +30,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -92,6 +93,10 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		mHeaderLayout = (LinearLayout) LayoutInflater.from(mAttachActivity).inflate(R.layout.index_goods_detail_fragment_header, null);
 		initHeaderView();
 		
+		//当弹出软键盘时如果ListView最后一条Item可见那么将ListView顶上去(要配合windowSoftInputMode="adjustResize")
+		mListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
+		//请求强制拦截触摸事件,以解决滚动冲突问题
+		mListView.requestForceInterceptTouchEvent(true);
 		mListView.addHeaderView(mHeaderLayout);
 		mListView.setAdapter(new GoodsCommentListViewAdapter());
 

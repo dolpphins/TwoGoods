@@ -48,8 +48,10 @@ public class GoodsScreen {
 			return null;
 		}
 		PictureThumbnailSpecification specification = new PictureThumbnailSpecification();
-		specification.setWidth(ImageUtil.dp2px(at, 100));
-		specification.setHeight(ImageUtil.dp2px(at, 100));
+		int screenWidth = DisplayUtils.getScreenWidthPixels(at);
+		int sideLength = screenWidth * 2 / 5;
+		specification.setWidth(sideLength);
+		specification.setHeight(sideLength);
 		return specification;
 	}
 }

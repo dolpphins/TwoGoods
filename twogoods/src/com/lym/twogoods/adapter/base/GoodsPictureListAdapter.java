@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 /**
  * <p>
@@ -59,6 +60,7 @@ public class GoodsPictureListAdapter extends BaseAdapter{
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		ImageView iv = new ImageView(mAcitity);
+		iv.setScaleType(ScaleType.CENTER_CROP);
 		PictureThumbnailSpecification specification = GoodsScreen.getGoodsPictureThumbnailSpecification(mAcitity);
 		AbsListView.LayoutParams params = new AbsListView.LayoutParams(specification.getWidth(), specification.getHeight());
 		iv.setLayoutParams(params);

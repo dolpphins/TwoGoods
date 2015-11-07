@@ -61,7 +61,7 @@ public class GoodsData {
 		item4.setPublish_location("广州市天河区");
 		item4.setPublish_time(System.currentTimeMillis() - 7200);
 		picturesUrlList = new ArrayList<String>();
-		picturesUrlList.add("http://img4.imgtn.bdimg.com/it/u=3231325652,4269613482&fm=21&gp=0.jpg");
+		picturesUrlList.add("http://d.hiphotos.baidu.com/zhidao/pic/item/472309f790529822090ecdf3d5ca7bcb0a46d4c5.jpg");
 		item4.setPictureUrlList(picturesUrlList);
 		
 		goodsList.add(item1);

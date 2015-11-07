@@ -67,6 +67,8 @@ public class XListView extends ListView implements OnScrollListener {
 	private final static float OFFSET_RADIO = 1.8f; // support iOS like pull
 													// feature.
 	
+	/** 标记是否请求强制拦截触摸事件 */
+	private boolean mRequestInterceptTouchEventFlag = false;
 	
 	/**
 	 * @param context
@@ -230,7 +232,11 @@ public class XListView extends ListView implements OnScrollListener {
 		int finalHeight = 0; // default: scroll back to dismiss header.
 		// is refreshing, just scroll back to show all the header.
 		if (mPullRefreshing && height > mHeaderViewHeight) {
-			finalHeight = mHeaderViewHeight;
+			if(!mHeaderView.isClearHeader()) {
+				finalHeight = mHeaderViewHeight;
+			} else {
+				finalHeight = 0;
+			}
 		}
 		mScrollBack = SCROLLBACK_HEADER;
 		mScroller.startScroll(0, height, 0, finalHeight - height,
@@ -339,7 +345,20 @@ public class XListView extends ListView implements OnScrollListener {
 	
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		return false;//为解决与ViewPager滚动冲突,暂时返回false
+		if(mRequestInterceptTouchEventFlag) {
+			return false;//为解决与ViewPager滚动冲突
+		} else {
+			return super.onInterceptTouchEvent(ev);
+		}
+	}
+	
+	/**
+	 * 请求强制拦截触摸事件
+	 * 
+	 * @param allow true表示强制拦截,false表示有系统自行处理,不强制拦截
+	 * */
+	public void requestForceInterceptTouchEvent(boolean allow) {
+		mRequestInterceptTouchEventFlag = allow;
 	}
 	
 	@Override
@@ -442,6 +461,15 @@ public class XListView extends ListView implements OnScrollListener {
 	public void setRefreshArrow(int resId) {
 		if(mHeaderView != null) {
 			mHeaderView.setRefreshArrow(resId);
+		}
+	}
+	
+	/**
+	 * 清除头部所有控件
+	 * */
+	public void clearHeader() {
+		if(mHeaderView != null) {
+			mHeaderView.clearHeader();
 		}
 	}
 }

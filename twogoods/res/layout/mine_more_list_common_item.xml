@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	我的更多信息界面列表普通Item布局
+
+	@author 麦灿标
+ -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/user_detail_more_list_item_padding"  >
+    
+	<TextView 
+	    android:id="@+id/user_detail_more_list_common_item_left_tv"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentStart="true"
+	    android:layout_centerVertical="true"/>
+	
+	<TextView 
+	    android:id="@+id/user_detail_more_list_common_item_right_tv"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentRight="true"
+	    android:layout_alignParentEnd="true"
+	    android:layout_centerVertical="true"/>
+    
+</RelativeLayout>

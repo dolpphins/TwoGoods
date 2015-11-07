@@ -39,6 +39,9 @@ public class XListViewHeader extends LinearLayout {
 	//提示文字
 	private CharSequence[] hintText = new String[3];
 	
+	//标记是否清除头部所有控件
+	private boolean mClearViewFlag = false;
+	
 	public XListViewHeader(Context context) {
 		super(context);
 		initView(context);
@@ -80,6 +83,8 @@ public class XListViewHeader extends LinearLayout {
 
 	public void setState(int state) {
 		if (state == mState) return ;
+		
+		if(mClearViewFlag) return;
 		
 		if (state == STATE_REFRESHING) {	// 显示进度
 			mArrowImageView.clearAnimation();
@@ -176,7 +181,7 @@ public class XListViewHeader extends LinearLayout {
 	 * @param 要设置的内容,注意如果为""表示不显示任何内容,为null表示显示默认文本
 	 * */
 	public void setHintLastTimeTipText(CharSequence text) {
-		if(text == null) {
+		if(text == null || mClearViewFlag) {
 			return;
 		}
 		TextView tv = (TextView) findViewById(R.id.xlistview_header_time_tip);
@@ -192,8 +197,37 @@ public class XListViewHeader extends LinearLayout {
 	 * */
 	public void setRefreshArrow(int resId) {
 		ImageView iv = (ImageView) findViewById(R.id.xlistview_header_arrow);
-		if(iv != null) {
+		if(iv != null && !mClearViewFlag) {
 			iv.setImageResource(resId);
 		}
+	}
+	
+	/**
+	 * 清除头部所有控件
+	 * */
+	public void clearHeader() {
+		mClearViewFlag = true;
+		if(mArrowImageView != null) {
+			mArrowImageView.setVisibility(View.INVISIBLE);
+		}
+		if(mHintTextView != null) {
+			mHintTextView.setVisibility(View.INVISIBLE);
+		}
+		if(mProgressBar != null) {
+			mProgressBar.setVisibility(View.INVISIBLE);
+		}
+		TextView tv = (TextView) findViewById(R.id.xlistview_header_time_tip);
+		if(tv != null) {
+			tv.setVisibility(View.INVISIBLE);
+		}
+	}
+	
+	/**
+	 * 判断是否清除头部所有控件
+	 * 
+	 * @return 如果清除那么返回true,否则返回false
+	 * */
+	public boolean isClearHeader() {
+		return mClearViewFlag;
 	}
 }

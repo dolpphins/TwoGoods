@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	我的更多信息界面列表头像Item布局
+	
+	@author 麦灿标
+ -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/user_detail_more_list_item_padding" >
+    
+	<com.lym.twogoods.widget.CircleImageView
+	    android:id="@+id/user_detail_more_list_item_head_iv" 
+	    android:layout_width="80dip"
+	    android:layout_height="80dip"
+	    android:layout_centerVertical="true"
+	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentStart="true"/>
+	<TextView 
+	    android:id="@+id/user_detail_more_list_item_username"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignBottom="@id/user_detail_more_list_item_head_iv"
+	    android:layout_toRightOf="@id/user_detail_more_list_item_head_iv"
+	    android:layout_toEndOf="@id/user_detail_more_list_item_head_iv"
+	    android:layout_marginLeft="@dimen/user_detail_more_list_item_username_marginLeft"
+	    android:layout_marginStart="@dimen/user_detail_more_list_item_username_marginLeft"
+	    android:textSize="@dimen/user_detail_more_list_item_username_textSize"/>
+    
+</RelativeLayout>

@@ -52,8 +52,8 @@ public abstract class BaseListFragment extends BaseFragment {
 	 * @param adapter 要设置的适配器
 	 * */
 	protected void setAdapter(ListAdapter adapter) {
-		if(adapter != null) {
-			mAdapter = adapter;
+		mAdapter = adapter;
+		if(mListView != null) {
 			mListView.setAdapter(mAdapter);
 		}
 	}

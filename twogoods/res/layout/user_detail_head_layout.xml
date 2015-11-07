@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	某用户详情界面头部布局
+
+	@author 麦灿标
+ -->
+
+<RelativeLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+	 android:layout_width="match_parent"
+	 android:layout_height="wrap_content"
+	 android:paddingTop="@dimen/user_detail_head_layout_paddingTop"
+	 android:paddingBottom="@dimen/user_detail_head_layout_paddingBottom"
+	 android:paddingLeft="@dimen/user_detail_head_layout_paddingLeft"
+	 android:paddingStart="@dimen/user_detail_head_layout_paddingLeft"
+	 android:paddingRight="@dimen/user_detail_head_layout_paddingRight"
+	 android:paddingEnd="@dimen/user_detail_head_layout_paddingRight"
+	 android:background="@drawable/user_detail_head_layout_bg">
+	 
+    
+	 <!-- 更多 -->
+	   <TextView 
+	       android:id="@+id/user_detail_head_more"
+	       android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:text="@string/user_detail_head_more"
+	       android:layout_alignParentRight="true"
+	       android:layout_alignParentEnd="true"
+	       android:textSize="@dimen/user_detail_head_more_textSize"
+	       android:textColor="@color/white"
+	       android:layout_marginRight="@dimen/user_detail_head_more_marginRight"
+	       android:layout_marginEnd="@dimen/user_detail_head_more_marginRight"
+	       android:clickable="true"/>
+		   
+	<!-- 返回箭头 -->
+    <ImageView 
+        android:id="@+id/user_detail_head_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/user_detail_header_back_icon"
+        android:contentDescription="@null"
+        android:clickable="true"
+        android:visibility="gone"/> 
+	   
+	<!-- 头像 -->
+	<com.lym.twogoods.widget.CircleImageView 
+	    android:id="@+id/user_detail_head_head_picture"
+	    android:layout_width="100dip"
+	       android:layout_height="100dip"
+	       android:layout_centerHorizontal="true"
+	       android:src="@drawable/user_default_head"
+	       android:contentDescription="@null"
+	       android:layout_marginTop="@dimen/user_detail_head_head_picture_marginTop"/>
+	<!-- 贰货号 -->
+	<TextView 
+	    android:id="@+id/user_detail_head_username"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:layout_below="@id/user_detail_head_head_picture"
+	    android:layout_marginTop="@dimen/user_detail_head_username_marginTop"
+	    android:textColor="@color/white"
+	    android:textSize="@dimen/user_detail_head_username_textSize"/>
+	<!-- 浏览数 -->
+	<TextView 
+	    android:id="@+id/user_detail_head_browse_num"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:layout_below="@id/user_detail_head_username"
+	    android:layout_marginTop="@dimen/user_detail_head_browse_num_marginTop"
+	    android:textColor="@color/white"
+	    android:textSize="@dimen/user_detail_head_browse_num_textSize"/>
+	<!-- 简介 -->
+		<TextView
+		    android:id="@+id/user_detail_head_description" 
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@id/user_detail_head_browse_num"
+		    android:textSize="@dimen/user_detail_head_description_textSize"
+			android:layout_marginTop="@dimen/user_detail_head_description_marginTop"
+			android:layout_marginBottom="@dimen/user_detail_head_description_marginBottom"/>
+	
+</RelativeLayout>

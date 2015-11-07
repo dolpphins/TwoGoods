@@ -1,5 +1,6 @@
 package com.lym.twogoods.bean;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -13,7 +14,12 @@ import cn.bmob.v3.BmobObject;
  * 
  * @author 麦灿标
  * */
-public class User extends BmobObject {
+public class User extends BmobObject implements Serializable{
+
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 5981733722386364265L;
 
 	/** id 主键,自增 */
 	@DatabaseField

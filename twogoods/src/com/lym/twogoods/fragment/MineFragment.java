@@ -4,27 +4,16 @@ import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.fragment.base.BaseFragment;
-import com.lym.twogoods.manager.UniversalImageLoaderConfigurationManager;
-import com.lym.twogoods.manager.UniversalImageLoaderManager;
-import com.lym.twogoods.manager.UniversalImageLoaderOptionManager;
-import com.lym.twogoods.screen.UserScreen;
+import com.lym.twogoods.manager.ImageLoaderHelper;
 import com.lym.twogoods.ui.PersonalityInfoActivity;
 import com.lym.twogoods.ui.SettingsActivity;
-import com.lym.twogoods.utils.ImageUtil;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,11 +32,11 @@ public class MineFragment extends BaseFragment{
 	private View mView;
 	
 	//头部控件
-	private TextView mine_more;
-	private ImageView mine_head_picture;
-	private TextView mine_username;
-	private TextView mine_browse_num;
-	private TextView mine_description;
+	private TextView user_detail_head_more;
+	private ImageView user_detail_head_head_picture;
+	private TextView user_detail_head_username;
+	private TextView user_detail_head_browse_num;
+	private TextView user_detail_head_description;
 	
 	//底部控件
 	private RelativeLayout mine_publish_goods;
@@ -63,6 +52,8 @@ public class MineFragment extends BaseFragment{
 //		mCurrent.setUsername("hello");
 //		mCurrent.setDeclaration("专卖小米手机");
 //		mCurrent.setHead_url("http://d.hiphotos.baidu.com/zhidao/pic/item/472309f790529822090ecdf3d5ca7bcb0a46d4c5.jpg");
+//		mCurrent.setSex("男");
+//		mCurrent.setPhone("15603005716");
 //		UserInfoManager.getInstance().setmCurrent(mCurrent);
 	}
 	
@@ -71,11 +62,11 @@ public class MineFragment extends BaseFragment{
 
 		mView = LayoutInflater.from(mAttachActivity).inflate(R.layout.mine_fragment_layout, null);
 		
-		mine_more = (TextView) mView.findViewById(R.id.mine_more);
-		mine_head_picture = (ImageView) mView.findViewById(R.id.mine_head_picture);
-		mine_username = (TextView) mView.findViewById(R.id.mine_username);
-		mine_browse_num = (TextView) mView.findViewById(R.id.mine_browse_num);
-		mine_description = (TextView) mView.findViewById(R.id.mine_description);
+		user_detail_head_more = (TextView) mView.findViewById(R.id.user_detail_head_more);
+		user_detail_head_head_picture = (ImageView) mView.findViewById(R.id.user_detail_head_head_picture);
+		user_detail_head_username = (TextView) mView.findViewById(R.id.user_detail_head_username);
+		user_detail_head_browse_num = (TextView) mView.findViewById(R.id.user_detail_head_browse_num);
+		user_detail_head_description = (TextView) mView.findViewById(R.id.user_detail_head_description);
 		
 		mine_publish_goods = (RelativeLayout) mView.findViewById(R.id.mine_publish_goods);
 		mine_focus_goods = (RelativeLayout) mView.findViewById(R.id.mine_focus_goods);
@@ -93,29 +84,30 @@ public class MineFragment extends BaseFragment{
 		if(UserInfoManager.getInstance().isLogining()) {
 			User user = UserInfoManager.getInstance().getmCurrent();
 			
-			loadPictureThumnail(user.getHead_url());
-			mine_username.setText(user.getUsername());
-			mine_browse_num.setText("浏览数:" + user.getBrowse_num());
-			mine_description.setText(user.getDeclaration());
+			ImageLoaderHelper.loadUserHeadPictureThumnail(mAttachActivity, user_detail_head_head_picture, user.getHead_url(), null);
+			user_detail_head_username.setText(user.getUsername());
+			user_detail_head_browse_num.setText("浏览数:" + user.getBrowse_num());
+			user_detail_head_description.setText(user.getDeclaration());
 		//未登录
 		} else {
-			mine_username.setText(mAttachActivity.getResources().getString(R.string.please_login));
+			user_detail_head_username.setText(mAttachActivity.getResources().getString(R.string.please_login));
 		}
 	}
 
 	private void setOnClickEventForView() {
-		mine_more.setOnClickListener(new OnClickListener() {
+		user_detail_head_more.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				if(checkIsLogining()) {
 					//跳转到个人更多信息页面
 					Intent intent = new Intent(mAttachActivity, PersonalityInfoActivity.class);
+					intent.putExtra("user", UserInfoManager.getInstance().getmCurrent());
 					startActivity(intent);
 				}
 			}
 		});
-		mine_head_picture.setOnClickListener(new OnClickListener() {
+		user_detail_head_head_picture.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -126,7 +118,7 @@ public class MineFragment extends BaseFragment{
 				}
 			}
 		});
-		mine_username.setOnClickListener(new OnClickListener() {
+		user_detail_head_username.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -176,30 +168,5 @@ public class MineFragment extends BaseFragment{
 	
 	private void goToLogin() {
 		
-	}
-	
-	//获取用户头像缩略图
-	private void loadPictureThumnail(String url) {
-		if(TextUtils.isEmpty(url)) {
-			return;
-		}
-		ImageLoaderConfiguration configuration = UniversalImageLoaderConfigurationManager
-				.getUserHeadPictureThumbnailImageLoaderConfiguration(mAttachActivity);
-		ImageLoader imageLoader = UniversalImageLoaderManager.getImageLoader(configuration);
-		
-		//使用Options无效果!必须改
-		int w = UserScreen.getMineHeadPictureSize(mAttachActivity);
-		BitmapFactory.Options decodingOptions = new BitmapFactory.Options();
-		decodingOptions.outHeight = w;
-		decodingOptions.outWidth = w;
-		DisplayImageOptions options = UniversalImageLoaderOptionManager.getHeadPictureDisplayImageOption(decodingOptions, w, w);
-		
-		imageLoader.displayImage(url, mine_head_picture, options, new SimpleImageLoadingListener(){
-			
-			@Override
-			public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-				System.out.println(ImageUtil.sizeOfBitmap(loadedImage));
-			}
-		});
 	}
 }
