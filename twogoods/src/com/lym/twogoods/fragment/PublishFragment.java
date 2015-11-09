@@ -13,11 +13,16 @@ import com.lym.twogoods.R;
 import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.fragment.base.BaseFragment;
+import com.lym.twogoods.message.MessageConfig;
+import com.lym.twogoods.publish.adapter.PublishGridViewAdapter;
+import com.lym.twogoods.publish.manger.PublishConfigManger;
+import com.lym.twogoods.ui.SendPictureActivity;
 import com.lym.twogoods.utils.DatabaseHelper;
 import com.lym.twogoods.utils.SensitiveUtils;
 import com.lym.twogoods.widget.WrapContentViewPager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -54,6 +60,7 @@ public class PublishFragment extends BaseFragment {
 	private EditText et_publish_fragment_price;
 	private EditText et_publish_fragment_description;
 	private TextView tv_publish_fragment_position_set;
+	private GridView gv_publish_fragment_photo;
 	private ImageView iv_publish_fragment_add_photo;
 	private ImageView iv_publish_fragment_add_smile;
 	private ImageView iv_publish_fragment_add_voice;
@@ -77,6 +84,10 @@ public class PublishFragment extends BaseFragment {
 	// 货品信息相关
 	private Goods goodsBean;
 	private EmotionViewPagerAdapter emotionViewPagerAdapter;
+	private String TGA="PublishFrament";
+	
+	//发布货品图片适配器
+	private PublishGridViewAdapter adapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -121,6 +132,7 @@ public class PublishFragment extends BaseFragment {
 				.findViewById(R.id.btn_publish_fragment_position);
 		ll_publish_fragment_emoji = (LinearLayout) view
 				.findViewById(R.id.ll_publish_fragment_emoji);
+		gv_publish_fragment_photo=(GridView) view.findViewById(R.id.gv_publish_fragment_photo);
 		// 定位相关
 		locationClient = new LocationClient(getActivity());
 		mylocationListen = new MylocationListen();
@@ -162,6 +174,17 @@ public class PublishFragment extends BaseFragment {
 				}
 			}
 		});
+		
+		//点击发送图片时
+		iv_publish_fragment_add_photo.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent=new Intent(getActivity(),SendPictureActivity.class);
+				intent.putExtra("picCount", PublishConfigManger.picCount);
+				startActivityForResult(intent, PublishConfigManger.requestCode);
+			}
+		});
 	}
 
 	/*
@@ -193,6 +216,8 @@ public class PublishFragment extends BaseFragment {
 				locationClient.requestLocation();
 			}
 		});
+		adapter=new PublishGridViewAdapter(getActivity(), PublishConfigManger.picsPath);
+		gv_publish_fragment_photo.setAdapter(adapter);
 	}
 
 	/*
@@ -417,5 +442,37 @@ public class PublishFragment extends BaseFragment {
 	public void onStop() {
 		super.onStop();
 		locationClient.stop();
+	}
+	/*
+	 * 回调函数，取得照片路径
+	 */
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (resultCode) {
+		case MessageConfig.SEND_CAMERA_PIC:
+			PublishConfigManger.picPath=data.getExtras().getString("picture");
+			Toast.makeText(getActivity(), PublishConfigManger.picPath, Toast.LENGTH_LONG).show();
+			sendPicture(PublishConfigManger.picPath);
+			break;
+
+		case MessageConfig.SEND_LOCAL_PIC:
+			PublishConfigManger.picsPath = data.getExtras().getStringArrayList("pictures");
+			Toast.makeText(getActivity(), "共发送本地图片"+PublishConfigManger.picsPath.size()+"张", Toast.LENGTH_LONG).show();
+			for(String s:PublishConfigManger.picsPath)
+			Log.v(TGA, s);
+			sendPicture(PublishConfigManger.picsPath);
+			break;
+		default:
+			break;
+		}
+	}
+	//单一图片上传
+	private void sendPicture(String filePath) {
+		
+	}
+	//多张图片上传
+	private void sendPicture(ArrayList<String> filesPath) {
+		
 	}
 }

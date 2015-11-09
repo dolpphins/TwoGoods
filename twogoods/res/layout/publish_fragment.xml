@@ -168,6 +168,18 @@
             android:textSize="@dimen/app_publish_fragment_textsize" />
     </LinearLayout>
 
+    <GridView 
+        android:id="@+id/gv_publish_fragment_photo"
+        android:layout_below="@id/ll_publish_fragment_position"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignLeft="@id/ll_publish_fragment_position"
+        android:layout_alignRight="@id/et_publish_fragment_description"
+        android:horizontalSpacing="@dimen/app_publish_fragment_gridview_horizontalspacing"
+        android:verticalSpacing="@dimen/app_publish_fragment_gridview_verticalspacing"
+        android:scrollbars="none"
+        ></GridView>
     <LinearLayout
         android:id="@+id/ll_publish_fragment_bottom"
         android:layout_width="fill_parent"

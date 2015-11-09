@@ -1,33 +1,32 @@
-package com.lym.twogoods.adapter;
+package com.lym.twogoods.publish.adapter;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import com.lym.twogoods.R;
+import com.lym.twogoods.publish.manger.PublishConfigManger;
+import com.lym.twogoods.publish.util.PublishBimp;
+
+import android.R.integer;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-/**
- * <p>
- * 发布商品照片的gridview的适配器
- * </p>
- * 
- * @author 龙宇文
- * */
 public class PublishGridViewAdapter extends BaseAdapter {
 
-	private LayoutInflater mInflater;
-	private ArrayList<HashMap<String, Object>> list;
-
-	public PublishGridViewAdapter(Context context,
-			ArrayList<HashMap<String, Object>> list) {
-		this.list = list;
-		mInflater = LayoutInflater.from(context);
+	private LayoutInflater minInflater;
+	private ArrayList<String> list;
+	
+	public PublishGridViewAdapter(Context context,ArrayList<String> list) {
+		this.list=list;
+		minInflater=LayoutInflater.from(context);
 	}
-
+	
 	@Override
 	public int getCount() {
 		return list.size();
@@ -45,10 +44,11 @@ public class PublishGridViewAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		final int index=position;
 		ViewHoder viewHoder = null;
 		if (convertView == null) {
 			viewHoder = new ViewHoder();
-			convertView = mInflater.inflate(R.layout.publish_gridview_item,
+			convertView = minInflater.inflate(R.layout.publish_gridview_item,
 					parent, false);
 			viewHoder.item_image = (ImageView) convertView
 					.findViewById(R.id.iv_publish_gridview_image);
@@ -58,12 +58,24 @@ public class PublishGridViewAdapter extends BaseAdapter {
 		} else {
 			viewHoder=(ViewHoder) convertView.getTag();
 		}
-		viewHoder.item_image.setImageResource((Integer) list.get(position)
-				.get("image"));
+		try {
+			viewHoder.item_image.setImageBitmap(PublishBimp.revitionImageSize(list.get(position)));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		viewHoder.item_delect.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				PublishConfigManger.picsPath.remove(index);
+			}
+		});
+		
 		return convertView;
 	}
 
-	class ViewHoder {
+	class ViewHoder{
 		public ImageView item_image;
 		public ImageView item_delect;
 	}
