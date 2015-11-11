@@ -1,15 +1,12 @@
 package com.lym.twogoods.publish.adapter;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import com.lym.twogoods.R;
-import com.lym.twogoods.publish.manger.PublishConfigManger;
 import com.lym.twogoods.publish.util.PublishBimp;
 
-import android.R.integer;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,9 +17,9 @@ import android.widget.ImageView;
 public class PublishGridViewAdapter extends BaseAdapter {
 
 	private LayoutInflater minInflater;
-	private ArrayList<String> list;
+	private List<String> list;
 	
-	public PublishGridViewAdapter(Context context,ArrayList<String> list) {
+	public PublishGridViewAdapter(Context context,List<String> list) {
 		this.list=list;
 		minInflater=LayoutInflater.from(context);
 	}
@@ -61,14 +58,14 @@ public class PublishGridViewAdapter extends BaseAdapter {
 		try {
 			viewHoder.item_image.setImageBitmap(PublishBimp.revitionImageSize(list.get(position)));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		viewHoder.item_delect.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				PublishConfigManger.picsPath.remove(index);
+				list.remove(index);
+				notifyDataSetChanged();
 			}
 		});
 		

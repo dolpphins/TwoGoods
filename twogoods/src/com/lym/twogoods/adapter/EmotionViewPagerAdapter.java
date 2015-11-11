@@ -114,5 +114,9 @@ public class EmotionViewPagerAdapter extends PagerAdapter{
 			}
 		});
 	}
+	
+	public void attachEditext(EditText et){
+		mAttachEditText=et;
+	}
 
 }

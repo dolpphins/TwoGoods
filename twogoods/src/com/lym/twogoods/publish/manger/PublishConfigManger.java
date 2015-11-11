@@ -1,9 +1,5 @@
 package com.lym.twogoods.publish.manger;
 
-import java.util.ArrayList;
-
-import android.R.integer;
-
 /**
  * <p>
  * 发布信息相关配置
@@ -17,8 +13,4 @@ public class PublishConfigManger {
 	
 	//启动获取图片activity
 	public final static int requestCode=0;
-	
-	//发布照片的路径
-	public static String picPath;
-	public static ArrayList<String> picsPath=new ArrayList<String>();
 }
