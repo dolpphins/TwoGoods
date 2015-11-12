@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.util.List;
 
 import com.lym.twogoods.R;
+import com.lym.twogoods.bean.PictureThumbnailSpecification;
 import com.lym.twogoods.publish.util.PublishBimp;
+import com.lym.twogoods.screen.PublishGoodsScreen;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +16,18 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
 
 public class PublishGridViewAdapter extends BaseAdapter {
 
+	private Context context;
 	private LayoutInflater minInflater;
 	private List<String> list;
 	
 	public PublishGridViewAdapter(Context context,List<String> list) {
+		this.context=context;
 		this.list=list;
 		minInflater=LayoutInflater.from(context);
 	}
@@ -55,6 +63,8 @@ public class PublishGridViewAdapter extends BaseAdapter {
 		} else {
 			viewHoder=(ViewHoder) convertView.getTag();
 		}
+		viewHoder.item_image.setScaleType(ScaleType.CENTER_CROP);
+		imageViewSetLayoutParams(viewHoder.item_image);
 		try {
 			viewHoder.item_image.setImageBitmap(PublishBimp.revitionImageSize(list.get(position)));
 		} catch (IOException e) {
@@ -75,5 +85,12 @@ public class PublishGridViewAdapter extends BaseAdapter {
 	class ViewHoder{
 		public ImageView item_image;
 		public ImageView item_delect;
+	}
+	
+	private void imageViewSetLayoutParams(ImageView imageView) {
+		PictureThumbnailSpecification specification=new PictureThumbnailSpecification();
+		specification=PublishGoodsScreen.getPublishPictureThumbnailSpecification((Activity) context);
+		LayoutParams params=new LayoutParams(specification.getWidth(),specification.getHeight());
+		imageView.setLayoutParams(params);
 	}
 }

@@ -7,17 +7,25 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
 
+    <LinearLayout 
+        android:id="@+id/ll_publish_gridview_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/iv_publish_gridview_image"
         android:layout_width="wrap_content"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_launcher"
         android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_publish_gridview_item_delect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/iv_publish_gridview_image"
+        android:contentDescription="@null"
+        android:layout_alignRight="@id/ll_publish_gridview_image"
         android:src="@drawable/publish_gridview_item_delect" />
 
 </RelativeLayout>

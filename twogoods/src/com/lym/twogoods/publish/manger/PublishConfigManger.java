@@ -1,5 +1,8 @@
 package com.lym.twogoods.publish.manger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p>
  * 发布信息相关配置
@@ -9,8 +12,12 @@ package com.lym.twogoods.publish.manger;
  * */
 public class PublishConfigManger {
 
-	public final static int picCount=9;
-	
+	//展示图片最大数
+	public final static int PICTURE_COUNT=9;
+	//发布图片展示列数
+	public final static int PUBLISH_PICTURE_GRIDVIEW_COLUMN=3;
 	//启动获取图片activity
 	public final static int requestCode=0;
+	//图片列表url集合
+	public final static List<String> publishPictureUrl=new ArrayList<String>();
 }

@@ -3,9 +3,14 @@
     App发布商品fragment布局	
     author:龙宇文
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none">
+<RelativeLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
+
     <EditText
         android:id="@+id/et_publish_fragment_description"
         android:layout_width="fill_parent"
@@ -17,6 +22,7 @@
         android:gravity="top"
         android:hint="@string/publish_description"
         android:maxLength="200" />
+
     <TextView
         android:id="@+id/tv_publish_fragment_text_number"
         android:layout_width="wrap_content"
@@ -27,6 +33,7 @@
         android:gravity="center"
         android:text="@string/publish_text_number"
         android:textSize="@dimen/app_publish_fragment_textsize" />
+
     <ImageButton
         android:id="@+id/btn_publish_fragment_voice"
         android:layout_width="wrap_content"
@@ -35,6 +42,7 @@
         android:layout_toLeftOf="@+id/tv_publish_fragment_text_number"
         android:contentDescription="@string/publish_voice_description"
         android:src="@drawable/publish_voice" />
+
     <LinearLayout
         android:id="@+id/ll_publish_fragment_category"
         android:layout_width="wrap_content"
@@ -43,17 +51,20 @@
         android:layout_below="@id/tv_publish_fragment_text_number"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
+
         <TextView
             android:id="@+id/tv_publish_fragment_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/publish_sort"
             android:textSize="@dimen/app_publish_fragment_textsize" />
+
         <Spinner
             android:id="@+id/sp_publish_fragment_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_publish_fragment_tel"
         android:layout_width="wrap_content"
@@ -61,6 +72,7 @@
         android:layout_alignLeft="@+id/ll_publish_fragment_category"
         android:layout_below="@id/ll_publish_fragment_category"
         android:gravity="center_vertical" >
+
         <TextView
             android:id="@+id/tv_publish_fragment_tel"
             android:layout_width="wrap_content"
@@ -68,6 +80,7 @@
             android:gravity="center"
             android:text="@string/publish_tel"
             android:textSize="@dimen/app_publish_fragment_textsize" />
+
         <EditText
             android:id="@+id/et_publish_fragment_tel"
             android:layout_width="wrap_content"
@@ -76,6 +89,7 @@
             android:hint="@string/publish_tel_hint"
             android:inputType="phone" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_publish_fragment_price"
         android:layout_width="wrap_content"
@@ -83,12 +97,14 @@
         android:layout_alignLeft="@+id/ll_publish_fragment_category"
         android:layout_below="@id/ll_publish_fragment_tel"
         android:gravity="center_vertical" >
+
         <TextView
             android:id="@+id/tv_publish_fragment_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/publish_price"
             android:textSize="@dimen/app_publish_fragment_textsize" />
+
         <EditText
             android:id="@+id/et_publish_fragment_price"
             android:layout_width="wrap_content"
@@ -96,11 +112,14 @@
             android:background="@drawable/edittext_circle_shape"
             android:hint="@string/publish_price_hint"
             android:inputType="number" />
-        <TextView android:id="@+id/tv_publish_fragment_yuan"
+
+        <TextView
+            android:id="@+id/tv_publish_fragment_yuan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/yuan"/>
+            android:text="@string/yuan" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_publish_fragment_date"
         android:layout_width="wrap_content"
@@ -108,21 +127,26 @@
         android:layout_alignLeft="@+id/ll_publish_fragment_category"
         android:layout_below="@id/ll_publish_fragment_price"
         android:gravity="center_vertical" >
+
         <TextView
             android:id="@+id/tv_publish_fragment_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/publish_date"
             android:textSize="@dimen/app_publish_fragment_textsize" />
+
         <Spinner
             android:id="@+id/sp_publish_fragment_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <TextView android:id="@+id/tv_publish_fragment_tian"
+
+        <TextView
+            android:id="@+id/tv_publish_fragment_tian"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tian"/>
+            android:text="@string/tian" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/ll_publish_fragment_position"
         android:layout_width="wrap_content"
@@ -130,19 +154,21 @@
         android:layout_alignLeft="@+id/ll_publish_fragment_category"
         android:layout_below="@id/ll_publish_fragment_date"
         android:gravity="center_vertical" >
+
         <Button
             android:id="@+id/btn_publish_fragment_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/publish_position"
             android:background="@color/transparent"
+            android:text="@string/publish_position"
             android:textSize="@dimen/app_publish_fragment_textsize" />
-        <ImageView 
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:src="@drawable/nearby_select_city_dingwei"
-            />
+            android:src="@drawable/nearby_select_city_dingwei" />
+
         <TextView
             android:id="@+id/tv_publish_fragment_position_set"
             android:layout_width="wrap_content"
@@ -150,17 +176,16 @@
             android:gravity="center"
             android:textSize="@dimen/app_publish_fragment_textsize" />
     </LinearLayout>
-    <GridView 
-        android:id="@+id/gv_publish_fragment_photo"
-        android:layout_below="@id/ll_publish_fragment_position"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_alignLeft="@id/ll_publish_fragment_position"
-        android:layout_alignRight="@id/et_publish_fragment_description"
-        android:horizontalSpacing="@dimen/app_publish_fragment_gridview_horizontalspacing"
-        android:verticalSpacing="@dimen/app_publish_fragment_gridview_verticalspacing"
-        android:scrollbars="none"
-        ></GridView>
 
+        <GridView
+            android:id="@+id/gv_publish_fragment_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/ll_publish_fragment_position"
+       		android:layout_below="@id/ll_publish_fragment_position"
+            android:horizontalSpacing="@dimen/app_publish_fragment_gridview_horizontalspacing"
+            android:scrollbars="none"
+            android:verticalSpacing="@dimen/app_publish_fragment_gridview_verticalspacing" >
+        </GridView>
 </RelativeLayout>
+</ScrollView>

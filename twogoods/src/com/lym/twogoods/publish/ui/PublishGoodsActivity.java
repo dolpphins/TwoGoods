@@ -20,7 +20,6 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * <p>
@@ -45,12 +44,6 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 	//表情布局是否显示的标志
 	private boolean mEmotionLayoutIsShowing=false;
 	
-	//发布照片的路径
-	private static String picPath="";
-	private static List<String> picsPath=new ArrayList<String>();
-	//bundle传递数据
-	private Bundle pictureBundle;
-
 	@Override
 	public View onCreateBottomView() {
 		View publish_bottom = getLayoutInflater().inflate(
@@ -92,7 +85,6 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 		publishFragment = new PublishFragment();
 		addFragment(publishFragment);
 		showFragment(publishFragment);
-		pictureBundle=new Bundle();
 	}
 	@Override
 	protected void onStart() {
@@ -106,7 +98,7 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 			@Override
 			public void onClick(View v) {
 				Intent intent=new Intent(PublishGoodsActivity.this,SendPictureActivity.class);
-				intent.putExtra("picCount", PublishConfigManger.picCount);
+				intent.putExtra("picCount", PublishConfigManger.PICTURE_COUNT);
 				startActivityForResult(intent, PublishConfigManger.requestCode);
 			}
 		});
@@ -158,23 +150,16 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (resultCode) {
 		case MessageConfig.SEND_CAMERA_PIC:
-			picPath="";
-			picPath = data.getExtras().getString("picture");
-			pictureBundle.putString("picture", picPath);
-			publishFragment.setArguments(pictureBundle);
-			Toast.makeText(this, picPath,
-					Toast.LENGTH_LONG).show();
+			PublishConfigManger.publishPictureUrl.add(data.getExtras().getString("picture"));
 			break;
 
 		case MessageConfig.SEND_LOCAL_PIC:
-			picsPath.clear();
-			picsPath = data.getExtras().getStringArrayList(
-					"pictures");
-			pictureBundle.putString("pictures", picPath);
-			publishFragment.setArguments(pictureBundle);
-			Toast.makeText(this,
-					"共发送本地图片" +picsPath.size() + "张",
-					Toast.LENGTH_LONG).show();
+			for (int i = 0; i < data.getExtras().getStringArrayList(
+					"pictures").size(); i++) {
+				PublishConfigManger.publishPictureUrl.add(data.getExtras().getStringArrayList(
+					"pictures").get(i));
+			}
+			publishFragment.notifyGridView(PublishConfigManger.publishPictureUrl);
 			break;
 		default:
 			break;

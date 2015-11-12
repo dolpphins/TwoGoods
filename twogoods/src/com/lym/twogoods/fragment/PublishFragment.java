@@ -1,5 +1,6 @@
 package com.lym.twogoods.fragment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -12,16 +13,18 @@ import com.baidu.location.LocationClientOption;
 import com.lym.twogoods.R;
 import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
 import com.lym.twogoods.bean.Goods;
+import com.lym.twogoods.bean.PictureThumbnailSpecification;
 import com.lym.twogoods.fragment.base.BaseFragment;
-import com.lym.twogoods.message.MessageConfig;
 import com.lym.twogoods.publish.adapter.PublishGridViewAdapter;
 import com.lym.twogoods.publish.manger.PublishConfigManger;
 import com.lym.twogoods.publish.ui.PublishGoodsActivity;
+import com.lym.twogoods.publish.util.PublishBimp;
+import com.lym.twogoods.screen.PublishGoodsScreen;
 import com.lym.twogoods.utils.DatabaseHelper;
 import com.lym.twogoods.utils.SensitiveUtils;
 import com.lym.twogoods.widget.WrapContentViewPager;
 
-import android.content.Intent;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,10 +33,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +55,7 @@ import cn.bmob.v3.listener.SaveListener;
  * */
 public class PublishFragment extends BaseFragment {
 
-	//上下文
+	// 上下文
 	private PublishGoodsActivity publishGoodsActivity;
 	// 定义控件
 	private TextView tv_publish_fragment_text_number;
@@ -59,13 +66,6 @@ public class PublishFragment extends BaseFragment {
 	private EditText et_publish_fragment_description;
 	private TextView tv_publish_fragment_position_set;
 	private GridView gv_publish_fragment_photo;
-	/*
-	 * private ImageView iv_publish_fragment_add_photo; private ImageView
-	 * iv_publish_fragment_add_smile; private ImageView
-	 * iv_publish_fragment_add_voice; private WrapContentViewPager
-	 * vp_publish_fragement_emoji; private LinearLayout
-	 * ll_publish_fragment_emoji;
-	 */
 	private Button btn_publish_fragment_position;
 	private WrapContentViewPager vp_publish_fragement_emoji;
 
@@ -85,17 +85,9 @@ public class PublishFragment extends BaseFragment {
 	// 货品信息相关
 	private Goods goodsBean;
 	private EmotionViewPagerAdapter emotionViewPagerAdapter;
-	private String TGA = "PublishFrament";
 
 	// 发布货品图片适配器
 	private PublishGridViewAdapter publishGridViewAdapter;
-	
-	//发布照片的路径
-	private static String picPath;
-	private static List<String> picsPath=new ArrayList<String>();
-	
-	//Bundle传递数据
-	private Bundle pictureBundle;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,7 +106,7 @@ public class PublishFragment extends BaseFragment {
 	 * 控件初始化
 	 */
 	private void init(View view) {
-		pictureBundle=new Bundle();
+		PublishConfigManger.publishPictureUrl.clear();
 		tv_publish_fragment_text_number = (TextView) view
 				.findViewById(R.id.tv_publish_fragment_text_number);
 		sp_publish_fragment_sort = (Spinner) view
@@ -141,8 +133,9 @@ public class PublishFragment extends BaseFragment {
 		 * vp_publish_fragement_emoji = (WrapContentViewPager) view
 		 * .findViewById(R.id.vp_publish_fragment_emoji);
 		 */
-		publishGoodsActivity=(PublishGoodsActivity) getActivity();
-		vp_publish_fragement_emoji = (WrapContentViewPager) publishGoodsActivity.attrachEmotionViewPager();
+		publishGoodsActivity = (PublishGoodsActivity) getActivity();
+		vp_publish_fragement_emoji = (WrapContentViewPager) publishGoodsActivity
+				.attrachEmotionViewPager();
 		btn_publish_fragment_position = (Button) view
 				.findViewById(R.id.btn_publish_fragment_position);
 		/*
@@ -213,9 +206,41 @@ public class PublishFragment extends BaseFragment {
 				locationClient.requestLocation();
 			}
 		});
-		publishGridViewAdapter = new PublishGridViewAdapter(getActivity(),
-				picsPath);
-		gv_publish_fragment_photo.setAdapter(publishGridViewAdapter);
+		gv_publish_fragment_photo
+				.setNumColumns(PublishConfigManger.PUBLISH_PICTURE_GRIDVIEW_COLUMN);
+		gv_publish_fragment_photo
+				.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						LayoutInflater inflater = LayoutInflater
+								.from(getActivity());
+						View inflateView = inflater.inflate(
+								R.layout.publish_picture_gridview_item_dialog,
+								null);
+						final AlertDialog alertDialog = new AlertDialog.Builder(
+								getActivity()).create();
+						ImageView imageView = (ImageView) inflateView
+								.findViewById(R.id.iv_publish_gridview_item_dialog);
+						try {
+							imageView.setImageBitmap(PublishBimp
+									.revitionImageSize(PublishConfigManger.publishPictureUrl
+											.get(position)));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						alertDialog.setView(inflateView);
+						alertDialog.show();
+						imageView.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								alertDialog.cancel();
+							}
+						});
+					}
+				});
 	}
 
 	/*
@@ -316,6 +341,10 @@ public class PublishFragment extends BaseFragment {
 				.getText().toString());
 		goodsBean.setLocation_latitude(String.valueOf(latitude));
 		goodsBean.setLocation_longitude(String.valueOf(longitude));
+		if (!PublishConfigManger.publishPictureUrl.isEmpty()) {
+			goodsBean
+					.setPictureUrlList((ArrayList<String>) PublishConfigManger.publishPictureUrl);
+		}
 		// 上传头像
 		// goodsBean.setHead_url(sSpManager.getString(getActivity(), name, mode,
 		// key, defValue))
@@ -430,19 +459,28 @@ public class PublishFragment extends BaseFragment {
 		locationClient.stop();
 	}
 
-
-	// 单一图片上传
-	private void sendPicture(String filePath) {
-
-	}
-
-	// 多张图片上传
-	private void sendPicture(ArrayList<String> filesPath) {
-
-	}
-
 	public EditText getEditTextDescription() {
 		return et_publish_fragment_description;
 	}
-	
+
+	public void notifyGridView(List<String> paths) {
+		if (PublishConfigManger.publishPictureUrl.size() != 0) {
+			publishGridViewAdapter = new PublishGridViewAdapter(getActivity(),
+					PublishConfigManger.publishPictureUrl);
+			int row = PublishConfigManger.publishPictureUrl.size() / 3;
+			if (PublishConfigManger.publishPictureUrl.size() % 3 != 0) {
+				row++;
+			}
+			int interval = getResources().getDimensionPixelSize(
+					R.dimen.app_publish_fragment_gridview_verticalspacing);
+			PictureThumbnailSpecification specification = new PictureThumbnailSpecification();
+			specification = PublishGoodsScreen
+					.getPublishPictureThumbnailSpecification(getActivity());
+			int height = specification.getHeight() * row + (row - 1) * interval;
+			LayoutParams params = gv_publish_fragment_photo.getLayoutParams();
+			params.height = height;
+			gv_publish_fragment_photo.setAdapter(publishGridViewAdapter);
+			// publishGridViewAdapter.notifyDataSetChanged();
+		}
+	}
 }
