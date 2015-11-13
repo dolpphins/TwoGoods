@@ -2,7 +2,6 @@ package com.lym.twogoods.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import com.j256.ormlite.field.DatabaseField;
 

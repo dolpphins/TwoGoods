@@ -1,6 +1,7 @@
 package com.lym.twogoods.index.manager;
 
 import com.lym.twogoods.R;
+import com.lym.twogoods.local.bean.LocalGoods;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -56,6 +57,29 @@ public class GoodsSortManager {
 			return res.getString(R.string.most_focus);
 		case MOST_BROWSE:
 			return res.getString(R.string.most_browse);
+		default:
+			return null;
+		}
+	}
+	
+	/**
+	 * 获取指定分类对应的列名
+	 * 
+	 * @param gs 指定分类
+	 * 
+	 * @return 获取成功返回相应的列名,获取失败返回null.
+	 * */
+	public static String getColumnString(GoodsSort gs) {
+		
+		switch (gs) {
+		case NEWEST_PUBLISH:
+			return LocalGoods.getPublishTimeColoumnString();
+		case PRICE_ASC:
+			return LocalGoods.getPriceColoumnString();
+		case MOST_FOCUS:
+			return LocalGoods.getFocusColoumnString();
+		case MOST_BROWSE:
+			return LocalGoods.getBrowseColoumnString();
 		default:
 			return null;
 		}

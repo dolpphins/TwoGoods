@@ -161,7 +161,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(mAttachActivity, DisplayPicturesActivity.class);
-				intent.putStringArrayListExtra("picturesUrlList",mData.getPictureUrlList());
+				intent.putStringArrayListExtra("picturesUrlList", mData.getPictureUrlList());
 				startActivity(intent);
 			}
 		});

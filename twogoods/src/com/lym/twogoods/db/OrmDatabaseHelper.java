@@ -10,6 +10,7 @@ import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.GoodsComment;
 import com.lym.twogoods.bean.GoodsFocus;
 import com.lym.twogoods.bean.User;
+import com.lym.twogoods.local.bean.LocalGoods;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,7 +28,7 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
  * 		user表
  *  </li>
  *  <li>
- * 		goods表
+ * 		localgoods表
  *  </li>
  *  <li>
  * 		goods_comment表
@@ -73,7 +74,7 @@ public class OrmDatabaseHelper extends OrmLiteSqliteOpenHelper{
 	/** user表DAO */
 	private Dao<User, Integer> userDAO;
 	/** goods表DAO */
-	private Dao<Goods, Integer> goodsDAO;
+	private Dao<LocalGoods, Integer> goodsDAO;
 	/** goods_comment表DAO */
 	private Dao<GoodsComment, Integer> goodsCommentDAO;
 	/** goods_focus表DAO */
@@ -82,7 +83,6 @@ public class OrmDatabaseHelper extends OrmLiteSqliteOpenHelper{
 	private Dao<ChatDetailBean, Integer> chatDetailBeanDAO;
 	/** chat_snapshot表DAO */
 	private Dao<ChatSnapshot, Integer> chatSnapshotDAO;
-	
 	
 	public OrmDatabaseHelper(Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
@@ -96,7 +96,7 @@ public class OrmDatabaseHelper extends OrmLiteSqliteOpenHelper{
 	public void onCreate(SQLiteDatabase arg0, ConnectionSource arg1) {
 		try {
 			TableUtils.createTable(connectionSource, User.class);
-			TableUtils.createTable(connectionSource, Goods.class);
+			TableUtils.createTable(connectionSource, LocalGoods.class);
 			TableUtils.createTable(connectionSource, GoodsComment.class);
 			TableUtils.createTable(connectionSource, GoodsFocus.class);
 			TableUtils.createTable(connectionSource, ChatDetailBean.class);
@@ -136,10 +136,10 @@ public class OrmDatabaseHelper extends OrmLiteSqliteOpenHelper{
 	 * 
 	 * @return 获取成功返回相应的Dao,获取失败返回null
 	 * */
-	public Dao<Goods, Integer> getGoodsDao() {
+	public Dao<LocalGoods, Integer> getGoodsDao() {
 		if(goodsDAO == null) {
 			try {
-				goodsDAO = getDao(Goods.class);
+				goodsDAO = getDao(LocalGoods.class);
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
