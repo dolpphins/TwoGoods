@@ -314,7 +314,7 @@ public class LoginActivity extends BackActivity {
 
 	private void codeMatch() {
 
-		/*BmobSMS.verifySmsCode(getApplicationContext(), phone, et_login_code
+		BmobSMS.verifySmsCode(getApplicationContext(), phone, et_login_code
 				.getText().toString(), new VerifySMSCodeListener() {
 
 			@Override
@@ -325,9 +325,7 @@ public class LoginActivity extends BackActivity {
 					codeVerify = false;
 				}
 			}
-		});*/
-
-		codeVerify = true;
+		});
 	}
 
 	/**

@@ -118,8 +118,7 @@ public final class R {
          */
         public static final int app_main_bottomdock_tab_paddingTop=0x7f060007;
         public static final int app_publish_fragment_et_heigth=0x7f06006a;
-        public static final int app_publish_fragment_gridview_horizontalspacing=0x7f06006e;
-        public static final int app_publish_fragment_gridview_verticalspacing=0x7f06006d;
+        public static final int app_publish_fragment_gridview_left_right_padding=0x7f06006d;
         public static final int app_publish_fragment_marginletf_right=0x7f060069;
         /**  app_publish_fragment 
          */
@@ -135,7 +134,7 @@ public final class R {
         /**  app_reset_password 
          */
         public static final int app_reset_passwrod_left_right_marigin=0x7f060067;
-        public static final int base_scrollview_top_height=0x7f06007d;
+        public static final int base_scrollview_top_height=0x7f06007c;
         public static final int index_fragment_head_category_gridview_paddingBottom=0x7f06001a;
         public static final int index_fragment_head_category_gridview_paddingLeft=0x7f06001b;
         public static final int index_fragment_head_category_gridview_paddingRight=0x7f06001c;
@@ -190,11 +189,11 @@ public final class R {
  lyw_publish 
          */
         public static final int margintop=0x7f060061;
-        public static final int message_base_scrollview_top_height=0x7f06007a;
+        public static final int message_base_scrollview_top_height=0x7f060079;
         /**  yjf 
          */
-        public static final int message_list_item_height=0x7f060079;
-        public static final int message_margin_chat_top=0x7f06007c;
+        public static final int message_list_item_height=0x7f060078;
+        public static final int message_margin_chat_top=0x7f06007b;
         public static final int mine_exit_button_marginBottom=0x7f06005c;
         public static final int mine_exit_button_marginLeft=0x7f060059;
         public static final int mine_exit_button_marginRight=0x7f06005a;
@@ -207,19 +206,19 @@ public final class R {
         public static final int mine_list_item_textSize=0x7f060057;
         public static final int mine_publish_goods_marginTop=0x7f06005d;
         public static final int mine_settings_item_marginTop=0x7f060056;
-        public static final int nearby_select_city_dingwei_textsize=0x7f060077;
+        public static final int nearby_select_city_dingwei_textsize=0x7f060076;
         /**  nearby_select_city 
          */
-        public static final int nearby_select_city_division=0x7f06006f;
-        public static final int nearby_select_city_letter_sort_height=0x7f060076;
-        public static final int nearby_select_city_marginleft=0x7f060071;
-        public static final int nearby_select_city_marginright=0x7f060072;
-        public static final int nearby_select_city_margintop=0x7f060070;
-        public static final int nearby_select_city_position_letter_top_letter_bottom=0x7f060073;
-        public static final int nearby_select_city_position_name_left=0x7f060075;
-        public static final int nearby_select_city_position_name_top_bottom=0x7f060074;
-        public static final int nearby_select_city_position_textsize=0x7f060078;
-        public static final int tab_padding_left_right=0x7f06007b;
+        public static final int nearby_select_city_division=0x7f06006e;
+        public static final int nearby_select_city_letter_sort_height=0x7f060075;
+        public static final int nearby_select_city_marginleft=0x7f060070;
+        public static final int nearby_select_city_marginright=0x7f060071;
+        public static final int nearby_select_city_margintop=0x7f06006f;
+        public static final int nearby_select_city_position_letter_top_letter_bottom=0x7f060072;
+        public static final int nearby_select_city_position_name_left=0x7f060074;
+        public static final int nearby_select_city_position_name_top_bottom=0x7f060073;
+        public static final int nearby_select_city_position_textsize=0x7f060077;
+        public static final int tab_padding_left_right=0x7f06007a;
         public static final int user_detail_head_browse_num_marginTop=0x7f06004a;
         public static final int user_detail_head_browse_num_textSize=0x7f06004d;
         public static final int user_detail_head_description_marginBottom=0x7f060050;

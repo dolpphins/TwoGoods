@@ -1,8 +1,5 @@
 package com.lym.twogoods.publish.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.lym.twogoods.R;
 import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
 import com.lym.twogoods.fragment.PublishFragment;
@@ -78,7 +75,7 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 			@Override
 			public void onClick(View v) {
 				if (publishFragment.judgeDescription()) {
-					publishFragment.publishGoods();
+					publishFragment.pictureUpload();
 				}
 			}
 		});
@@ -134,7 +131,7 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 		mEmotionLayoutIsShowing = true;
 	}
 
-	private void hideEmotionLayout() {
+	public void hideEmotionLayout() {
 		vp_publish_fragement_emoji.setVisibility(View.GONE);
 		mEmotionLayoutIsShowing = false;
 	}
@@ -151,6 +148,7 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 		switch (resultCode) {
 		case MessageConfig.SEND_CAMERA_PIC:
 			PublishConfigManger.publishPictureUrl.add(data.getExtras().getString("picture"));
+			publishFragment.notifyGridView(PublishConfigManger.publishPictureUrl);
 			break;
 
 		case MessageConfig.SEND_LOCAL_PIC:

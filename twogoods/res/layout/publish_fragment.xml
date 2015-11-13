@@ -179,13 +179,13 @@
 
         <GridView
             android:id="@+id/gv_publish_fragment_photo"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/ll_publish_fragment_position"
+            android:paddingLeft="@dimen/app_publish_fragment_gridview_left_right_padding"
+            android:paddingRight="@dimen/app_publish_fragment_gridview_left_right_padding"
        		android:layout_below="@id/ll_publish_fragment_position"
-            android:horizontalSpacing="@dimen/app_publish_fragment_gridview_horizontalspacing"
-            android:scrollbars="none"
-            android:verticalSpacing="@dimen/app_publish_fragment_gridview_verticalspacing" >
+       		android:gravity="center_horizontal"
+            android:scrollbars="none">
         </GridView>
 </RelativeLayout>
 </ScrollView>
