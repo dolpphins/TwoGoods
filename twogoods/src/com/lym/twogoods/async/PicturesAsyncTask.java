@@ -60,7 +60,7 @@ public class PicturesAsyncTask extends BaseAsyncTask<String, Integer, Bitmap>{
 	private long maxDiskCacheSize = 20 * 1024 * 1024;
 	
 	private enum Source {
-		UNKNOWN, MEMORY, DISK, NETWORK
+		UNKNOWN, MEMORY, DISK, LOCAL_DISK, NETWORK
 	}
 	
 	/** 标记当前图片来自哪里 */
@@ -139,11 +139,16 @@ public class PicturesAsyncTask extends BaseAsyncTask<String, Integer, Bitmap>{
 			bitmap = tryLoadfromDiskCache(url);
 			if(bitmap == null) {
 				System.out.println("disk cache not exists");
-				bitmap = tryLoadfromNetwork(url);
+				bitmap = tryLoadfromLocalDisk(url);
 				if(bitmap == null) {
-					mSource = Source.UNKNOWN;//加载失败
+					bitmap = tryLoadfromNetwork(url);
+					if(bitmap == null) {
+						mSource = Source.UNKNOWN;//加载失败
+					} else {
+						mSource = Source.NETWORK;//来自网络
+					}
 				} else {
-					mSource = Source.NETWORK;//来自网络
+					mSource = Source.LOCAL_DISK;//来自本地磁盘
 				}
 			} else {
 				mSource = Source.DISK;//来自硬盘缓存
@@ -180,6 +185,19 @@ public class PicturesAsyncTask extends BaseAsyncTask<String, Integer, Bitmap>{
 		}
 	}
 	
+	//可能是本地url，尝试从本地存储加载
+	private Bitmap tryLoadfromLocalDisk(String url) {
+		File f = new File(url);
+		if(f.exists()) {
+			try {
+				return BitmapFactory.decodeFile(url);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
 	//尝试从网络加载
 	private Bitmap tryLoadfromNetwork(String url) {
 		return ImageUtil.decodeBitmapFromNet(url);
@@ -204,8 +222,8 @@ public class PicturesAsyncTask extends BaseAsyncTask<String, Integer, Bitmap>{
 			return false;
 		}
 		String key = generateDiskCacheKey(url);
-		//已经缓存到磁盘了,直接返回
-		if(existInDisk(key)) {
+		//是本地文件，或者已经缓存到磁盘了,直接返回
+		if(mSource == Source.LOCAL_DISK || existInDisk(key)) {
 			return false;
 		}
 		File f = new File(diskCacheDir);

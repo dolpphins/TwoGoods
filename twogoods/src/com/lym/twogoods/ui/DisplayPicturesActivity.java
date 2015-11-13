@@ -70,6 +70,10 @@ public class DisplayPicturesActivity extends BackActivity implements MultiPictur
 		picturesUrlList = getIntent().getStringArrayListExtra("picturesUrlList");
 		
 		if(picturesUrlList != null) {
+			for(String url : picturesUrlList) {
+				System.out.println(url);
+			}
+			
 			int currentIndex = getIntent().getIntExtra("currentIndex", 0);
 			app_dispaly_pictures_viewpager.setOnPageChangeListener(this);
 			app_dispaly_pictures_viewpager.setAdapter(new PicturesViewPagerAdapter());
