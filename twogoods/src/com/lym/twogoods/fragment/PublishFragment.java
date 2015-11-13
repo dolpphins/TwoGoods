@@ -10,43 +10,30 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.lym.twogoods.R;
-import com.lym.twogoods.UserInfoManager;
-import com.lym.twogoods.adapter.EmotionGridViewAdapter;
 import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
-import com.lym.twogoods.adapter.PublishEmotionGvAdapter;
-import com.lym.twogoods.adapter.PublishEmotionPagerAdapter;
 import com.lym.twogoods.bean.Goods;
-import com.lym.twogoods.config.EmotionUtils;
 import com.lym.twogoods.fragment.base.BaseFragment;
-import com.lym.twogoods.manager.DiskCacheManager;
-import com.lym.twogoods.screen.DisplayUtils;
+import com.lym.twogoods.message.MessageConfig;
+import com.lym.twogoods.publish.adapter.PublishGridViewAdapter;
+import com.lym.twogoods.publish.manger.PublishConfigManger;
+import com.lym.twogoods.publish.ui.PublishGoodsActivity;
 import com.lym.twogoods.utils.DatabaseHelper;
 import com.lym.twogoods.utils.SensitiveUtils;
-import com.lym.twogoods.utils.SharePreferencesManager;
 import com.lym.twogoods.widget.WrapContentViewPager;
 
-import android.app.ActionBar.LayoutParams;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.text.style.ImageSpan;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +48,8 @@ import cn.bmob.v3.listener.SaveListener;
  * */
 public class PublishFragment extends BaseFragment {
 
+	//上下文
+	private PublishGoodsActivity publishGoodsActivity;
 	// 定义控件
 	private TextView tv_publish_fragment_text_number;
 	private Spinner sp_publish_fragment_sort;
@@ -69,19 +58,19 @@ public class PublishFragment extends BaseFragment {
 	private EditText et_publish_fragment_price;
 	private EditText et_publish_fragment_description;
 	private TextView tv_publish_fragment_position_set;
-	private ImageView iv_publish_fragment_add_photo;
-	private ImageView iv_publish_fragment_add_smile;
-	private ImageView iv_publish_fragment_add_voice;
-	private WrapContentViewPager vp_publish_fragement_emoji;
-	private LinearLayout ll_publish_fragment_emoji;
+	private GridView gv_publish_fragment_photo;
+	/*
+	 * private ImageView iv_publish_fragment_add_photo; private ImageView
+	 * iv_publish_fragment_add_smile; private ImageView
+	 * iv_publish_fragment_add_voice; private WrapContentViewPager
+	 * vp_publish_fragement_emoji; private LinearLayout
+	 * ll_publish_fragment_emoji;
+	 */
 	private Button btn_publish_fragment_position;
+	private WrapContentViewPager vp_publish_fragement_emoji;
 
 	// 设置日期
 	private List<String> items = new ArrayList<String>();
-
-	// 定义适配器
-	private PublishEmotionPagerAdapter publishEmotionPagerAdapter;
-	// private EmotionGridViewAdapter emotionGridViewAdapter;
 
 	// 定位相关
 	private boolean isFirst = false;
@@ -90,10 +79,23 @@ public class PublishFragment extends BaseFragment {
 	private double longitude;
 	private double latitude;
 
+	// 标记表情布局是否弹出
+	private boolean mEmotionLayoutIsShowing = false;
+
 	// 货品信息相关
 	private Goods goodsBean;
-	private SharePreferencesManager sSpManager;
 	private EmotionViewPagerAdapter emotionViewPagerAdapter;
+	private String TGA = "PublishFrament";
+
+	// 发布货品图片适配器
+	private PublishGridViewAdapter publishGridViewAdapter;
+	
+	//发布照片的路径
+	private static String picPath;
+	private static List<String> picsPath=new ArrayList<String>();
+	
+	//Bundle传递数据
+	private Bundle pictureBundle;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,6 +114,7 @@ public class PublishFragment extends BaseFragment {
 	 * 控件初始化
 	 */
 	private void init(View view) {
+		pictureBundle=new Bundle();
 		tv_publish_fragment_text_number = (TextView) view
 				.findViewById(R.id.tv_publish_fragment_text_number);
 		sp_publish_fragment_sort = (Spinner) view
@@ -126,18 +129,28 @@ public class PublishFragment extends BaseFragment {
 				.findViewById(R.id.et_publish_fragment_tel);
 		tv_publish_fragment_position_set = (TextView) view
 				.findViewById(R.id.tv_publish_fragment_position_set);
-		iv_publish_fragment_add_photo = (ImageView) view
-				.findViewById(R.id.iv_publish_fragment_add_photo);
-		iv_publish_fragment_add_smile = (ImageView) view
-				.findViewById(R.id.iv_publish_fragment_add_smile);
-		iv_publish_fragment_add_voice = (ImageView) view
-				.findViewById(R.id.iv_publish_fragment_add_voice);
-		vp_publish_fragement_emoji = (WrapContentViewPager) view
-				.findViewById(R.id.vp_publish_fragment_emoji);
+		/*
+		 * iv_publish_fragment_add_photo = (ImageView) view
+		 * .findViewById(R.id.iv_publish_fragment_add_photo);
+		 * iv_publish_fragment_add_smile = (ImageView) view
+		 * .findViewById(R.id.iv_publish_fragment_add_smile);
+		 * iv_publish_fragment_add_voice = (ImageView) view
+		 * .findViewById(R.id.iv_publish_fragment_add_voice);
+		 */
+		/*
+		 * vp_publish_fragement_emoji = (WrapContentViewPager) view
+		 * .findViewById(R.id.vp_publish_fragment_emoji);
+		 */
+		publishGoodsActivity=(PublishGoodsActivity) getActivity();
+		vp_publish_fragement_emoji = (WrapContentViewPager) publishGoodsActivity.attrachEmotionViewPager();
 		btn_publish_fragment_position = (Button) view
 				.findViewById(R.id.btn_publish_fragment_position);
-		ll_publish_fragment_emoji = (LinearLayout) view
-				.findViewById(R.id.ll_publish_fragment_emoji);
+		/*
+		 * ll_publish_fragment_emoji = (LinearLayout) view
+		 * .findViewById(R.id.ll_publish_fragment_emoji);
+		 */
+		gv_publish_fragment_photo = (GridView) view
+				.findViewById(R.id.gv_publish_fragment_photo);
 		// 定位相关
 		locationClient = new LocationClient(getActivity());
 		mylocationListen = new MylocationListen();
@@ -151,7 +164,36 @@ public class PublishFragment extends BaseFragment {
 
 		// 货品信息相关
 		goodsBean = new Goods();
-		sSpManager = SharePreferencesManager.getInstance();
+
+		et_publish_fragment_description
+				.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						if (mEmotionLayoutIsShowing) {
+							hideEmotionLayout();
+						}
+					}
+				});
+		et_publish_fragment_price.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (mEmotionLayoutIsShowing) {
+					hideEmotionLayout();
+				}
+			}
+		});
+		et_publish_fragment_tel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (mEmotionLayoutIsShowing) {
+					hideEmotionLayout();
+				}
+			}
+		});
+
 	}
 
 	/*
@@ -161,17 +203,6 @@ public class PublishFragment extends BaseFragment {
 	private void initEvent() {
 		et_publish_fragment_description.addTextChangedListener(mTextWatcher);
 		setSpinner();
-		iv_publish_fragment_add_smile.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (ll_publish_fragment_emoji.getVisibility() == View.VISIBLE) {
-					ll_publish_fragment_emoji.setVisibility(View.GONE);
-				} else {
-					ll_publish_fragment_emoji.setVisibility(View.VISIBLE);
-				}
-			}
-		});
 
 		// 定位监听按钮
 		btn_publish_fragment_position.setOnClickListener(new OnClickListener() {
@@ -182,6 +213,19 @@ public class PublishFragment extends BaseFragment {
 				locationClient.requestLocation();
 			}
 		});
+		publishGridViewAdapter = new PublishGridViewAdapter(getActivity(),
+				picsPath);
+		gv_publish_fragment_photo.setAdapter(publishGridViewAdapter);
+	}
+
+	/*
+	 * 
+	 * 表情键盘切换与隐藏的关系
+	 */
+
+	private void hideEmotionLayout() {
+		vp_publish_fragement_emoji.setVisibility(View.GONE);
+		mEmotionLayoutIsShowing = false;
 	}
 
 	/*
@@ -259,8 +303,6 @@ public class PublishFragment extends BaseFragment {
 	private void getGoodsData() {
 		goodsBean.setDescription(et_publish_fragment_description.getText()
 				.toString());
-		Log.v("getGoodsData",et_publish_fragment_description.getText()
-				.toString() );
 		goodsBean.setCategory(sp_publish_fragment_sort.getSelectedItem()
 				.toString());
 		goodsBean.setPhone(et_publish_fragment_tel.getText().toString());
@@ -277,7 +319,7 @@ public class PublishFragment extends BaseFragment {
 		// 上传头像
 		// goodsBean.setHead_url(sSpManager.getString(getActivity(), name, mode,
 		// key, defValue))
-		goodsBean.setHead_url(UserInfoManager.getInstance().getmCurrent().getHead_url());
+		// goodsBean.setHead_url(UserInfoManager.getInstance().getmCurrent().getHead_url());
 	}
 
 	/*
@@ -325,21 +367,23 @@ public class PublishFragment extends BaseFragment {
 	}
 
 	/*
-	 * 判断货品描述是否正确
+	 * 判断货品描述是否为空
 	 */
 	public boolean judgeGoods() {
-		if ((et_publish_fragment_description.getText() != null)
-				&& (sp_publish_fragment_sort.getSelectedItem() != null)
-				&& (et_publish_fragment_tel.getText() != null)
-				&& (et_publish_fragment_price.getText() != null)
-				&& (sp_publish_fragment_date.getSelectedItem() != null)
-				&& (tv_publish_fragment_position_set.getText() != null)) {
-			return true;
-		} else {
+		if (((et_publish_fragment_description.getText().toString()).equals(""))
+				|| ((sp_publish_fragment_sort.getSelectedItem().toString())
+						.equals(""))
+				|| ((et_publish_fragment_tel.getText().toString()).equals(""))
+				|| ((et_publish_fragment_price.getText().toString()).equals(""))
+				|| ((sp_publish_fragment_date.getSelectedItem().toString())
+						.equals(""))
+				|| ((tv_publish_fragment_position_set.getText().toString())
+						.equals(""))) {
 			Toast.makeText(getActivity(), "你发布的商品信息不全哦", Toast.LENGTH_SHORT)
 					.show();
 			return false;
 		}
+		return true;
 	}
 
 	/*
@@ -347,84 +391,9 @@ public class PublishFragment extends BaseFragment {
 	 * 初始化表情面板内容
 	 */
 	private void initEmotion() {
-		// 设置面板的宽高，间隔
-		/*int screenWidth = DisplayUtils.getScreenWidthPixels(getActivity());
-		int spacing = DisplayUtils.dp2px(getActivity(), 8);
-		int itemWidth = (screenWidth - spacing * 8) / 7;
-		int gvHeight = itemWidth * 3 + spacing * 4;
-
-		List<GridView> gvs = new ArrayList<GridView>();
-		List<String> emotionNames = new ArrayList<String>();
-		for (String emojiName : EmotionUtils.emojiMap.keySet()) {
-			emotionNames.add(emojiName);
-			if (emotionNames.size() == 20) {
-				GridView gv = createEmotionGridView(emotionNames, screenWidth,
-						spacing, itemWidth, gvHeight);
-				gvs.add(gv);
-
-				emotionNames = new ArrayList<String>();
-			}
-		}
-
-		if (emotionNames.size() > 0) {
-			GridView gv = createEmotionGridView(emotionNames, screenWidth,
-					spacing, itemWidth, gvHeight);
-			gvs.add(gv);
-		}*/
-		//publishEmotionPagerAdapter = new PublishEmotionPagerAdapter(gvs);
-		emotionViewPagerAdapter=new EmotionViewPagerAdapter(getActivity(),et_publish_fragment_description);
-		/*LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-				screenWidth, gvHeight);
-		ll_publish_fragment_emoji.setLayoutParams(params);*/
+		emotionViewPagerAdapter = new EmotionViewPagerAdapter(getActivity(),
+				et_publish_fragment_description);
 		vp_publish_fragement_emoji.setAdapter(emotionViewPagerAdapter);
-	}
-
-	/*
-	 * 创建显示表情的GridView
-	 */
-	private GridView createEmotionGridView(List<String> emotionNames,
-			int gvWidth, int padding, int itemWidth, int gvHeight) {
-		GridView gv = new GridView(getActivity());
-		gv.setNumColumns(7);
-		gv.setPadding(padding, padding, padding, padding);
-		gv.setHorizontalSpacing(padding);
-		gv.setVerticalSpacing(padding);
-
-		LayoutParams params = new LayoutParams(gvWidth, gvHeight);
-		gv.setLayoutParams(params);
-
-		PublishEmotionGvAdapter adapter = new PublishEmotionGvAdapter(
-				getActivity(), emotionNames, itemWidth);
-		gv.setAdapter(adapter);
-		gv.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				if (position == parent.getAdapter().getCount() - 1) {
-					// 如果点击了最后一个回退按钮,则调用删除键事件
-					et_publish_fragment_description
-							.dispatchKeyEvent(new KeyEvent(
-									KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
-				} else {
-					// 如果点击了表情,则添加到输入框中
-					String emotionName = (String) parent.getAdapter().getItem(
-							position);
-					Drawable drawable = getResources().getDrawable(
-							EmotionUtils.emojiMap.get(emotionName));
-					SpannableString ss = new SpannableString("*");
-					drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
-							drawable.getIntrinsicHeight());
-					ImageSpan span = new ImageSpan(drawable,
-							ImageSpan.ALIGN_BASELINE);
-					ss.setSpan(span, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-					et_publish_fragment_description.getText()
-							.insert(et_publish_fragment_description
-									.getSelectionStart(), ss);
-				}
-			}
-		});
-		return gv;
 	}
 
 	/*
@@ -460,4 +429,20 @@ public class PublishFragment extends BaseFragment {
 		super.onStop();
 		locationClient.stop();
 	}
+
+
+	// 单一图片上传
+	private void sendPicture(String filePath) {
+
+	}
+
+	// 多张图片上传
+	private void sendPicture(ArrayList<String> filesPath) {
+
+	}
+
+	public EditText getEditTextDescription() {
+		return et_publish_fragment_description;
+	}
+	
 }

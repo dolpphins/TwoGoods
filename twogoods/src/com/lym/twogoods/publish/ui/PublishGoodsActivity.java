@@ -1,14 +1,26 @@
 package com.lym.twogoods.publish.ui;
 
-import com.lym.twogoods.R;
-import com.lym.twogoods.fragment.PublishFragment;
-import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.lym.twogoods.R;
+import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
+import com.lym.twogoods.fragment.PublishFragment;
+import com.lym.twogoods.message.MessageConfig;
+import com.lym.twogoods.publish.manger.PublishConfigManger;
+import com.lym.twogoods.ui.SendPictureActivity;
+import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
+import com.lym.twogoods.widget.WrapContentViewPager;
+
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.FrameLayout;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * <p>
@@ -21,17 +33,49 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 
 	private TextView publish;
 	private PublishFragment publishFragment;
+	// 底部控件
+	private ImageView iv_publish_fragment_add_photo;
+	private ImageView iv_publish_fragment_add_smile;
+	private ImageView iv_publish_fragment_add_voice;
+	private WrapContentViewPager vp_publish_fragement_emoji;
+	
+	//表情适配器
+	private EmotionViewPagerAdapter emotionViewPagerAdapter;
+	
+	//表情布局是否显示的标志
+	private boolean mEmotionLayoutIsShowing=false;
+	
+	//发布照片的路径
+	private static String picPath="";
+	private static List<String> picsPath=new ArrayList<String>();
+	//bundle传递数据
+	private Bundle pictureBundle;
 
 	@Override
 	public View onCreateBottomView() {
-		return null;
+		View publish_bottom = getLayoutInflater().inflate(
+				R.layout.publish_fragment_bottom, null);
+		if (publish_bottom != null) {
+			iv_publish_fragment_add_photo = (ImageView) publish_bottom
+					.findViewById(R.id.iv_publish_fragment_add_photo);
+			iv_publish_fragment_add_smile = (ImageView) publish_bottom
+					.findViewById(R.id.iv_publish_fragment_add_smile);
+			iv_publish_fragment_add_voice = (ImageView) publish_bottom
+					.findViewById(R.id.iv_publish_fragment_add_voice);
+			vp_publish_fragement_emoji = (WrapContentViewPager) publish_bottom
+					.findViewById(R.id.vp_publish_fragment_emoji);
+		}
+		return publish_bottom;
 	}
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		init();
+		emotionViewPagerAdapter=new EmotionViewPagerAdapter(PublishGoodsActivity.this, null);
+		vp_publish_fragement_emoji.setAdapter(emotionViewPagerAdapter);
+		initEvent();
 	}
 
 	private void init() {
@@ -48,5 +92,92 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 		publishFragment = new PublishFragment();
 		addFragment(publishFragment);
 		showFragment(publishFragment);
+		pictureBundle=new Bundle();
+	}
+	@Override
+	protected void onStart() {
+		super.onStart();
+		emotionViewPagerAdapter.attachEditext(publishFragment.getEditTextDescription());
+	}
+
+	private void initEvent() {
+		iv_publish_fragment_add_photo.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent=new Intent(PublishGoodsActivity.this,SendPictureActivity.class);
+				intent.putExtra("picCount", PublishConfigManger.picCount);
+				startActivityForResult(intent, PublishConfigManger.requestCode);
+			}
+		});
+		iv_publish_fragment_add_smile.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				toggleEmotionLayout();
+				if (mEmotionLayoutIsShowing) {
+					// 隐藏键盘
+					InputMethodManager imm = (InputMethodManager) 
+							getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+				}
+			}
+		});
+	}
+	
+	/*
+	 * 
+	 * 表情键盘切换与隐藏的关系
+	 */
+	private void toggleEmotionLayout() {
+		if (mEmotionLayoutIsShowing) {
+			hideEmotionLayout();
+		} else {
+			showEmotionLayout();
+		}
+	}
+
+	private void showEmotionLayout() {
+		vp_publish_fragement_emoji.setVisibility(View.VISIBLE);
+		mEmotionLayoutIsShowing = true;
+	}
+
+	private void hideEmotionLayout() {
+		vp_publish_fragement_emoji.setVisibility(View.GONE);
+		mEmotionLayoutIsShowing = false;
+	}
+	
+	public  WrapContentViewPager attrachEmotionViewPager() {
+		return vp_publish_fragement_emoji;
+	}
+	/*
+	 * 回调函数，取得照片路径
+	 */
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (resultCode) {
+		case MessageConfig.SEND_CAMERA_PIC:
+			picPath="";
+			picPath = data.getExtras().getString("picture");
+			pictureBundle.putString("picture", picPath);
+			publishFragment.setArguments(pictureBundle);
+			Toast.makeText(this, picPath,
+					Toast.LENGTH_LONG).show();
+			break;
+
+		case MessageConfig.SEND_LOCAL_PIC:
+			picsPath.clear();
+			picsPath = data.getExtras().getStringArrayList(
+					"pictures");
+			pictureBundle.putString("pictures", picPath);
+			publishFragment.setArguments(pictureBundle);
+			Toast.makeText(this,
+					"共发送本地图片" +picsPath.size() + "张",
+					Toast.LENGTH_LONG).show();
+			break;
+		default:
+			break;
+		}
 	}
 }

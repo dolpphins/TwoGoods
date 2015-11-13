@@ -1,4 +1,4 @@
-package com.lym.twogoods.publish.ui;
+package com.lym.twogoods.widget;
 
 /**
  * <p>

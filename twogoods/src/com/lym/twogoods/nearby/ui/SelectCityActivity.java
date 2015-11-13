@@ -1,7 +1,6 @@
 package com.lym.twogoods.nearby.ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -24,6 +22,7 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.lym.twogoods.R;
+import com.lym.twogoods.config.CityManger;
 import com.lym.twogoods.nearby.NearbyPositionModelBean;
 import com.lym.twogoods.nearby.adapter.NearbyHotCityListviewAdapter;
 import com.lym.twogoods.nearby.adapter.SelectCityPositionListViewAdapter;
@@ -57,13 +56,6 @@ public class SelectCityActivity extends BackFragmentActivity {
 
 	// 热门城市数组
 	List<List<String>> mList = new ArrayList<List<String>>();
-	List<String> list1 = new ArrayList<String>(Arrays.asList("上海市", "北京市",
-			"深圳市", "广州市"));
-	List<String> list2 = new ArrayList<String>(Arrays.asList("苏州市", "杭州市",
-			"天津市", "东莞市"));
-	List<String> list3 = new ArrayList<String>(Arrays.asList("武汉市", "哈尔滨市",
-			"黑龙江市", "佛山市"));
-	private List<String> list=new ArrayList<String>();
 
 	// 适配器
 	private NearbyHotCityListviewAdapter adapter;
@@ -92,9 +84,9 @@ public class SelectCityActivity extends BackFragmentActivity {
 	 */
 	private void init() {
 		lv_select_city_city = (ListView) findViewById(R.id.lv_select_city_city);
-		mList.add(list1);
-		mList.add(list2);
-		mList.add(list3);
+		mList.add(CityManger.list1);
+		mList.add(CityManger.list2);
+		mList.add(CityManger.list3);
 		adapter = new NearbyHotCityListviewAdapter(getApplicationContext(),
 				mList);
 		lv_select_city_city.setAdapter(adapter);
@@ -161,7 +153,7 @@ public class SelectCityActivity extends BackFragmentActivity {
 			}
 		});
 		// 设置城市到数组中
-		dataList = fillData(getResources().getStringArray(R.array.position));
+		dataList = fillData(CityManger.allcity);
 		// 根据a-z排序
 		Collections.sort(dataList, comparator);
 		selectCityPositionListViewAdapter = new SelectCityPositionListViewAdapter(

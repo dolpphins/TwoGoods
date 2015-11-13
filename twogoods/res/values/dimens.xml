@@ -156,8 +156,8 @@
 	<dimen name="app_publish_fragment_et_heigth">150dp</dimen>
 	<dimen name="app_publish_fragment_textsize">18sp</dimen>
 	<dimen name="app_publish_fragment_sort_marginright">30dp</dimen>
-	<dimen name="app_publish_fragment_gridview_verticalspacing">15dp</dimen>
-	<dimen name="app_publish_fragment_gridview_horizontalspacing">15dp</dimen>
+	<dimen name="app_publish_fragment_gridview_verticalspacing">5dp</dimen>
+	<dimen name="app_publish_fragment_gridview_horizontalspacing">5dp</dimen>
 	<!-- nearby_select_city -->
 	<dimen name="nearby_select_city_division">1dp</dimen>
 	<dimen name="nearby_select_city_margintop">10dp</dimen>

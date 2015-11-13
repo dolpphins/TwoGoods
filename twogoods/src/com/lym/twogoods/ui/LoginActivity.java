@@ -10,11 +10,12 @@ import cn.bmob.v3.listener.RequestSMSCodeListener;
 import cn.bmob.v3.listener.VerifySMSCodeListener;
 
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.User;
+import com.lym.twogoods.config.UserConfiguration;
 import com.lym.twogoods.ui.base.BackActivity;
 import com.lym.twogoods.utils.EncryptHelper;
 import com.lym.twogoods.utils.NetworkHelper;
-import com.lym.twogoods.utils.SharePreferencesManager;
 import com.lym.twogoods.utils.StringUtil;
 
 import android.content.Intent;
@@ -47,18 +48,17 @@ public class LoginActivity extends BackActivity {
 	// 定义actionbar控件
 	private TextView actionbarRightTextView;
 
-	// 定义存储数据
-	private SharePreferencesManager sSpManager;
 	// 定义变量来看是否查找成功。
 	private BmobQuery<User> bmobQuery;
 	private boolean find_succeed = false;
 	private boolean codeVerify = false;
 	// 通过用户名来取得手机号码
 	private String phone = "";
+	// User对象，根据登陆的用户来获得
+	private User user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.app_login_activity);
 		initActionbar();
@@ -74,8 +74,7 @@ public class LoginActivity extends BackActivity {
 		btn_login_land = (Button) findViewById(R.id.btn_login_land);
 		btn_login_forget = (Button) findViewById(R.id.btn_login_forget);
 
-		// 存储数据相关
-		sSpManager = SharePreferencesManager.getInstance();
+		user = new User();
 	}
 
 	/**
@@ -91,15 +90,15 @@ public class LoginActivity extends BackActivity {
 
 			@Override
 			public void onClick(View v) {
+
 				if (NetworkHelper.isMobileDataEnable(getApplicationContext())
 						|| NetworkHelper
 								.isWifiDataEnable(getApplicationContext())) {
 					if (StringUtil.isPhoneNumber(et_login_erhuo.getText()
 							.toString())) {
 						phone = et_login_erhuo.getText().toString();
-						BmobSMS.requestSMSCode(getApplicationContext(),
-								et_login_erhuo.getText().toString(), "登录验证",
-								new RequestSMSCodeListener() {
+						BmobSMS.requestSMSCode(getApplicationContext(), phone,
+								"登录验证", new RequestSMSCodeListener() {
 
 									@Override
 									public void done(Integer smsId,
@@ -139,6 +138,7 @@ public class LoginActivity extends BackActivity {
 					Toast.makeText(getApplicationContext(), "当前网络不佳",
 							Toast.LENGTH_SHORT).show();
 				}
+
 			}
 		});
 
@@ -245,45 +245,60 @@ public class LoginActivity extends BackActivity {
 
 			@Override
 			public void onError(int arg0, String arg1) {
-				// 判断手机号码作为账号的情况
-				bmobQuery = new BmobQuery<User>();
-				bmobQuery.addWhereEqualTo("phone", et_login_erhuo.getText()
-						.toString());
-				bmobQuery.findObjects(getApplicationContext(),
-						new FindListener<User>() {
 
-							@Override
-							public void onError(int arg0, String arg1) {
-								Toast.makeText(getApplicationContext(),
-										"用户名不存在", Toast.LENGTH_SHORT).show();
-								find_succeed = false;
-							}
-
-							@Override
-							public void onSuccess(List<User> list) {
-								if (EncryptHelper.getMD5(
-										et_login_password.getText().toString())
-										.equals(list.get(0).getPassword())) {
-									writeSharePreference();
-									find_succeed = true;
-								} else {
-									Toast.makeText(getApplicationContext(),
-											"密码错误", Toast.LENGTH_SHORT).show();
-								}
-							}
-						});
 			}
 
 			@Override
 			public void onSuccess(List<User> list) {
-				if (EncryptHelper
-						.getMD5(et_login_password.getText().toString()).equals(
-								list.get(0).getPassword())) {
-					writeSharePreference();
-					find_succeed = true;
+				if (list.size() != 0) {
+					user = list.get(0);
+					if (EncryptHelper.getMD5(
+							et_login_password.getText().toString()).equals(
+							user.getPassword())) {
+						writeSharePreference();
+						find_succeed = true;
+					} else {
+						Toast.makeText(getApplicationContext(), "密码错误",
+								Toast.LENGTH_SHORT).show();
+					}
+					// 搜索不成功的情况
 				} else {
-					Toast.makeText(getApplicationContext(), "密码错误",
-							Toast.LENGTH_SHORT).show();
+					// 判断手机号码作为账号的情况
+					bmobQuery = new BmobQuery<User>();
+					bmobQuery.addWhereEqualTo("phone", et_login_erhuo.getText()
+							.toString());
+					bmobQuery.findObjects(getApplicationContext(),
+							new FindListener<User>() {
+
+								@Override
+								public void onError(int arg0, String arg1) {
+									// 不清楚什么时候为error
+								}
+
+								@Override
+								public void onSuccess(List<User> list) {
+									if (list.size() != 0) {
+										user = list.get(0);
+										if (EncryptHelper.getMD5(
+												et_login_password.getText()
+														.toString()).equals(
+												user.getPassword())) {
+											writeSharePreference();
+											find_succeed = true;
+
+										} else {
+											Toast.makeText(
+													getApplicationContext(),
+													"密码错误", Toast.LENGTH_SHORT)
+													.show();
+										}
+									} else {
+										Toast.makeText(getApplicationContext(),
+												"用户名不存在", Toast.LENGTH_SHORT)
+												.show();
+									}
+								}
+							});
 				}
 			}
 		});
@@ -298,7 +313,8 @@ public class LoginActivity extends BackActivity {
 	 **/
 
 	private void codeMatch() {
-		BmobSMS.verifySmsCode(getApplicationContext(), phone, et_login_code
+
+		/*BmobSMS.verifySmsCode(getApplicationContext(), phone, et_login_code
 				.getText().toString(), new VerifySMSCodeListener() {
 
 			@Override
@@ -309,22 +325,21 @@ public class LoginActivity extends BackActivity {
 					codeVerify = false;
 				}
 			}
-		});
+		});*/
+
+		codeVerify = true;
 	}
 
 	/**
 	 * <p>
-	 * 本地存储用户信息
+	 * 本地存储用户信息,保存到UserInfoManger中
 	 * </p>
 	 * 
 	 * @author 龙宇文
 	 **/
 	private void writeSharePreference() {
-		sSpManager.putString(this, "loginmessage(MD5).xml", MODE_PRIVATE,
-				"username", et_login_erhuo.getText().toString());
-		sSpManager.putString(this, "loginmessage(MD5).xml", MODE_PRIVATE,
-				"password",
-				EncryptHelper.getMD5(et_login_password.getText().toString()));
+		user.setHead_url(UserConfiguration.USER_DEFAULT_HEAD);
+		UserInfoManager.getInstance().setmCurrent(user);
 	}
 
 	/**
@@ -335,25 +350,28 @@ public class LoginActivity extends BackActivity {
 	 * @author 龙宇文
 	 **/
 	private String usernameToPhone() {
-		bmobQuery = new BmobQuery<User>();
-		bmobQuery.addWhereEqualTo("username", et_login_erhuo.getText()
-				.toString());
-		bmobQuery.findObjects(getApplicationContext(),
-				new FindListener<User>() {
+		if (user.getPhone() == null) {
+			bmobQuery = new BmobQuery<User>();
+			bmobQuery.addWhereEqualTo("username", et_login_erhuo.getText()
+					.toString());
+			bmobQuery.findObjects(getApplicationContext(),
+					new FindListener<User>() {
 
-					@Override
-					public void onError(int arg0, String arg1) {
-						Toast.makeText(getApplicationContext(), "用户名不存在",
-								Toast.LENGTH_SHORT).show();
-						Log.v("hello", "a1a1aaaaaaaaaaaaaaaaaaaaaaaa");
-						phone = null;
-					}
+						@Override
+						public void onError(int arg0, String arg1) {
+							Toast.makeText(getApplicationContext(), "用户名不存在",
+									Toast.LENGTH_SHORT).show();
+							phone = null;
+						}
 
-					@Override
-					public void onSuccess(List<User> list) {
-						phone = list.get(0).getPhone();
-					}
-				});
+						@Override
+						public void onSuccess(List<User> list) {
+							phone = list.get(0).getPhone();
+						}
+					});
+		} else {
+			phone = user.getPhone();
+		}
 		return phone;
 	}
 }

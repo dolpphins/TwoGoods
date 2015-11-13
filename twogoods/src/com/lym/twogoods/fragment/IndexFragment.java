@@ -3,10 +3,13 @@ package com.lym.twogoods.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.lym.twogoods.R;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.config.GoodsCategory;
 import com.lym.twogoods.config.GoodsCategory.Category;
+import com.lym.twogoods.db.OrmDatabaseHelper;
 import com.lym.twogoods.fragment.base.HeaderPullListFragment;
 import com.lym.twogoods.index.adapter.CategoryGridViewAdapter;
 import com.lym.twogoods.index.adapter.IndexGoodsListAdapter;
@@ -16,7 +19,7 @@ import com.lym.twogoods.index.manager.GoodsSortManager;
 import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.index.widget.DropdownLinearLayout;
 import com.lym.twogoods.index.widget.MaskLayer;
-import com.lym.twogoods.test.mcb.GoodsData;
+import com.lym.twogoods.local.bean.LocalGoods;
 import com.lym.twogoods.ui.GoodsDetailActivity;
 
 import android.content.Intent;
@@ -33,13 +36,10 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 /**
@@ -108,7 +108,10 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 	//
 	private GoodsSort mCurrentGoodsSort;
 	private int mGoodsSortPosition;
-
+	
+	//获取数据相关
+	private long mPerPageCount = 10;
+	private int mCurrentPageIndex = 0;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -238,7 +241,7 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 			for(Category c : categorys) {
 				categoryData.add(c);
 				if(c.equals(Category.ALL)) {
-					mCurrentCategory = Category.ALL;
+					mCurrentCategory = Category.ALL;//默认为所有
 					mCategoryPosition = i;
 				}
 				i++;
@@ -265,9 +268,78 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 		sortAdapter = new SortListViewAdapter(mAttachActivity, sortData);
 		sortAdapter.setDefaultGoodsSort(mCurrentGoodsSort);
 		
-		List<Goods> tempList = GoodsData.getGoodsData(mAttachActivity);
-		mGoodsList.addAll(tempList);
 		mListViewAdapter = new IndexGoodsListAdapter(mAttachActivity, mGoodsList);
+		
+		//List<Goods> tempList = GoodsData.getGoodsData(mAttachActivity);
+		//mGoodsList.addAll(tempList);
+		//读取缓存
+		OrmDatabaseHelper ormHelper = new OrmDatabaseHelper(mAttachActivity);
+		Dao<LocalGoods, Integer> dao = ormHelper.getGoodsDao();
+		QueryBuilder<LocalGoods, Integer> builder = dao.queryBuilder();
+		//加载所有缓存数据
+//		//分页
+//		try {
+//			builder.offset(mCurrentPageIndex * mPerPageCount);
+//			builder.limit(mPerPageCount);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			//不支持分页
+//		}
+		//查询指定分类
+		String all = getResources().getString(R.string.category_all);
+		String currentCategoryString = GoodsCategory.getString(mAttachActivity, mCurrentCategory);
+		if(!all.equals(currentCategoryString)) {
+			try {
+				builder.where().eq("categoty", currentCategoryString);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		//查询结果排序
+		String sort = GoodsSortManager.getColumnString(mCurrentGoodsSort);
+		builder.orderBy(sort, true);
+		//开始查询
+		try {
+			List<LocalGoods> goodsList = builder.query();
+			if(goodsList != null) {
+				Log.i(TAG, "database query size:" + goodsList.size());
+				int size = goodsList.size();
+				for(int i = 0; i < size; i++) {
+					mGoodsList.add(LocalGoods.toGoods(goodsList.get(i)));
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+//		BmobQuery<Goods> query = new BmobQuery<Goods>();
+//		query.setSkip(mCurrentPageIndex * mPerPageCount);
+//		query.setLimit(mPerPageCount);
+//		String all = getResources().getString(R.string.category_all);
+//		String currentCategoryString = GoodsSortManager.getString(mAttachActivity, mCurrentGoodsSort);
+//		if(!all.equals(currentCategoryString)) {
+//			query.addWhereEqualTo("category", currentCategoryString);
+//		}
+//		query.findObjects(mAttachActivity, new FindListener<Goods>() {
+//			
+//			@Override
+//			public void onSuccess(List<Goods> goodsList) {
+//				if(goodsList == null) {
+//					
+//				} else if(goodsList.size() <= 0) {
+//					
+//				} else if(goodsList.size() < mPerPageCount) {
+//					mGoodsList.addAll(goodsList);
+//				} else {
+//					mGoodsList.addAll(goodsList);
+//				}
+//			}
+//			
+//			@Override
+//			public void onError(int arg0, String arg1) {
+//				
+//			}
+//		});
 	}
 	
 	private void initView() {
@@ -501,5 +573,20 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 		});
 	}
 	
+	@Override
+	public void onRefresh() {
+		super.onRefresh();
+		System.out.println("onRefresh");
+		
+		
+		
+		
+	}
+	
+	@Override
+	public void onLoadMore() {
+		super.onLoadMore();
+		System.out.println("onLoadMore");
+	}
 	
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/app_goods_details_write_comment_padding" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/app_goods_details_write_comment_top_padding" >
+
+        <ImageView
+            android:id="@+id/iv_publish_fragment_add_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/message_btn_chat_add_selector"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:id="@+id/iv_publish_fragment_add_smile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/message_btn_chat_emo_selector" />
+
+        <ImageView
+            android:id="@+id/iv_publish_fragment_add_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/publish_voice" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#cccccc" />
+
+    <com.lym.twogoods.widget.WrapContentViewPager
+        android:id="@+id/vp_publish_fragment_emoji"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+</LinearLayout>
