@@ -33,7 +33,7 @@ public class ImageLoaderHelper {
 	 * @param listener 加载监听器
 	 * */
 	public static void loadUserHeadPictureThumnail(Context context, ImageView iv, String url, ImageLoadingListener listener) {
-		if(iv == null || TextUtils.isEmpty(url)) {
+		if(iv == null) {
 			return;
 		}
 		ImageLoaderConfiguration configuration = UniversalImageLoaderConfigurationManager
@@ -48,5 +48,6 @@ public class ImageLoaderHelper {
 		DisplayImageOptions options = UniversalImageLoaderOptionManager.getHeadPictureDisplayImageOption(decodingOptions, w, w);
 		
 		imageLoader.displayImage(url, iv, options, listener);
+				
 	}
 }

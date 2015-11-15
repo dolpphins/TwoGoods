@@ -40,9 +40,9 @@ public class UniversalImageLoaderOptionManager {
 	public static DisplayImageOptions getDefaultDisplayImageOption() {
 		
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-							.showImageOnLoading(R.drawable.empty_picture)
-							.showImageForEmptyUri(R.drawable.empty_picture)
-							.showImageOnFail(R.drawable.empty_picture)
+							.showImageOnLoading(R.drawable.goods_empty_picture)
+							.showImageForEmptyUri(R.drawable.goods_empty_picture)
+							.showImageOnFail(R.drawable.goods_empty_picture)
 							.cacheInMemory(true)
 							.cacheOnDisk(true)
 							.considerExifParams(true)

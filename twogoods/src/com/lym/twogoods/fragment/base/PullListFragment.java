@@ -106,14 +106,18 @@ public abstract class PullListFragment extends BaseListFragment
 	 * 停止刷新
 	 * */
 	public void stopRefresh() {
-		mListView.stopRefresh();
+		if(mListView != null) {
+			mListView.stopRefresh();
+		}
 	}
 	
 	/**
 	 * 停止加载更多
 	 * */
 	public void stopLoadMore() {
-		mListView.stopLoadMore();
+		if(mListView != null) {
+			mListView.stopLoadMore();
+		}
 	}
 	
 	/**
@@ -122,7 +126,10 @@ public abstract class PullListFragment extends BaseListFragment
 	 * @param time 要设置的上次刷新时间
 	 * */
 	public void setLastRefreshTime(String time) {
-		mListView.setRefreshTime(time);
+		if(mListView != null) {
+			mListView.setRefreshTime(time);
+		}
+		
 	}
 	
 	/**

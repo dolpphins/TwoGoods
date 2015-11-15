@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="white">#ffffff</color>   
+    <color name="white">#ffffff</color>
     <!-- common -->
     	<!-- ActionBar -->
     <color name="app_common_actionbar_bg">#18b4ed</color>    <!-- ActionBar背景颜色 -->
@@ -9,7 +9,7 @@
     <color name="app_tab_top_separator">#cccccc</color>      <!-- Tab顶部分割线背景颜色 -->
     <color name="app_tab_backgound_bg">#ffffff</color>       <!-- Tab背景颜色 -->
     
-    
+	<color name="common_listview_item_sel">#eaeaea</color>    
     
     
     

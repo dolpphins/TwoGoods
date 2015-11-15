@@ -70,6 +70,9 @@ public class GoodsSortManager {
 	 * @return 获取成功返回相应的列名,获取失败返回null.
 	 * */
 	public static String getColumnString(GoodsSort gs) {
+		if(gs == null) {
+			return null;
+		}
 		
 		switch (gs) {
 		case NEWEST_PUBLISH:

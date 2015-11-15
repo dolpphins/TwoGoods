@@ -59,6 +59,9 @@ public class GoodsCategory {
 	 * @return 获取成功返回相应的字符串,失败返回null.
 	 * */
 	public static String getString(Context context, Category category) {
+		if(category == null) {
+			return null;
+		}
 		Resources res = context.getResources();
 		
 		switch (category) {

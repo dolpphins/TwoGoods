@@ -10,7 +10,7 @@ import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.config.GoodsCategory;
 import com.lym.twogoods.config.GoodsCategory.Category;
 import com.lym.twogoods.db.OrmDatabaseHelper;
-import com.lym.twogoods.fragment.base.HeaderPullListFragment;
+import com.lym.twogoods.fragment.base.HeaderPullListGoodsFragment;
 import com.lym.twogoods.index.adapter.CategoryGridViewAdapter;
 import com.lym.twogoods.index.adapter.IndexGoodsListAdapter;
 import com.lym.twogoods.index.adapter.SortListViewAdapter;
@@ -47,7 +47,7 @@ import android.widget.ListView;
  * 
  * @author 麦灿标
  * */
-public class IndexFragment extends HeaderPullListFragment implements DropDownAble {
+public class IndexFragment extends HeaderPullListGoodsFragment implements DropDownAble {
 
 	private final static String TAG = "IndexFragment";
 	
@@ -98,10 +98,6 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 	/**
 	 * 商品列表 
 	 * */
-	//商品ListView适配器
-	private IndexGoodsListAdapter mListViewAdapter;
-	//商品数据List
-	private List<Goods> mGoodsList = new ArrayList<Goods>();
 	//当前分类
 	private Category mCurrentCategory;
 	private int mCategoryPosition;
@@ -109,9 +105,6 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 	private GoodsSort mCurrentGoodsSort;
 	private int mGoodsSortPosition;
 	
-	//获取数据相关
-	private long mPerPageCount = 10;
-	private int mCurrentPageIndex = 0;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -181,8 +174,6 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 		
 		//为头部设置点击事件
 		setOnclickForHeadLayout();
-		//为ListView设置事件
-		setOnclickForListView();
 		
 		return frameLayout;
 	}
@@ -264,89 +255,17 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 				i++;
 			}
 		}
-		//注意第二三个参数不要搞错
+		
 		sortAdapter = new SortListViewAdapter(mAttachActivity, sortData);
 		sortAdapter.setDefaultGoodsSort(mCurrentGoodsSort);
 		
-		mListViewAdapter = new IndexGoodsListAdapter(mAttachActivity, mGoodsList);
-		
-		//List<Goods> tempList = GoodsData.getGoodsData(mAttachActivity);
-		//mGoodsList.addAll(tempList);
-		//读取缓存
-		OrmDatabaseHelper ormHelper = new OrmDatabaseHelper(mAttachActivity);
-		Dao<LocalGoods, Integer> dao = ormHelper.getGoodsDao();
-		QueryBuilder<LocalGoods, Integer> builder = dao.queryBuilder();
-		//加载所有缓存数据
-//		//分页
-//		try {
-//			builder.offset(mCurrentPageIndex * mPerPageCount);
-//			builder.limit(mPerPageCount);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			//不支持分页
-//		}
-		//查询指定分类
-		String all = getResources().getString(R.string.category_all);
-		String currentCategoryString = GoodsCategory.getString(mAttachActivity, mCurrentCategory);
-		if(!all.equals(currentCategoryString)) {
-			try {
-				builder.where().eq("categoty", currentCategoryString);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		//查询结果排序
-		String sort = GoodsSortManager.getColumnString(mCurrentGoodsSort);
-		builder.orderBy(sort, true);
-		//开始查询
-		try {
-			List<LocalGoods> goodsList = builder.query();
-			if(goodsList != null) {
-				Log.i(TAG, "database query size:" + goodsList.size());
-				int size = goodsList.size();
-				for(int i = 0; i < size; i++) {
-					mGoodsList.add(LocalGoods.toGoods(goodsList.get(i)));
-				}
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-//		BmobQuery<Goods> query = new BmobQuery<Goods>();
-//		query.setSkip(mCurrentPageIndex * mPerPageCount);
-//		query.setLimit(mPerPageCount);
-//		String all = getResources().getString(R.string.category_all);
-//		String currentCategoryString = GoodsSortManager.getString(mAttachActivity, mCurrentGoodsSort);
-//		if(!all.equals(currentCategoryString)) {
-//			query.addWhereEqualTo("category", currentCategoryString);
-//		}
-//		query.findObjects(mAttachActivity, new FindListener<Goods>() {
-//			
-//			@Override
-//			public void onSuccess(List<Goods> goodsList) {
-//				if(goodsList == null) {
-//					
-//				} else if(goodsList.size() <= 0) {
-//					
-//				} else if(goodsList.size() < mPerPageCount) {
-//					mGoodsList.addAll(goodsList);
-//				} else {
-//					mGoodsList.addAll(goodsList);
-//				}
-//			}
-//			
-//			@Override
-//			public void onError(int arg0, String arg1) {
-//				
-//			}
-//		});
+		setCurrentCategory(mCurrentCategory);
+		setGoodsSort(mCurrentGoodsSort);
 	}
 	
 	private void initView() {
-
 		index_fragment_head_category_dropdown_gv.setAdapter(categoryAdapter);
 		index_fragment_head_sort_dropdown_lv.setAdapter(sortAdapter);
-		mListView.setAdapter(mListViewAdapter);
 	}
 	
 	
@@ -550,27 +469,6 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 	 * */
 	public boolean isShowingSortLayout() {
 		return isShowingSortLayout;
-	}
-	
-	private void setOnclickForListView() {
-		mListView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Log.i(TAG, "onItemClick position:" + position);
-				//注意position从1开始
-				Intent intent = new Intent(mAttachActivity, GoodsDetailActivity.class);
-				intent.putExtra("goods", mGoodsList.get(position - 1));
-//				ArrayList<String> picturesUrlList = new ArrayList<String>();
-//				picturesUrlList.add("http://cdn.pcbeta.attachment.inimc.com/data/attachment/forum/201312/31/181215p0jnzo60mp0oenz0.jpg");
-//				picturesUrlList.add("http://download.pchome.net/wallpaper/pic-1853-4-1024x768.jpg");
-//				picturesUrlList.add("http://img2.imgtn.bdimg.com/it/u=2110278011,3816929467&fm=21&gp=0.jpg");
-//				picturesUrlList.add("http://img5.imgtn.bdimg.com/it/u=1457497701,2659227830&fm=21&gp=0.jpg");
-//				picturesUrlList.add("http://img3.imgtn.bdimg.com/it/u=4028451469,3760090854&fm=21&gp=0.jpg");
-//				intent.putStringArrayListExtra("picturesUrlList", picturesUrlList);
-				startActivity(intent);
-			}
-		});
 	}
 	
 	@Override

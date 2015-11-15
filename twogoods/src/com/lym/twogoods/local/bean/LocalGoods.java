@@ -67,7 +67,7 @@ public class LocalGoods {
 	private int focus_num = 0;
 	
 	/** 商品所在分类 */
-	@DatabaseField
+	@DatabaseField(columnName="category")
 	private String category;
 	
 	/** 浏览数,默认为0 */
@@ -424,5 +424,14 @@ public class LocalGoods {
 	 * */
 	public static String getBrowseColoumnString() {
 		return "browse_num";
+	}
+	
+	/**
+	 * 获取OrmLite框架下该数据库表中分类列列名
+	 * 
+	 * @return 分类列列名
+	 * */
+	public static String getCategoryColoumnString() {
+		return "category";
 	}
 }

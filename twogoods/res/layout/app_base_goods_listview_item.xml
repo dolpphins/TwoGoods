@@ -10,6 +10,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
+    android:background="@color/white"
     android:padding="@dimen/app_base_goods_listview_item_padding"
     android:descendantFocusability="blocksDescendants">  <!-- 该属性解决ListView点击Item获取不了焦点问题 -->
     

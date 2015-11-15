@@ -22,8 +22,8 @@
     <dimen name="app_base_goods_listview_item_dscription_textSize">16sp</dimen>
     <dimen name="app_base_goods_listview_item_picture_interval">10dip</dimen>
     
-    
-    
+    <!-- 加载动画 -->
+    <dimen name="app_basefragment_listview_laodfail_tip_textSize">16sp</dimen>
     
     
     

@@ -11,7 +11,7 @@
 	 android:layout_width="match_parent"
 	 android:layout_height="match_parent"
 	 android:orientation="vertical"
-	 android:background="@color/index_fragment_head_background_color">
+	 android:background="@color/white">
 	 
 	 <LinearLayout
 	  android:baselineAligned="false"

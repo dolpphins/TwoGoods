@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	公共ListView布局(含加载布局)
+	
+	@author 麦灿标
+ -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+   	<ProgressBar 
+   	    android:id="@+id/app_basefragment_listview_pb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/common_loading_center_icon"
+        android:visibility="gone"
+        android:indeterminateDrawable="@drawable/app_baselistview_loading_anim"
+        android:indeterminateDuration="1000"
+        android:indeterminate="true"/> <!-- 无限循环 -->
+   	<TextView
+   	    android:id="@+id/app_basefragment_listview_tv" 
+   	    android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="@dimen/app_basefragment_listview_laodfail_tip_textSize"
+        android:clickable="true"
+        android:visibility="gone"/>
+   	<me.maxwin.view.XListView
+	   android:id="@+id/app_basefragment_listview_lv"
+	   android:layout_width="match_parent"
+	   android:layout_height="match_parent"
+	   android:scrollbars="none"
+	   android:listSelector="@drawable/app_baselistview_selector"/> "
+
+</RelativeLayout>
