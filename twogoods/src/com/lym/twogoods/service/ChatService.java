@@ -159,6 +159,7 @@ public class ChatService extends Service {
 	        		        }
 							@Override
 							public void onSuccess(List<ChatDetailBean> object) {
+								
 								if(object.size()>0){//有新消息,对新消息根据发送者进行分类，然后保存到本地ChatSnapshot表
 									List<String>listOfName = new ArrayList<String>();
 									for(ChatDetailBean obj : object){//获取有哪些用户发信息过来
@@ -300,7 +301,7 @@ public class ChatService extends Service {
 	        			});
 	        		try {
 	        			loadTime = TimeUtil.getCurrentMilliSecond();
-						sleep(1000);
+						sleep(2000);
 					} catch (InterruptedException e) {
 						// TODO 自动生成的 catch 块
 						e.printStackTrace();
