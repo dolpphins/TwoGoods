@@ -1,6 +1,10 @@
 package com.lym.twogoods.index.manager;
 
+import java.util.Comparator;
+
 import com.lym.twogoods.R;
+import com.lym.twogoods.bean.Goods;
+import com.lym.twogoods.bean.GoodsSortComparatorGenerator;
 import com.lym.twogoods.local.bean.LocalGoods;
 
 import android.content.Context;
@@ -83,6 +87,31 @@ public class GoodsSortManager {
 			return LocalGoods.getFocusColoumnString();
 		case MOST_BROWSE:
 			return LocalGoods.getBrowseColoumnString();
+		default:
+			return null;
+		}
+	}
+	
+	/**
+	 * 获取指定排序方式的比较器
+	 * 
+	 * @return 指定排序方式
+	 * 
+	 * @return 获取成功返回相应的比较器,失败返回null.
+	 * */
+	public static Comparator<Goods> getGoodsSortComparator(GoodsSort gs) {
+		if(gs == null) {
+			return null;
+		}
+		switch (gs) {
+		case NEWEST_PUBLISH:
+			return GoodsSortComparatorGenerator.newGoodsPublishNewestSortComparator();
+		case PRICE_ASC:
+			return GoodsSortComparatorGenerator.newGoodsPriceLowestSortComparator();
+		case MOST_FOCUS:
+			return GoodsSortComparatorGenerator.newGoodsFocusMostSortComarator();
+		case MOST_BROWSE:
+			return GoodsSortComparatorGenerator.newGoodsFBrowseMostSortComarator();
 		default:
 			return null;
 		}

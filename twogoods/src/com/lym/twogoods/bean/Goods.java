@@ -248,7 +248,6 @@ public class Goods extends BmobObject implements Serializable{
 	public void setPictureUrlList(ArrayList<String> picturesUrlList) {
 		this.picturesUrlList = picturesUrlList;
 	}
-	
 }
 
 

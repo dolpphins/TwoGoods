@@ -147,6 +147,17 @@ public class CategoryGridViewAdapter extends BaseAdapter{
 		return (Category)categoryMap.get(Integer.valueOf(position));
 	}
 	
+//	/**
+//	 * <p>
+//	 * 	get the current category
+//	 * </p>
+//	 * 
+//	 * @return the current category
+//	 * */
+//	public Category getCurrentCategory() {
+//		return mCurrentCategory;
+//	}
+	
 	/**
 	 * <p>
 	 * 	set the default category 
@@ -157,7 +168,6 @@ public class CategoryGridViewAdapter extends BaseAdapter{
 	public void setDefaultSelectedCategory(Category c) {
 		mCurrentCategory = c;
 	}
-	
 	
 	private class ItemViewHolder {
 		

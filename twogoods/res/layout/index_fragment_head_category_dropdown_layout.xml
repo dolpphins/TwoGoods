@@ -22,7 +22,8 @@
     	android:paddingLeft="@dimen/index_fragment_head_category_gridview_paddingLeft"
     	android:paddingStart="@dimen/index_fragment_head_category_gridview_paddingLeft"
     	android:paddingRight="@dimen/index_fragment_head_category_gridview_paddingRight"
-    	android:paddingEnd="@dimen/index_fragment_head_category_gridview_paddingRight"/>
+    	android:paddingEnd="@dimen/index_fragment_head_category_gridview_paddingRight"
+    	android:listSelector="@android:color/transparent"/>
     
     <TextView 
        	android:layout_width="match_parent"

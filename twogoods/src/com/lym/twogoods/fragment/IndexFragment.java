@@ -257,10 +257,7 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 		}
 		
 		sortAdapter = new SortListViewAdapter(mAttachActivity, sortData);
-		sortAdapter.setDefaultGoodsSort(mCurrentGoodsSort);
-		
-		setCurrentCategory(mCurrentCategory);
-		setGoodsSort(mCurrentGoodsSort);
+		sortAdapter.setCurrentSelectedPosition(mGoodsSortPosition);
 	}
 	
 	private void initView() {
@@ -347,13 +344,19 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					categoryAdapter.setCategoryItemStatus(mCategoryPosition, false); 
 					mCategoryPosition = position;
-					mCurrentCategory = categoryAdapter.getCurrentCategory(mCategoryPosition);
+					Category category = categoryAdapter.getCurrentCategory(mCategoryPosition);
 					categoryAdapter.setCategoryItemStatus(mCategoryPosition, true);
 					
 					filpUpArrowAnimation(index_fragment_head_category_iv);
 					hideDropdownAnimation(categoryDropdownLayout, -mCategoryDropdownLayoutHeight);
 					isShowingCategoryLayout = false;
 					maskLayer.hide();
+					
+					//分类发生改变那么需要重新请求数据
+					if(!mCurrentCategory.equals(category)) {
+						mCurrentCategory = category;
+						requestReloadData();
+					}
 				}
 			});
 		}
@@ -364,10 +367,12 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-					sortAdapter.setItemStatus(mGoodsSortPosition, false);
 					mGoodsSortPosition = position;
+					sortAdapter.setCurrentSelectedPosition(position);
+					sortAdapter.notifyDataSetChanged();
 					mCurrentGoodsSort = sortAdapter.getCurrentGoodsSort(mGoodsSortPosition);
-					sortAdapter.setItemStatus(mGoodsSortPosition, true);
+					//重新排序
+					requestResort(mCurrentGoodsSort);
 					
 					filpUpArrowAnimation(index_fragment_head_sort_iv);
 					hideDropdownAnimation(sortDropdownLayout, -mSortDropdownLayoutHeight);
@@ -472,19 +477,12 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 	}
 	
 	@Override
-	public void onRefresh() {
-		super.onRefresh();
-		System.out.println("onRefresh");
-		
-		
-		
-		
+	protected String onCreateCategory() {
+		return GoodsCategory.getString(mAttachActivity, mCurrentCategory);
 	}
 	
 	@Override
-	public void onLoadMore() {
-		super.onLoadMore();
-		System.out.println("onLoadMore");
+	protected String onCreateGoodsSort() {
+		return GoodsSortManager.getColumnString(mCurrentGoodsSort);
 	}
-	
 }

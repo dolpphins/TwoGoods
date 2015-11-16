@@ -20,13 +20,13 @@ public abstract class HeaderListFragment extends BaseListFragment{
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
+		View v = super.onCreateView(inflater, container, savedInstanceState);
 		mHeaderView = onCreateHeaderView();
 		LinearLayout wrapper = (LinearLayout) inflater.inflate(R.layout.app_header_listview_decorview, null);
 		if(mHeaderView != null) {
 			wrapper.addView(mHeaderView);
 		}
-		wrapper.addView(mListView);
+		wrapper.addView(v);
 		
 		return wrapper;
 	}

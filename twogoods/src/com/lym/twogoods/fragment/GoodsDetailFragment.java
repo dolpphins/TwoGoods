@@ -6,12 +6,17 @@ import com.lym.twogoods.R;
 import com.lym.twogoods.async.MultiPicturesAsyncTask;
 import com.lym.twogoods.async.MultiPicturesAsyncTaskExecutor;
 import com.lym.twogoods.bean.Goods;
+import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.GoodsConfiguration;
 import com.lym.twogoods.fragment.base.PullListFragment;
 import com.lym.twogoods.index.adapter.GoodsCommentListViewAdapter;
 import com.lym.twogoods.manager.DiskCacheManager;
+import com.lym.twogoods.manager.ImageLoaderHelper;
+import com.lym.twogoods.message.ui.ChatActivity;
 import com.lym.twogoods.screen.DisplayUtils;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
+import com.lym.twogoods.utils.TimeUtil;
+import com.lym.twogoods.widget.EmojiTextView;
 import com.lym.twogoods.widget.WrapContentViewPager;
 
 import android.content.Intent;
@@ -23,12 +28,10 @@ import android.support.v4.view.ViewPager.LayoutParams;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
@@ -36,7 +39,6 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import me.maxwin.view.XListView;
 
 
 /**
@@ -87,8 +89,8 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
-		//设置只允许上拉
-		setMode(Mode.PULLUP);
+		//紧张上拉和下拉
+		setMode(Mode.NONE);
 		
 		mHeaderLayout = (LinearLayout) LayoutInflater.from(mAttachActivity).inflate(R.layout.index_goods_detail_fragment_header, null);
 		initHeaderView();
@@ -135,7 +137,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		
 		detailMessageViewHolder.index_goods_detail_browse_num = (TextView) mHeaderLayout.findViewById(R.id.index_goods_detail_browse_num);
 		detailMessageViewHolder.index_goods_detail_contact = (ImageView) mHeaderLayout.findViewById(R.id.index_goods_detail_contact);
-		detailMessageViewHolder.index_goods_detail_description = (TextView) mHeaderLayout.findViewById(R.id.index_goods_detail_description);
+		detailMessageViewHolder.index_goods_detail_description = (EmojiTextView) mHeaderLayout.findViewById(R.id.index_goods_detail_description);
 		detailMessageViewHolder.index_goods_detail_focus = (TextView) mHeaderLayout.findViewById(R.id.index_goods_detail_focus);
 		detailMessageViewHolder.index_goods_detail_fouse_num = (TextView) mHeaderLayout.findViewById(R.id.index_goods_detail_fouse_num);
 		detailMessageViewHolder.index_goods_detail_head_picture = (ImageView) mHeaderLayout.findViewById(R.id.index_goods_detail_head_picture);
@@ -147,9 +149,47 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		detailMessageViewHolder.index_goods_detail_username = (TextView) mHeaderLayout.findViewById(R.id.index_goods_detail_username);
 		detailMessageViewHolder.index_goods_detail_voice = (ImageView) mHeaderLayout.findViewById(R.id.index_goods_detail_voice);
 		//设置数据
-		
-		
-		
+		if(mData != null) {
+			Log.i(TAG, "mData != null");
+			//描述
+			float emojiSize = (float) (detailMessageViewHolder.index_goods_detail_description.getTextSize() * 1.75); 
+			detailMessageViewHolder.index_goods_detail_description.setEmojiSize((int) emojiSize);
+			detailMessageViewHolder.index_goods_detail_description.setText(mData.getDescription());
+			//关注数
+			detailMessageViewHolder.index_goods_detail_fouse_num.setText("关注数 " + mData.getFocus_num());
+			//浏览数
+			detailMessageViewHolder.index_goods_detail_browse_num.setText("浏览数 " + mData.getBrowse_num() + "");
+			//联系方式
+			detailMessageViewHolder.index_goods_detail_phone.setText("联系方式 " + mData.getPhone());
+			//价格
+			detailMessageViewHolder.index_goods_detail_price.setText("￥" + mData.getPrice());
+			//发布时间
+			detailMessageViewHolder.index_goods_detail_publish_time.setText(TimeUtil.getDescriptionTimeFromTimestamp(mData.getPublish_time()));
+			//发布位置
+			detailMessageViewHolder.index_goods_detail_publish_location.setText(mData.getPublish_location());
+			//用户名
+			detailMessageViewHolder.index_goods_detail_username.setText(mData.getUsername());
+			
+			//头像
+			ImageLoaderHelper.loadUserHeadPictureThumnail(mAttachActivity,
+					detailMessageViewHolder.index_goods_detail_head_picture, mData.getHead_url(), null);
+			
+			//联系商家
+			detailMessageViewHolder.index_goods_detail_contact.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					//检查是否登录
+					//跳转到聊天页面
+					User user = new User();
+					user.setUsername(mData.getUsername());
+					user.setHead_url(mData.getHead_url());
+					Intent intent = new Intent(mAttachActivity, ChatActivity.class);
+					intent.putExtra("otherUser", user);
+					startActivity(intent);
+				}
+			});
+		}
 	}
 	
 	private void setOnClickForImageView(ImageView iv) {
@@ -254,7 +294,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 	private static class DetailMessageViewHolder {
 		
 		/** 描述 */
-		private TextView index_goods_detail_description;
+		private EmojiTextView index_goods_detail_description;
 
 		/** 价格 */
 		private TextView index_goods_detail_price;

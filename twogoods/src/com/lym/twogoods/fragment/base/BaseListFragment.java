@@ -136,14 +136,19 @@ public abstract class BaseListFragment extends BaseFragment {
 	 * 显示ListView
 	 * */
 	public void showListView() {
-		if(!mListViewIsShowing && mListView != null && mListView.getVisibility() != View.VISIBLE) {
-			try {
-				mLoadingLayout.removeView(app_basefragment_listview_pb);
-				mLoadingLayout.removeView(app_basefragment_listview_tv);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
+		if(!mListViewIsShowing && mListView != null) {
 			mListView.setVisibility(View.VISIBLE);
+			mListViewIsShowing = true;
+		}
+	}
+	
+	/**
+	 * 隐藏ListView
+	 * */
+	public void hideListView() {
+		if(mListViewIsShowing && mListView != null) {
+			mListView.setVisibility(View.GONE);
+			mListViewIsShowing = false;
 		}
 	}
 	

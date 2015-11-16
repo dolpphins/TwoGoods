@@ -265,4 +265,54 @@ public class EmotionConfiguration {
 		return true;
 	}
 	
+	/**
+	 * 通过表情文本获取相应的表情Drawable对象
+	 * 
+	 * @param context 上下文
+	 * @param text 表情文本
+	 *                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+	 * @return 获取成功返回相应的表情Drawable对象.失败返回null.
+	 * */
+	public static Drawable getEmojiDrawableFromString(Context context, String text) {
+		if(context == null || TextUtils.isEmpty(text)) {
+			return null;
+		}
+		Integer id = sEmojiMap.get(text);
+		if(id != null) {
+			return context.getResources().getDrawable(id);
+		}
+		return null;
+	}
+	
+	/**
+	 * 将指定的文本转换为html格式文本,其中所有表情标签都会被
+	 * 更换成<img src="">
+	 * 
+	 * @return text 要转换的普通文本
+	 * 
+	 * @return 返回转换后的文本,如果原文本不含有表情标签那么将原样返回.
+	 * */
+	public static String toHtml(String text) {
+		if(TextUtils.isEmpty(text)) {
+			return text;
+		} else {
+			Set<String> keySet = sEmojiMap.keySet();
+			if(keySet != null && keySet.size() > 0) {
+				StringBuilder sb = null;
+				for(String s : keySet) {
+					sb = new StringBuilder();
+					sb.append("<img src=\"");
+					sb.append(s);
+					sb.append("\">");
+					if(text.contains(s)) {
+						s = s.replaceAll("\\[", "\\\\[");
+						s = s.replaceAll("\\]", "\\\\]");
+						System.out.println(s);
+						text = text.replaceAll(s, sb.toString());
+					}
+				}
+			}
+			return text;
+		}
+	}
 }

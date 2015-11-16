@@ -1,8 +1,11 @@
 package com.lym.twogoods.fragment.base;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import com.baidu.platform.comapi.map.m;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.lym.twogoods.R;
@@ -48,16 +51,12 @@ public abstract class HeaderPullListGoodsFragment extends HeaderPullListFragment
 	private IndexGoodsListAdapter mListViewAdapter;
 	//商品数据List
 	private List<Goods> mGoodsList = new ArrayList<Goods>();
-	//当前分类
-	private Category mCurrentCategory = Category.ALL;
-	//排序方式
-	private GoodsSort mCurrentGoodsSort = GoodsSort.NEWEST_PUBLISH;
 	//分页
 	private int mPerPageCount = 10;
 	//private int mCurrentPageIndex = 0;
 	
 	private enum Status {
-		REFRSHING, LOADING, NONE
+		REFRSHING, LOADING, INIT_LOADING, NONE
 	}
 	
 	//ListView当前状态
@@ -91,7 +90,7 @@ public abstract class HeaderPullListGoodsFragment extends HeaderPullListFragment
 			//获取失败尝试自动通过网络获取数据
 			tryRefreshFromNetwork(false, false);
 		} else {
-			initAndShowListView();//初始化并显示ListView
+			showGoodsListView();//显示ListView
 		}
 	}
 	
@@ -112,7 +111,7 @@ public abstract class HeaderPullListGoodsFragment extends HeaderPullListFragment
 				//加载更多要求:1.没有正在刷新或加载 2.ListView处于静止状态 3.ListView最后一个item可见
 				if(mStatus == Status.NONE && mScrollStatus ==  OnScrollListener.SCROLL_STATE_IDLE
 										  && lastItemPosition == totalItemCount - 1) {
-					loadDataFromNetwork(false, true);
+					prepareLoadDataFromNetwork(false, true);
 				}
 			}
 		});
@@ -126,7 +125,7 @@ public abstract class HeaderPullListGoodsFragment extends HeaderPullListFragment
 				Log.i(TAG, "onItemClick position:" + position);
 				//注意position从1开始
 				Intent intent = new Intent(mAttachActivity, GoodsDetailActivity.class);
-				intent.putExtra("goods", mGoodsList.get(position - 1));
+				intent.putExtra("goodsList", mGoodsList.get(position - 1));
 				startActivity(intent);
 			}
 		});
@@ -139,16 +138,16 @@ public abstract class HeaderPullListGoodsFragment extends HeaderPullListFragment
 		QueryBuilder<LocalGoods, Integer> builder = dao.queryBuilder();
 		//分类
 		String all = getResources().getString(R.string.category_all);
-		String currentCategoryString = GoodsCategory.getString(mAttachActivity, mCurrentCategory);
-		if(!all.equals(currentCategoryString)) {
+		String category = onCreateCategory();
+		if(!all.equals(category)) {
 			try {
-				builder.where().eq(LocalGoods.getCategoryColoumnString(), currentCategoryString);
+				builder.where().eq(LocalGoods.getCategoryColoumnString(), category);
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
 		}
 		//查询结果排序
-		String sort = GoodsSortManager.getColumnString(mCurrentGoodsSort);
+		String sort = onCreateGoodsSort();
 		if(!TextUtils.isEmpty(sort)) {
 			builder.orderBy(sort, true);
 		}
@@ -171,42 +170,6 @@ public abstract class HeaderPullListGoodsFragment extends HeaderPullListFragment
 		return false;
 	}
 	
-	/**
-	 * 设置当前分类
-	 * 
-	 * @param category 要设置的分类
-	 * */
-	public void setCurrentCategory(Category category) {
-		mCurrentCategory = category;
-	}
-	
-	/**
-	 * 获取当前分类
-	 * 
-	 * @return 返回当前分类
-	 * */
-	public Category getCurrentCategory() {
-		return mCurrentCategory;
-	}
-	
-	/**
-	 * 设置商品排序方式
-	 * 
-	 * @param gs 要设置的排序方式
-	 * */
-	public void setGoodsSort(GoodsSort gs) {
-		mCurrentGoodsSort = gs;
-	}
-	
-	/**
-	 * 获取当前商品的排序方式
-	 * 
-	 * @return 返回当前商品的排序方式
-	 * */
-	public GoodsSort getGoodsSort() {
-		return mCurrentGoodsSort;
-	}
-	
 	@Override
 	public void onRefresh() {
 		super.onRefresh();
@@ -219,7 +182,7 @@ public abstract class HeaderPullListGoodsFragment extends HeaderPullListFragment
 			Toast.makeText(mAttachActivity, "网络不可用", Toast.LENGTH_SHORT).show();
 			handlleLoadFormNetworkFinish(null);
 		} else {
-			loadDataFromNetwork(isRefresh, isLoadMore);
+			prepareLoadDataFromNetwork(isRefresh, isLoadMore);
 		}
 	}
 	
@@ -232,8 +195,13 @@ public abstract class HeaderPullListGoodsFragment extends HeaderPullListFragment
 		}
 	}
 	
+	private void prepareLoadDataFromNetwork(boolean isRefresh, boolean isLoadMore) {
+		String category = onCreateCategory();
+		loadDataFromNetwork(category, isRefresh, isLoadMore);
+	}
+	
 	//请求网络数据唯一入口
-	private void loadDataFromNetwork(final boolean isRefresh, final boolean isLoadMore) {
+	private void loadDataFromNetwork(String category, final boolean isRefresh, final boolean isLoadMore) {
 		
 		if(isRefresh && !isLoadMore) {
 			mStatus = Status.REFRSHING;
@@ -242,6 +210,8 @@ public abstract class HeaderPullListGoodsFragment extends HeaderPullListFragment
 		} else if(isRefresh && isLoadMore) {
 			//非法状态
 			return;
+		} else {
+			mStatus = Status.INIT_LOADING;
 		}
 		BmobQuery<Goods> query = new BmobQuery<Goods>();
 		
@@ -252,9 +222,9 @@ public abstract class HeaderPullListGoodsFragment extends HeaderPullListFragment
 		}
 		query.setLimit(mPerPageCount);
 		String all = getResources().getString(R.string.category_all);
-		String currentCategoryString = GoodsCategory.getString(mAttachActivity, mCurrentCategory);
-		if(all != null && !all.equals(currentCategoryString)) {
-			query.addWhereEqualTo("category", currentCategoryString);
+		System.out.println("category:" + category);
+		if(!TextUtils.isEmpty(all) && !TextUtils.isEmpty(category) && !all.equals(category)) {
+			query.addWhereEqualTo("category", category);
 		}
 		
 		//请求网络唯一出口
@@ -280,8 +250,9 @@ public abstract class HeaderPullListGoodsFragment extends HeaderPullListFragment
 			Toast.makeText(mAttachActivity, "没有更多的数据了", Toast.LENGTH_SHORT).show();
 		} else {
 			System.out.println("goodsList size:" + goodsList.size());
-			initAndShowListView();//初始化并显示ListView
+			showGoodsListView();//显示ListView
 			//如果是刷新则清除所有旧的数据
+			Log.i(TAG, "mStatus:" + mStatus);
 			if(mStatus == Status.REFRSHING) {
 				mGoodsList.clear();
 			}
@@ -326,9 +297,56 @@ public abstract class HeaderPullListGoodsFragment extends HeaderPullListFragment
 		return true;
 	}
 	
-	private void initAndShowListView() {
-		mListViewAdapter = new IndexGoodsListAdapter(mAttachActivity, mGoodsList);
-		setAdapter(mListViewAdapter);
+	private void showGoodsListView() {
+		if(mListViewAdapter == null) {
+			mListViewAdapter = new IndexGoodsListAdapter(mAttachActivity, mGoodsList);
+			setAdapter(mListViewAdapter);
+		}
 		showListView();
+	}
+	
+	/**
+	 * 如果有分类的话子类必须重写该方法返回当前分类(字符串形式)
+	 * 
+	 * @return 返回当前分类,返回null表示全部分类.
+	 * */
+	protected String onCreateCategory() {
+		return null;
+	}
+	
+	/**
+	 * 获取当前排序列列名,如果子类有排序功能必须重写该方法.
+	 * 
+	 * @return 返回当前排序列列名
+	 * */
+	protected String onCreateGoodsSort() {
+		return null;
+	}
+	
+	/**
+	 * 请求重新加载数据,注意:该方法会清空内存中之前所有数据然后重新加载(通过网络)
+	 * */
+	public void requestReloadData() {
+		Log.i(TAG, "requestReloadData");
+		hideListView();
+		showLoadingAnimation();
+		//清除数据
+		mGoodsList.clear();
+		tryRefreshFromNetwork(false, false);
+	}
+	
+	/**
+	 * 请求重新排序
+	 * 
+	 * @param gs 指定排序指标
+	 * */
+	public void requestResort(GoodsSort gs) {
+		Comparator<Goods> comparator = GoodsSortManager.getGoodsSortComparator(gs);
+		if(comparator != null) {
+			Collections.sort(mGoodsList, comparator);
+			if(mListViewAdapter != null) {
+				mListViewAdapter.notifyDataSetChanged();
+			}
+		}
 	}
 }

@@ -64,6 +64,7 @@
     <dimen name="index_goods_detail_share_listview_item_padding">10dip</dimen>
     <dimen name="index_goods_detail_message_padding">10dip</dimen>
     <dimen name="index_goods_detail_description_marginBottom">5dip</dimen>
+    <dimen name="index_goods_detail_description_textSize">15sp</dimen>
     <dimen name="index_goods_detail_price_textSize">18sp</dimen>
     <dimen name="index_goods_detail_price_marginTop">5dip</dimen>
     <dimen name="index_goods_detail_price_marginBottom">5dip</dimen>       

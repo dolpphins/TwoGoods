@@ -24,12 +24,12 @@
         android:padding="@dimen/index_goods_detail_message_padding">
         
         <!-- 描述 -->
-        <TextView
+        <com.lym.twogoods.widget.EmojiTextView
             android:id="@+id/index_goods_detail_description" 
             android:layout_width="match_parent"
         	android:layout_height="wrap_content"
         	android:layout_marginBottom="@dimen/index_goods_detail_description_marginBottom"
-        	android:text="小米手机"/>
+        	android:textSize="@dimen/index_goods_detail_description_textSize"/>
         <!-- 价格 -->
         <TextView
             android:id="@+id/index_goods_detail_price" 
@@ -39,8 +39,7 @@
         	android:layout_marginTop="@dimen/index_goods_detail_price_marginTop"
         	android:layout_marginBottom="@dimen/index_goods_detail_price_marginBottom"
         	android:textSize="@dimen/index_goods_detail_price_textSize"
-        	android:textColor="@color/index_goods_detail_price_textColor"
-        	android:text="￥100"/>
+        	android:textColor="@color/index_goods_detail_price_textColor"/>
         <!-- 关注数 -->
         <TextView
             android:id="@+id/index_goods_detail_fouse_num" 
@@ -48,8 +47,7 @@
         	android:layout_height="wrap_content"
         	android:layout_below="@id/index_goods_detail_price"
         	android:layout_marginRight="@dimen/index_goods_detail_fouse_num_marginBottom"
-        	android:layout_marginEnd="@dimen/index_goods_detail_fouse_num_marginBottom"
-        	android:text="关注100"/>
+        	android:layout_marginEnd="@dimen/index_goods_detail_fouse_num_marginBottom"/>
         <!-- 浏览数 -->
         <TextView
             android:id="@+id/index_goods_detail_browse_num" 
@@ -80,8 +78,7 @@
             android:layout_alignTop="@id/index_goods_detail_head_picture"
             android:layout_marginLeft="@dimen/index_goods_detail_username_marginLeft"
             android:layout_marginStart="@dimen/index_goods_detail_username_marginLeft"
-            android:textSize="@dimen/index_goods_detail_username_textSize"
-            android:text="12345"/>
+            android:textSize="@dimen/index_goods_detail_username_textSize"/>
         <!-- 发布时间 -->
         <TextView 
             android:id="@+id/index_goods_detail_publish_time"
@@ -93,8 +90,7 @@
             android:layout_marginLeft="@dimen/index_goods_detail_publish_time_marginLeft"
             android:layout_marginStart="@dimen/index_goods_detail_publish_time_marginLeft"
             android:layout_marginRight="@dimen/index_goods_detail_publish_time_marginRight"
-            android:layout_marginEnd="@dimen/index_goods_detail_publish_time_marginRight"
-            android:text="2分钟前"/>
+            android:layout_marginEnd="@dimen/index_goods_detail_publish_time_marginRight"/>
         <!-- 发布位置 -->
         <TextView 
             android:id="@+id/index_goods_detail_publish_location"
@@ -102,8 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/index_goods_detail_publish_time"
             android:layout_toEndOf="@id/index_goods_detail_publish_time"
-            android:layout_alignBaseline="@id/index_goods_detail_publish_time"
-            android:text="广州市天河区"/>
+            android:layout_alignBaseline="@id/index_goods_detail_publish_time"/>
         <!-- 联系方式 -->
         <TextView 
             android:id="@+id/index_goods_detail_phone"
@@ -111,8 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/index_goods_detail_head_picture"
             android:autoLink="phone"
-            android:layout_marginTop="@dimen/index_goods_detail_phone_marginTop"
-            android:text="联系方式:15603005716"/>
+            android:layout_marginTop="@dimen/index_goods_detail_phone_marginTop"/>
         
         
         <!-- 关注 -->
@@ -124,7 +118,7 @@
             android:layout_alignEnd="@id/index_goods_detail_description"
             android:layout_alignBaseline="@id/index_goods_detail_price"
             android:background="@drawable/index_goods_detail_focus_bg"
-            android:text="关注"/>
+            android:text="@string/goods_focus"/>
         <!-- 语音 -->
         <ImageView
             android:id="@+id/index_goods_detail_voice"
@@ -151,7 +145,7 @@
             android:layout_alignRight="@id/index_goods_detail_description"
             android:layout_alignEnd="@id/index_goods_detail_description"
             android:layout_alignBaseline="@id/index_goods_detail_phone"
-            android:text="举报"/>
+            android:text="@string/goods_report"/>
         
     </RelativeLayout>
     
