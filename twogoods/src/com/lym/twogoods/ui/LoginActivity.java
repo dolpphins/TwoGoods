@@ -255,7 +255,7 @@ public class LoginActivity extends BackActivity {
 					if (EncryptHelper.getMD5(
 							et_login_password.getText().toString()).equals(
 							user.getPassword())) {
-						writeSharePreference();
+						writeSharePreference(user);
 						find_succeed = true;
 					} else {
 						Toast.makeText(getApplicationContext(), "密码错误",
@@ -283,7 +283,7 @@ public class LoginActivity extends BackActivity {
 												et_login_password.getText()
 														.toString()).equals(
 												user.getPassword())) {
-											writeSharePreference();
+											writeSharePreference(user);
 											find_succeed = true;
 
 										} else {
@@ -322,6 +322,8 @@ public class LoginActivity extends BackActivity {
 				if (ex == null) {
 					codeVerify = true;
 				} else {
+					//Toast.makeText(getApplicationContext(), "验证码错误"+":错误信息是"+ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+					Log.v("LoginActivity", "验证码错误"+":错误信息是"+ex.getLocalizedMessage());
 					codeVerify = false;
 				}
 			}
@@ -335,7 +337,8 @@ public class LoginActivity extends BackActivity {
 	 * 
 	 * @author 龙宇文
 	 **/
-	private void writeSharePreference() {
+	private void writeSharePreference(User user) {
+		this.user=user;
 		user.setHead_url(UserConfiguration.USER_DEFAULT_HEAD);
 		UserInfoManager.getInstance().setmCurrent(user);
 	}
