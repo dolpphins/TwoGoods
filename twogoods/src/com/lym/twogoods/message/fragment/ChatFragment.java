@@ -69,6 +69,12 @@ public class ChatFragment extends PullListFragment{
 	}
 	
 	@Override
+	public void onAttach(Activity activity) {
+		// TODO 自动生成的方法存根
+		super.onAttach(activity);
+	}
+	
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		init();
@@ -76,8 +82,8 @@ public class ChatFragment extends PullListFragment{
 
 	private void init() {
 		initData();
-		initXlistView();
 		initCurrentUser();
+		initXlistView();
 	}
 	
 	/**
@@ -520,13 +526,18 @@ public class ChatFragment extends PullListFragment{
 		QueryBuilder<ChatDetailBean, Integer>mQueryBuilder = mChatDetailDao.queryBuilder();
 		try {
 			
-			Where<ChatDetailBean, Integer>sendWhere = mQueryBuilder.where().eq("username", currentUser.getUsername())
+			/*Where<ChatDetailBean, Integer>sendWhere = mQueryBuilder.where().eq("username", currentUser.getUsername())
 				.eq("other_username", otherUser.getUsername());
 			Where<ChatDetailBean, Integer>receiverWhere = mQueryBuilder.where().eq("username", 
 					otherUser.getUsername()).eq("other_username", currentUser.getUsername());
 					
 			@SuppressWarnings("unchecked")
-			Where<ChatDetailBean, Integer> where = mQueryBuilder.where().or(sendWhere,receiverWhere);
+			Where<ChatDetailBean, Integer> where = mQueryBuilder.where().or(sendWhere,receiverWhere);*/
+			
+			Where<ChatDetailBean, Integer> where = mQueryBuilder.where().eq("username", currentUser.getUsername()).
+					or().eq("other_username", currentUser.getUsername());
+			
+			
 			list = where.query();
 		} catch (SQLException e) {
 			// TODO 自动生成的 catch 块
