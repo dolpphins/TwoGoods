@@ -77,6 +77,10 @@
     <dimen name="index_goods_detail_username_textSize">16sp</dimen> 
     <dimen name="index_goods_detail_publish_time_marginLeft">5dip</dimen>
 	<dimen name="index_goods_detail_phone_marginTop">5dip</dimen>
+	<dimen name="index_goods_detail_comment_title_textSize">18sp</dimen>
+	<dimen name="index_goods_detail_comment_title_marginLeft">10dip</dimen>
+	<dimen name="index_goods_detail_comment_title_marginTop">10dip</dimen>
+	<dimen name="index_goods_detail_comment_title_marginBottom">10dip</dimen>
 	<dimen name="index_goods_search_header_padding">10dip</dimen>
 	<dimen name="index_goods_search_search_button_marginLeft">5dip</dimen>
 	<dimen name="index_goods_search_edittext_textSize">18sp</dimen>

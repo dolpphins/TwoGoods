@@ -21,7 +21,8 @@
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/index_goods_detail_message_padding">
+        android:padding="@dimen/index_goods_detail_message_padding"
+        android:background="@color/white">
         
         <!-- 描述 -->
         <com.lym.twogoods.widget.EmojiTextView
@@ -149,5 +150,25 @@
         
     </RelativeLayout>
     
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/index_goods_detail_header_separator_bg"/>
+    
+    <!-- 评论区表标题 -->
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@color/white">
+	    <TextView 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/goods_comment"
+	        android:textSize="@dimen/index_goods_detail_comment_title_textSize"
+	        android:layout_marginLeft="@dimen/index_goods_detail_comment_title_marginLeft"
+	        android:layout_marginStart="@dimen/index_goods_detail_comment_title_marginLeft"
+	        android:layout_marginTop="@dimen/index_goods_detail_comment_title_marginTop"
+	        android:layout_marginBottom="@dimen/index_goods_detail_comment_title_marginBottom"/>
+	</RelativeLayout>
 
 </LinearLayout>

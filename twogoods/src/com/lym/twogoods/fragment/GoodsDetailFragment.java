@@ -89,7 +89,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
-		//紧张上拉和下拉
+		//禁止上拉和下拉
 		setMode(Mode.NONE);
 		
 		mHeaderLayout = (LinearLayout) LayoutInflater.from(mAttachActivity).inflate(R.layout.index_goods_detail_fragment_header, null);
