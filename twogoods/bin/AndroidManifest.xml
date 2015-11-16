@@ -41,6 +41,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 系统功能权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- 手机震动 权限-->
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:name="com.lym.twogoods.TwoGoodsApplication"
@@ -130,6 +132,16 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+        
+        <!-- 未连接网络广播接收者 -->
+        <receiver
+            android:name="com.lym.twogoods.receiver.NetworkTipsBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="networkDisconnect" />
+            </intent-filter>
+        </receiver>
 
         <!-- 使用百度地图必须添加的service -->
         <service
@@ -140,6 +152,10 @@
             <intent-filter>
                 <action android:name="com.baidu.location.service_v2.4" />
             </intent-filter>
+        </service>
+       <!-- 聊天接收新消息的service --> 
+        <service
+           android:name="com.lym.twogoods.service.ChatService" >
         </service>
     </application>
 

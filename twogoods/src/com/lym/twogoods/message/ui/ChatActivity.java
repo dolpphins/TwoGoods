@@ -798,9 +798,10 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		}
 		final String other_username = mChatDetailBean.getOther_username();
 		mChatSnapshot.setOther_username(other_username);
-		
+		mChatSnapshot.setUsername(currentUser.getUsername());
 		mChatSnapshot.setLast_time(mChatDetailBean.getPublish_time());
 		mChatSnapshot.setUnread_num(0);
+		mChatSnapshot.setlast_message_status(mChatDetailBean.getLast_Message_Status());
 		mChatSnapshot.setLast_message_type(type);
 		mChatSnapshot.save(this,new SaveListener() {
 			
