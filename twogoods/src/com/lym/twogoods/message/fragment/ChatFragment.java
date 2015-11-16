@@ -75,9 +75,9 @@ public class ChatFragment extends PullListFragment{
 	}
 
 	private void init() {
+		initData();
 		initXlistView();
 		initCurrentUser();
-		initData();
 	}
 	
 	/**
@@ -511,6 +511,12 @@ public class ChatFragment extends PullListFragment{
 	 */
 	public List<ChatDetailBean> initMsgData()
 	{
+		if(mChatDetailDao==null)
+		{
+			mOrmDatabaseHelper = new OrmDatabaseHelper(getActivity());
+			mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
+			
+		}
 		QueryBuilder<ChatDetailBean, Integer>mQueryBuilder = mChatDetailDao.queryBuilder();
 		try {
 			

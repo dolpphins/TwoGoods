@@ -66,7 +66,7 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		super.onCreate(savedInstanceState);
 		
 		initTabFragment();
-		startService();
+	//	startService();
 		//开始时显示首页
 		resetTab(0);
 		showSelectTabFragment(0);
