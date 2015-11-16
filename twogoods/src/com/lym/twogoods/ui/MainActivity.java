@@ -1,6 +1,7 @@
 package com.lym.twogoods.ui;
 
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.fragment.IndexFragment;
 import com.lym.twogoods.fragment.MessageFragment;
 import com.lym.twogoods.fragment.MineFragment;
@@ -8,6 +9,8 @@ import com.lym.twogoods.fragment.NearbyFragment;
 import com.lym.twogoods.index.ui.GoodsSearchActivity;
 import com.lym.twogoods.nearby.ui.SelectCityActivity;
 import com.lym.twogoods.publish.ui.PublishGoodsActivity;
+import com.lym.twogoods.receiver.NetworkTipsBroadcastReceiver;
+import com.lym.twogoods.service.ChatService;
 import com.lym.twogoods.ui.base.BottomDockFragmentActivity;
 import com.lym.twogoods.viewholder.TabViewHolder;
 
@@ -55,14 +58,15 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 	
 	/** 当前选择Tab索引 */
 	private int currentTabIndex;
-	
+	/**为连接网络的广播接受者*/
+	private NetworkTipsBroadcastReceiver mNetworkTipsBroadcastReceiver = new NetworkTipsBroadcastReceiver();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		initTabFragment();
-		
+		startService();
 		//开始时显示首页
 		resetTab(0);
 		showSelectTabFragment(0);
@@ -70,11 +74,22 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		setActionBar(0);
 	}
 	
+
 	@Override
 	public View onCreateBottomView() {
 		mTabView = getLayoutInflater().inflate(R.layout.app_main_bottomdock_tab, null);
 		setTabClickEvent();
 		return mTabView;
+	}
+	/**
+	 * 开启service,
+	 */
+	private void startService() {
+		
+		if(!UserInfoManager.getInstance().isLogining()){//如果用户已经登录,开启service,否则不开启
+			Intent chatService = new Intent(MainActivity.this,ChatService.class);
+			this.startService(chatService);
+		}
 	}
 	
 	private void initTabFragment() {

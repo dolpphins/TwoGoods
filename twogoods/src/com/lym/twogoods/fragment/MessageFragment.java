@@ -29,6 +29,7 @@ import com.lym.twogoods.fragment.base.PullListFragment;
 import com.lym.twogoods.message.MessageDialog;
 import com.lym.twogoods.message.MessageDialog.MyItemOnClickListener;
 import com.lym.twogoods.message.adapter.MessageListAdapter;
+import com.lym.twogoods.message.adapter.TestAdapter;
 import com.lym.twogoods.message.ui.ChatActivity;
 import com.lym.twogoods.utils.SharePreferencesManager;
 import com.lym.twogoods.utils.TimeUtil;
@@ -42,6 +43,8 @@ import com.lym.twogoods.utils.TimeUtil;
 
 public class MessageFragment extends PullListFragment implements 
 	OnItemClickListener,OnItemLongClickListener{
+	
+	private Boolean isLogining;
 
 	//xListView的adapter
 	private MessageListAdapter mMessageListAdapter;
@@ -61,28 +64,41 @@ public class MessageFragment extends PullListFragment implements
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO 自动生成的方法存根
+		System.out.println("life"+"onCreate");
 		super.onCreate(savedInstanceState);
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO 自动生成的方法存根
+		System.out.println("life"+"onCreateView");
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 		super.onActivityCreated(savedInstanceState);
+		System.out.println("life"+"onActivityCreated");
 		init();
 	}
+	
+	@Override
+	public void onStart() {
+		System.out.println("life"+"onStart");
+		super.onStart();
+	
+	}
+	
+	
+	
+	
 	
 
 	private void init() {
 		mSharePreferenceManager = SharePreferencesManager.getInstance();
+		isLogining = UserInfoManager.getInstance().isLogining();
 		intiUser();
 		initData();
 		initView();
@@ -121,14 +137,20 @@ public class MessageFragment extends PullListFragment implements
 	}
 
 	protected void setAdapter() {
-	
-//		int images[] = {R.drawable.user_default_head,R.drawable.user_default_head,
-//				R.drawable.user_default_head,R.drawable.user_default_head,
-//				R.drawable.user_default_head};
-//		TestAdapter adapter = new TestAdapter(getActivity(), images);
-		mMessageListAdapter = new MessageListAdapter(getActivity(), R.layout.message_list_item_conversation, chatSnapshotList);
-		
-		super.setAdapter(mMessageListAdapter);
+		if(isLogining){
+			mMessageListAdapter = new MessageListAdapter(getActivity(),
+					R.layout.message_list_item_conversation, chatSnapshotList);
+			super.setAdapter(mMessageListAdapter);
+			System.out.println("life123");
+			
+		}else{
+			int images[] = {R.drawable.user_default_head,R.drawable.user_default_head,
+					R.drawable.user_default_head,R.drawable.user_default_head,
+					R.drawable.user_default_head};
+			System.out.println("life123456");
+			TestAdapter adapter = new TestAdapter(getActivity(), images);
+			super.setAdapter(adapter);
+		}
 	}
 	
 	/**
@@ -177,8 +199,10 @@ public class MessageFragment extends PullListFragment implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		ChatSnapshot recent = mMessageListAdapter.getItem(position);
-		showDeleteDialog(recent);
+		if(isLogining){
+			ChatSnapshot recent = mMessageListAdapter.getItem(position);
+			showDeleteDialog(recent);
+		}
 		return true;
 	}
 	
@@ -218,17 +242,20 @@ public class MessageFragment extends PullListFragment implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-	
-		Intent intent = new Intent(getActivity(), ChatActivity.class);
-		
-		ChatSnapshot chatSnapshot = (ChatSnapshot) mAdapter.getItem(position);
-		
-		User otherUser = new User();
-		otherUser.setUsername(chatSnapshot.getUsername());
-		otherUser.setHead_url(chatSnapshot.getHead_url());
-		
-		intent.putExtra("otherUser", otherUser);		
-		startActivity(intent);
+		if(isLogining){
+			Intent intent = new Intent(getActivity(), ChatActivity.class);
+			
+			ChatSnapshot chatSnapshot = (ChatSnapshot) mAdapter.getItem(position);
+			
+			User otherUser = new User();
+			otherUser.setUsername(chatSnapshot.getUsername());
+			otherUser.setHead_url(chatSnapshot.getHead_url());
+			
+			intent.putExtra("otherUser", otherUser);		
+			startActivity(intent);
+		}else{
+			
+		}
 	}
 
 	/**判断当前fragment是否显示在屏幕上，如果显示，则刷新界面*/
@@ -237,8 +264,10 @@ public class MessageFragment extends PullListFragment implements
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
 		this.ishidden = hidden;
-		if(!ishidden){
-			refreshMessage();
+		if(isLogining){
+			if(!ishidden){
+				refreshMessage();
+			}
 		}
 	}
 
@@ -306,6 +335,7 @@ public class MessageFragment extends PullListFragment implements
 	public void onResume() {
 		// TODO 自动生成的方法存根
 		//refreshMessage();
+		System.out.println("lifeonResume");
 		super.onResume();
 	}
 
