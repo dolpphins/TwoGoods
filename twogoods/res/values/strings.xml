@@ -133,7 +133,9 @@
     <string name="nearby_select_city_current_position">当前位置:</string>
     <string name="dingwei">定位</string>
     <string name="hot_city">热门城市</string>
-    <string name="nearby_select_city_search">请输入关键字</string>
+    <string name="nearby_select_city_search">请输入关键字（中文或拼音）</string>
+    <string name="cancel">取消</string>
+    <string name="nearby_select_city_dingwei">定位到目前所在城市</string>
     
     
     

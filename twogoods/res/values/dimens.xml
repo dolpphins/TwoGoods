@@ -172,8 +172,11 @@
 	<dimen name="nearby_select_city_position_name_left">5dip</dimen>
 	<dimen name="nearby_select_city_letter_sort_height">30dip</dimen>
 	<dimen name="nearby_select_city_dingwei_textsize">20sp</dimen>
-	<dimen name="nearby_select_city_position_textsize">20sp</dimen>
-	
+	<dimen name="nearby_select_city_hot_city_textsize">20sp</dimen>
+	<dimen name="nearby_select_city_dingwei_paddingTop">10dp</dimen>
+	<dimen name="nearby_select_city_dingwei_paddingBottom">10dp</dimen>
+	<dimen name="nearby_select_city_hot_city_gridview_marginTop">10dp</dimen>
+	<dimen name="nearby_select_city_position_textsize">18sp</dimen>
 	
 	
 	
