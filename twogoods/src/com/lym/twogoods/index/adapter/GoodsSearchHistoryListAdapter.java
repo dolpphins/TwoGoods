@@ -65,6 +65,15 @@ public class GoodsSearchHistoryListAdapter extends BaseAdapter{
 		return convertView;
 	}
 	
+	/**
+	 * 设置数据集
+	 * 
+	 * @param list 要设置的数据集
+	 * */
+	public void setDataList(List<String> list) {
+		mHistoryList = list;
+	}
+	
 	private static class ItemViewHolder {
 		
 		private TextView index_goods_search_history_item_tv;

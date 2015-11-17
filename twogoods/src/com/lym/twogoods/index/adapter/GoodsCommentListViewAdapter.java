@@ -1,5 +1,10 @@
 package com.lym.twogoods.index.adapter;
 
+import java.util.List;
+
+import com.lym.twogoods.bean.GoodsComment;
+
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -14,6 +19,15 @@ import android.widget.BaseAdapter;
  * */
 public class GoodsCommentListViewAdapter extends BaseAdapter {
 
+	private Context mContext;
+	
+	private List<GoodsComment> mGoodsCommentList;
+	
+	public GoodsCommentListViewAdapter(Context context, List<GoodsComment> goodsCommentList) {
+		mContext = context;
+		mGoodsCommentList = goodsCommentList;
+	}
+	
 	@Override
 	public int getCount() {
 		return 0;
