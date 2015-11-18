@@ -1,11 +1,13 @@
 package com.lym.twogoods.fragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.async.MultiPicturesAsyncTask;
 import com.lym.twogoods.async.MultiPicturesAsyncTaskExecutor;
 import com.lym.twogoods.bean.Goods;
+import com.lym.twogoods.bean.GoodsComment;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.GoodsConfiguration;
 import com.lym.twogoods.fragment.base.PullListFragment;
@@ -15,6 +17,7 @@ import com.lym.twogoods.manager.ImageLoaderHelper;
 import com.lym.twogoods.message.ui.ChatActivity;
 import com.lym.twogoods.screen.DisplayUtils;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
+import com.lym.twogoods.utils.NetworkHelper;
 import com.lym.twogoods.utils.TimeUtil;
 import com.lym.twogoods.widget.EmojiTextView;
 import com.lym.twogoods.widget.WrapContentViewPager;
@@ -39,6 +42,8 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
 
 
 /**
@@ -66,6 +71,12 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 	//包含详细信息所有控件
 	private DetailMessageViewHolder detailMessageViewHolder = new DetailMessageViewHolder();
 	
+	/**
+	 * 评论相关
+	 * */
+	private List<GoodsComment> mGoodsCommentList = new ArrayList<GoodsComment>();
+	private int perPageCount = 10;
+	private GoodsCommentListViewAdapter mGoodsCommentListViewAdapter;
 	/**
 	 * 构造函数
 	 * 
@@ -100,7 +111,8 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		//请求强制拦截触摸事件,以解决滚动冲突问题
 		mListView.requestForceInterceptTouchEvent(true);
 		mListView.addHeaderView(mHeaderLayout);
-		mListView.setAdapter(new GoodsCommentListViewAdapter());
+		mGoodsCommentListViewAdapter = new GoodsCommentListViewAdapter(mAttachActivity, mGoodsCommentList);
+		mListView.setAdapter(mGoodsCommentListViewAdapter);
 
 		//开始获取数据
 		getData();
@@ -225,6 +237,59 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		}
 		
 		executor.execute(params);
+		
+		//尝试加载评论信息
+		tryLoadCommentDataFromNetwork();
+	}
+	
+	//尝试从网络获取评论信息
+	private void tryLoadCommentDataFromNetwork() {
+		if(!checkNetworkCondition()) {
+			//网络不可用
+		} else {
+			loadCommentDataFromNetwork();
+		}
+	}
+	
+	//检查网络状态
+	private boolean checkNetworkCondition() {
+		if(NetworkHelper.isNetworkAvailable(mAttachActivity)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	//通过网络加载评论唯一入口
+	private void loadCommentDataFromNetwork() {
+		BmobQuery<GoodsComment> query = new BmobQuery<GoodsComment>();
+		query.setSkip(mGoodsCommentList.size());
+		query.setLimit(perPageCount);
+		query.findObjects(mAttachActivity, new FindListener<GoodsComment>() {
+			
+			@Override
+			public void onSuccess(List<GoodsComment> goodsCommentList) {
+				handleLoadCommentDataFromNetworkFinish(goodsCommentList);
+			}
+			
+			@Override
+			public void onError(int arg0, String arg1) {
+				handleLoadCommentDataFromNetworkFinish(null);
+			}
+		});
+	}
+	
+	//通过网络加载评论唯一出口
+	private void handleLoadCommentDataFromNetworkFinish(List<GoodsComment> goodsCommentList) {
+		if(goodsCommentList == null) {
+			
+		} else if(goodsCommentList.size() <= 0) {
+			
+		} else if(goodsCommentList.size() < perPageCount) {
+			
+		} else {
+			
+		}
 	}
 	
 	private class PicturesViewPagerAdapter extends PagerAdapter {

@@ -8,13 +8,13 @@ import java.util.Set;
 import com.lym.twogoods.R;
 import com.lym.twogoods.fragment.base.HeaderListFragment;
 import com.lym.twogoods.index.adapter.GoodsSearchHistoryListAdapter;
+import com.lym.twogoods.index.ui.GoodsSearchResultActivity;
 import com.lym.twogoods.screen.DisplayUtils;
+import com.lym.twogoods.utils.NetworkHelper;
 import com.lym.twogoods.utils.SharePreferencesManager;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -23,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,7 +66,6 @@ public class GoodsSearchFragment extends HeaderListFragment {
 		} else {
 			mHistoryList = new ArrayList<String>(historySet);
 		}
-		mHistoryAdapter = new GoodsSearchHistoryListAdapter(mAttachActivity, mHistoryList);
 	}
 	
 	@Override
@@ -94,7 +95,7 @@ public class GoodsSearchFragment extends HeaderListFragment {
 				
 				@Override
 				public void onClick(View v) {
-					search();
+					prepareSearchForClick();
 				}
 			});
 		}
@@ -113,13 +114,20 @@ public class GoodsSearchFragment extends HeaderListFragment {
 				public void afterTextChanged(Editable s) {
 					String text = s.toString();
 					if(TextUtils.isEmpty(text)) {
-						showHistoryList();
 						//隐藏删除按钮
 						index_goods_search_input_delete.setVisibility(View.INVISIBLE);
 					} else {
-						hideHistoryList();
 						//显示删除按钮
 						index_goods_search_input_delete.setVisibility(View.VISIBLE);
+					}
+					
+					List<String> historyListTemp = getListForStartWith(text);
+					if(historyListTemp == null || historyListTemp.size() <= 0) {
+						hideHistoryList();
+					} else {
+						mHistoryAdapter.setDataList(historyListTemp);
+						mHistoryAdapter.notifyDataSetChanged();
+						showHistoryList();
 					}
 				}
 			});
@@ -147,12 +155,52 @@ public class GoodsSearchFragment extends HeaderListFragment {
 		index_goods_search_history_clear = (TextView) mHistoryFooter.findViewById(R.id.index_goods_search_history_clear);
 		setClickEventForClearHistory();
 		mListView.setFooterDividersEnabled(false);
+		
+		mListView.addHeaderView(mHistoryTip, null, false);//不可点击
+		mListView.addFooterView(mHistoryFooter, null, false);//不可点击
+		mHistoryAdapter = new GoodsSearchHistoryListAdapter(mAttachActivity, mHistoryList);
+		mListView.setAdapter(mHistoryAdapter);
+		
+		setClickEventForListView();
+		
 		//开始默认显示搜索历史记录列表
 		showHistoryList();
 	}
 	
+	private void setClickEventForListView() {
+		mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				//System.out.println("position:" + position);
+				//System.out.println("mHistoryList size:" + mHistoryList.size());
+				//注意如果ListView有HeaderView那么第一个真正的Item的position为2
+				
+				int index = position - 2;
+				if(index >= 0 && index < mHistoryList.size()) {
+					String keyword = mHistoryList.get(index);
+					startSearchActivity(keyword);
+				}
+			}
+		});
+	}
+	
+	//获取历史记录列表中以某个字符串开始的集合
+	private List<String> getListForStartWith(String startText) {
+		if(TextUtils.isEmpty(startText)) {
+			return mHistoryList;
+		}
+		List<String> tempList = new ArrayList<String>();
+		for(String s : mHistoryList) {
+			if(s.startsWith(startText)) {
+				tempList.add(s);
+			}
+		}
+		return tempList;
+	}
+	
 	//搜索
-	private void search() {
+	private void prepareSearchForClick() {
 		if(check()) {
 			//添加到历史记录中
 			String keyword = index_goods_search_edittext.getText().toString();
@@ -166,6 +214,7 @@ public class GoodsSearchFragment extends HeaderListFragment {
 				System.out.println(b);
 			}
 			//开始搜索
+			trySearchFromNetwork(keyword);
 		}
 	}
 	
@@ -186,16 +235,18 @@ public class GoodsSearchFragment extends HeaderListFragment {
 	
 	private void showHistoryList() {
 		if(mHistoryList != null && mHistoryList.size() > 0) {
-			mListView.addHeaderView(mHistoryTip, null, false);//不可点击
-			mListView.addFooterView(mHistoryFooter, null, false);//不可点击
-			mListView.setAdapter(mHistoryAdapter);
+			//mListView.addHeaderView(mHistoryTip, null, false);//不可点击
+			//mListView.addFooterView(mHistoryFooter, null, false);//不可点击
+			//mListView.setAdapter(mHistoryAdapter);
+			mListView.setVisibility(View.VISIBLE);
 		}
 	}
 	
 	private void hideHistoryList() {
-		mListView.removeHeaderView(mHistoryTip);
-		mListView.removeFooterView(mHistoryFooter);
-		mListView.setAdapter(null);
+		//mListView.removeHeaderView(mHistoryTip);
+		//mListView.removeFooterView(mHistoryFooter);
+		//mListView.setAdapter(null);
+		mListView.setVisibility(View.GONE);
 	}
 	
 	private void setClickEventForClearHistory() {
@@ -214,5 +265,23 @@ public class GoodsSearchFragment extends HeaderListFragment {
 			});
 		}
 	}
-
+	
+	private void trySearchFromNetwork(String keyword) {
+		//检查网络
+		if(!NetworkHelper.isNetworkAvailable(mAttachActivity)) {
+			Toast.makeText(mAttachActivity, "网络不可用", Toast.LENGTH_SHORT).show();
+		} else {
+			startSearchActivity(keyword);
+		}
+	}
+	
+	private void startSearchActivity(String keyword) {
+		//先设置编辑框
+		index_goods_search_edittext.setText(keyword);
+		
+		Intent intent = new Intent(mAttachActivity, GoodsSearchResultActivity.class);
+		intent.putExtra("keyword", keyword);
+		startActivity(intent);
+	}
+	
 }
