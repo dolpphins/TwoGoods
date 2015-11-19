@@ -16,4 +16,6 @@ public class NearbyConfig {
 	public final static double WIDTH_LENGTH_RATE=1.33;
 	//默认加载16个地方
 	public final static int HOT_CITY_COUNT=16;
+	//
+	public final static int SEND_POSITION=0;
 }

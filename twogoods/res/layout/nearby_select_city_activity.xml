@@ -94,19 +94,5 @@
         android:scrollbars="none" >
     </GridView>
 
-    <Button
-        android:id="@+id/btn_nearby_select_city_replace_add_more"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/nearby_select_city_hot_city_gridview_marginTop"
-        android:layout_marginLeft="@dimen/nearby_select_city_marginleft"
-        android:layout_marginRight="@dimen/nearby_select_city_marginright"
-        android:background="#FFFFFF"
-        android:gravity="center_horizontal|center_vertical"
-        android:paddingBottom="@dimen/nearby_select_city_dingwei_paddingBottom"
-        android:paddingTop="@dimen/nearby_select_city_dingwei_paddingTop"
-        android:textSize="@dimen/nearby_select_city_hot_city_textsize"
-        android:text="加载更多" />
-
     </LinearLayout>
 </LinearLayout>

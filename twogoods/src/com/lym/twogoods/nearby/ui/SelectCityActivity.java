@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -19,6 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import com.lym.twogoods.nearby.config.NearbyConfig;
 import com.lym.twogoods.nearby.utils.CharacterParser;
 import com.lym.twogoods.nearby.utils.PinyinComparator;
 import com.lym.twogoods.screen.NearbyScreen;
+import com.lym.twogoods.ui.MainActivity;
 import com.lym.twogoods.ui.base.BackFragmentActivity;
 
 /**
@@ -55,10 +57,8 @@ public class SelectCityActivity extends BackFragmentActivity {
 	private LinearLayout ll_nearby_select_city_dingwei;
 	private LinearLayout ll_nearby_select_city_replace_hidelayout;
 	private GridView gv_nearby_select_city_hot_city;
-	private Button btn_nearby_select_city_replace_add_more;
 	// 热门城市相关
 	private NearbyHotCityGridViewAdapter nearbyHotCityGridViewAdapter;
-	private List<String> hot_city_list = new ArrayList<String>();
 	// 汉字转为拼音的类
 	private CharacterParser characterParser;
 	private List<NearbyPositionModelBean> dataList;
@@ -70,6 +70,8 @@ public class SelectCityActivity extends BackFragmentActivity {
 	private boolean isFirst = false;
 	private LocationClient locationClient;
 	private MylocationListen mylocationListen;
+	//ActionbarTitle
+	private String title="";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +79,23 @@ public class SelectCityActivity extends BackFragmentActivity {
 		setContentView(R.layout.nearby_select_city_activity);
 		init();
 		initEvent();
+		
 	}
 
+	/*
+	 * 
+	 * 只有点返回的时候才会将地址返回
+	 * (non-Javadoc)
+	 * @see com.lym.twogoods.ui.base.BackFragmentActivity#onActionBarBack()
+	 */
+	@Override
+	public void onActionBarBack() {
+		super.onActionBarBack();
+		Intent intent=new Intent(SelectCityActivity.this,MainActivity.class);
+		intent.putExtra("city", title);
+		setResult(NearbyConfig.SEND_POSITION);
+		this.finish();
+	}
 	private void init() {
 		et_nearby_select_city_input = (SelectCityClearEditText) findViewById(R.id.et_nearby_select_city_replace_input);
 		btn_nearby_select_city_input_cancel = (Button) findViewById(R.id.btn_nearby_select_city_replace_input_cancel);
@@ -86,9 +103,7 @@ public class SelectCityActivity extends BackFragmentActivity {
 		ll_nearby_select_city_dingwei = (LinearLayout) findViewById(R.id.ll_nearby_select_city_replace_dingwei);
 		ll_nearby_select_city_replace_hidelayout = (LinearLayout) findViewById(R.id.ll_nearby_select_city_replace_hidelayout);
 		gv_nearby_select_city_hot_city = (GridView) findViewById(R.id.gv_nearby_select_city_replace_hot_city);
-		btn_nearby_select_city_replace_add_more = (Button) findViewById(R.id.btn_nearby_select_city_replace_add_more);
 
-		hotCityInit();
 		gridViewSetting();
 		initLocation();
 		characterParser = CharacterParser.getInstance();
@@ -104,38 +119,6 @@ public class SelectCityActivity extends BackFragmentActivity {
 	}
 
 	private void initEvent() {
-		btn_nearby_select_city_replace_add_more
-				.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						if (nearbyHotCityGridViewAdapter != null) {
-							int size = nearbyHotCityGridViewAdapter.getCount();
-							if ((size + 2 * NearbyConfig.CITY_COLUMNS) > CityManger.hot_city
-									.size()) {
-								nearbyHotCityGridViewAdapter = new NearbyHotCityGridViewAdapter(
-										getApplicationContext(),
-										CityManger.hot_city);
-								gv_nearby_select_city_hot_city
-										.setAdapter(nearbyHotCityGridViewAdapter);
-								Toast.makeText(getApplicationContext(),
-										"已经显示完所有热门城市了", Toast.LENGTH_SHORT)
-										.show();
-							} else {
-								hot_city_list.clear();
-								for (int i = 0; i < size + 2
-										* NearbyConfig.CITY_COLUMNS; i++) {
-									hot_city_list.add(CityManger.hot_city
-											.get(i));
-								}
-								nearbyHotCityGridViewAdapter = new NearbyHotCityGridViewAdapter(
-										getApplicationContext(), hot_city_list);
-								gv_nearby_select_city_hot_city
-										.setAdapter(nearbyHotCityGridViewAdapter);
-							}
-						}
-					}
-				});
 		et_nearby_select_city_input
 				.setOnFocusChangeListener(new OnFocusChangeListener() {
 
@@ -193,6 +176,8 @@ public class SelectCityActivity extends BackFragmentActivity {
 						// 根据点击的结果设置为title
 						setCenterTitle(((NearbyPositionModelBean) selectCityPositionListViewAdapter
 								.getItem(position)).getName());
+						title=((NearbyPositionModelBean) selectCityPositionListViewAdapter
+								.getItem(position)).getName();
 						//隐藏操作
 						et_nearby_select_city_input.clearFocus();
 						InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -217,12 +202,6 @@ public class SelectCityActivity extends BackFragmentActivity {
 	 * 初始化加载热门城市
 	 * 
 	 */
-	private void hotCityInit() {
-		for (int i = 0; i < NearbyConfig.HOT_CITY_COUNT; i++) {
-			// 取前16个城市
-			hot_city_list.add(CityManger.hot_city.get(i));
-		}
-	}
 
 	/*
 	 * 
@@ -248,14 +227,12 @@ public class SelectCityActivity extends BackFragmentActivity {
 		PictureThumbnailSpecification specification = new PictureThumbnailSpecification();
 		specification = NearbyScreen.getHotCityItemThumbnailSpecification(this);
 		nearbyHotCityGridViewAdapter = new NearbyHotCityGridViewAdapter(
-				getApplicationContext(), hot_city_list);
-		/*
-		 * LayoutParams params = (LayoutParams) gv_nearby_select_city_hot_city
-		 * .getLayoutParams(); params.height = (int) (specification.getHeight()
+				getApplicationContext(), CityManger.hot_city,SelectCityActivity.this);
+		  LayoutParams params = (LayoutParams) gv_nearby_select_city_hot_city
+		  .getLayoutParams(); params.height = (int) (specification.getHeight()
 		 * (NearbyConfig.HOT_CITY_COUNT / NearbyConfig.CITY_COLUMNS) +
-		 * (NearbyConfig.HOT_CITY_COUNT / NearbyConfig.CITY_COLUMNS - 1)
+		  (NearbyConfig.HOT_CITY_COUNT / NearbyConfig.CITY_COLUMNS - 1)
 		 * getResources().getDimension(R.dimen.division));
-		 */
 		gv_nearby_select_city_hot_city.setNumColumns(NearbyConfig.CITY_COLUMNS);
 		gv_nearby_select_city_hot_city.setVerticalSpacing((int) getResources()
 				.getDimension(R.dimen.division));
@@ -269,10 +246,10 @@ public class SelectCityActivity extends BackFragmentActivity {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-						setCenterTitle(((Button) (nearbyHotCityGridViewAdapter
-								.getItem(position))).getText().toString());
-						Log.v(TAG, "打印"+((Button) (nearbyHotCityGridViewAdapter
-								.getItem(position))).getText().toString());
+						setCenterTitle((String)(nearbyHotCityGridViewAdapter
+								.getItem(position)));
+						title=(String)(nearbyHotCityGridViewAdapter
+								.getItem(position));
 					}
 				});
 	}
@@ -346,10 +323,8 @@ public class SelectCityActivity extends BackFragmentActivity {
 			if (isFirst) {
 				Toast.makeText(getApplicationContext(), location.getAddrStr(),
 						Toast.LENGTH_SHORT).show();
-				// tv_select_city_position_set.setText(location.getAddrStr());
-				// 设置位置缓存
-				// setPositionSharePreferences(location.getAddrStr());
 				setCenterTitle(location.getAddrStr());
+				title=location.getAddrStr();
 				isFirst = false;
 			}
 		}

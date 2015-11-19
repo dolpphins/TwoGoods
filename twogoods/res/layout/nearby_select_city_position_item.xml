@@ -12,6 +12,7 @@
         android:paddingBottom="@dimen/nearby_select_city_position_name_top_bottom"
         android:paddingLeft="@dimen/nearby_select_city_position_name_left"
         android:paddingTop="@dimen/nearby_select_city_position_name_top_bottom"
+        android:textSize="@dimen/nearby_select_city_position_textsize"
         android:textColor="@color/nearby_select_city_position_name" />
 
 </LinearLayout>

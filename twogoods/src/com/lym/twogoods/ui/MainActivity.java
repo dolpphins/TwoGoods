@@ -153,8 +153,6 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 			break;
 		//点击底部Tab附近
 		case R.id.tab_nearby_btn:
-			Intent intent1 = new Intent(this, SelectCityActivity.class);
-			startActivity(intent1);
 			selectTabIndex = 1;
 			break;
 		//点击底部发布

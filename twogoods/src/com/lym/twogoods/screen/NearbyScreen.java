@@ -1,6 +1,7 @@
 package com.lym.twogoods.screen;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.bean.PictureThumbnailSpecification;
@@ -15,7 +16,7 @@ import com.lym.twogoods.nearby.config.NearbyConfig;
  * */
 public class NearbyScreen {
 
-	private String TGA = "NearbyScreen";
+	private static String TGA = "NearbyScreen";
 
 	/**
 	 * <p>
@@ -33,11 +34,15 @@ public class NearbyScreen {
 		}
 		PictureThumbnailSpecification specification = new PictureThumbnailSpecification();
 		int screenWidth = DisplayUtils.getScreenWidthPixels(at);
+		Log.v(TGA, "screenWidth="+screenWidth);
 		int gridView = screenWidth
 				- at.getResources().getDimensionPixelSize(
-						R.dimen.nearby_select_city_marginright) * 2 -3;
+						R.dimen.nearby_select_city_marginright) * 2 -NearbyConfig.CITY_COLUMNS+1;
+		Log.v(TGA, "gridView="+gridView);
 		int cityWidth = gridView / NearbyConfig.CITY_COLUMNS;
+		Log.v(TGA, "cityWidth="+cityWidth);
 		int cityHeigth = (int) (cityWidth / NearbyConfig.WIDTH_LENGTH_RATE);
+		Log.v(TGA, "cityHeigth="+cityHeigth);
 		specification.setWidth(cityWidth);
 		specification.setHeight(cityHeigth);
 		return specification;
