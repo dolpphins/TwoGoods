@@ -52,7 +52,7 @@
 	<color name="nearby_select_city_position_name">#336598</color>
 	<color name="nearby_select_city_position_letter_background">#E0E0E0</color>
 	<color name="nearby_select_city_position_background">#E0E0E0</color>
-	<color name="nearby_select_city_position_cancel_text">#ADFF2F</color>		<!-- 黄绿色 -->
+	<color name="nearby_select_city_position_cancel_text">#87CEEB</color>		<!-- 天蓝色 -->
 	<color name="nearby_select_city_position_dingwei_textcolor">#87CEEB</color>	<!-- 天蓝色 -->
 	<color name="nearby_select_city_position_hotcity_textcolor">#696969</color>	<!-- 淡灰色 -->
 	

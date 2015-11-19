@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * <p>
+ * 相关城市信息管理类
+ * </p>
+ * 
+ * @author 龙宇文
+ * */
 public class CityManger {
 	// 热门城市
 	public final static List<String> list1 = new ArrayList<String>(
