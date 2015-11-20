@@ -221,6 +221,25 @@ public class OrmDatabaseHelper extends OrmLiteSqliteOpenHelper{
 		return chatSnapshotDAO;
 	}
 	
+	/**
+	 * 清除指定表的所有记录
+	 * 
+	 * @param 与该表相关联的实体类的Class对象
+	 * 
+	 * @return 成功返回true,失败返回false.
+	 * */
+	public <T> boolean clearTable(Class<T> clazz) {
+		ConnectionSource cs = getConnectionSource();
+		try {
+			//返回受影响的行数
+			TableUtils.clearTable(cs, clazz);
+			return true;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public void close() {
 		super.close();
 	}

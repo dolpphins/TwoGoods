@@ -27,7 +27,7 @@ public class LocalGoods {
 	private String GUID;
 	
 	/** 用户名,即贰货号,注意它需要符合一定的规则 */
-	@DatabaseField
+	@DatabaseField(columnName="username")
 	private String username;
 	
 	/** 该用户头像存放在网络服务器上的可访问url */
@@ -294,9 +294,11 @@ public class LocalGoods {
 		for(int i = 0; i < size; i++) {
 			String s = list.get(i);
 			if(!TextUtils.isEmpty(s)) {
+				sb.append("{");
 				sb.append("\"url\":\"");
 				sb.append(s);
 				sb.append("\"");
+				sb.append("}");
 			}
 			if(i < size - 1) {
 				sb.append(",");
@@ -433,5 +435,14 @@ public class LocalGoods {
 	 * */
 	public static String getCategoryColoumnString() {
 		return "category";
+	}
+	
+	/**
+	 * 获取OrmLite框架下该数据库表中用户名列列名
+	 * 
+	 * @return 用户名列列名
+	 * */
+	public static String getUsernameColoumnString() {
+		return "username";
 	}
 }

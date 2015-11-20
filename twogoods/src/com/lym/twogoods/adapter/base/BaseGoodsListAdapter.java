@@ -220,34 +220,34 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 	}
 	
 	@SuppressWarnings("unused")
-	private static class ItemViewHolder {
+	protected static class ItemViewHolder {
 		
 		/** 用户相关信息子布局 */
-		private RelativeLayout base_goods_listview_item_user_layout;
+		public RelativeLayout base_goods_listview_item_user_layout;
 		
 		/** 头像 */
-		private ImageView base_goods_listview_item_headpic;
+		public ImageView base_goods_listview_item_headpic;
 		
 		/** 用户名 */
-		private TextView base_goods_listview_item_username;
+		public TextView base_goods_listview_item_username;
 		
 		/** 发布时间 */
-		private TextView base_goods_listview_item_publishtime;
+		public TextView base_goods_listview_item_publishtime;
 		
 		/** 发布位置 */
-		private TextView base_goods_listview_item_publishlocation;
+		public TextView base_goods_listview_item_publishlocation;
 		
 		/** 价格 */
-		private TextView base_goods_listview_item_price;
+		public TextView base_goods_listview_item_price;
 		
 		/** 操作 */
-		private TextView base_goods_listview_item_operation;
+		public TextView base_goods_listview_item_operation;
 		
 		/** 商品描述 */
-		private TextView base_goods_listview_item_description;
+		public TextView base_goods_listview_item_description;
 		
 		/** 左右可滑动图片 */
-		private GridView base_goods_gridview_item_pictures;
+		public GridView base_goods_gridview_item_pictures;
 	}
 }
 

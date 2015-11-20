@@ -1,10 +1,15 @@
 package com.lym.twogoods.fragment;
 
+import java.util.ArrayList;
+
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.fragment.base.BaseFragment;
 import com.lym.twogoods.manager.ImageLoaderHelper;
+import com.lym.twogoods.mine.ui.MineFocusActivity;
+import com.lym.twogoods.mine.ui.MinePublishActivity;
+import com.lym.twogoods.ui.DisplayPicturesActivity;
 import com.lym.twogoods.ui.PersonalityInfoActivity;
 import com.lym.twogoods.ui.SettingsActivity;
 
@@ -114,7 +119,12 @@ public class MineFragment extends BaseFragment{
 				if(!UserInfoManager.getInstance().isLogining()) {
 					goToLogin();
 				} else {
-					
+					Intent intent = new Intent(mAttachActivity, DisplayPicturesActivity.class);
+					ArrayList<String> picturesUrlList = new ArrayList<String>();
+					User user = UserInfoManager.getInstance().getmCurrent();
+					picturesUrlList.add(user.getHead_url());
+					intent.putStringArrayListExtra("picturesUrlList", picturesUrlList);
+					mAttachActivity.startActivity(intent);
 				}
 			}
 		});
@@ -132,7 +142,10 @@ public class MineFragment extends BaseFragment{
 			@Override
 			public void onClick(View v) {
 				if(checkIsLogining()) {
-					
+					Intent intent = new Intent(mAttachActivity, MinePublishActivity.class);
+					User user = UserInfoManager.getInstance().getmCurrent();
+					intent.putExtra("username", user.getUsername());
+					mAttachActivity.startActivity(intent);
 				}
 			}
 		});
@@ -141,7 +154,10 @@ public class MineFragment extends BaseFragment{
 			@Override
 			public void onClick(View v) {
 				if(checkIsLogining()) {
-					
+					Intent intent = new Intent(mAttachActivity, MineFocusActivity.class);
+					User user = UserInfoManager.getInstance().getmCurrent();
+					intent.putExtra("username", user.getUsername());
+					mAttachActivity.startActivity(intent);
 				}
 			}
 		});

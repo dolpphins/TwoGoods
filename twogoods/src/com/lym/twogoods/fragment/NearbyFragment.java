@@ -1,6 +1,6 @@
 package com.lym.twogoods.fragment;
 
-import com.lym.twogoods.fragment.base.HeaderPullListGoodsFragment;
+import com.lym.twogoods.fragment.base.HeaderPullListFragment;
 
 import android.view.View;
 
@@ -12,7 +12,7 @@ import android.view.View;
  * 
  * @author 麦灿标
  * */
-public class NearbyFragment extends HeaderPullListGoodsFragment{
+public class NearbyFragment extends HeaderPullListFragment{
 
 	@Override
 	protected View onCreateHeaderView() {
