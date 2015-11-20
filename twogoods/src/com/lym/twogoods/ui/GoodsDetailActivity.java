@@ -71,7 +71,7 @@ public class GoodsDetailActivity extends BottomDockBackFragmentActivity{
 		setClickForShareIcon();
 		
 		
-		mData = (Goods) getIntent().getSerializableExtra("goodsList");
+		mData = (Goods) getIntent().getSerializableExtra("goods");
 		if(mData == null) {
 			Log.i(TAG, "goods data is null");
 		}

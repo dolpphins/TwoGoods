@@ -3,28 +3,24 @@ package com.lym.twogoods.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.lym.twogoods.R;
+import com.lym.twogoods.adapter.StoreDetailGoodsListAdapter;
+import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.config.GoodsCategory;
 import com.lym.twogoods.config.GoodsCategory.Category;
-import com.lym.twogoods.db.OrmDatabaseHelper;
-import com.lym.twogoods.fragment.base.HeaderPullListGoodsFragment;
+import com.lym.twogoods.fragment.base.HeaderPullListFragment;
 import com.lym.twogoods.index.adapter.CategoryGridViewAdapter;
-import com.lym.twogoods.index.adapter.IndexGoodsListAdapter;
 import com.lym.twogoods.index.adapter.SortListViewAdapter;
 import com.lym.twogoods.index.interf.DropDownAble;
 import com.lym.twogoods.index.manager.GoodsSortManager;
 import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.index.widget.DropdownLinearLayout;
 import com.lym.twogoods.index.widget.MaskLayer;
-import com.lym.twogoods.local.bean.LocalGoods;
-import com.lym.twogoods.ui.GoodsDetailActivity;
+import com.lym.twogoods.network.DefaultOnLoaderListener;
+import com.lym.twogoods.network.ListViewLoader;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +32,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import cn.bmob.v3.BmobQuery;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -47,7 +44,7 @@ import android.widget.ListView;
  * 
  * @author 麦灿标
  * */
-public class IndexFragment extends HeaderPullListGoodsFragment implements DropDownAble {
+public class IndexFragment extends HeaderPullListFragment implements DropDownAble {
 
 	private final static String TAG = "IndexFragment";
 	
@@ -105,6 +102,15 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 	private GoodsSort mCurrentGoodsSort;
 	private int mGoodsSortPosition;
 	
+	
+	/**
+	 * 商品列表加载器相关
+	 * */
+	private ListViewLoader mListViewLoader;
+	private BaseGoodsListAdapter mAdapter;
+	private List<Goods> mGoodsList;
+	private int perPageCount = 10;
+	private ListViewLoader.OnLoaderListener mOnLoaderListener;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -174,6 +180,19 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 		
 		//为头部设置点击事件
 		setOnclickForHeadLayout();
+		
+		setMode(Mode.PULLDOWN);
+		//ListView加载器
+		mGoodsList = new ArrayList<Goods>();
+		mAdapter = new StoreDetailGoodsListAdapter(mAttachActivity, mGoodsList);
+		mListViewLoader = new ListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
+		mOnLoaderListener = new DefaultOnLoaderListener(this, mListViewLoader);
+		mListViewLoader.setOnLoaderListener(mOnLoaderListener);
+		//mListViewLoader.setLoadCacheFromDisk(true);
+		//mListViewLoader.setSaveCacheToDisk(true);
+		mListView.setAdapter(mAdapter);
+		
+		loadDataInit();
 		
 		return frameLayout;
 	}
@@ -355,7 +374,7 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 					//分类发生改变那么需要重新请求数据
 					if(!mCurrentCategory.equals(category)) {
 						mCurrentCategory = category;
-						requestReloadData();
+
 					}
 				}
 			});
@@ -372,7 +391,7 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 					sortAdapter.notifyDataSetChanged();
 					mCurrentGoodsSort = sortAdapter.getCurrentGoodsSort(mGoodsSortPosition);
 					//重新排序
-					requestResort(mCurrentGoodsSort);
+					
 					
 					filpUpArrowAnimation(index_fragment_head_sort_iv);
 					hideDropdownAnimation(sortDropdownLayout, -mSortDropdownLayoutHeight);
@@ -476,13 +495,22 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 		return isShowingSortLayout;
 	}
 	
-	@Override
-	protected String onCreateCategory() {
-		return GoodsCategory.getString(mAttachActivity, mCurrentCategory);
+	private void loadDataInit() {
+		BmobQuery<Goods> query = new BmobQuery<Goods>();
+		query.setSkip(0);
+		query.setLimit(perPageCount);
+		String all = GoodsCategory.getString(mAttachActivity, mCurrentCategory);
+		if(!GoodsCategory.getString(mAttachActivity, GoodsCategory.Category.ALL).equals(all)) {
+			query.addWhereEqualTo("category", GoodsCategory.getString(mAttachActivity, mCurrentCategory));
+		}
+		String order = GoodsSortManager.getColumnString(mCurrentGoodsSort);
+		query.order(order);
+		mListViewLoader.requestLoadData(query, null, true, true);
 	}
 	
 	@Override
-	protected String onCreateGoodsSort() {
-		return GoodsSortManager.getColumnString(mCurrentGoodsSort);
+	public void onRefresh() {
+		super.onRefresh();
+		
 	}
 }
