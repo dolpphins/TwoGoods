@@ -6,6 +6,7 @@ import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.fragment.base.BaseListFragment;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -17,6 +18,8 @@ import android.widget.TextView;
  * @author 麦灿标
  * */
 public class DefaultOnLoaderListener implements ListViewLoader.OnLoaderListener{
+	
+	private final static String TAG = "DefaultOnLoaderListener";
 	
 	private BaseListFragment mFragment;
 	
@@ -41,6 +44,7 @@ public class DefaultOnLoaderListener implements ListViewLoader.OnLoaderListener{
 	@Override
 	public void onLoaderSuccess(List<Goods> goodsList) {
 		mFragment.hideLoadingAnimation();
+		mFragment.showListView();
 	}
 
 	@Override
@@ -51,6 +55,7 @@ public class DefaultOnLoaderListener implements ListViewLoader.OnLoaderListener{
 			
 			@Override
 			public void onClick(View v) {
+				Log.i(TAG, "onClick");
 				mFragment.hideRetryText();
 				mFragment.showLoadingAnimation();//重新显示加载动画
 				mListViewLoader.requestRetryLoadData();

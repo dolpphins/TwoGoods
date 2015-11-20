@@ -14,10 +14,10 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.ListView;
 import android.widget.Toast;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
+import me.maxwin.view.XListView;
 
 /**
  * 所有商品列表的通用加载工具类
@@ -32,7 +32,7 @@ public class ListViewLoader {
 	private Context mContext;
 	
 	/** 相关联的ListView */
-	private ListView mListView;
+	private XListView mListView;
 	
 	/** 数据集 */
 	private List<Goods> mGoodsList;
@@ -77,7 +77,7 @@ public class ListViewLoader {
 	 * @param adapter
 	 * @param goodsList
 	 * */
-	public ListViewLoader(Context context, ListView listView, BaseGoodsListAdapter adapter, List<Goods> goodsList) {
+	public ListViewLoader(Context context, XListView listView, BaseGoodsListAdapter adapter, List<Goods> goodsList) {
 		mContext = context;
 		mListView = listView;
 		mAdapter = adapter;
@@ -103,7 +103,8 @@ public class ListViewLoader {
 				int lastItemPosition = mListView.getLastVisiblePosition();
 				if(lastItemPosition == totalItemCount - 1 && 
 						mScrollStatus == OnScrollListener.SCROLL_STATE_IDLE
-						&& mStatus == Status.NONE) {
+						&& mStatus == Status.NONE
+						&& visibleItemCount < totalItemCount) {
 					if(mBmobQuery != null) {
 						mBmobQuery.setSkip(mGoodsList.size());
 						prepareLoadDataFromNetwork(mBmobQuery, false);
@@ -197,6 +198,7 @@ public class ListViewLoader {
 	
 	private void prepareLoadDataFromNetwork(BmobQuery<Goods> query, boolean clear) {
 		if(!NetworkHelper.isNetworkAvailable(mContext)) {
+			handleLoadDataForPrepareFail();
 			return;
 		}
 		loadDataFromNetwork(query, clear);
@@ -219,7 +221,7 @@ public class ListViewLoader {
 			
 			@Override
 			public void onError(int arg0, String arg1) {
-				Log.i(TAG, "onError");
+				Log.i(TAG, "onError " + arg0 + " " + arg1);
 				handleLoadDataFromNetworkFinish(null, c);
 			}
 		});
@@ -260,10 +262,22 @@ public class ListViewLoader {
 				}
 			}
 		}
-		
+		mListView.stopRefresh();
+		mListView.stopLoadMore();
 		mStatus = Status.NONE;
 		
-	}      
+	} 
+	
+	//获取数据准备工作失败调用
+	private void handleLoadDataForPrepareFail() {
+		mListView.stopRefresh();
+		mListView.stopLoadMore();
+		mStatus = Status.NONE;
+		if(mOnLoaderListener != null) {
+			mOnLoaderListener.onLoaderFail();
+		}
+		
+	}
 	
 	/**
 	 * 设置数据加载监听器

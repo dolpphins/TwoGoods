@@ -9,6 +9,8 @@ import com.lym.twogoods.adapter.StoreDetailGoodsListAdapter;
 import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.fragment.base.PullListFragment;
+import com.lym.twogoods.index.manager.GoodsSortManager;
+import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.local.bean.LocalGoods;
 import com.lym.twogoods.mine.adapter.MinePublishGoodsListAdapter;
 import com.lym.twogoods.network.DefaultOnLoaderListener;
@@ -85,20 +87,26 @@ public class MinePublishFragment extends PullListFragment {
 	
 	//加载初始化数据
 	private void loadDataInit() {
-		BmobQuery<Goods> query = new BmobQuery<Goods>();
-		query.setSkip(0);
-		query.setLimit(perPageCount);
-		query.addWhereEqualTo("username", mUsername);
-		mListViewLoader.requestLoadData(query, null, true, true);
+		reloadData();
 	}
 	
 	@Override
 	public void onRefresh() {
-		super.onRefresh();
+		reloadData();
+	}
+	
+	private void reloadData() {
 		BmobQuery<Goods> query = new BmobQuery<Goods>();
 		query.setSkip(0);
 		query.setLimit(perPageCount);
 		query.addWhereEqualTo("username", mUsername);
+		String order = "-" + GoodsSortManager.getColumnString(GoodsSort.NEWEST_PUBLISH);
+		query.order(order);
 		mListViewLoader.requestLoadData(query, null, true, false);
+	}
+	
+	@Override
+	protected boolean requestDelayShowListView() {
+		return true;
 	}
 }

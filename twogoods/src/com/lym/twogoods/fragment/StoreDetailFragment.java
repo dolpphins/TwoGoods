@@ -10,7 +10,10 @@ import com.lym.twogoods.adapter.StoreDetailGoodsListAdapter;
 import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.User;
+import com.lym.twogoods.fragment.base.BaseListFragment;
 import com.lym.twogoods.fragment.base.PullListFragment;
+import com.lym.twogoods.index.manager.GoodsSortManager;
+import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.local.bean.LocalGoods;
 import com.lym.twogoods.manager.ImageLoaderHelper;
 import com.lym.twogoods.network.DefaultOnLoaderListener;
@@ -20,14 +23,18 @@ import com.lym.twogoods.ui.GoodsDetailActivity;
 import com.lym.twogoods.ui.PersonalityInfoActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.bmob.v3.BmobQuery;
 
@@ -74,7 +81,8 @@ public class StoreDetailFragment extends PullListFragment {
 		initHeaderView();
 		
 		initListView();
-		mListView.addHeaderView(mHeaderView);
+		//mListView.addHeaderView(mHeaderView);
+		mListView.addHeaderView(mHeaderView, null, false);
 		
 		setOnClickEventForView();
 		
@@ -106,11 +114,13 @@ public class StoreDetailFragment extends PullListFragment {
 	private void initListView() {
 		mListView.clearHeader();
 		setMode(Mode.PULLDOWN);
+		LayoutParams params = mListView.getLayoutParams();
+		params.height = LayoutParams.WRAP_CONTENT;
 		
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new StoreDetailGoodsListAdapter(mAttachActivity, mGoodsList);
 		mListViewLoader = new ListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
-		mOnLoaderListener = new DefaultOnLoaderListener(this, mListViewLoader);
+		mOnLoaderListener = new StoreDetailOnLoaderListener(this, mListViewLoader);
 		mListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		//mListViewLoader.setLoadCacheFromDisk(true);
 		//mListViewLoader.setSaveCacheToDisk(true);
@@ -159,7 +169,7 @@ public class StoreDetailFragment extends PullListFragment {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					Intent intent = new Intent(mAttachActivity, GoodsDetailActivity.class);
-					intent.putExtra("goods", mGoodsList.get(position - 1));
+					intent.putExtra("goods", mGoodsList.get(position - 2));
 					startActivity(intent);
 				}
 			});
@@ -168,20 +178,48 @@ public class StoreDetailFragment extends PullListFragment {
 	
 	//加载初始化数据
 	private void loadDataInit() {
-		BmobQuery<Goods> query = new BmobQuery<Goods>();
-		query.setSkip(0);
-		query.setLimit(perPageCount);
-		query.addWhereEqualTo("username", mUser.getUsername());
-		mListViewLoader.requestLoadData(query, null, true, true);
+		reloadData();
 	}
 	
 	@Override
 	public void onRefresh() {
-		super.onRefresh();
+		reloadData();
+	}
+	
+	private void reloadData() {
 		BmobQuery<Goods> query = new BmobQuery<Goods>();
 		query.setSkip(0);
 		query.setLimit(perPageCount);
 		query.addWhereEqualTo("username", mUser.getUsername());
+		String order = "-" + GoodsSortManager.getColumnString(GoodsSort.NEWEST_PUBLISH);
+		query.order(order);
 		mListViewLoader.requestLoadData(query, null, true, false);
+	}
+	
+//	@Override
+//	protected boolean requestDelayShowListView() {
+//		return true;
+//	}
+	
+	//自定义加载监听器
+	private static class StoreDetailOnLoaderListener extends DefaultOnLoaderListener {
+
+		private BaseListFragment mFragment;
+		
+		public StoreDetailOnLoaderListener(BaseListFragment fragment, ListViewLoader loader) {
+			super(fragment, loader);
+			mFragment = fragment;
+		}
+		
+		@Override
+		public void onLoaderStart() {
+			mFragment.showLoadingAnimation();
+		}
+		
+		@Override
+		public void onLoaderFail() {
+			super.onLoaderFail();
+			mFragment.showListView();
+		}
 	}
 }

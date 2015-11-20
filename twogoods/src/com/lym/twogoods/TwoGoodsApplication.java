@@ -30,7 +30,7 @@ public class TwoGoodsApplication extends Application{
 		
 		//免登录 测试使用
 		User user = new User();
-		user.setUsername("我非常2");
+		user.setUsername("qqqQQ");
 		user.setBrowse_num(100);
 		user.setFocus_num(10);
 		user.setPhone("15603005716");

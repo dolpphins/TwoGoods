@@ -9,6 +9,8 @@ import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.GoodsFocus;
 import com.lym.twogoods.fragment.base.PullListFragment;
 import com.lym.twogoods.fragment.base.PullListFragment.Mode;
+import com.lym.twogoods.index.manager.GoodsSortManager;
+import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.mine.adapter.MineFocusGoodsListAdapter;
 import com.lym.twogoods.network.DefaultOnLoaderListener;
 import com.lym.twogoods.network.ListViewLoader;
@@ -20,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import cn.bmob.v3.BmobQuery;
@@ -68,6 +71,8 @@ public class MineFocusFragment extends PullListFragment {
 	
 	private void initListView() {
 		setMode(Mode.PULLDOWN);
+		LayoutParams params = mListView.getLayoutParams();
+		params.height = LayoutParams.WRAP_CONTENT;
 		
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new MineFocusGoodsListAdapter(mAttachActivity, mGoodsList);
@@ -119,19 +124,26 @@ public class MineFocusFragment extends PullListFragment {
 	
 	//加载初始化数据
 	private void loadDataInit() {
-		BmobQuery<Goods> query = new BmobQuery<Goods>();
-		query.setSkip(0);
-		query.setLimit(perPageCount);
-		query.addWhereContainedIn("objectId", mFocusGoodsObjectIdList);
-		mListViewLoader.requestLoadData(query, null, true, true);
+		reloadData(true);
 	}
 	
 	@Override
 	public void onRefresh() {
+		reloadData(false);
+	}
+	
+	private void reloadData(boolean isInit) {
 		BmobQuery<Goods> query = new BmobQuery<Goods>();
 		query.setSkip(0);
 		query.setLimit(perPageCount);
 		query.addWhereContainedIn("objectId", mFocusGoodsObjectIdList);
-		mListViewLoader.requestLoadData(query, null, true, true);
+		String order = "-" + GoodsSortManager.getColumnString(GoodsSort.NEWEST_PUBLISH);
+		query.order(order);
+		mListViewLoader.requestLoadData(query, null, true, isInit);
+	}
+	
+	@Override
+	protected boolean requestDelayShowListView() {
+		return true;
 	}
 }

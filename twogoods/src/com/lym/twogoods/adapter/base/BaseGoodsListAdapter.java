@@ -53,9 +53,9 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 
 	private final static String TAG = "BaseGoodsListAdapter";
 	
-	private Activity mActivity;
+	protected Activity mActivity;
 	
-	private List<Goods> mGoodsList;
+	protected List<Goods> mGoodsList;
 	
 	public BaseGoodsListAdapter(Activity at, List<Goods> goodsList) {
 		super();
@@ -128,7 +128,7 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 		//设置基本内容
 		setItemContent(viewHolder, item);
 		//设置特殊内容
-		setCustomContent(viewHolder);
+		setCustomContent(viewHolder, item);
 		
 		return convertView;
 		//return LayoutInflater.from(mActivity).inflate(R.layout.app_base_goods_listview_item, null);
@@ -203,9 +203,10 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 	 *	</p> 
 	 * 
 	 * @param viewHolder 每个Item的ViewHolder
+	 * @param item 相应的实体对象
 	 * 
 	 * */
-	protected void setCustomContent(ItemViewHolder viewHolder) {
+	protected void setCustomContent(ItemViewHolder viewHolder, Goods item) {
 	}
 	
 	//由Goods对象转User对象

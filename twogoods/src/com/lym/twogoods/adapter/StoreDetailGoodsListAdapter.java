@@ -19,8 +19,7 @@ public class StoreDetailGoodsListAdapter extends BaseGoodsListAdapter {
 	}
 
 	@Override
-	protected void setCustomContent(ItemViewHolder viewHolder) {
-		super.setCustomContent(viewHolder);
+	protected void setCustomContent(ItemViewHolder viewHolder, Goods item) {
 		//禁止跳转
 		viewHolder.base_goods_listview_item_user_layout.setOnTouchListener(null);
 		

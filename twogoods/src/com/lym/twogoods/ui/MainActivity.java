@@ -208,14 +208,14 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 				}
 			}
 		//附近
-		} else if(index == 1){
-			Drawable nearbySearchIcon = getResources().getDrawable(R.drawable.index_search_icon);//跟主页搜索图标一样 
-			ImageView nearbySearchIconIv = setRightDrawable(nearbySearchIcon);
-			if(nearbySearchIconIv != null) {
-				if(!setClickEventForImageView(nearbySearchIconIv, new NearByActionBarSearchIconClickListener())) {
-					Log.w(TAG, "set click event for nearby actionbar search icon fail");
-				}
-			}
+//		} else if(index == 1){
+//			Drawable nearbySearchIcon = getResources().getDrawable(R.drawable.index_search_icon);//跟主页搜索图标一样 
+//			ImageView nearbySearchIconIv = setRightDrawable(nearbySearchIcon);
+//			if(nearbySearchIconIv != null) {
+//				if(!setClickEventForImageView(nearbySearchIconIv, new NearByActionBarSearchIconClickListener())) {
+//					Log.w(TAG, "set click event for nearby actionbar search icon fail");
+//				}
+//			}
 		} else {
 			setRightDrawable(null);
 		}

@@ -307,7 +307,6 @@ public class EmotionConfiguration {
 					if(text.contains(s)) {
 						s = s.replaceAll("\\[", "\\\\[");
 						s = s.replaceAll("\\]", "\\\\]");
-						System.out.println(s);
 						text = text.replaceAll(s, sb.toString());
 					}
 				}

@@ -3,15 +3,20 @@ package com.lym.twogoods.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.baidu.platform.comapi.map.w;
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.async.MultiPicturesAsyncTask;
 import com.lym.twogoods.async.MultiPicturesAsyncTaskExecutor;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.GoodsComment;
+import com.lym.twogoods.bean.GoodsFocus;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.GoodsConfiguration;
 import com.lym.twogoods.fragment.base.PullListFragment;
 import com.lym.twogoods.index.adapter.GoodsCommentListViewAdapter;
+import com.lym.twogoods.index.interf.OnGoodsCommentReplyListener;
+import com.lym.twogoods.index.interf.OnPublishCommentListener;
 import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.manager.ImageLoaderHelper;
 import com.lym.twogoods.message.ui.ChatActivity;
@@ -22,6 +27,8 @@ import com.lym.twogoods.utils.TimeUtil;
 import com.lym.twogoods.widget.EmojiTextView;
 import com.lym.twogoods.widget.WrapContentViewPager;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -37,13 +44,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.DeleteListener;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
 
 
 /**
@@ -77,13 +89,16 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 	private List<GoodsComment> mGoodsCommentList = new ArrayList<GoodsComment>();
 	private int perPageCount = 10;
 	private GoodsCommentListViewAdapter mGoodsCommentListViewAdapter;
+	private OnGoodsCommentReplyListener mOnGoodsCommentReplyListener;
+	
 	/**
 	 * 构造函数
 	 * 
 	 * @param data 注意不能为空
 	 * */
-	public GoodsDetailFragment(Goods data) {
+	public GoodsDetailFragment(Goods data,OnGoodsCommentReplyListener l) {
 		mData = data;
+		mOnGoodsCommentReplyListener = l;
 		//如果为null,那么使用默认值
 		if(mData == null) {
 			Log.i(TAG, "goods detail activity get the goods data is null");
@@ -105,14 +120,8 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		
 		mHeaderLayout = (LinearLayout) LayoutInflater.from(mAttachActivity).inflate(R.layout.index_goods_detail_fragment_header, null);
 		initHeaderView();
-		
-		//当弹出软键盘时如果ListView最后一条Item可见那么将ListView顶上去(要配合windowSoftInputMode="adjustResize")
-		mListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
-		//请求强制拦截触摸事件,以解决滚动冲突问题
-		mListView.requestForceInterceptTouchEvent(true);
-		mListView.addHeaderView(mHeaderLayout);
-		mGoodsCommentListViewAdapter = new GoodsCommentListViewAdapter(mAttachActivity, mGoodsCommentList);
-		mListView.setAdapter(mGoodsCommentListViewAdapter);
+	
+		initListView();
 
 		//开始获取数据
 		getData();
@@ -185,23 +194,60 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 			//头像
 			ImageLoaderHelper.loadUserHeadPictureThumnail(mAttachActivity,
 					detailMessageViewHolder.index_goods_detail_head_picture, mData.getHead_url(), null);
+
+			//关注
+			initForFocus();
 			
 			//联系商家
-			detailMessageViewHolder.index_goods_detail_contact.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					//检查是否登录
-					//跳转到聊天页面
-					User user = new User();
-					user.setUsername(mData.getUsername());
-					user.setHead_url(mData.getHead_url());
-					Intent intent = new Intent(mAttachActivity, ChatActivity.class);
-					intent.putExtra("otherUser", user);
-					startActivity(intent);
-				}
-			});
+			initForContact();
 		}
+	}
+	
+	private void initListView() {
+		//当弹出软键盘时如果ListView最后一条Item可见那么将ListView顶上去(要配合windowSoftInputMode="adjustResize")
+		mListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
+		//请求强制拦截触摸事件,以解决滚动冲突问题
+		mListView.requestForceInterceptTouchEvent(true);
+		mListView.addHeaderView(mHeaderLayout);
+		mGoodsCommentListViewAdapter = new GoodsCommentListViewAdapter(mAttachActivity, mGoodsCommentList);
+		mListView.setAdapter(mGoodsCommentListViewAdapter);
+		
+		mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				if(position == 1) {
+					return;
+				}
+				final GoodsComment goodsComment = mGoodsCommentList.get(position - 2);
+				AlertDialog.Builder builder = new AlertDialog.Builder(mAttachActivity);
+				String[] items = new String[]{"回复"};
+				builder.setItems(items, new AlertDialog.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						
+						if(!UserInfoManager.getInstance().isLogining()) {
+							Toast.makeText(mAttachActivity, "请先登录", Toast.LENGTH_SHORT).show();
+							return;
+						}
+						User user = UserInfoManager.getInstance().getmCurrent();
+						if(user.getUsername().equals(goodsComment.getUsername())) {
+							return;
+						}
+						switch(which) {
+						//回复
+						case 0:
+							if(mOnGoodsCommentReplyListener != null) {
+								mOnGoodsCommentReplyListener.onReply(goodsComment);
+							}
+							break;
+						}
+					}
+				});
+				builder.show();
+			}
+		});
 	}
 	
 	private void setOnClickForImageView(ImageView iv) {
@@ -265,6 +311,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		BmobQuery<GoodsComment> query = new BmobQuery<GoodsComment>();
 		query.setSkip(mGoodsCommentList.size());
 		query.setLimit(perPageCount);
+		query.addWhereEqualTo("good_objectId", mData.getObjectId());
 		query.findObjects(mAttachActivity, new FindListener<GoodsComment>() {
 			
 			@Override
@@ -285,10 +332,9 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 			
 		} else if(goodsCommentList.size() <= 0) {
 			
-		} else if(goodsCommentList.size() < perPageCount) {
-			
 		} else {
-			
+			mGoodsCommentList.addAll(goodsCommentList);
+			mGoodsCommentListViewAdapter.notifyDataSetChanged();
 		}
 	}
 	
@@ -351,10 +397,158 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		}
 	}
 	
+	//初始化关注
+	private void initForFocus() {
+		if(UserInfoManager.getInstance().isLogining()) {
+			final User user = UserInfoManager.getInstance().getmCurrent();
+			if(user.getUsername().equals(mData.getUsername())) {
+				detailMessageViewHolder.index_goods_detail_focus.setVisibility(View.GONE);
+			} else {
+				BmobQuery<GoodsFocus> query = new BmobQuery<GoodsFocus>();
+				query.addWhereEqualTo("username", user.getUsername());
+				query.addWhereEqualTo("goods_objectId", mData.getObjectId());
+				query.findObjects(mAttachActivity, new FindListener<GoodsFocus>() {
+					
+					@Override
+					public void onSuccess(List<GoodsFocus> goodsFocusList) {
+						if(goodsFocusList != null && goodsFocusList.size() == 0) {
+							detailMessageViewHolder.index_goods_detail_focus.setText("关注");
+							GoodsFocus item = new GoodsFocus();
+							item.setGoods_objectId(mData.getObjectId());
+							item.setUsername(user.getUsername());
+							setClickForFocus(item, false);
+						} else if(goodsFocusList != null && goodsFocusList.size() == 1) {
+							detailMessageViewHolder.index_goods_detail_focus.setText("已关注");
+							setClickForFocus(goodsFocusList.get(0), true);
+						}
+					}
+					
+					@Override
+					public void onError(int arg0, String arg1) {						
+					}
+				});
+			}
+		} else {
+			
+		}
+	}
 	
+	//item可能为null
+	private void setClickForFocus(final GoodsFocus item, final boolean isFocus) {
+		detailMessageViewHolder.index_goods_detail_focus.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(isFocus) {
+					if(item != null) {
+						item.delete(mAttachActivity, new DeleteListener() {
+							
+							@Override
+							public void onSuccess() {
+								detailMessageViewHolder.index_goods_detail_focus.setText("关注");
+							}
+							
+							@Override
+							public void onFailure(int arg0, String arg1) {
+								
+							}
+						});
+					}
+				} else {
+					if(item != null) {
+						item.save(mAttachActivity, new SaveListener() {
+							
+							@Override
+							public void onSuccess() {
+								detailMessageViewHolder.index_goods_detail_focus.setText("已关注");
+							}
+							
+							@Override
+							public void onFailure(int arg0, String arg1) {
+								
+							}
+						});
+					}
+				}
+			}
+		});
+	}
 	
+	private void initForContact() {
+		if(UserInfoManager.getInstance().isLogining()) {
+			User user = UserInfoManager.getInstance().getmCurrent();
+			if(user.getUsername().equals(mData.getUsername())) {
+				detailMessageViewHolder.index_goods_detail_contact.setVisibility(View.GONE);
+			} else {
+				detailMessageViewHolder.index_goods_detail_contact.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						//跳转到聊天页面
+						User user = new User();
+						user.setUsername(mData.getUsername());
+						user.setHead_url(mData.getHead_url());
+						Intent intent = new Intent(mAttachActivity, ChatActivity.class);
+						intent.putExtra("otherUser", user);
+						mAttachActivity.startActivity(intent);
+					}
+				});
+			}
+		} else {
+			
+		}
+	}
 	
+	/**
+	 * 发表评论
+	 * 
+	 * @param comment
+	 * @param replyUsername
+	 * @param replyId
+	 */
+	public void publishComment(String comment, String replyUsername, String replyObjectId, final OnPublishCommentListener listener) {
+		final GoodsComment goodsComment = new GoodsComment();
+		User user = UserInfoManager.getInstance().getmCurrent();
+		goodsComment.setUsername(user.getUsername());
+		goodsComment.setComment_username(replyUsername);
+		goodsComment.setContent(comment);
+		goodsComment.setGood_objectId(mData.getObjectId());
+		goodsComment.setParent_objectId(replyObjectId);
+		goodsComment.setTime(System.currentTimeMillis());
+		goodsComment.save(mAttachActivity, new SaveListener() {
+			
+			@Override
+			public void onSuccess() {
+				notifyPublishNewComment(goodsComment);
+				if(listener != null) {
+					listener.onSuccess();
+				}
+				//将评论列表滚到最底部
+				mListView.setSelection(mListView.getCount() - 1);
+			}
+			
+			@Override
+			public void onFailure(int arg0, String arg1) {
+				Toast.makeText(mAttachActivity, "发表评论失败", Toast.LENGTH_SHORT).show();
+				if(listener != null) {
+					listener.onFail();
+				}
+			}
+		});
+	}
 	
+	/**
+	 * 通知发表新的评论,该方法会导致UI更新
+	 * 
+	 * @param goodsComment
+	 */
+	public void notifyPublishNewComment(GoodsComment goodsComment) {
+		if(goodsComment != null) {
+			mGoodsCommentList.add(goodsComment);
+			mGoodsCommentListViewAdapter.notifyDataSetChanged();
+			
+		}
+	}
 	
 	private static class DetailMessageViewHolder {
 		

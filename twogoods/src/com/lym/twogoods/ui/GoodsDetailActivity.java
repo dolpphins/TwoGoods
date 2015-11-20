@@ -1,21 +1,22 @@
 package com.lym.twogoods.ui;
 
-import java.util.ArrayList;
-
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
 import com.lym.twogoods.bean.Goods;
+import com.lym.twogoods.bean.GoodsComment;
 import com.lym.twogoods.config.ShareConfiguration;
 import com.lym.twogoods.fragment.GoodsDetailFragment;
 import com.lym.twogoods.index.adapter.GoodsShareListViewAdapter;
+import com.lym.twogoods.index.interf.OnGoodsCommentReplyListener;
+import com.lym.twogoods.index.interf.OnPublishCommentListener;
 import com.lym.twogoods.screen.DisplayUtils;
 import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
-import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -28,7 +29,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 
 /**
  * <p>
@@ -37,7 +37,7 @@ import android.widget.TextView;
  * 
  * @author 麦灿标
  * */
-public class GoodsDetailActivity extends BottomDockBackFragmentActivity{
+public class GoodsDetailActivity extends BottomDockBackFragmentActivity {
 
 	private final static String TAG = "GoodsDetailActivity";
 	
@@ -60,6 +60,10 @@ public class GoodsDetailActivity extends BottomDockBackFragmentActivity{
 	private GoodsDetailFragment mFragment;
 	private Goods mData;
 	
+	//回复
+	/** 正在回复的评论信息 */
+	private GoodsComment mReplyGoodsComment;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,7 +81,7 @@ public class GoodsDetailActivity extends BottomDockBackFragmentActivity{
 		}
 		//mData不能为空
 		//主Fragment
-		mFragment = new GoodsDetailFragment(mData);
+		mFragment = new GoodsDetailFragment(mData, new GoodsCommentReplyListener());
 		showFragment(mFragment);
 	}	
 	
@@ -119,9 +123,7 @@ public class GoodsDetailActivity extends BottomDockBackFragmentActivity{
 				public void onClick(View v) {
 					toggleEmotionLayout();
 					if(mEmotionLayoutIsShowing) {
-						//隐藏软键盘
-						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-						imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+						hideSoftInput();
 					}
 				}
 			});
@@ -143,10 +145,40 @@ public class GoodsDetailActivity extends BottomDockBackFragmentActivity{
 				
 				@Override
 				public void onClick(View v) {
-					
+					String comment = app_goods_detail_write_comment_input.getText().toString();
+					if(!UserInfoManager.getInstance().isLogining()) {
+						
+					} else if(TextUtils.isEmpty(comment)) {
+						
+					} else {
+						String replyUsername = null;
+						String replyObjectId = null;
+						//发表评论
+						if(mReplyGoodsComment != null) {
+							if(comment.startsWith("回复 " + mReplyGoodsComment.getUsername() + ":")) {
+								replyUsername = mReplyGoodsComment.getUsername();
+								replyObjectId = mReplyGoodsComment.getParent_objectId();
+							}
+						}
+						mFragment.publishComment(comment, replyUsername, replyObjectId, new GoodsCommentPublishListener());
+						mReplyGoodsComment = null;
+					}
 				}
 			});
 		}
+	}
+	
+	//隐藏软键盘
+	private void hideSoftInput() {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		View v = findViewById(android.R.id.content);
+		imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+	}
+	
+	//显示软键盘
+	private void showSoftInput() {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
 	}
 	
 	private void toggleEmotionLayout() {
@@ -222,6 +254,35 @@ public class GoodsDetailActivity extends BottomDockBackFragmentActivity{
 		if(mSharePopupWindow != null) {
 			mSharePopupWindow.dismiss();
 			mShareLayoutIsShowing = false;
+		}
+	}
+	
+	private class GoodsCommentPublishListener implements OnPublishCommentListener {
+
+		@Override
+		public void onSuccess() {
+			app_goods_detail_write_comment_input.setText("");
+			//隐藏软键盘
+			hideSoftInput();
+			//隐藏表情
+			hideEmotionLayout();
+		}
+
+		@Override
+		public void onFail() {
+			
+		}
+	}
+	
+	private class GoodsCommentReplyListener implements OnGoodsCommentReplyListener {
+
+		@Override
+		public void onReply(GoodsComment goodsComment) {
+			mReplyGoodsComment = goodsComment;
+			app_goods_detail_write_comment_input.setText("回复 " + goodsComment.getUsername() + ":");
+			app_goods_detail_write_comment_input.requestFocus();
+			app_goods_detail_write_comment_input.setSelection(app_goods_detail_write_comment_input.getText().length());
+			showSoftInput();
 		}
 	}
 }

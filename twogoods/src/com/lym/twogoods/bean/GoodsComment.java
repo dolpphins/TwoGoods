@@ -17,13 +17,13 @@ public class GoodsComment extends BmobObject{
 	@DatabaseField(generatedId = true)
 	private int id;
 	
-	/** 评论父id,如果为-1说明为评论,为某一评论id说明是那条评论的回复,默认为-1 */
+	/** 评论父objectId,不为null表示是回复信息 */
 	@DatabaseField
-	private int parent_id = -1;
+	private String parent_objectId;
 	
-	/** 评论的商品id */
+	/** 评论的商品ObjectId */
 	@DatabaseField
-	private int good_id;
+	private String good_objectId;
 	
 	/** id对应的用户名,即贰货号 */
 	@DatabaseField
@@ -40,6 +40,10 @@ public class GoodsComment extends BmobObject{
 	/** 内容,注意可包含表情 */
 	@DatabaseField
 	private String content;
+	
+	/** 头像网络url */
+	@DatabaseField
+	private String head_url;
 
 	public int getId() {
 		return id;
@@ -49,20 +53,20 @@ public class GoodsComment extends BmobObject{
 		this.id = id;
 	}
 
-	public int getParent_id() {
-		return parent_id;
+	public String getParent_objectId() {
+		return parent_objectId;
 	}
 
-	public void setParent_id(int parent_id) {
-		this.parent_id = parent_id;
+	public void setParent_objectId(String parent_objectId) {
+		this.parent_objectId = parent_objectId;
 	}
 
-	public int getGood_id() {
-		return good_id;
+	public String getGood_objectId() {
+		return good_objectId;
 	}
 
-	public void setGood_id(int good_id) {
-		this.good_id = good_id;
+	public void setGood_objectId(String good_objectId) {
+		this.good_objectId = good_objectId;
 	}
 
 	public String getUsername() {
@@ -96,5 +100,15 @@ public class GoodsComment extends BmobObject{
 	public void setContent(String content) {
 		this.content = content;
 	}
+
+	public String getHead_url() {
+		return head_url;
+	}
+
+	public void setHead_url(String head_url) {
+		this.head_url = head_url;
+	}
+	
+	
 
 }
