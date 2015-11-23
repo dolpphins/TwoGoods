@@ -4,6 +4,9 @@ import cn.bmob.v3.Bmob;
 
 import com.lym.twogoods.AccessTokenKeeper;
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
+import com.lym.twogoods.bean.User;
+import com.lym.twogoods.config.UserConfiguration;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -48,6 +51,7 @@ public class LaunchActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				
 				Intent intent = new Intent(LaunchActivity.this,
 						MainActivity.class);
 				startActivity(intent);

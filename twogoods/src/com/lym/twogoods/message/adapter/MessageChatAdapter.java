@@ -90,9 +90,9 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 			// TODO 自动生成的方法存根
 			return UserInfoManager.getInstance().getmCurrent().getUsername();
 		}
+		
 
-
-
+		
 		@Override
 		public int getItemViewType(int position) {
 			ChatDetailBean msg = list.get(position);
@@ -237,7 +237,7 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 						dealWithImage(position, progress_load, iv_fail_resend, iv_picture, item);
 					}else
 					{
-						iv_picture.setImageResource(R.drawable.user_default_head);
+						iv_picture.setImageResource(R.drawable.goods_empty_picture);
 					}
 					iv_picture.setOnClickListener(new OnClickListener() {
 						
@@ -262,32 +262,24 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 				try {
 					if (text != null && !text.equals("")) {
 						tv_voice_length.setVisibility(View.VISIBLE);
+						tv_voice_length.setText("3''");
 						String content = item.getMessage();
 						
 						//发送的消息
 						if (item.getUsername().equals(currentUserName)) {
 							if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_SUCCEED){//当发送成功或者发送已阅读的时候，则显示语音长度
 								tv_voice_length.setVisibility(View.VISIBLE);
-								String length = content.split("&")[2];
-								tv_voice_length.setText(length+"\''");
+								System.out.println("voice 发送语音消息成功");
 							}else{
 								tv_voice_length.setVisibility(View.INVISIBLE);
+								System.out.println("voice 发送语音消息失败");
 							}
 						} else {
-							//收到的消息
-							Boolean isExists = false;
-							if(!isExists){//若指定格式的录音文件不存在，则需要下载，因为其文件比较小，故放在此下载
-								String netUrl = content.split("&")[0];
-								final String length = content.split("&")[1];
-								
-							}else{
-								String length = content.split("&")[2];
-								tv_voice_length.setText(length+"\''");
-							}
+							
 						}
 					}
 					//播放语音文件
-					iv_voice.setOnClickListener(new RecordPlayClickListener(mContext,item,iv_voice));
+					new RecordPlayClickListener(mContext,item,iv_voice);
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println("处理音频文件出现异常");
@@ -302,32 +294,11 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 		
 	}
 		
-	/**
-	 * 用于在getView中获得相应的控件
-	 * @author yao
-	 *
-	 */
-	public static class ViewHolder {
-		public static <T extends View> T get(View view, int id) {
-			SparseArray<View> viewHolder = (SparseArray<View>) view.getTag();
-			if (viewHolder == null) {
-				viewHolder = new SparseArray<View>();
-				view.setTag(viewHolder);
-			}
-			View childView = viewHolder.get(id);
-			if (childView == null) {
-				childView = view.findViewById(id);
-				viewHolder.put(id, childView);
-			}
-			return (T) childView;
-		}
-	}
-		
 		
 		 /**
 		  *  获取图片的地址--
 		  * @Description: TODO
-		  * @param @param item一条消息
+		  * @param item一条消息
 		  * @return String
 		  * @author yao
 		  */
@@ -375,12 +346,7 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 					iv_fail_resend.setVisibility(View.INVISIBLE);
 				}
 				//发送的图片，直接用本地地址展示，
-				String showUrl = "";
-				if(content.contains("&")){
-					showUrl = content.split("&")[0];
-				}else{
-					showUrl = content;
-				}
+				String showUrl = item.getMessage();
 				//为了方便每次都是取本地图片显示
 				ImageLoader.getInstance().displayImage(showUrl, iv_picture);
 			}else{
@@ -432,5 +398,27 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 				}
 			}
 		}
+		
+		/**
+		 * 用于在getView中获得相应的控件
+		 * @author yao
+		 *
+		 */
+		public static class ViewHolder {
+			public static <T extends View> T get(View view, int id) {
+				SparseArray<View> viewHolder = (SparseArray<View>) view.getTag();
+				if (viewHolder == null) {
+					viewHolder = new SparseArray<View>();
+					view.setTag(viewHolder);
+				}
+				View childView = viewHolder.get(id);
+				if (childView == null) {
+					childView = view.findViewById(id);
+					viewHolder.put(id, childView);
+				}
+				return (T) childView;
+			}
+		}
+			
 
 }

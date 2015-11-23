@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	商品详情页面头部信息区域与评论标题之间的背景
+	
+	@author 麦灿标
+ -->
+ 
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+    <stroke
+        android:width="1dp"
+        android:color="#cccccc"/>
+    <padding 
+        android:top="2dip"
+        android:bottom="2dip"/>
+        
+</shape>

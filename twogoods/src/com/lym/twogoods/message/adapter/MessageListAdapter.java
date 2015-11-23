@@ -4,6 +4,7 @@ package com.lym.twogoods.message.adapter;
 import java.util.List;
 
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.ChatSnapshot;
 import com.lym.twogoods.config.ChatConfiguration;
 import com.lym.twogoods.message.ImageLoadOptions;
@@ -49,14 +50,14 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 
 	@Override
 	public int getCount() {
-		// TODO 自动生成的方法存根
 		return mData.size();
 	}
 
 	@Override
 	public ChatSnapshot getItem(int position) {
 		// TODO 自动生成的方法存根
-		return mData.get(position);
+		System.out.println("position="+position);
+		return mData.get(position-1);
 	}
 
 	@Override
@@ -124,8 +125,12 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 			iv_recent_avatar.setImageResource(R.drawable.user_default_head);
 		}
 		//iv_recent_avatar.setImageResource(R.drawable.user_default_head);
+		
+		String name = item.getOther_username();
+		if(name==UserInfoManager.getInstance().getmCurrent().getUsername())
+			name = item.getUsername();
 		tv_recent_name.setText(item.getOther_username());
-		tv_recent_time.setText(TimeUtil.getChatTime(item.getLast_time()));
+		tv_recent_time.setText(TimeUtil.getDescriptionTimeFromTimestamp(item.getLast_time()));
 		if(item.getLast_message_type()==ChatConfiguration.TYPE_MESSAGE_TEXT){
 			//SpannableString spannableString = FaceTextUtils.toSpannableString(mContext, item.getMessage());
 			tv_recent_msg.setText(item.getLast_message());

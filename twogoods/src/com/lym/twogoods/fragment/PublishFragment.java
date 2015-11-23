@@ -102,7 +102,7 @@ public class PublishFragment extends BaseFragment {
 	// 发布货品图片适配器
 	private PublishGridViewAdapter publishGridViewAdapter;
 
-	//上传图片加载器
+	// 上传图片加载器
 	private ProgressDialog progressDialog;
 
 	@Override
@@ -175,7 +175,7 @@ public class PublishFragment extends BaseFragment {
 
 		// 货品信息相关
 		goodsBean = new Goods();
-		progressDialog=new ProgressDialog(getActivity());
+		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setTitle("正在发布货品信息");
 		progressDialog.setMessage("稍等一下......");
 		progressDialog.setCancelable(true);
@@ -209,33 +209,11 @@ public class PublishFragment extends BaseFragment {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-						/*LayoutInflater inflater = LayoutInflater
-								.from(getActivity());
-						View inflateView = inflater.inflate(
-								R.layout.publish_picture_gridview_item_dialog,
-								null);
-						final AlertDialog alertDialog = new AlertDialog.Builder(
-								getActivity()).create();
-						ImageView imageView = (ImageView) inflateView
-								.findViewById(R.id.iv_publish_gridview_item_dialog);
-						try {
-							imageView.setImageBitmap(PublishBimp
-									.revitionImageSize(PublishConfigManger.publishPictureUrl
-											.get(position)));
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						alertDialog.setView(inflateView);
-						alertDialog.show();
-						imageView.setOnClickListener(new OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-								alertDialog.cancel();
-							}
-						});*/
-						Intent intent=new Intent(getActivity(),DisplayPicturesActivity.class);
-						intent.putStringArrayListExtra("picturesUrlList", (ArrayList<String>) PublishConfigManger.publishPictureUrl);
+						Intent intent = new Intent(getActivity(),
+								DisplayPicturesActivity.class);
+						intent.putStringArrayListExtra(
+								"picturesUrlList",
+								(ArrayList<String>) PublishConfigManger.publishPictureUrl);
 						intent.putExtra("currentIndex", position);
 						startActivity(intent);
 					}
@@ -257,9 +235,9 @@ public class PublishFragment extends BaseFragment {
 						publishGoodsActivity.hideEmotionLayout();
 					}
 				});
-		
+
 		progressDialog.setOnCancelListener(new OnCancelListener() {
-			
+
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				PublishConfigManger.pictureCloudUrl.clear();
@@ -356,9 +334,12 @@ public class PublishFragment extends BaseFragment {
 				.getText().toString());
 		goodsBean.setLocation_latitude(String.valueOf(latitude));
 		goodsBean.setLocation_longitude(String.valueOf(longitude));
-		// goodsBean.setHead_url(UserInfoManager.getInstance().getmCurrent().getHead_url());
+		goodsBean.setHead_url(UserInfoManager.getInstance().getmCurrent()
+				.getHead_url());
 		goodsBean
 				.setPictureUrlList((ArrayList<String>) PublishConfigManger.pictureCloudUrl);
+		goodsBean.setUsername(UserInfoManager.getInstance().getmCurrent()
+				.getUsername());
 	}
 
 	/*
@@ -455,16 +436,18 @@ public class PublishFragment extends BaseFragment {
 						@Override
 						public void onProgress(int arg0, int arg1, int arg2,
 								int arg3) {
-							Log.i("PublishFrament","onProgress :"+arg0+"---"+arg1+"---"+arg2+"----"+arg3);
+							Log.i("PublishFrament", "onProgress :" + arg0
+									+ "---" + arg1 + "---" + arg2 + "----"
+									+ arg3);
 						}
 
 						@Override
 						public void onSuccess(boolean arg0, String[] arg1,
 								String[] arg2, BmobFile[] arg3) {
 							if (arg0) {
-								for (int i = 0; i < arg2.length; i++) {
+								for (int i = 0; i < arg3.length; i++) {
 									PublishConfigManger.pictureCloudUrl
-											.add(arg2[i]);
+											.add(arg3[i].getUrl());
 								}
 								publishGoods();
 							}
@@ -526,20 +509,26 @@ public class PublishFragment extends BaseFragment {
 		if (PublishConfigManger.publishPictureUrl.size() != 0) {
 			publishGridViewAdapter = new PublishGridViewAdapter(getActivity(),
 					PublishConfigManger.publishPictureUrl);
-			int row = PublishConfigManger.publishPictureUrl.size() / PublishConfigManger.PUBLISH_PICTURE_GRIDVIEW_COLUMN;
-			if (PublishConfigManger.publishPictureUrl.size() % PublishConfigManger.PUBLISH_PICTURE_GRIDVIEW_COLUMN != 0) {
+			int row = PublishConfigManger.publishPictureUrl.size()
+					/ PublishConfigManger.PUBLISH_PICTURE_GRIDVIEW_COLUMN;
+			if (PublishConfigManger.publishPictureUrl.size()
+					% PublishConfigManger.PUBLISH_PICTURE_GRIDVIEW_COLUMN != 0) {
 				row++;
 			}
 			PictureThumbnailSpecification specification = new PictureThumbnailSpecification();
 			specification = PublishGoodsScreen
 					.getPublishPictureThumbnailSpecification(getActivity());
-			int height = specification.getHeight() * row + (row - 1) * specification.getHeight()/PublishConfigManger.PICTURE_RATE;
+			int height = specification.getHeight() * row + (row - 1)
+					* specification.getHeight()
+					/ PublishConfigManger.PICTURE_RATE;
 			LayoutParams params = gv_publish_fragment_photo.getLayoutParams();
 			params.height = height;
-			gv_publish_fragment_photo.setVerticalSpacing(specification.getHeight()/PublishConfigManger.PICTURE_RATE);
-			gv_publish_fragment_photo.setHorizontalSpacing(specification.getHeight()/PublishConfigManger.PICTURE_RATE);
+			gv_publish_fragment_photo.setVerticalSpacing(specification
+					.getHeight() / PublishConfigManger.PICTURE_RATE);
+			gv_publish_fragment_photo.setHorizontalSpacing(specification
+					.getHeight() / PublishConfigManger.PICTURE_RATE);
 			gv_publish_fragment_photo.setAdapter(publishGridViewAdapter);
 		}
 	}
-	
+
 }

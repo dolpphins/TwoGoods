@@ -19,6 +19,7 @@ import com.lym.twogoods.utils.TimeUtil;
 import com.lym.twogoods.widget.EmojiTextView;
 import com.lym.twogoods.widget.WrapContentViewPager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -66,6 +67,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 	//包含详细信息所有控件
 	private DetailMessageViewHolder detailMessageViewHolder = new DetailMessageViewHolder();
 	
+	
 	/**
 	 * 构造函数
 	 * 
@@ -89,7 +91,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
-		//紧张上拉和下拉
+		//禁止上拉和下拉
 		setMode(Mode.NONE);
 		
 		mHeaderLayout = (LinearLayout) LayoutInflater.from(mAttachActivity).inflate(R.layout.index_goods_detail_fragment_header, null);
@@ -187,6 +189,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 					Intent intent = new Intent(mAttachActivity, ChatActivity.class);
 					intent.putExtra("otherUser", user);
 					startActivity(intent);
+					getActivity().finish();
 				}
 			});
 		}

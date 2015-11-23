@@ -86,7 +86,7 @@ public class LoginActivity extends BackActivity {
 	 **/
 	private void clickEvent() {
 		// 获取验证码按钮点击事件
-		btn_login_code_get.setOnClickListener(new OnClickListener() {
+		/*btn_login_code_get.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -140,7 +140,7 @@ public class LoginActivity extends BackActivity {
 				}
 
 			}
-		});
+		});*/
 
 		// 登录按钮点击事件
 		btn_login_land.setOnClickListener(new OnClickListener() {
@@ -159,7 +159,13 @@ public class LoginActivity extends BackActivity {
 									.getText().toString())) {
 						if (StringUtil.isPassword(et_login_password.getText()
 								.toString())) {
-							if (StringUtil.isSecurityCode(et_login_code
+							judgePassword();
+							Intent intent = new Intent(
+									LoginActivity.this,
+									MainActivity.class);
+							startActivity(intent);
+							finish();
+							/*if (StringUtil.isSecurityCode(et_login_code
 									.getText().toString())) {
 								judgePassword();
 								codeMatch();
@@ -174,7 +180,7 @@ public class LoginActivity extends BackActivity {
 								Toast.makeText(getApplicationContext(),
 										"验证码格式有误", Toast.LENGTH_SHORT).show();
 							}
-
+*/
 						} else {
 
 							Toast.makeText(getApplicationContext(), "密码格式有误",
@@ -255,7 +261,7 @@ public class LoginActivity extends BackActivity {
 					if (EncryptHelper.getMD5(
 							et_login_password.getText().toString()).equals(
 							user.getPassword())) {
-						writeSharePreference();
+						writeSharePreference(user);
 						find_succeed = true;
 					} else {
 						Toast.makeText(getApplicationContext(), "密码错误",
@@ -283,7 +289,7 @@ public class LoginActivity extends BackActivity {
 												et_login_password.getText()
 														.toString()).equals(
 												user.getPassword())) {
-											writeSharePreference();
+											writeSharePreference(user);
 											find_succeed = true;
 
 										} else {
@@ -322,6 +328,8 @@ public class LoginActivity extends BackActivity {
 				if (ex == null) {
 					codeVerify = true;
 				} else {
+					//Toast.makeText(getApplicationContext(), "验证码错误"+":错误信息是"+ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+					Log.v("LoginActivity", "验证码错误"+":错误信息是"+ex.getLocalizedMessage());
 					codeVerify = false;
 				}
 			}
@@ -335,7 +343,8 @@ public class LoginActivity extends BackActivity {
 	 * 
 	 * @author 龙宇文
 	 **/
-	private void writeSharePreference() {
+	private void writeSharePreference(User user) {
+		this.user=user;
 		user.setHead_url(UserConfiguration.USER_DEFAULT_HEAD);
 		UserInfoManager.getInstance().setmCurrent(user);
 	}

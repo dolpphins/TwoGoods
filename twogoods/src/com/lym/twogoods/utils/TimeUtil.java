@@ -191,6 +191,16 @@ public class TimeUtil {
 		SimpleDateFormat format = new SimpleDateFormat("yy-MM-dd HH:mm");
 		return format.format(new Date(time));
 	}
+	/**
+	 *获取日期  格式是yyyy-MM-dd 
+	 * @param time
+	 * @return
+	 */
+	public static String getDayTime(long time)
+	{
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		return format.format(new Date(time));
+	}
 	
 	/**
 	 * 获取当前时间的小时和分钟
@@ -215,7 +225,7 @@ public class TimeUtil {
 	  * @throws
 	  */
 	public static String getChatTime(long timesamp) {
-		long clearTime = timesamp*1000;
+		long clearTime = timesamp;
 		String result = "";
 		SimpleDateFormat sdf = new SimpleDateFormat("dd");
 		Date today = new Date(System.currentTimeMillis());
@@ -225,7 +235,7 @@ public class TimeUtil {
 
 		switch (temp) {
 		case 0:
-			result = "今天 " + getHourAndMin(clearTime);
+			result =  getHourAndMin(clearTime);
 			break;
 		case 1:
 			result = "昨天 " + getHourAndMin(clearTime);
@@ -235,7 +245,7 @@ public class TimeUtil {
 			break;
 
 		default:
-			result = getTime(clearTime);
+			result = getDayTime(clearTime);
 			break;
 		}
 

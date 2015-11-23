@@ -4,16 +4,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.maxwin.view.XListView;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.TextView;
 
 import cn.bmob.im.bean.BmobMsg;
@@ -56,7 +61,7 @@ public class ChatFragment extends PullListFragment{
 	/**当前用户*/
 	private User currentUser;
 	/**当前用户与聊天对象的消息记录*/
-	List<ChatDetailBean> list = null;
+	List<ChatDetailBean> mList = null;
 	
 	Handler mHandler;
 	
@@ -79,10 +84,16 @@ public class ChatFragment extends PullListFragment{
 		super.onActivityCreated(savedInstanceState);
 		init();
 	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		return super.onCreateView(inflater, container, savedInstanceState);
+	}
 
 	private void init() {
-		initData();
 		initCurrentUser();
+		initData();
 		initXlistView();
 	}
 	
@@ -93,8 +104,9 @@ public class ChatFragment extends PullListFragment{
 		//初始化本地聊天数据库
 		mOrmDatabaseHelper = new OrmDatabaseHelper(getActivity());
 		mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
-		
 		mChatDetailBean = new ChatDetailBean();
+		
+		mList = initMsgData();
 	}
 
 	/**
@@ -126,7 +138,11 @@ public class ChatFragment extends PullListFragment{
 		setMode(Mode.PULLDOWN);
 		
 		initOrRefresh();
-		
+		//当弹出软键盘时如果ListView最后一条Item可见那么将ListView顶上去(要配合windowSoftInputMode="adjustResize")
+		mListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+		mListView.setFooterDividersEnabled(false);
+		mListView.setHeaderDividersEnabled(false);
+		mListView.setDivider(null);
 		mListView.setOnTouchListener(new OnTouchListener() {
 
 			@Override
@@ -234,11 +250,11 @@ public class ChatFragment extends PullListFragment{
 	private void sendVoice2Db(Boolean isUpload,final View parentV, Object values) {
 		// TODO 自动生成的方法存根
 		//mChatDetailBean = new ChatDetailBean();
-		String username = "1234567123456";
+		String username = currentUser.getUsername();
 		//String username = currentUser.getUsername();
 		mChatDetailBean.setUsername(username);
 		mChatDetailBean.setGUID(DatabaseHelper.getUUID().toString());
-		mChatDetailBean.setOther_username("15603005669");
+		mChatDetailBean.setOther_username(otherUser.getUsername());
 		mChatDetailBean.setMessage_type(ChatConfiguration.TYPE_MESSAGE_VOICE);
 		mChatDetailBean.setPublish_time(System.currentTimeMillis());
 		//语音文件上传到服务器成功
@@ -404,11 +420,11 @@ public class ChatFragment extends PullListFragment{
 	//把数据传到数据库
 		private void sendPicture2Db(Boolean isUpload,final View parentV, Object values)
 		{
-			String username = "1234567123456";
+			String username = currentUser.getUsername();
 			//String username = currentUser.getUsername();
 			mChatDetailBean.setUsername(username);
 			mChatDetailBean.setGUID(DatabaseHelper.getUUID().toString());
-			mChatDetailBean.setOther_username("15603005669");
+			mChatDetailBean.setOther_username(otherUser.getUsername());
 			mChatDetailBean.setMessage_type(ChatConfiguration.TYPE_MESSAGE_PICTURE);
 			mChatDetailBean.setPublish_time(System.currentTimeMillis());
 			//文件上传成功
@@ -491,23 +507,24 @@ public class ChatFragment extends PullListFragment{
 				}
 				mListView.setSelection(mAdapter.getCount() - 1);
 			} else {
-				mMessageChatAdapter.notifyDataSetChanged();
+				System.out.println("12345添加记录到adapter中");
 			}
 		}else{
+			System.out.println("12345new一个adapter");
 			setAdapter();
 		}
+		mListView.setSelection(mMessageChatAdapter.getCount()-1);
+		
 	}
 	
-	
+	public void sendNewMessage(ChatDetailBean chatBean)
+	{
+		mList.add(chatBean);
+		initOrRefresh();
+	}
 
 	private void setAdapter() {
-		/*int images[] = {R.drawable.user_default_head,R.drawable.user_default_head,
-				R.drawable.user_default_head,R.drawable.user_default_head,
-				R.drawable.user_default_head};
-		TestAdapter adapter = new TestAdapter(getActivity(), images);*/
-		
-		mMessageChatAdapter = new MessageChatAdapter(getActivity(), initMsgData());
-		
+		mMessageChatAdapter = new MessageChatAdapter(getActivity(), mList);
 		super.setAdapter(mMessageChatAdapter);
 	}
 	
@@ -517,6 +534,7 @@ public class ChatFragment extends PullListFragment{
 	 */
 	public List<ChatDetailBean> initMsgData()
 	{
+		List<ChatDetailBean> list = null;
 		if(mChatDetailDao==null)
 		{
 			mOrmDatabaseHelper = new OrmDatabaseHelper(getActivity());
@@ -524,22 +542,17 @@ public class ChatFragment extends PullListFragment{
 			
 		}
 		QueryBuilder<ChatDetailBean, Integer>mQueryBuilder = mChatDetailDao.queryBuilder();
+		if(mQueryBuilder==null)
+		{
+			System.out.println("mQueryBuilder==null");
+		}
 		try {
-			
-			/*Where<ChatDetailBean, Integer>sendWhere = mQueryBuilder.where().eq("username", currentUser.getUsername())
-				.eq("other_username", otherUser.getUsername());
-			Where<ChatDetailBean, Integer>receiverWhere = mQueryBuilder.where().eq("username", 
-					otherUser.getUsername()).eq("other_username", currentUser.getUsername());
-					
-			@SuppressWarnings("unchecked")
-			Where<ChatDetailBean, Integer> where = mQueryBuilder.where().or(sendWhere,receiverWhere);*/
-			
 			Where<ChatDetailBean, Integer> where = mQueryBuilder.where().eq("username", currentUser.getUsername()).
 					or().eq("other_username", currentUser.getUsername());
 			
 			
 			list = where.query();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 			System.out.println("查询本地聊天信息数据库失败");

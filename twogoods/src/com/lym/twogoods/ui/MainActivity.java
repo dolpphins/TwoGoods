@@ -2,6 +2,7 @@ package com.lym.twogoods.ui;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
+import com.lym.twogoods.eventbus.event.ExitChatEvent;
 import com.lym.twogoods.fragment.IndexFragment;
 import com.lym.twogoods.fragment.MessageFragment;
 import com.lym.twogoods.fragment.MineFragment;
@@ -13,6 +14,8 @@ import com.lym.twogoods.receiver.NetworkTipsBroadcastReceiver;
 import com.lym.twogoods.service.ChatService;
 import com.lym.twogoods.ui.base.BottomDockFragmentActivity;
 import com.lym.twogoods.viewholder.TabViewHolder;
+
+import de.greenrobot.event.EventBus;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -57,9 +60,12 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 	private String[] tabText = new String[tabCount];
 	
 	/** 当前选择Tab索引 */
-	private int currentTabIndex;
+	private int currentTabIndex = 0;
 	/**为连接网络的广播接受者*/
 	private NetworkTipsBroadcastReceiver mNetworkTipsBroadcastReceiver = new NetworkTipsBroadcastReceiver();
+	/**要显示的Tab*/
+	private int showTabIndex = 0;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +73,8 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		
 		initTabFragment();
 	//	startService();
-		//开始时显示首页
-		resetTab(0);
-		showSelectTabFragment(0);
-		//初始化ActionBar
-		setActionBar(0);
+		EventBus.getDefault().register(this);
 	}
-	
 
 	@Override
 	public View onCreateBottomView() {
@@ -81,6 +82,19 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		setTabClickEvent();
 		return mTabView;
 	}
+	
+	@Override
+	protected void onStart() {
+		// TODO 自动生成的方法存根
+		super.onStart();
+		//开始时显示首页
+		resetTab(showTabIndex);
+		showSelectTabFragment(showTabIndex);
+		//初始化ActionBar
+		setActionBar(showTabIndex);
+	}
+
+
 	/**
 	 * 开启service,
 	 */
@@ -193,6 +207,7 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		tabTextView[selectTabIndex].setSelected(true);
 		currentTabIndex = selectTabIndex;
 		setCenterTitle(tabText[currentTabIndex]);
+		showTabIndex = currentTabIndex;
 	}
 	
 	private void showSelectTabFragment(int selectTabIndex) {
@@ -262,4 +277,19 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 			//可以设置动画
 		}
 	}
+	
+	public void onEventMainThread(ExitChatEvent event) {  
+		// showSelectTabFragment(2); 
+		showTabIndex = 2;
+		 System.out.println("onEventMainThread");
+    }  
+	
+	@Override
+	protected void onDestroy() {
+		// TODO 自动生成的方法存根
+		super.onDestroy();
+		EventBus.getDefault().unregister(this);
+	}
+	
+	
 }
