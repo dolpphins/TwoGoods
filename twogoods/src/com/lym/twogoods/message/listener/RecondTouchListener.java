@@ -98,21 +98,19 @@ public class RecondTouchListener implements View.OnTouchListener {
 		case MotionEvent.ACTION_UP://放开手指时
 			v.setPressed(false);
 			count++;
-			Message msg = new Message();
-			msg.what = MessageConfig.FINISH_RECORD;
-			Bundle data = new Bundle();
-			data.putString("filename", filename);
-			msg.setData(data);
-			mHandler.sendMessage(msg);
 			mediaRecorder.setOnErrorListener(null);
 			mediaRecorder.setOnInfoListener(null);
 			mediaRecorder.stop();
-			Toast.makeText(mContext, "结束录音", Toast.LENGTH_LONG).show();
 			try {
 				if (event.getY() < 0) {// 放弃录音
 					audioFile.delete();
 				} else {
-					
+					Message msg = new Message();
+					msg.what = MessageConfig.FINISH_RECORD;
+					Bundle data = new Bundle();
+					data.putString("filename", filename);
+					msg.setData(data);
+					mHandler.sendMessage(msg);
 				}
 			} catch (Exception e) {
 			}

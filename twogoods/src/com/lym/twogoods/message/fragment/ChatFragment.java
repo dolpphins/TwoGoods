@@ -519,6 +519,7 @@ public class ChatFragment extends PullListFragment{
 	
 	public void sendNewMessage(ChatDetailBean chatBean)
 	{
+		System.out.println("click"+chatBean.getMessage_type());
 		mList.add(chatBean);
 		initOrRefresh();
 	}

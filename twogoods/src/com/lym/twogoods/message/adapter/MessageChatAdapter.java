@@ -27,6 +27,8 @@ import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.ChatDetailBean;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.ChatConfiguration;
+import com.lym.twogoods.manager.UniversalImageLoaderConfigurationManager;
+import com.lym.twogoods.manager.UniversalImageLoaderManager;
 import com.lym.twogoods.message.ImageLoadOptions;
 import com.lym.twogoods.message.MessageConfig;
 import com.lym.twogoods.message.listener.RecordPlayClickListener;
@@ -36,6 +38,7 @@ import com.lym.twogoods.ui.PersonalityInfoActivity;
 import com.lym.twogoods.utils.TimeUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -90,9 +93,12 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 			// TODO 自动生成的方法存根
 			return UserInfoManager.getInstance().getmCurrent().getUsername();
 		}
-		
+		@Override
+		public int getCount() {
+			// TODO 自动生成的方法存根
+			return list.size();
+		}
 
-		
 		@Override
 		public int getItemViewType(int position) {
 			ChatDetailBean msg = list.get(position);
@@ -137,9 +143,16 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 			// TODO 自动生成的方法存根
 			
 			final ChatDetailBean item = list.get(position);
+			System.out.println("1click item type = "+item.getMessage_type());
 			if (convertView == null) {
 				convertView = createViewByType(item, position);
+				convertView.setTag(R.id.tv_time,item.getMessage_type());
 			}
+			if(Integer.parseInt(convertView.getTag(R.id.tv_time).toString())!=item.getMessage_type())
+			{
+				convertView = createViewByType(item, position);
+			}
+			System.out.println("2click item type = "+item.getMessage_type());
 			//文本类型
 			ImageView iv_avatar = ViewHolder.get(convertView, R.id.iv_avatar);
 			final ImageView iv_fail_resend = ViewHolder.get(convertView, R.id.iv_fail_resend);//失败重发
@@ -154,7 +167,7 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 			final ImageView iv_voice = ViewHolder.get(convertView, R.id.iv_voice);
 			//语音长度
 			final TextView tv_voice_length = ViewHolder.get(convertView, R.id.tv_voice_length);
-			
+			System.out.println("3click item type = "+item.getMessage_type());
 			//点击头像进入个人资料,拿到缓存的
 			String avatar;
 			if(item.getUsername().equals(currentUserName))
@@ -185,9 +198,7 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 					mContext.startActivity(intent);
 				}
 			});
-			
 			tv_time.setText(TimeUtil.getDescriptionTimeFromTimestamp(item.getPublish_time()));
-			
 			if(getItemViewType(position)==TYPE_SEND_TXT
 					||getItemViewType(position)==TYPE_SEND_LOCATION
 					||getItemViewType(position)==TYPE_SEND_VOICE){//只有自己发送的消息才有重发机制
@@ -196,7 +207,8 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 					progress_load.setVisibility(View.INVISIBLE);
 					iv_fail_resend.setVisibility(View.INVISIBLE);
 					if(item.getMessage_type()==ChatConfiguration.TYPE_MESSAGE_VOICE){
-						tv_voice_length.setVisibility(View.VISIBLE);
+						if(tv_voice_length!=null)
+							tv_voice_length.setVisibility(View.VISIBLE);
 				}else if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_FAILED){//服务器无响应或者查询失败等原因造成的发送失败，均需要重发
 					progress_load.setVisibility(View.INVISIBLE);
 					iv_fail_resend.setVisibility(View.VISIBLE);
@@ -216,23 +228,20 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 						tv_voice_length.setVisibility(View.GONE);
 					}
 				}
+				}
 			}
-			//根据类型显示内容
 			final String text = item.getMessage();
 			switch (item.getMessage_type()) {
 			case ChatConfiguration.TYPE_MESSAGE_TEXT:
-				/*try {
-					SpannableString spannableString = FaceTextUtils
-							.toSpannableString(mContext, text);
-					tv_message.setText(spannableString);
-				} catch (Exception e) {
-				}*/
-				tv_message.setText(text);
-				
+				if(text==null)
+					tv_message.setText(null);
+				else
+					tv_message.setText(text);
 				break;
 
 			case  ChatConfiguration.TYPE_MESSAGE_PICTURE://图片类
 				try {
+					System.out.println("click发送了图片");
 					if (text != null && !text.equals("")) {//发送成功之后存储的图片类型的content和接收到的是不一样的
 						dealWithImage(position, progress_load, iv_fail_resend, iv_picture, item);
 					}else
@@ -244,6 +253,7 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 						@Override
 						public void onClick(View arg0) {
 							// TODO Auto-generated method stub
+							System.out.println("click点击发送的图片");
 							Intent intent =new Intent(mContext,DisplayPicturesActivity.class);
 							ArrayList<String> photos = new ArrayList<String>();
 							photos.add(getImageUrl(item));
@@ -289,9 +299,8 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 			default:
 				break;
 			}
-		}
+			convertView.setTag(R.id.tv_time,item.getMessage_type());
 			return convertView;
-		
 	}
 		
 		
@@ -348,7 +357,10 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 				//发送的图片，直接用本地地址展示，
 				String showUrl = item.getMessage();
 				//为了方便每次都是取本地图片显示
-				ImageLoader.getInstance().displayImage(showUrl, iv_picture);
+				ImageLoaderConfiguration configuration = UniversalImageLoaderConfigurationManager
+						.getDefaultImageLoaderConfiguration(mContext);
+				ImageLoader imageLoader = UniversalImageLoaderManager.getImageLoader(configuration);
+				imageLoader.displayImage("file://"+showUrl, iv_picture);
 			}else{
 				//接收的图片
 				ImageLoader.getInstance().displayImage(content, iv_picture,options,new ImageLoadingListener() {

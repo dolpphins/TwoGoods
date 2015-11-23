@@ -66,8 +66,10 @@ public class RecordPlayClickListener implements View.OnClickListener {
 	@SuppressWarnings("resource")
 	public void startPlayRecord(String filePath, boolean isUseSpeaker) {
 		if (!(new File(filePath).exists())) {
+			System.out.println("voice文件不存在");
 			return;
 		}
+		System.out.println("voice开始播放语音");
 		AudioManager audioManager = (AudioManager) context
 				.getSystemService(Context.AUDIO_SERVICE);
 		mediaPlayer = new MediaPlayer();
@@ -115,6 +117,7 @@ public class RecordPlayClickListener implements View.OnClickListener {
 		} catch (Exception e) {
 			BmobLog.i("播放错误:" + e.getMessage());
 		}
+		System.out.println("voice结束播放语音");
 	}
 
 	/**
