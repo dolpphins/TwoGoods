@@ -159,6 +159,7 @@ public class ChatService extends Service {
 	        		        }
 							@Override
 							public void onSuccess(List<ChatDetailBean> object) {
+								System.out.println("service search---------");
 								
 								if(object.size()>0){//有新消息,对新消息根据发送者进行分类，然后保存到本地ChatSnapshot表
 									List<String>listOfName = new ArrayList<String>();
@@ -291,9 +292,6 @@ public class ChatService extends Service {
 											
 											mNotificationManager.notify(1, notification);
 										}
-										
-										
-										
 										
 									}
 								}
