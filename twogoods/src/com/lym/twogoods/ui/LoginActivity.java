@@ -18,6 +18,7 @@ import com.lym.twogoods.utils.EncryptHelper;
 import com.lym.twogoods.utils.NetworkHelper;
 import com.lym.twogoods.utils.StringUtil;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,13 +51,12 @@ public class LoginActivity extends BackActivity {
 
 	// 定义变量来看是否查找成功。
 	private BmobQuery<User> bmobQuery;
-	private boolean find_succeed = false;
-	private boolean codeVerify = false;
 	// 通过用户名来取得手机号码
 	private String phone = "";
 	// User对象，根据登陆的用户来获得
 	private User user;
-
+	//登陆加载器
+	private ProgressDialog progressDialog;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,6 +75,11 @@ public class LoginActivity extends BackActivity {
 		btn_login_forget = (Button) findViewById(R.id.btn_login_forget);
 
 		user = new User();
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setTitle("正在登陆");
+		progressDialog.setMessage("稍等一下......");
+		progressDialog.setProgress(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setIndeterminate(true);
 	}
 
 	/**
@@ -86,7 +91,7 @@ public class LoginActivity extends BackActivity {
 	 **/
 	private void clickEvent() {
 		// 获取验证码按钮点击事件
-		/*btn_login_code_get.setOnClickListener(new OnClickListener() {
+		btn_login_code_get.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -108,6 +113,11 @@ public class LoginActivity extends BackActivity {
 													getApplicationContext(),
 													"短信已发送，请注意查看",
 													Toast.LENGTH_SHORT).show();
+										}else {
+											Toast.makeText(
+													getApplicationContext(),
+													"短信发送失败",
+													Toast.LENGTH_SHORT).show();
 										}
 									}
 
@@ -126,6 +136,11 @@ public class LoginActivity extends BackActivity {
 													getApplicationContext(),
 													"短信已发送，请注意查看",
 													Toast.LENGTH_SHORT).show();
+										}else {
+											Toast.makeText(
+													getApplicationContext(),
+													"短信发送失败",
+													Toast.LENGTH_SHORT).show();
 										}
 									}
 
@@ -140,7 +155,7 @@ public class LoginActivity extends BackActivity {
 				}
 
 			}
-		});*/
+		});
 
 		// 登录按钮点击事件
 		btn_login_land.setOnClickListener(new OnClickListener() {
@@ -159,15 +174,9 @@ public class LoginActivity extends BackActivity {
 									.getText().toString())) {
 						if (StringUtil.isPassword(et_login_password.getText()
 								.toString())) {
-							judgePassword();
-							Intent intent = new Intent(
-									LoginActivity.this,
-									MainActivity.class);
-							startActivity(intent);
-							finish();
-							/*if (StringUtil.isSecurityCode(et_login_code
+							if (StringUtil.isSecurityCode(et_login_code
 									.getText().toString())) {
-								judgePassword();
+								/*judgePassword();
 								codeMatch();
 								if (find_succeed && codeVerify) {
 									Intent intent = new Intent(
@@ -175,12 +184,12 @@ public class LoginActivity extends BackActivity {
 											MainActivity.class);
 									startActivity(intent);
 									finish();
-								}
+								}*/
+								codeMatch();
 							} else {
 								Toast.makeText(getApplicationContext(),
 										"验证码格式有误", Toast.LENGTH_SHORT).show();
 							}
-*/
 						} else {
 
 							Toast.makeText(getApplicationContext(), "密码格式有误",
@@ -192,8 +201,6 @@ public class LoginActivity extends BackActivity {
 					}
 
 				}
-
-				//
 				else {
 					Toast.makeText(getApplicationContext(), "当前网络不佳",
 							Toast.LENGTH_SHORT).show();
@@ -261,8 +268,14 @@ public class LoginActivity extends BackActivity {
 					if (EncryptHelper.getMD5(
 							et_login_password.getText().toString()).equals(
 							user.getPassword())) {
+						progressDialog.show();
 						writeSharePreference(user);
-						find_succeed = true;
+						progressDialog.dismiss();
+						Intent intent = new Intent(
+								LoginActivity.this,
+								MainActivity.class);
+						startActivity(intent);
+						finish();
 					} else {
 						Toast.makeText(getApplicationContext(), "密码错误",
 								Toast.LENGTH_SHORT).show();
@@ -289,8 +302,14 @@ public class LoginActivity extends BackActivity {
 												et_login_password.getText()
 														.toString()).equals(
 												user.getPassword())) {
+											progressDialog.show();
 											writeSharePreference(user);
-											find_succeed = true;
+											progressDialog.dismiss();
+											Intent intent = new Intent(
+													LoginActivity.this,
+													MainActivity.class);
+											startActivity(intent);
+											finish();
 
 										} else {
 											Toast.makeText(
@@ -326,11 +345,9 @@ public class LoginActivity extends BackActivity {
 			@Override
 			public void done(BmobException ex) {
 				if (ex == null) {
-					codeVerify = true;
+						judgePassword();
 				} else {
-					//Toast.makeText(getApplicationContext(), "验证码错误"+":错误信息是"+ex.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-					Log.v("LoginActivity", "验证码错误"+":错误信息是"+ex.getLocalizedMessage());
-					codeVerify = false;
+					Toast.makeText(getApplicationContext(), "验证码错误", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
