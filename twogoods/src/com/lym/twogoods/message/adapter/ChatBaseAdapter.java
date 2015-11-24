@@ -13,9 +13,13 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
-import cn.bmob.im.util.BmobLog;
 
-
+/**
+ * 聊天适配器的基类
+ * @author yao
+ *
+ * @param <E>
+ */
 public abstract class ChatBaseAdapter<E> extends BaseAdapter {
 
 	public List<E> list;
@@ -57,11 +61,15 @@ public abstract class ChatBaseAdapter<E> extends BaseAdapter {
 
 	@Override
 	public int getCount() {
+		if(list==null)
+			return 0;
 		return list.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
+		if(list==null)
+			return null;
 		return list.get(position);
 	}
 

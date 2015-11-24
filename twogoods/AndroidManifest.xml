@@ -89,7 +89,8 @@
             android:windowSoftInputMode="adjustResize">
         </activity>
         <!-- 聊天Activity -->
-        <activity android:name="com.lym.twogoods.message.ui.ChatActivity" >
+        <activity android:name="com.lym.twogoods.message.ui.ChatActivity"
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <!-- 我发布的商品Activity -->
         <activity android:name="com.lym.twogoods.mine.ui.MinePublishActivity" >

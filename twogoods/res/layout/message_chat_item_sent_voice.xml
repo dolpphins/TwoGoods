@@ -28,21 +28,7 @@
             android:contentDescription="@string/chat_add_avator"
             android:scaleType="fitXY" />
 
-        <LinearLayout
-            android:id="@+id/layout_voice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/message_margin_chat_top"
-            android:layout_marginTop="10dp"
-            android:layout_toLeftOf="@id/iv_avatar"
-            android:background="@drawable/message_chat_item_send_msg"
-            android:minWidth="80dp"
-            android:minHeight="45dp"
-            android:gravity="right"
-            android:paddingBottom="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="15dp"
-            android:paddingTop="5dp" >
+        
 
             <ImageView
                 android:id="@+id/iv_voice"
@@ -50,17 +36,28 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/chat_add_avator"
                 android:scaleType="fitCenter"
+                android:layout_marginRight="@dimen/message_margin_chat_top"
+	            android:layout_marginTop="10dp"
+	            android:layout_toLeftOf="@id/iv_avatar"
+	            android:background="@drawable/message_chat_item_send_msg"
+	            android:minWidth="80dp"
+	            android:minHeight="45dp"
+	            android:gravity="right"
+	            android:paddingBottom="5dp"
+	            android:paddingLeft="5dp"
+	            android:paddingRight="15dp"
+	            android:paddingTop="5dp"
                 android:src="@drawable/message_chat_voice_left3" />
-        </LinearLayout>
 
         <TextView
+            android:visibility="invisible"
             android:id="@+id/tv_voice_length"
             style="@style/chat_text_name_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/layout_voice"
+            android:layout_toLeftOf="@id/iv_voice"
             android:gravity="center" />
 
         <ImageView
@@ -69,7 +66,7 @@
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/layout_voice"
+            android:layout_toLeftOf="@id/iv_voice"
             android:clickable="true"
             android:contentDescription="@string/action_settings"
             android:scaleType="fitCenter"
@@ -83,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/layout_voice"
+            android:layout_toLeftOf="@id/iv_voice"
             android:textSize="12sp"
             android:visibility="invisible" />
 
@@ -93,7 +90,7 @@
             android:layout_height="25dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/layout_voice"
+            android:layout_toLeftOf="@id/iv_voice"
             android:visibility="invisible" />
     </RelativeLayout>
 

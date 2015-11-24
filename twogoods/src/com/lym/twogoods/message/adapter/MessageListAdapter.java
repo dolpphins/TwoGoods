@@ -4,18 +4,16 @@ package com.lym.twogoods.message.adapter;
 import java.util.List;
 
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.ChatSnapshot;
 import com.lym.twogoods.config.ChatConfiguration;
 import com.lym.twogoods.message.ImageLoadOptions;
-import com.lym.twogoods.message.fragment.ChatFragment;
 import com.lym.twogoods.message.viewHolder.MessageItemViewHolder;
 import com.lym.twogoods.utils.ImageUtil;
 import com.lym.twogoods.utils.TimeUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 
-import cn.bmob.im.bean.BmobRecent;
-import cn.bmob.im.config.BmobConfig;
 import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -49,14 +47,14 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 
 	@Override
 	public int getCount() {
-		// TODO 自动生成的方法存根
 		return mData.size();
 	}
 
 	@Override
 	public ChatSnapshot getItem(int position) {
 		// TODO 自动生成的方法存根
-		return mData.get(position);
+		System.out.println("position="+position);
+		return mData.get(position-1);
 	}
 
 	@Override
@@ -123,11 +121,13 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 		}else{
 			iv_recent_avatar.setImageResource(R.drawable.user_default_head);
 		}
-		//iv_recent_avatar.setImageResource(R.drawable.user_default_head);
+		
+		String name = item.getOther_username();
+		if(name==UserInfoManager.getInstance().getmCurrent().getUsername())
+			name = item.getUsername();
 		tv_recent_name.setText(item.getOther_username());
-		tv_recent_time.setText(TimeUtil.getChatTime(item.getLast_time()));
+		tv_recent_time.setText(TimeUtil.getDescriptionTimeFromTimestamp(item.getLast_time()));
 		if(item.getLast_message_type()==ChatConfiguration.TYPE_MESSAGE_TEXT){
-			//SpannableString spannableString = FaceTextUtils.toSpannableString(mContext, item.getMessage());
 			tv_recent_msg.setText(item.getLast_message());
 		}else if(item.getLast_message_type()==ChatConfiguration.TYPE_MESSAGE_PICTURE){
 			tv_recent_msg.setText("[图片]");
@@ -137,7 +137,7 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 				String address = all.split("&")[0];
 				tv_recent_msg.setText("[位置]"+address);
 			}
-		}else if(item.getLast_message_type()==BmobConfig.TYPE_VOICE){
+		}else if(item.getLast_message_type()==ChatConfiguration.TYPE_MESSAGE_VOICE){
 			tv_recent_msg.setText("[语音]");
 		}
 		if(item.getUnread_num()>0){

@@ -3,7 +3,6 @@ package com.lym.twogoods.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.baidu.platform.comapi.map.w;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.async.MultiPicturesAsyncTask;
@@ -82,6 +81,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 	
 	//包含详细信息所有控件
 	private DetailMessageViewHolder detailMessageViewHolder = new DetailMessageViewHolder();
+	
 	
 	/**
 	 * 评论相关
@@ -200,6 +200,22 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 			
 			//联系商家
 			initForContact();
+
+			detailMessageViewHolder.index_goods_detail_contact.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					//检查是否登录
+					//跳转到聊天页面
+					User user = new User();
+					user.setUsername(mData.getUsername());
+					user.setHead_url(mData.getHead_url());
+					Intent intent = new Intent(mAttachActivity, ChatActivity.class);
+					intent.putExtra("otherUser", user);
+					startActivity(intent);
+					getActivity().finish();
+				}
+			});
 		}
 	}
 	
