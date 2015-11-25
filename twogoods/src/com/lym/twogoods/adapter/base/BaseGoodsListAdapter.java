@@ -116,7 +116,7 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 			}
 			
 			convertView.setTag(viewHolder);
-		}
+		} 
 		viewHolder = (ItemViewHolder) convertView.getTag();
 		
 		Goods item = null;
