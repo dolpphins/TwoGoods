@@ -185,6 +185,7 @@ public class LoginActivity extends BackActivity {
 									startActivity(intent);
 									finish();
 								}*/
+								progressDialog.show();
 								codeMatch();
 							} else {
 								Toast.makeText(getApplicationContext(),
@@ -268,7 +269,6 @@ public class LoginActivity extends BackActivity {
 					if (EncryptHelper.getMD5(
 							et_login_password.getText().toString()).equals(
 							user.getPassword())) {
-						progressDialog.show();
 						writeSharePreference(user);
 						progressDialog.dismiss();
 						Intent intent = new Intent(
@@ -277,6 +277,7 @@ public class LoginActivity extends BackActivity {
 						startActivity(intent);
 						finish();
 					} else {
+						progressDialog.dismiss();
 						Toast.makeText(getApplicationContext(), "密码错误",
 								Toast.LENGTH_SHORT).show();
 					}
@@ -302,7 +303,6 @@ public class LoginActivity extends BackActivity {
 												et_login_password.getText()
 														.toString()).equals(
 												user.getPassword())) {
-											progressDialog.show();
 											writeSharePreference(user);
 											progressDialog.dismiss();
 											Intent intent = new Intent(
@@ -312,12 +312,14 @@ public class LoginActivity extends BackActivity {
 											finish();
 
 										} else {
+											progressDialog.dismiss();
 											Toast.makeText(
 													getApplicationContext(),
 													"密码错误", Toast.LENGTH_SHORT)
 													.show();
 										}
 									} else {
+										progressDialog.dismiss();
 										Toast.makeText(getApplicationContext(),
 												"用户名不存在", Toast.LENGTH_SHORT)
 												.show();
@@ -347,6 +349,7 @@ public class LoginActivity extends BackActivity {
 				if (ex == null) {
 						judgePassword();
 				} else {
+					progressDialog.dismiss();
 					Toast.makeText(getApplicationContext(), "验证码错误", Toast.LENGTH_SHORT).show();
 				}
 			}
