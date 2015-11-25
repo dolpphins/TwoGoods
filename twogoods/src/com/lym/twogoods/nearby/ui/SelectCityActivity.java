@@ -5,16 +5,22 @@ import java.util.Collections;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -22,15 +28,17 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.lym.twogoods.R;
-import com.lym.twogoods.config.CityManger;
+import com.lym.twogoods.bean.PictureThumbnailSpecification;
 import com.lym.twogoods.nearby.NearbyPositionModelBean;
-import com.lym.twogoods.nearby.adapter.NearbyHotCityListviewAdapter;
+import com.lym.twogoods.nearby.adapter.NearbyHotCityGridViewAdapter;
 import com.lym.twogoods.nearby.adapter.SelectCityPositionListViewAdapter;
-import com.lym.twogoods.nearby.ui.SelectCityLetterView.OnTouchingLetterChangedListener;
-import com.lym.twogoods.ui.base.BackFragmentActivity;
-import com.lym.twogoods.utils.SharePreferencesManager;
+import com.lym.twogoods.nearby.config.CityManger;
+import com.lym.twogoods.nearby.config.NearbyConfig;
 import com.lym.twogoods.nearby.utils.CharacterParser;
 import com.lym.twogoods.nearby.utils.PinyinComparator;
+import com.lym.twogoods.screen.NearbyScreen;
+import com.lym.twogoods.ui.MainActivity;
+import com.lym.twogoods.ui.base.BackFragmentActivity;
 
 /**
  * <p>
@@ -41,56 +49,165 @@ import com.lym.twogoods.nearby.utils.PinyinComparator;
  * */
 public class SelectCityActivity extends BackFragmentActivity {
 
-	// 控件定义相关
-	private ListView lv_select_city_city;
-	private ListView lv_select_city_sort;
-	private TextView tv_select_city_position_set;
-	private TextView tv_select_city_locate;
-	private SelectCityLetterView selectCityLetterView;
-	private SelectCityClearEditText selectCityClearEditText;
-
+	private String TAG = "ReplaceActivity";
+	// 定义控件
+	private SelectCityClearEditText et_nearby_select_city_input;
+	private Button btn_nearby_select_city_input_cancel;
+	private ListView lv_nearby_select_city_search_result;
+	private LinearLayout ll_nearby_select_city_dingwei;
+	private LinearLayout ll_nearby_select_city_replace_hidelayout;
+	private GridView gv_nearby_select_city_hot_city;
+	// 热门城市相关
+	private NearbyHotCityGridViewAdapter nearbyHotCityGridViewAdapter;
+	// 汉字转为拼音的类
+	private CharacterParser characterParser;
+	private List<NearbyPositionModelBean> dataList;
+	// 根据拼音来排列ListView里面的数据类
+	private PinyinComparator comparator;
+	// 筛选结果适配器
+	private SelectCityPositionListViewAdapter selectCityPositionListViewAdapter;
 	// 定位相关
 	private boolean isFirst = false;
 	private LocationClient locationClient;
 	private MylocationListen mylocationListen;
-
-	// 热门城市数组
-	List<List<String>> mList = new ArrayList<List<String>>();
-
-	// 适配器
-	private NearbyHotCityListviewAdapter adapter;
-	private SelectCityPositionListViewAdapter selectCityPositionListViewAdapter;
-
-	// 汉字转为拼音的类
-	private CharacterParser characterParser;
-	private List<NearbyPositionModelBean> dataList;
-
-	// 根据拼音来排列ListView里面的数据类
-	private PinyinComparator comparator;
-	
-	//SharePreferences管理相关
-	SharePreferencesManager manager;
+	//ActionbarTitle
+	private String title="";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.nearby_select_city_activity);
 		init();
+		initEvent();
+		
 	}
 
 	/*
 	 * 
-	 * 初始化
+	 * 只有点返回的时候才会将地址返回
+	 * (non-Javadoc)
+	 * @see com.lym.twogoods.ui.base.BackFragmentActivity#onActionBarBack()
 	 */
+	@Override
+	public void onActionBarBack() {
+		super.onActionBarBack();
+		Intent intent=new Intent(SelectCityActivity.this,MainActivity.class);
+		intent.putExtra("city", title);
+		setResult(NearbyConfig.SEND_POSITION);
+		this.finish();
+	}
 	private void init() {
-		lv_select_city_city = (ListView) findViewById(R.id.lv_select_city_city);
-		mList.add(CityManger.list1);
-		mList.add(CityManger.list2);
-		mList.add(CityManger.list3);
-		adapter = new NearbyHotCityListviewAdapter(getApplicationContext(),
-				mList);
-		lv_select_city_city.setAdapter(adapter);
-		// 定位相关
+		et_nearby_select_city_input = (SelectCityClearEditText) findViewById(R.id.et_nearby_select_city_replace_input);
+		btn_nearby_select_city_input_cancel = (Button) findViewById(R.id.btn_nearby_select_city_replace_input_cancel);
+		lv_nearby_select_city_search_result = (ListView) findViewById(R.id.lv_nearby_select_city_replace_search_result);
+		ll_nearby_select_city_dingwei = (LinearLayout) findViewById(R.id.ll_nearby_select_city_replace_dingwei);
+		ll_nearby_select_city_replace_hidelayout = (LinearLayout) findViewById(R.id.ll_nearby_select_city_replace_hidelayout);
+		gv_nearby_select_city_hot_city = (GridView) findViewById(R.id.gv_nearby_select_city_replace_hot_city);
+
+		gridViewSetting();
+		initLocation();
+		characterParser = CharacterParser.getInstance();
+		comparator = new PinyinComparator();
+		// 初始化数据
+		dataList = fillData(CityManger.allcity);
+		// 根据a-z排序
+		Collections.sort(dataList, comparator);
+		selectCityPositionListViewAdapter = new SelectCityPositionListViewAdapter(
+				getApplicationContext(), dataList);
+		lv_nearby_select_city_search_result
+				.setAdapter(selectCityPositionListViewAdapter);
+	}
+
+	private void initEvent() {
+		et_nearby_select_city_input
+				.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+					@Override
+					public void onFocusChange(View v, boolean hasFocus) {
+						if (hasFocus) {
+							btn_nearby_select_city_input_cancel
+									.setVisibility(View.VISIBLE);
+						} else {
+							btn_nearby_select_city_input_cancel
+									.setVisibility(View.GONE);
+						}
+					}
+				});
+		et_nearby_select_city_input.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				filterData(s.toString());
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		btn_nearby_select_city_input_cancel
+				.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// 点击取消的时候，Edittext失去焦点，隐藏键盘，内容为空
+						et_nearby_select_city_input.clearFocus();
+						InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(
+								et_nearby_select_city_input.getWindowToken(), 0);
+						et_nearby_select_city_input.setText("");
+					}
+				});
+		lv_nearby_select_city_search_result
+				.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						// 根据点击的结果设置为title
+						setCenterTitle(((NearbyPositionModelBean) selectCityPositionListViewAdapter
+								.getItem(position)).getName());
+						title=((NearbyPositionModelBean) selectCityPositionListViewAdapter
+								.getItem(position)).getName();
+						//隐藏操作
+						et_nearby_select_city_input.clearFocus();
+						InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(
+								et_nearby_select_city_input.getWindowToken(), 0);
+						et_nearby_select_city_input.setText("");
+					}
+				});
+		
+		ll_nearby_select_city_dingwei.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				isFirst = true;
+				locationClient.requestLocation();
+			}
+		});
+	}
+
+	/**
+	 * 
+	 * 初始化加载热门城市
+	 * 
+	 */
+
+	/*
+	 * 
+	 * 定位相关初始化
+	 */
+	private void initLocation() {
 		locationClient = new LocationClient(getApplicationContext());
 		mylocationListen = new MylocationListen();
 		LocationClientOption option = new LocationClientOption();
@@ -100,88 +217,41 @@ public class SelectCityActivity extends BackFragmentActivity {
 		option.setScanSpan(1000);
 		locationClient.setLocOption(option);
 		locationClient.registerLocationListener(mylocationListen);
-		// 实例化汉字转拼音类
-		characterParser = CharacterParser.getInstance();
-		comparator = new PinyinComparator();
+	}
 
-		selectCityClearEditText = (SelectCityClearEditText) findViewById(R.id.et_nearby_select_city_input);
-		selectCityLetterView = (SelectCityLetterView) findViewById(R.id.lv_nearby_select_city_letter_sort);
-		lv_select_city_sort = (ListView) findViewById(R.id.lv_nearby_select_city_position_sort);
-		tv_select_city_position_set=(TextView) findViewById(R.id.tv_select_city_position_set);
-		tv_select_city_locate=(TextView) findViewById(R.id.tv_select_city_locate);
-		tv_select_city_locate.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				isFirst = true;
-				locationClient.requestLocation();
-			}
-		});
-
-		selectCityLetterView
-				.setOnTouchingLetterChangedListener(new OnTouchingLetterChangedListener() {
+	/*
+	 * 
+	 * 热门城市GridView相关配置
+	 */
+	private void gridViewSetting() {
+		PictureThumbnailSpecification specification = new PictureThumbnailSpecification();
+		specification = NearbyScreen.getHotCityItemThumbnailSpecification(this);
+		nearbyHotCityGridViewAdapter = new NearbyHotCityGridViewAdapter(
+				getApplicationContext(), CityManger.hot_city,SelectCityActivity.this);
+		  LayoutParams params = (LayoutParams) gv_nearby_select_city_hot_city
+		  .getLayoutParams(); params.height = (int) (specification.getHeight()
+		 * (NearbyConfig.HOT_CITY_COUNT / NearbyConfig.CITY_COLUMNS) +
+		  (NearbyConfig.HOT_CITY_COUNT / NearbyConfig.CITY_COLUMNS - 1)
+		 * getResources().getDimension(R.dimen.division));
+		gv_nearby_select_city_hot_city.setNumColumns(NearbyConfig.CITY_COLUMNS);
+		gv_nearby_select_city_hot_city.setVerticalSpacing((int) getResources()
+				.getDimension(R.dimen.division));
+		gv_nearby_select_city_hot_city
+				.setHorizontalSpacing((int) getResources().getDimension(
+						R.dimen.division));
+		gv_nearby_select_city_hot_city.setAdapter(nearbyHotCityGridViewAdapter);
+		gv_nearby_select_city_hot_city
+				.setOnItemClickListener(new OnItemClickListener() {
 
 					@Override
-					public void onTouchingLetterChanged(String s) {
-						// 该字母第一次出现的位置
-						int position = selectCityPositionListViewAdapter
-								.getPositionForSection(s.charAt(0));
-						if (position != -1) {
-							lv_select_city_sort.setSelection(position);
-						}
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						setCenterTitle((String)(nearbyHotCityGridViewAdapter
+								.getItem(position)));
+						title=(String)(nearbyHotCityGridViewAdapter
+								.getItem(position));
 					}
 				});
-
-		lv_select_city_sort.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// 通过适配器来获取当前位置所对应的对象
-				Toast.makeText(
-						getApplicationContext(),
-						((NearbyPositionModelBean) selectCityPositionListViewAdapter
-								.getItem(position)).getName(),
-						Toast.LENGTH_SHORT).show();
-				tv_select_city_position_set
-						.setText(((NearbyPositionModelBean) selectCityPositionListViewAdapter
-								.getItem(position)).getName());
-				//设置位置缓存
-				setPositionSharePreferences(((NearbyPositionModelBean) selectCityPositionListViewAdapter
-								.getItem(position)).getName());
-				
-			}
-		});
-		// 设置城市到数组中
-		dataList = fillData(CityManger.allcity);
-		// 根据a-z排序
-		Collections.sort(dataList, comparator);
-		selectCityPositionListViewAdapter = new SelectCityPositionListViewAdapter(
-				getApplicationContext(), dataList);
-		lv_select_city_sort.setAdapter(selectCityPositionListViewAdapter);
-
-		// 根据输入框输入值的改变来过滤
-		selectCityClearEditText.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				// 当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
-				filterData(s.toString());
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-		});
-		
-		//SharePreferences管理
-		manager=SharePreferencesManager.getInstance();
 	}
 
 	/*
@@ -213,11 +283,13 @@ public class SelectCityActivity extends BackFragmentActivity {
 	 * 
 	 * 根据输入框中的值来过滤数据并更新ListView
 	 */
+	@SuppressLint("DefaultLocale")
 	private void filterData(String filterStr) {
 		List<NearbyPositionModelBean> filterDateList = new ArrayList<NearbyPositionModelBean>();
-		if (TextUtils.isEmpty(filterStr)) {
-			filterDateList = dataList;
-		} else {
+		if (!TextUtils.isEmpty(filterStr)) {
+			// 当输入框中有数据的时候，隐藏其它组件，只显示listview（筛选结果）和Edittext那部分
+			ll_nearby_select_city_replace_hidelayout.setVisibility(View.GONE);
+			lv_nearby_select_city_search_result.setVisibility(View.VISIBLE);
 			filterDateList.clear();
 			for (NearbyPositionModelBean bean : dataList) {
 				String name = bean.getName();
@@ -229,6 +301,11 @@ public class SelectCityActivity extends BackFragmentActivity {
 					filterDateList.add(bean);
 				}
 			}
+		} else {
+			ll_nearby_select_city_replace_hidelayout
+					.setVisibility(View.VISIBLE);
+			lv_nearby_select_city_search_result.setVisibility(View.GONE);
+			filterDateList = dataList;
 		}
 		// 根据a-z排序
 		Collections.sort(filterDateList, comparator);
@@ -246,9 +323,8 @@ public class SelectCityActivity extends BackFragmentActivity {
 			if (isFirst) {
 				Toast.makeText(getApplicationContext(), location.getAddrStr(),
 						Toast.LENGTH_SHORT).show();
-				tv_select_city_position_set.setText(location.getAddrStr());
-				//设置位置缓存
-				setPositionSharePreferences(location.getAddrStr());
+				setCenterTitle(location.getAddrStr());
+				title=location.getAddrStr();
 				isFirst = false;
 			}
 		}
@@ -267,10 +343,5 @@ public class SelectCityActivity extends BackFragmentActivity {
 	public void onStop() {
 		super.onStop();
 		locationClient.stop();
-	}
-	
-	//设置位置缓存信息
-	private void setPositionSharePreferences(String position){
-		manager.setLocationString(getApplicationContext(), "position", position);
 	}
 }

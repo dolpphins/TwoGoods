@@ -1,5 +1,6 @@
 package com.lym.twogoods;
 
+import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.UserConfiguration;
 import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.manager.UniversalImageLoaderConfigurationManager;
@@ -24,8 +25,12 @@ public class TwoGoodsApplication extends Application{
 		super.onCreate();
 		
 		initConfig();
-		
+		/*User user = new User();
+		user.setUsername("阿尧yao");
+		user.setPhone("15603005669");
+		UserInfoManager.getInstance().setmCurrent(user);*/
 		prepare();
+		
 	}
 	
 	//初始化应用配置

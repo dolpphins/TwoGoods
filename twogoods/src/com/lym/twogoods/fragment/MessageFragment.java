@@ -161,6 +161,7 @@ public class MessageFragment extends PullListFragment implements
 		Dao<ChatSnapshot,Integer> mChatDao = helper.getChatSnapshotDao();
 		Map<String, Object>map = new HashMap<String, Object>();
 		map.put("username", getCurrentErHuoHao());
+		map.put("other_username", getCurrentErHuoHao());
 		try {
 			list = mChatDao.queryForFieldValues(map);
 		} catch (SQLException e) {

@@ -3,14 +3,12 @@ package com.lym.twogoods.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.lym.twogoods.R;
+import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.config.GoodsCategory;
 import com.lym.twogoods.config.GoodsCategory.Category;
-import com.lym.twogoods.db.OrmDatabaseHelper;
-import com.lym.twogoods.fragment.base.HeaderPullListGoodsFragment;
+import com.lym.twogoods.fragment.base.HeaderPullListFragment;
 import com.lym.twogoods.index.adapter.CategoryGridViewAdapter;
 import com.lym.twogoods.index.adapter.IndexGoodsListAdapter;
 import com.lym.twogoods.index.adapter.SortListViewAdapter;
@@ -19,12 +17,12 @@ import com.lym.twogoods.index.manager.GoodsSortManager;
 import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.index.widget.DropdownLinearLayout;
 import com.lym.twogoods.index.widget.MaskLayer;
-import com.lym.twogoods.local.bean.LocalGoods;
+import com.lym.twogoods.network.DefaultOnLoaderListener;
+import com.lym.twogoods.network.ListViewLoader;
 import com.lym.twogoods.ui.GoodsDetailActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,13 +39,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import cn.bmob.v3.BmobQuery;
 
 /**
  * <p>主页Fragment</p>
  * 
  * @author 麦灿标
  * */
-public class IndexFragment extends HeaderPullListGoodsFragment implements DropDownAble {
+public class IndexFragment extends HeaderPullListFragment implements DropDownAble {
 
 	private final static String TAG = "IndexFragment";
 	
@@ -105,6 +104,15 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 	private GoodsSort mCurrentGoodsSort;
 	private int mGoodsSortPosition;
 	
+	
+	/**
+	 * 商品列表加载器相关
+	 * */
+	private ListViewLoader mListViewLoader;
+	private BaseGoodsListAdapter mAdapter;
+	private List<Goods> mGoodsList;
+	private int perPageCount = 10;
+	private ListViewLoader.OnLoaderListener mOnLoaderListener;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -174,6 +182,10 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 		
 		//为头部设置点击事件
 		setOnclickForHeadLayout();
+		
+		initListView();
+		
+		loadDataInit();
 		
 		return frameLayout;
 	}
@@ -265,7 +277,6 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 		index_fragment_head_sort_dropdown_lv.setAdapter(sortAdapter);
 	}
 	
-	
 	//为头部布局设置所有点击事件
 	private void setOnclickForHeadLayout() {
 		if(index_fragment_head_category != null) {
@@ -355,7 +366,7 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 					//分类发生改变那么需要重新请求数据
 					if(!mCurrentCategory.equals(category)) {
 						mCurrentCategory = category;
-						requestReloadData();
+						reloadData(false);
 					}
 				}
 			});
@@ -370,14 +381,17 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 					mGoodsSortPosition = position;
 					sortAdapter.setCurrentSelectedPosition(position);
 					sortAdapter.notifyDataSetChanged();
-					mCurrentGoodsSort = sortAdapter.getCurrentGoodsSort(mGoodsSortPosition);
-					//重新排序
-					requestResort(mCurrentGoodsSort);
+					GoodsSort goodsSort = sortAdapter.getCurrentGoodsSort(mGoodsSortPosition);
 					
 					filpUpArrowAnimation(index_fragment_head_sort_iv);
 					hideDropdownAnimation(sortDropdownLayout, -mSortDropdownLayoutHeight);
 					isShowingSortLayout = false;
 					maskLayer.hide();
+					//
+					if(!mCurrentGoodsSort.equals(goodsSort)) {
+						mCurrentGoodsSort = goodsSort;
+						reloadData(false);
+					}
 				}
 			});
 		}
@@ -476,13 +490,53 @@ public class IndexFragment extends HeaderPullListGoodsFragment implements DropDo
 		return isShowingSortLayout;
 	}
 	
-	@Override
-	protected String onCreateCategory() {
-		return GoodsCategory.getString(mAttachActivity, mCurrentCategory);
+	private void initListView() {
+		setMode(Mode.PULLDOWN);
+		//ListView加载器
+		mGoodsList = new ArrayList<Goods>();
+		mAdapter = new IndexGoodsListAdapter(mAttachActivity, mGoodsList);
+		mListViewLoader = new ListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
+		mOnLoaderListener = new DefaultOnLoaderListener(this, mListViewLoader);
+		mListViewLoader.setOnLoaderListener(mOnLoaderListener);
+		//mListViewLoader.setLoadCacheFromDisk(true);
+		//mListViewLoader.setSaveCacheToDisk(true);
+		mListView.setAdapter(mAdapter);
+		
+		mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(mAttachActivity, GoodsDetailActivity.class);
+				intent.putExtra("goods", mGoodsList.get(position - 1));
+				startActivity(intent);
+			}
+		});
+	}
+	
+	private void loadDataInit() {
+		reloadData(true);
 	}
 	
 	@Override
-	protected String onCreateGoodsSort() {
-		return GoodsSortManager.getColumnString(mCurrentGoodsSort);
+	public void onRefresh() {
+		reloadData(false);
+	}
+	
+	private void reloadData(boolean isInit) {
+		BmobQuery<Goods> query = new BmobQuery<Goods>();
+		query.setSkip(0);
+		query.setLimit(perPageCount);
+		String all = GoodsCategory.getString(mAttachActivity, mCurrentCategory);
+		if(!GoodsCategory.getString(mAttachActivity, GoodsCategory.Category.ALL).equals(all)) {
+			query.addWhereEqualTo("category", GoodsCategory.getString(mAttachActivity, mCurrentCategory));
+		}
+		String order = GoodsSortManager.getBmobQueryOrderString(mCurrentGoodsSort);
+		query.order(order);
+		mListViewLoader.requestLoadData(query, null, true, isInit);
+	}
+	
+	@Override
+	protected boolean requestDelayShowListView() {
+		return true;
 	}
 }

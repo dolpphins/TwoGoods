@@ -797,6 +797,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		super.onDestroy();
 		//释放录音的资源
 		mRecondTouchListener.release();
+		
 	}
 	
 	
@@ -861,6 +862,9 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 				// TODO 自动生成的方法存根
 				mChatSnapshot.setlast_message_status(MessageConfig.SEND_MESSAGE_FAILED);
 				try {
+					DeleteBuilder<ChatSnapshot, Integer> deleteBuilder =mChatSnapshotDao.deleteBuilder();
+		            deleteBuilder.where().eq("other_username",other_username);
+		            deleteBuilder.delete();
 					mChatSnapshotDao.create(mChatSnapshot);
 					System.out.println("bmob将数据插入到本地数据库中");
 				} catch (SQLException e) {

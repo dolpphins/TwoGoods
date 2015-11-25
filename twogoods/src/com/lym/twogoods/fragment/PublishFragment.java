@@ -1,6 +1,5 @@
 package com.lym.twogoods.fragment;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,26 +20,20 @@ import com.lym.twogoods.fragment.base.BaseFragment;
 import com.lym.twogoods.publish.adapter.PublishGridViewAdapter;
 import com.lym.twogoods.publish.manger.PublishConfigManger;
 import com.lym.twogoods.publish.ui.PublishGoodsActivity;
-import com.lym.twogoods.publish.util.PublishBimp;
-import com.lym.twogoods.screen.DisplayUtils;
 import com.lym.twogoods.screen.PublishGoodsScreen;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
 import com.lym.twogoods.utils.DatabaseHelper;
 import com.lym.twogoods.utils.SensitiveUtils;
 import com.lym.twogoods.widget.WrapContentViewPager;
 
-import android.R.bool;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnKeyListener;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,11 +46,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.SaveListener;
 

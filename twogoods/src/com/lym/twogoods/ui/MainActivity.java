@@ -102,7 +102,7 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 	 */
 	private void startService() {
 		
-		if(!UserInfoManager.getInstance().isLogining()){//如果用户已经登录,开启service,否则不开启
+		if(UserInfoManager.getInstance().isLogining()){//如果用户已经登录,开启service,否则不开启
 			chatService = new Intent(MainActivity.this,ChatService.class);
 			this.startService(chatService);
 		}
@@ -169,8 +169,6 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 			break;
 		//点击底部Tab附近
 		case R.id.tab_nearby_btn:
-			Intent intent1 = new Intent(this, SelectCityActivity.class);
-			startActivity(intent1);
 			selectTabIndex = 1;
 			break;
 		//点击底部发布
@@ -227,14 +225,14 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 				}
 			}
 		//附近
-		} else if(index == 1){
-			Drawable nearbySearchIcon = getResources().getDrawable(R.drawable.index_search_icon);//跟主页搜索图标一样 
-			ImageView nearbySearchIconIv = setRightDrawable(nearbySearchIcon);
-			if(nearbySearchIconIv != null) {
-				if(!setClickEventForImageView(nearbySearchIconIv, new NearByActionBarSearchIconClickListener())) {
-					Log.w(TAG, "set click event for nearby actionbar search icon fail");
-				}
-			}
+//		} else if(index == 1){
+//			Drawable nearbySearchIcon = getResources().getDrawable(R.drawable.index_search_icon);//跟主页搜索图标一样 
+//			ImageView nearbySearchIconIv = setRightDrawable(nearbySearchIcon);
+//			if(nearbySearchIconIv != null) {
+//				if(!setClickEventForImageView(nearbySearchIconIv, new NearByActionBarSearchIconClickListener())) {
+//					Log.w(TAG, "set click event for nearby actionbar search icon fail");
+//				}
+//			}
 		} else {
 			setRightDrawable(null);
 		}

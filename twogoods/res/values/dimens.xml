@@ -21,7 +21,9 @@
     <dimen name="app_base_goods_listview_item_publishtime_marginRight">10dip</dimen>
     <dimen name="app_base_goods_listview_item_dscription_textSize">16sp</dimen>
     <dimen name="app_base_goods_listview_item_picture_interval">10dip</dimen>
-    
+    <dimen name="app_base_goods_listview_item_location_marginTop">10dip</dimen>
+    <dimen name="app_base_goods_listview_item_location_text_marginLeft">5dip</dimen>
+    <dimen name="app_base_goods_listview_item_location_textSize">12sp</dimen>
     <!-- 加载动画 -->
     <dimen name="app_basefragment_listview_laodfail_tip_textSize">16sp</dimen>
     
@@ -81,6 +83,10 @@
 	<dimen name="index_goods_detail_comment_title_marginLeft">10dip</dimen>
 	<dimen name="index_goods_detail_comment_title_marginTop">10dip</dimen>
 	<dimen name="index_goods_detail_comment_title_marginBottom">10dip</dimen>
+	<dimen name="index_goods_detail_comment_item_padding">10dip</dimen>
+	<dimen name="index_goods_detail_comment_item_hp_marginRight">10dip</dimen>
+	<dimen name="index_goods_detail_comment_item_personality_marginBottom">10dip</dimen>
+	<dimen name="index_goods_detail_comment_item_content_marginTop">10dip</dimen>
 	<dimen name="index_goods_search_header_padding">10dip</dimen>
 	<dimen name="index_goods_search_search_button_marginLeft">5dip</dimen>
 	<dimen name="index_goods_search_edittext_textSize">18sp</dimen>
@@ -172,8 +178,12 @@
 	<dimen name="nearby_select_city_position_name_left">5dip</dimen>
 	<dimen name="nearby_select_city_letter_sort_height">30dip</dimen>
 	<dimen name="nearby_select_city_dingwei_textsize">20sp</dimen>
-	<dimen name="nearby_select_city_position_textsize">20sp</dimen>
-	
+	<dimen name="nearby_select_city_hot_city_textsize">20sp</dimen>
+	<dimen name="nearby_select_city_dingwei_paddingTop">10dp</dimen>
+	<dimen name="nearby_select_city_dingwei_paddingBottom">10dp</dimen>
+	<dimen name="nearby_select_city_hot_city_gridview_marginTop">10dp</dimen>
+	<dimen name="nearby_select_city_position_textsize">18sp</dimen>
+	<dimen name="division">1dp</dimen>
 	
 	
 	

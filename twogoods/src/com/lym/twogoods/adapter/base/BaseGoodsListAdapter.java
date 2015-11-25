@@ -53,9 +53,9 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 
 	private final static String TAG = "BaseGoodsListAdapter";
 	
-	private Activity mActivity;
+	protected Activity mActivity;
 	
-	private List<Goods> mGoodsList;
+	protected List<Goods> mGoodsList;
 	
 	public BaseGoodsListAdapter(Activity at, List<Goods> goodsList) {
 		super();
@@ -128,7 +128,7 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 		//设置基本内容
 		setItemContent(viewHolder, item);
 		//设置特殊内容
-		setCustomContent(viewHolder);
+		setCustomContent(viewHolder, item);
 		
 		return convertView;
 		//return LayoutInflater.from(mActivity).inflate(R.layout.app_base_goods_listview_item, null);
@@ -203,9 +203,10 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 	 *	</p> 
 	 * 
 	 * @param viewHolder 每个Item的ViewHolder
+	 * @param item 相应的实体对象
 	 * 
 	 * */
-	protected void setCustomContent(ItemViewHolder viewHolder) {
+	protected void setCustomContent(ItemViewHolder viewHolder, Goods item) {
 	}
 	
 	//由Goods对象转User对象
@@ -220,34 +221,34 @@ public class BaseGoodsListAdapter extends BaseAdapter{
 	}
 	
 	@SuppressWarnings("unused")
-	private static class ItemViewHolder {
+	protected static class ItemViewHolder {
 		
 		/** 用户相关信息子布局 */
-		private RelativeLayout base_goods_listview_item_user_layout;
+		public RelativeLayout base_goods_listview_item_user_layout;
 		
 		/** 头像 */
-		private ImageView base_goods_listview_item_headpic;
+		public ImageView base_goods_listview_item_headpic;
 		
 		/** 用户名 */
-		private TextView base_goods_listview_item_username;
+		public TextView base_goods_listview_item_username;
 		
 		/** 发布时间 */
-		private TextView base_goods_listview_item_publishtime;
+		public TextView base_goods_listview_item_publishtime;
 		
 		/** 发布位置 */
-		private TextView base_goods_listview_item_publishlocation;
+		public TextView base_goods_listview_item_publishlocation;
 		
 		/** 价格 */
-		private TextView base_goods_listview_item_price;
+		public TextView base_goods_listview_item_price;
 		
 		/** 操作 */
-		private TextView base_goods_listview_item_operation;
+		public TextView base_goods_listview_item_operation;
 		
 		/** 商品描述 */
-		private TextView base_goods_listview_item_description;
+		public TextView base_goods_listview_item_description;
 		
 		/** 左右可滑动图片 */
-		private GridView base_goods_gridview_item_pictures;
+		public GridView base_goods_gridview_item_pictures;
 	}
 }
 

@@ -50,27 +50,27 @@ public class PublishGridViewAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final int index=position;
-		ViewHoder viewHoder = null;
+		ViewHolder viewHolder = null;
 		if (convertView == null) {
-			viewHoder = new ViewHoder();
+			viewHolder = new ViewHolder();
 			convertView = minInflater.inflate(R.layout.publish_gridview_item,
 					parent, false);
-			viewHoder.item_image = (ImageView) convertView
+			viewHolder.item_image = (ImageView) convertView
 					.findViewById(R.id.iv_publish_gridview_image);
-			viewHoder.item_delect = (ImageView) convertView
+			viewHolder.item_delect = (ImageView) convertView
 					.findViewById(R.id.iv_publish_gridview_item_delect);
-			convertView.setTag(viewHoder);
+			convertView.setTag(viewHolder);
 		} else {
-			viewHoder=(ViewHoder) convertView.getTag();
+			viewHolder=(ViewHolder) convertView.getTag();
 		}
-		viewHoder.item_image.setScaleType(ScaleType.CENTER_CROP);
-		imageViewSetLayoutParams(viewHoder.item_image);
+		viewHolder.item_image.setScaleType(ScaleType.CENTER_CROP);
+		imageViewSetLayoutParams(viewHolder.item_image);
 		try {
-			viewHoder.item_image.setImageBitmap(PublishBimp.revitionImageSize(list.get(position)));
+			viewHolder.item_image.setImageBitmap(PublishBimp.revitionImageSize(list.get(position)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		viewHoder.item_delect.setOnClickListener(new OnClickListener() {
+		viewHolder.item_delect.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -82,7 +82,7 @@ public class PublishGridViewAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	class ViewHoder{
+	class ViewHolder{
 		public ImageView item_image;
 		public ImageView item_delect;
 	}

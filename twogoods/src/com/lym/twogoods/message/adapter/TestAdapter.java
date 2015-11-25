@@ -70,8 +70,7 @@ public class TestAdapter extends BaseAdapter {
 					message_list_iv_recent_avatar_head);
 			holder.name = (TextView) view.findViewById(R.id.
 					message_list_tv_recent_name);
-			holder.newMessageTip = (TextView) view.findViewById(R.id.
-					message_list_tv_recent_unread);
+			
 			holder.recent_msg = (TextView) view.findViewById(R.id.
 					message_list_tv_recent_msg);
 			holder.time = (TextView) view.findViewById(R.id.
@@ -85,7 +84,6 @@ public class TestAdapter extends BaseAdapter {
 		TextView tv_recent_name = holder.name;
 		TextView tv_recent_msg = holder.recent_msg;
 		TextView tv_recent_time = holder.time;
-		TextView tv_recent_unread = holder.newMessageTip;
 		//填充数据
 //		String avatar = item.getAvatar();
 //		if(avatar!=null&& !avatar.equals("")){
@@ -97,7 +95,6 @@ public class TestAdapter extends BaseAdapter {
 		tv_recent_name.setText("yao");
 		tv_recent_msg .setText("hello");
 		tv_recent_time.setText("12:00");
-		tv_recent_unread.setText("1");
 				
 		
 		return view;

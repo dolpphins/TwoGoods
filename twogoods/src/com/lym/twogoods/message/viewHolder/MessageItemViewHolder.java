@@ -13,7 +13,5 @@ public class MessageItemViewHolder {
 	public TextView recent_msg;
 	//时间
 	public TextView time;
-	//新消息提醒
-	public TextView newMessageTip;
 	
 }

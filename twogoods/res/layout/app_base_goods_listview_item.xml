@@ -50,14 +50,7 @@
 	        	android:layout_alignBottom="@id/base_goods_listview_item_headpic"
 	        	android:layout_marginRight="@dimen/app_base_goods_listview_item_publishtime_marginRight"
 	        	android:layout_marginEnd="@dimen/app_base_goods_listview_item_publishtime_marginRight"/>
-	        <!-- 发布位置-->
-	        <TextView 
-	            android:id="@+id/base_goods_listview_item_publishlocation" 
-	            android:layout_width="wrap_content"
-	        	android:layout_height="wrap_content"
-	        	android:layout_toRightOf="@id/base_goods_listview_item_publishtime"
-	        	android:layout_toEndOf="@id/base_goods_listview_item_publishtime"
-	        	android:layout_alignBottom="@id/base_goods_listview_item_publishtime"/>
+	         
         </RelativeLayout>
         
         <!-- 价格 -->
@@ -75,6 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:clickable="true"
             android:layout_alignBottom="@id/base_goods_listview_item_user_layout"/>
         
         
@@ -108,6 +102,30 @@
         		android:listSelector="@android:color/transparent"/>
     	</LinearLayout>       
     </HorizontalScrollView >
+    
+    <!-- 位置 -->
+    <RelativeLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/app_base_goods_listview_item_location_marginTop">
+        <ImageView 
+            android:id="@+id/index_location_icon"
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:src="@drawable/index_location_icon"
+        	android:contentDescription="@null"
+        	android:layout_centerVertical="true"/>
+        <TextView 
+            android:id="@+id/base_goods_listview_item_publishlocation"
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_toRightOf="@id/index_location_icon"
+        	android:layout_toEndOf="@id/index_location_icon"
+        	android:layout_marginLeft="@dimen/app_base_goods_listview_item_location_text_marginLeft"
+        	android:layout_marginStart="@dimen/app_base_goods_listview_item_location_text_marginLeft"
+        	android:textSize="@dimen/app_base_goods_listview_item_location_textSize"
+        	android:layout_centerVertical="true"/>
+    </RelativeLayout>
     
 </LinearLayout>
 

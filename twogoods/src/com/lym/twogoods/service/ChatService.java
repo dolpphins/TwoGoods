@@ -34,6 +34,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.preference.TwoStatePreference;
 import android.support.v4.app.NotificationCompat;
 
 /**
@@ -96,6 +97,7 @@ public class ChatService extends Service {
 	
 	private void init() {
 		
+		System.out.println("service init---------");
 		currentUser = UserInfoManager.getInstance().getmCurrent();
 		mOrmDatabaseHelper = new OrmDatabaseHelper(getApplicationContext());
 		mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
@@ -108,11 +110,11 @@ public class ChatService extends Service {
 		
 		query = new BmobQuery<ChatDetailBean>();
 		//查询发送对象是当前用户的数据
-		query.addWhereEqualTo("other_username", "15603005669");
+		query.addWhereEqualTo("other_username", currentUser.getUsername());
 		//返回50条数据，如果不加上这条语句，默认返回10条数据
 		query.setLimit(50);
 		
-		
+		System.out.println("service current username "+currentUser.getUsername());
 		mNotificationManager = (NotificationManager) getApplicationContext().
 				getSystemService(Context.NOTIFICATION_SERVICE); 
 		mBuilder = new NotificationCompat.Builder(getApplicationContext()); 
@@ -120,12 +122,52 @@ public class ChatService extends Service {
 
 
 	class MyThread extends Thread {  
+		
+		@Override
+		/*public void run() {
+			query.findObjects(getApplicationContext(), new FindListener<ChatDetailBean>() {
+		        
+		        @Override
+		        public void onError(int code, String msg) {
+		            // TODO Auto-generated method stub
+		        	System.out.println("service查询失败");
+		        }
+				@Override
+				public void onSuccess(List<ChatDetailBean> object) {
+					System.out.println("service search---------");
+					System.out.println("service new message Size "+object.size());
+					if(object.size()>0){//有新消息,对新消息根据发送者进行分类，然后保存到本地ChatSnapshot表
+						
+						List<String>listOfName = new ArrayList<String>();
+						for(ChatDetailBean obj : object){//获取有哪些用户发信息过来
+							if(!listOfName.contains(obj.getUsername())){
+								listOfName.add(obj.getUsername());
+							}
+						}
+						
+						if(listOfName.size()>0){
+							System.out.println("service 有新消息---------");
+							Map<String,List<ChatDetailBean>> map = new HashMap<String, List<ChatDetailBean>>();
+							List<ChatDetailBean>list;
+							//根据发送消息的用户名来进行整理
+							for (ChatDetailBean obj : object) {
+								System.out.println("servicesize"+object.size());
+        		            	System.out.println("service"+obj.getUsername());
+        		            	System.out.println("service"+obj.getMessage());
+        		            	System.out.println("service"+obj.getCreatedAt());
+							}
+						}
+					}
+				}
+			});
+		}
+		*/
   
         public void run() {  
         	while(true){
         		if(NetworkHelper.isNetConnected(getApplicationContext())){
 	    			if(isFirstLoad){//加载在本地数据库中最近一条发送或者接收的消息的时间以后的全部消息
-	    				
+	    				System.out.println("service qurry 第一次加载新消息---------");
 	    				QueryBuilder<ChatDetailBean, Integer>queryBuilder = mChatDetailDao.queryBuilder();
 	            		/**
 	            		 * 此处需要进行详细的测试，需要拿到的数据是本地数据库中最近一条发送或者接收的消息，而且消息状态是成功的。
@@ -134,7 +176,7 @@ public class ChatService extends Service {
 	    				//	where.eq("last_message_status", MessageConfig.SEND_MESSAGE_SUCCEED);
 	            			//where = where.eq("username", currentUser.getUsername());
 	    					//queryBuilder.setWhere(where);
-	            			queryBuilder.where().eq("username", "15603005669");
+	            			queryBuilder.where().eq("username", currentUser.getUsername());
 	    	        		chatDetailBean = queryBuilder.queryForFirst();
 	    				} catch (SQLException e1) {
 	    					// TODO 自动生成的 catch 块
@@ -143,12 +185,16 @@ public class ChatService extends Service {
 	            		
 	    				if(chatDetailBean==null){//如果本地数据库为空,即是第一次使用此软件聊天。则查找所有发送对象是当前用户的消息
 	    					query.addWhereGreaterThan("publish_time", 0);
+	    					System.out.println("service qurry 是第一次加载新消息,数据库为空---0");
 	    				}else{//只查询本地聊天数据库中没有的消息，需要减去加载数据的时间间隔.查询本地聊天数据库的第一条消息，需要得到最近一条消息的时间
 	    					query.addWhereGreaterThan("publish_time", chatDetailBean.getPublish_time());
+	    					System.out.println("service qurry 是第一次加载新消息"+chatDetailBean.getPublish_time());
 	    				}
 	    			}else{
+	    				System.out.println("service qurry 不是第一次加载新消息，数据库不为空---------");
 	    				query.addWhereGreaterThan("publish_time", loadTime);
 	    			}
+	    			System.out.println("service qurry inited---------");
 	        		//执行查询方法
 	        		query.findObjects(getApplicationContext(), new FindListener<ChatDetailBean>() {
 	        		        
@@ -162,6 +208,7 @@ public class ChatService extends Service {
 								System.out.println("service search---------");
 								
 								if(object.size()>0){//有新消息,对新消息根据发送者进行分类，然后保存到本地ChatSnapshot表
+									
 									List<String>listOfName = new ArrayList<String>();
 									for(ChatDetailBean obj : object){//获取有哪些用户发信息过来
 										if(!listOfName.contains(obj.getUsername())){
@@ -170,15 +217,22 @@ public class ChatService extends Service {
 									}
 									
 									if(listOfName.size()>0){
-										
+										System.out.println("service 有新消息---------");
 										Map<String,List<ChatDetailBean>> map = new HashMap<String, List<ChatDetailBean>>();
 										List<ChatDetailBean>list;
 										//根据发送消息的用户名来进行整理
 										for (ChatDetailBean obj : object) {
 											System.out.println("servicesize"+object.size());
-			        		            	System.out.println("service"+chatDetailBean.getUsername());
-			        		            	System.out.println("service"+chatDetailBean.getMessage());
-			        		            	System.out.println("service"+chatDetailBean.getCreatedAt());
+			        		            	System.out.println("service"+obj.getUsername());
+			        		            	System.out.println("service"+obj.getMessage());
+			        		            	System.out.println("service"+obj.getCreatedAt());
+			        		            	try {
+												mChatDetailDao.create(obj);
+											} catch (SQLException e) {
+												// TODO 自动生成的 catch 块
+												e.printStackTrace();
+												System.out.println("service接收的新消息插入到本地数据库失败");
+											}
 			        		            	
 			        		            	list = map.get(obj.getUsername());
 			        		            	if(list==null){
@@ -217,6 +271,7 @@ public class ChatService extends Service {
 											default:
 												break;
 											}
+											System.out.println("service set new message");
 											//发送的对象名字，这里是接收新消息，所以是当前用户的名字
 											chatSnapshot.setOther_username(currentUser.getUsername());
 											//发送者的名字，
@@ -227,13 +282,8 @@ public class ChatService extends Service {
 											
 											//发来的新消息数目加上之前未读的数目
 											int unread_num = 0;
-											try {
-												unread_num = mChatSnapshotDao.queryForEq("username", userName).get(0).getUnread_num();
-											} catch (SQLException e1) {
-												// TODO 自动生成的 catch 块
-												e1.printStackTrace();
-											}
-											
+											//unread_num = mChatSnapshotDao.queryForEq("username", userName).get(0).getUnread_num();
+											System.out.println("service get local unread_num");
 											chatSnapshot.setUnread_num(unread_num+listChat.size());
 											chatSnapshot.save(getApplicationContext(),new SaveListener() {
 												
@@ -246,12 +296,12 @@ public class ChatService extends Service {
 											            deleteBuilder.where().eq("username",userName);
 											            deleteBuilder.delete();
 														mChatSnapshotDao.create(chatSnapshot);
-														System.out.println("bmob将数据插入到本地数据库中");
+														System.out.println("service bmob将数据插入到本地数据库中");
 													} catch (Exception e) {
 														// TODO 自动生成的 catch 块
-														System.out.println("bmob将数据插入到本地数据库失败");
+														System.out.println("service bmob将数据插入到本地数据库失败");
 														e.printStackTrace();
-														System.out.println("bmob将数据插入到本地数据库失败");
+														System.out.println("service bmob将数据插入到本地数据库失败");
 													}
 												}
 												
@@ -261,31 +311,30 @@ public class ChatService extends Service {
 													chatSnapshot.setlast_message_status(MessageConfig.SEND_MESSAGE_FAILED);
 													try {
 														mChatSnapshotDao.create(chatSnapshot);
-														System.out.println("bmob将数据插入到本地数据库中");
+														System.out.println("service bmob将数据插入到本地数据库中");
 													} catch (SQLException e) {
 														// TODO 自动生成的 catch 块
 														e.printStackTrace();
-														System.out.println("bmob将最近一条消息插入到ChatSnapshot表中失败");
+														System.out.println("service bmob将最近一条消息插入到ChatSnapshot表中失败");
 													}
 												}
 											});
 										}
-										
+										System.out.println("service 发送notification");
 										//通过Status Bar Notification通知用户
 										for(int n = 0;n<listOfName.size();n++){
-											mBuilder.setContentTitle("测试标题")//设置通知栏标题  
-										    .setContentText("测试内容") //设置通知栏显示内容  
-										    .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL,listOfName.get(n))) //设置通知栏点击意图  
-										//  .setNumber(number) //设置通知集合的数量  
-										    .setTicker("测试通知来啦") //通知首次出现在通知栏，带上升动画效果的  
+											final String username = listOfName.get(n);
+											List<ChatDetailBean> chatList = map.get(username);
+											//拿到最近的一条新消息
+											final ChatDetailBean newChatDetailBean = chatList.get(chatList.size()-1);
+											mBuilder.setContentTitle(listOfName.get(n))//设置通知栏标题  
+										    .setContentText(newChatDetailBean.getMessage()) //设置通知栏显示内容  
+										    .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL,newChatDetailBean)) //设置通知栏点击意图  
+										    .setTicker(listOfName.get(n)+":"+newChatDetailBean.getMessage()) //通知首次出现在通知栏，带上升动画效果的  
 										    .setWhen(System.currentTimeMillis())//通知产生的时间，会在通知信息里显示，一般是系统获取到的时间  
 										    .setPriority(Notification.PRIORITY_HIGH) //设置该通知优先级  
-										//  .setAutoCancel(true)//设置这个标志当用户单击面板就可以让通知将自动取消    
 										    .setOngoing(false)//ture，设置他为一个正在进行的通知。他们通常是用来表示一个后台任务,用户积极参与(如播放音乐)或以某种方式正在等待,因此占用设备(如一个文件下载,同步操作,主动网络连接)  
-										    //.setDefaults(Notification.DEFAULT_VIBRATE)//向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合  
 										    .setDefaults(Notification.DEFAULT_ALL)
-										    //.setDefaults(Notification.DEFAULT_LIGHTS)
-										    //Notification.DEFAULT_ALL  Notification.DEFAULT_SOUND 添加声音 // requires VIBRATE permission  
 										    .setSmallIcon(R.drawable.ic_launcher);//设置通知小ICON  
 											Notification notification = mBuilder.build();  
 											notification.flags = Notification.FLAG_AUTO_CANCEL; 
@@ -317,6 +366,7 @@ public class ChatService extends Service {
         		netConnectTip = false;
           }  
        }  
+		
 	}
 	/**
 	 * 点击notification触发的事件，跳转到ChatActivity
@@ -325,10 +375,24 @@ public class ChatService extends Service {
 	 * @param otherUsername 聊天对象的名字
 	 * @return
 	 */
-	public PendingIntent getDefalutIntent(int flags,String otherUsername){  
+	public PendingIntent getDefalutIntent(int flags,ChatDetailBean chatDetailBean){  
 		Intent intent = new Intent(this,ChatActivity.class);
 		User user = new User();
-		user.setUsername(otherUsername);
+		user.setUsername(chatDetailBean.getUsername());
+		//user.setHead_url(head_url);
+		intent.putExtra("otherUser", user);
+		//点击了notification后，跳转到聊天界面，同时本地最近聊天数据表应该更新数据，把未读字段改为0
+		try {
+			ChatSnapshot oneChatSnapshot = mChatSnapshotDao.queryForEq("username", chatDetailBean.getUsername()).get(0);
+			System.out.println("service----- "+oneChatSnapshot.getUnread_num());
+			
+			mChatSnapshotDao.delete(oneChatSnapshot);
+			oneChatSnapshot.setUnread_num(0);
+			mChatSnapshotDao.create(oneChatSnapshot);
+		} catch (SQLException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
 	    PendingIntent pendingIntent= PendingIntent.getActivity(this, 1, intent ,flags);  
 	    return pendingIntent;  
 	}  

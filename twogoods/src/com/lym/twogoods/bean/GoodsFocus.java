@@ -21,9 +21,9 @@ public class GoodsFocus extends BmobObject{
 	@DatabaseField
 	private String username;
 	
-	/** 关注的商品id */
+	/** 关注的商品ObjectId */
 	@DatabaseField
-	private int goods_id;
+	private String goods_objectId;
 
 	public int getId() {
 		return id;
@@ -41,12 +41,12 @@ public class GoodsFocus extends BmobObject{
 		this.username = username;
 	}
 
-	public int getGoods_id() {
-		return goods_id;
+	public String getGoods_objectId() {
+		return goods_objectId;
 	}
 
-	public void setGoods_id(int goods_id) {
-		this.goods_id = goods_id;
+	public void setGoods_objectId(String goods_objectId) {
+		this.goods_objectId = goods_objectId;
 	}
 	
 	

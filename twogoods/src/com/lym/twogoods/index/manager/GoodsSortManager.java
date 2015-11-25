@@ -93,6 +93,31 @@ public class GoodsSortManager {
 	}
 	
 	/**
+	 * 获取适合Bmob SDK使用的商品排序字符串
+	 * 
+	 * @param gs
+	 * @return 获取成功返回相应的字符串,失败返回null.
+	 */
+	public static String getBmobQueryOrderString(GoodsSort gs) {
+		if(gs == null) {
+			return null;
+		}
+		
+		switch (gs) {
+		case NEWEST_PUBLISH:
+			return "-" + LocalGoods.getPublishTimeColoumnString();
+		case PRICE_ASC:
+			return LocalGoods.getPriceColoumnString();
+		case MOST_FOCUS:
+			return "-" + LocalGoods.getFocusColoumnString();
+		case MOST_BROWSE:
+			return "-" + LocalGoods.getBrowseColoumnString();
+		default:
+			return null;
+		}
+	}
+	
+	/**
 	 * 获取指定排序方式的比较器
 	 * 
 	 * @return 指定排序方式

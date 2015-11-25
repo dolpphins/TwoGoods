@@ -123,6 +123,9 @@
         <!-- 发送图片ACtivity -->
         <activity android:name="com.lym.twogoods.ui.SendPictureActivity" >
         </activity>
+        <!-- 显示商品搜索结果Activity -->
+        <activity android:name="com.lym.twogoods.index.ui.GoodsSearchResultActivity">
+        </activity>
 
         <!-- 网络状态改变广播接收者 -->
         <receiver

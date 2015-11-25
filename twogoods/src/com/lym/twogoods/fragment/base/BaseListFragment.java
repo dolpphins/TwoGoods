@@ -2,11 +2,12 @@ package com.lym.twogoods.fragment.base;
 
 import com.lym.twogoods.R;
 
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -24,7 +25,7 @@ public abstract class BaseListFragment extends BaseFragment {
 
 	private final static String TAG = "BaseListFragment";
 	
-	private RelativeLayout mLoadingLayout;
+	private LinearLayout mLoadingLayout;
 	private ProgressBar app_basefragment_listview_pb;
 	private TextView app_basefragment_listview_tv;
 	
@@ -40,7 +41,7 @@ public abstract class BaseListFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
-		mLoadingLayout = (RelativeLayout) inflater.inflate(R.layout.app_common_loading_layout, null);
+		mLoadingLayout = (LinearLayout) inflater.inflate(R.layout.app_common_loading_layout, null);
 		mListView = (XListView) mLoadingLayout.findViewById(R.id.app_basefragment_listview_lv);
 		initLoadingLayout();
 		
@@ -81,6 +82,10 @@ public abstract class BaseListFragment extends BaseFragment {
 		if(mLoadingLayout != null) {
 			app_basefragment_listview_pb = (ProgressBar) mLoadingLayout.findViewById(R.id.app_basefragment_listview_pb);
 			app_basefragment_listview_tv = (TextView) mLoadingLayout.findViewById(R.id.app_basefragment_listview_tv);
+			
+			//暂时这样设置
+			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			mLoadingLayout.setLayoutParams(params);
 		}
 	}
 	
@@ -118,6 +123,7 @@ public abstract class BaseListFragment extends BaseFragment {
 			app_basefragment_listview_tv.setText(text);
 			app_basefragment_listview_tv.setTextColor(color);
 			app_basefragment_listview_tv.setTextSize(textSize);
+			app_basefragment_listview_tv.setClickable(true);
 			app_basefragment_listview_tv.setVisibility(View.VISIBLE);
 		}
 		return app_basefragment_listview_tv;

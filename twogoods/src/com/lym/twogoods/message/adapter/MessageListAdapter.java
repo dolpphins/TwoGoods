@@ -8,6 +8,7 @@ import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.ChatSnapshot;
 import com.lym.twogoods.config.ChatConfiguration;
 import com.lym.twogoods.message.ImageLoadOptions;
+import com.lym.twogoods.message.view.BadgeView;
 import com.lym.twogoods.message.viewHolder.MessageItemViewHolder;
 import com.lym.twogoods.utils.ImageUtil;
 import com.lym.twogoods.utils.TimeUtil;
@@ -93,8 +94,7 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 					message_list_iv_recent_avatar_head);
 			holder.name = (TextView) view.findViewById(R.id.
 					message_list_tv_recent_name);
-			holder.newMessageTip = (TextView) view.findViewById(R.id.
-					message_list_tv_recent_unread);
+			
 			holder.recent_msg = (TextView) view.findViewById(R.id.
 					message_list_tv_recent_msg);
 			holder.time = (TextView) view.findViewById(R.id.
@@ -108,7 +108,6 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 		TextView tv_recent_name = holder.name;
 		TextView tv_recent_msg = holder.recent_msg;
 		TextView tv_recent_time = holder.time;
-		TextView tv_recent_unread = holder.newMessageTip;
 		//填充数据
 		String avatar = item.getHead_url();
 		if(avatar!=null&& !avatar.equals("")){
@@ -141,10 +140,10 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 			tv_recent_msg.setText("[语音]");
 		}
 		if(item.getUnread_num()>0){
-			tv_recent_unread.setVisibility(View.VISIBLE);
-			tv_recent_unread.setText(item.getUnread_num());
-		}else
-			tv_recent_unread.setVisibility(View.GONE);
+			BadgeView badge = new BadgeView(mContext, iv_recent_avatar);
+			badge.setText(""+item.getUnread_num());
+			badge.show();
+		}
 		
 		return view;
 	}

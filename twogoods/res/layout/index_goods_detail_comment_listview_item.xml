@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	商品评论列表每一个Item布局
+
+	@author 麦灿标
+ -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/index_goods_detail_comment_item_padding"
+    android:background="@color/white">
+ 
+   	<!-- 头像 -->
+    <ImageView
+        android:id="@+id/index_goods_detail_comment_item_hp" 
+        android:layout_width="50dip"
+        android:layout_height="50dip"
+        android:contentDescription="@null"
+        android:layout_marginRight="@dimen/index_goods_detail_comment_item_hp_marginRight"
+        android:layout_marginEnd="@dimen/index_goods_detail_comment_item_hp_marginRight"/>
+    <!-- 用户名 -->
+    <TextView
+        android:id="@+id/index_goods_detail_comment_item_username" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/index_goods_detail_comment_item_hp"
+        android:layout_toEndOf="@id/index_goods_detail_comment_item_hp"
+        android:layout_alignTop="@id/index_goods_detail_comment_item_hp"/>
+    <!-- 发表评论时间 -->
+    <TextView
+        android:id="@+id/index_goods_detail_comment_item_publish_time" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/index_goods_detail_comment_item_hp"
+        android:layout_toEndOf="@id/index_goods_detail_comment_item_hp"
+        android:layout_alignBottom="@id/index_goods_detail_comment_item_hp"/>    
+  
+    <!-- 内容 -->
+    <com.lym.twogoods.widget.EmojiTextView
+        android:id="@+id/index_goods_detail_comment_item_content" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/index_goods_detail_comment_item_hp"
+        android:layout_toEndOf="@id/index_goods_detail_comment_item_hp"
+        android:layout_below="@id/index_goods_detail_comment_item_hp"
+        android:layout_marginTop="@dimen/index_goods_detail_comment_item_content_marginTop"/>
+
+</RelativeLayout>
