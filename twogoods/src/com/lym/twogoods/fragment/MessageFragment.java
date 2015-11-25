@@ -91,10 +91,6 @@ public class MessageFragment extends PullListFragment implements
 	
 	}
 	
-	
-	
-	
-	
 
 	private void init() {
 		mSharePreferenceManager = SharePreferencesManager.getInstance();
@@ -108,18 +104,7 @@ public class MessageFragment extends PullListFragment implements
 		// TODO 自动生成的方法存根
 		currentUser = UserInfoManager.getInstance().getmCurrent();
 	}
-
-	/**
-	 * 初始化mListView
-	 */
-	private void initView() {
-		
-		setMode(Mode.PULLDOWN);
-		setAdapter();
-		mListView.setOnItemClickListener(this);
-		mListView.setOnItemLongClickListener(this);
-	}
-
+	
 	/**
 	 * 初始化消息列表的数据
 	 */
@@ -133,8 +118,20 @@ public class MessageFragment extends PullListFragment implements
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
-		
 	}
+
+
+	/**
+	 * 初始化mListView
+	 */
+	private void initView() {
+		
+		setMode(Mode.PULLDOWN);
+		setAdapter();
+		mListView.setOnItemClickListener(this);
+		mListView.setOnItemLongClickListener(this);
+	}
+
 
 	protected void setAdapter() {
 		if(isLogining){
@@ -170,6 +167,7 @@ public class MessageFragment extends PullListFragment implements
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
+		System.out.println("time1  "+TimeUtil.getCurrentMilliSecond());
 		return list;
 	}
 	
@@ -245,10 +243,14 @@ public class MessageFragment extends PullListFragment implements
 		if(isLogining){
 			Intent intent = new Intent(getActivity(), ChatActivity.class);
 			
-			ChatSnapshot chatSnapshot = (ChatSnapshot) mAdapter.getItem(position);
-			
+			ChatSnapshot chatSnapshot = (ChatSnapshot) mMessageListAdapter.getItem(position);
+			System.out.println("chatSnapshot username"+chatSnapshot.getUsername()+"otherusername"+chatSnapshot.getOther_username());
 			User otherUser = new User();
-			otherUser.setUsername(chatSnapshot.getUsername());
+			System.out.println("chatSnapshot currentuserame"+chatSnapshot.getUsername());
+			String name = chatSnapshot.getUsername();
+			if(name.equals(currentUser.getUsername()))
+				name = chatSnapshot.getOther_username();
+			otherUser.setUsername(name);
 			otherUser.setHead_url(chatSnapshot.getHead_url());
 			
 			intent.putExtra("otherUser", otherUser);		
@@ -267,15 +269,13 @@ public class MessageFragment extends PullListFragment implements
 		if(isLogining){
 			if(!ishidden){
 				refreshMessage();
+				System.out.println("12345message Fragment refreah");
 			}
 		}
 	}
 
 	/*
 	 * 向下滑动时调用
-	 * （非 Javadoc）
-	 * @see com.lym.twogoods.fragment.base.PullListFragment#onRefresh()
-	 *
 	 * @auther yao
 	 */
 	
@@ -300,9 +300,9 @@ public class MessageFragment extends PullListFragment implements
 		
 		stopRefresh();
 	}
+	
 	/*
 	 * 刷新message列表
-	 * 
 	 * @auther yao
 	 */
 	public void refreshMessage()
@@ -311,11 +311,8 @@ public class MessageFragment extends PullListFragment implements
 		try {
 			getActivity().runOnUiThread(new Runnable() {
 				public void run() {
-					int images[] = {R.drawable.user_default_head,R.drawable.user_default_head,
-							R.drawable.user_default_head,R.drawable.user_default_head,
-							R.drawable.user_default_head};
-					//TestAdapter adapter = new TestAdapter(getActivity(), images);
 					
+					chatSnapshotList = queryRecent();
 					mMessageListAdapter = new MessageListAdapter(getActivity(), 
 							R.layout.message_list_item_conversation, chatSnapshotList);
 					setAdapter(mMessageListAdapter);

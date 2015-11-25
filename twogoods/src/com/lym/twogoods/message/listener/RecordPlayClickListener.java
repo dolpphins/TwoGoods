@@ -50,6 +50,7 @@ public class RecordPlayClickListener implements View.OnClickListener {
 		currentMsg = msg;
 		currentPlayListener = this;
 		currentUsername = UserInfoManager.getInstance().getmCurrent().getUsername();
+		iv_voice.setOnClickListener(this);
 	}
 
 	/**
@@ -65,8 +66,10 @@ public class RecordPlayClickListener implements View.OnClickListener {
 	@SuppressWarnings("resource")
 	public void startPlayRecord(String filePath, boolean isUseSpeaker) {
 		if (!(new File(filePath).exists())) {
+			System.out.println("voice文件不存在");
 			return;
 		}
+		System.out.println("voice开始播放语音");
 		AudioManager audioManager = (AudioManager) context
 				.getSystemService(Context.AUDIO_SERVICE);
 		mediaPlayer = new MediaPlayer();
@@ -114,6 +117,7 @@ public class RecordPlayClickListener implements View.OnClickListener {
 		} catch (Exception e) {
 			BmobLog.i("播放错误:" + e.getMessage());
 		}
+		System.out.println("voice结束播放语音");
 	}
 
 	/**
@@ -183,13 +187,13 @@ public class RecordPlayClickListener implements View.OnClickListener {
 				return;
 			}
 		}
-		BmobLog.i("voice", "点击事件");
+		System.out.println("voiceClick");
 		if (voiceMessage.getUsername().equals(currentUsername)) {// 如果是自己发送的语音消息，则播放本地地址
-			String localPath = voiceMessage.getMessage().split("&")[0];
+			String localPath = voiceMessage.getMessage();
 			startPlayRecord(localPath, true);
 		} else {// 如果是收到的消息，则需要先下载后播放
 			String localPath = getDownLoadFilePath(voiceMessage);
-			BmobLog.i("voice", "收到的语音存储的地址:" + localPath);
+			System.out.println("voice"+ "收到的语音存储的地址:" + localPath);
 			startPlayRecord(localPath, true);
 		}
 	}
