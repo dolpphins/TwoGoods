@@ -1,8 +1,10 @@
 package com.lym.twogoods.widget;
 
+import com.lym.twogoods.R;
 import com.lym.twogoods.config.EmotionConfiguration;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Html.ImageGetter;
@@ -34,6 +36,10 @@ public class EmojiTextView extends TextView{
 	public EmojiTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mContext = context;
+		TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.EmojiTextView);      
+		int emojiSize = array.getDimensionPixelSize(R.styleable.EmojiTextView_emojiSize, 20);
+		setEmojiSize(emojiSize);
+		array.recycle();
 		init();
 	}
 	

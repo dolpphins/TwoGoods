@@ -24,7 +24,12 @@ public class ChatDetailBean extends BmobObject{
     private String username;
     
     /**发送状态，可判断是否成功发送*/
+    @DatabaseField
     private int last_message_status;
+    
+    /**接收状态，可判断是否成功接收*/
+    @DatabaseField
+    private int message_read_status;
     
     /** 对方用户名 */
     @DatabaseField
@@ -93,4 +98,18 @@ public class ChatDetailBean extends BmobObject{
     {
         return last_message_status;
     }
+	public int getLast_message_status() {
+		return last_message_status;
+	}
+	public void setLast_message_status(int last_message_status) {
+		this.last_message_status = last_message_status;
+	}
+	public int getMessage_read_status() {
+		return message_read_status;
+	}
+	public void setMessage_read_status(int message_read_status) {
+		this.message_read_status = message_read_status;
+	}
+	
+    
 }

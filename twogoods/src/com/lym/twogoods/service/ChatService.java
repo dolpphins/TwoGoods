@@ -26,6 +26,7 @@ import com.lym.twogoods.utils.TimeUtil;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -123,84 +124,17 @@ public class ChatService extends Service {
 
 	class MyThread extends Thread {  
 		
-		@Override
-		/*public void run() {
-			query.findObjects(getApplicationContext(), new FindListener<ChatDetailBean>() {
-		        
-		        @Override
-		        public void onError(int code, String msg) {
-		            // TODO Auto-generated method stub
-		        	System.out.println("service查询失败");
-		        }
-				@Override
-				public void onSuccess(List<ChatDetailBean> object) {
-					System.out.println("service search---------");
-					System.out.println("service new message Size "+object.size());
-					if(object.size()>0){//有新消息,对新消息根据发送者进行分类，然后保存到本地ChatSnapshot表
-						
-						List<String>listOfName = new ArrayList<String>();
-						for(ChatDetailBean obj : object){//获取有哪些用户发信息过来
-							if(!listOfName.contains(obj.getUsername())){
-								listOfName.add(obj.getUsername());
-							}
-						}
-						
-						if(listOfName.size()>0){
-							System.out.println("service 有新消息---------");
-							Map<String,List<ChatDetailBean>> map = new HashMap<String, List<ChatDetailBean>>();
-							List<ChatDetailBean>list;
-							//根据发送消息的用户名来进行整理
-							for (ChatDetailBean obj : object) {
-								System.out.println("servicesize"+object.size());
-        		            	System.out.println("service"+obj.getUsername());
-        		            	System.out.println("service"+obj.getMessage());
-        		            	System.out.println("service"+obj.getCreatedAt());
-							}
-						}
-					}
-				}
-			});
-		}
-		*/
-  
         public void run() {  
         	while(true){
         		if(NetworkHelper.isNetConnected(getApplicationContext())){
-	    			if(isFirstLoad){//加载在本地数据库中最近一条发送或者接收的消息的时间以后的全部消息
-	    				System.out.println("service qurry 第一次加载新消息---------");
-	    				QueryBuilder<ChatDetailBean, Integer>queryBuilder = mChatDetailDao.queryBuilder();
-	            		/**
-	            		 * 此处需要进行详细的测试，需要拿到的数据是本地数据库中最近一条发送或者接收的消息，而且消息状态是成功的。
-	            		 */
-	            		try {
-	    				//	where.eq("last_message_status", MessageConfig.SEND_MESSAGE_SUCCEED);
-	            			//where = where.eq("username", currentUser.getUsername());
-	    					//queryBuilder.setWhere(where);
-	            			queryBuilder.where().eq("username", currentUser.getUsername());
-	    	        		chatDetailBean = queryBuilder.queryForFirst();
-	    				} catch (SQLException e1) {
-	    					// TODO 自动生成的 catch 块
-	    					e1.printStackTrace();
-	    				}
-	            		
-	    				if(chatDetailBean==null){//如果本地数据库为空,即是第一次使用此软件聊天。则查找所有发送对象是当前用户的消息
-	    					query.addWhereGreaterThan("publish_time", 0);
-	    					System.out.println("service qurry 是第一次加载新消息,数据库为空---0");
-	    				}else{//只查询本地聊天数据库中没有的消息，需要减去加载数据的时间间隔.查询本地聊天数据库的第一条消息，需要得到最近一条消息的时间
-	    					query.addWhereGreaterThan("publish_time", chatDetailBean.getPublish_time());
-	    					System.out.println("service qurry 是第一次加载新消息"+chatDetailBean.getPublish_time());
-	    				}
-	    			}else{
-	    				System.out.println("service qurry 不是第一次加载新消息，数据库不为空---------");
-	    				query.addWhereGreaterThan("publish_time", loadTime);
-	    			}
-	    			System.out.println("service qurry inited---------");
+	    			
+	    			query.addWhereGreaterThan("message_read_status", 1);
+	    			
 	        		//执行查询方法
 	        		query.findObjects(getApplicationContext(), new FindListener<ChatDetailBean>() {
 	        		        
 	        		        @Override
 	        		        public void onError(int code, String msg) {
-	        		            // TODO Auto-generated method stub
 	        		        	System.out.println("service查询失败");
 	        		        }
 							@Override
@@ -208,12 +142,16 @@ public class ChatService extends Service {
 								System.out.println("service search---------");
 								
 								if(object.size()>0){//有新消息,对新消息根据发送者进行分类，然后保存到本地ChatSnapshot表
-									
+									System.out.println("service 新接收的消息数目为："+object.size());
 									List<String>listOfName = new ArrayList<String>();
 									for(ChatDetailBean obj : object){//获取有哪些用户发信息过来
 										if(!listOfName.contains(obj.getUsername())){
 											listOfName.add(obj.getUsername());
 										}
+									}
+									for(int f=0;f<listOfName.size();f++)
+									{
+										System.out.println("service 新接收的消息发送人为:"+listOfName.get(f));
 									}
 									
 									if(listOfName.size()>0){
@@ -226,6 +164,7 @@ public class ChatService extends Service {
 			        		            	System.out.println("service"+obj.getUsername());
 			        		            	System.out.println("service"+obj.getMessage());
 			        		            	System.out.println("service"+obj.getCreatedAt());
+			        		            	obj.setMessage_read_status(MessageConfig.MESSAGE_RECEIVED);
 			        		            	try {
 												mChatDetailDao.create(obj);
 											} catch (SQLException e) {
@@ -233,6 +172,23 @@ public class ChatService extends Service {
 												e.printStackTrace();
 												System.out.println("service接收的新消息插入到本地数据库失败");
 											}
+			        		            	//update新查询到数据
+			        		            	ChatDetailBean cdb = new ChatDetailBean();
+			        		            	cdb.setMessage_read_status(MessageConfig.MESSAGE_RECEIVED);
+			        		            	cdb.update(getApplicationContext(),obj.getObjectId(),new UpdateListener() {
+												
+												@Override
+												public void onSuccess() {
+													// TODO 自动生成的方法存根
+													System.out.println("service 更新成功");
+												}
+												
+												@Override
+												public void onFailure(int arg0, String arg1) {
+													// TODO 自动生成的方法存根
+													System.out.println("service 更新失败");
+												}
+											});
 			        		            	
 			        		            	list = map.get(obj.getUsername());
 			        		            	if(list==null){
@@ -291,9 +247,8 @@ public class ChatService extends Service {
 												public void onSuccess() {
 													// TODO 自动生成的方法存根
 													try {
-														
 														DeleteBuilder<ChatSnapshot, Integer> deleteBuilder =mChatSnapshotDao.deleteBuilder();
-											            deleteBuilder.where().eq("username",userName);
+											            deleteBuilder.where().eq("username",userName).or().eq("other_username", userName);
 											            deleteBuilder.delete();
 														mChatSnapshotDao.create(chatSnapshot);
 														System.out.println("service bmob将数据插入到本地数据库中");
@@ -347,11 +302,11 @@ public class ChatService extends Service {
 							}
 	        			});
 	        		try {
-	        			loadTime = TimeUtil.getCurrentMilliSecond();
-						sleep(2000);
+						sleep(1500);
 					} catch (InterruptedException e) {
 						// TODO 自动生成的 catch 块
 						e.printStackTrace();
+						System.out.println("service sleep 出现异常");
 					}
 	        		isFirstLoad = false;
         		}

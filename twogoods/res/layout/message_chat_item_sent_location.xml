@@ -57,7 +57,7 @@
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/iv_picture"
+            android:layout_toLeftOf="@id/layout_location"
             android:clickable="true"
             android:contentDescription="@string/action_settings"
             android:scaleType="fitCenter"

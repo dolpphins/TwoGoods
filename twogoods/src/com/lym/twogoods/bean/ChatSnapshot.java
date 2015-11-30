@@ -38,8 +38,10 @@ public class ChatSnapshot extends BmobObject{
 	@DatabaseField
 	private String last_message;
 	/**聊天对象头像的url*/
+	 @DatabaseField
 	private String head_url;
 	/**消息发送状态，有发送成功，发送失败和正在发送中三种状态*/
+	 @DatabaseField
 	private int last_message_status; 
 	
 	/** 最后一条消息类型,默认为{@link ChatConfiguration#TYPE_MESSAGE_UNKNOWN} */

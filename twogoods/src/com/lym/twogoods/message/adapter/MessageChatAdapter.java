@@ -36,6 +36,7 @@ import com.lym.twogoods.message.viewHolder.ViewHolder;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
 import com.lym.twogoods.ui.PersonalityInfoActivity;
 import com.lym.twogoods.utils.TimeUtil;
+import com.lym.twogoods.widget.EmojiTextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -50,8 +51,8 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 
 		//8种Item的类型
 		//文本
-		private final int TYPE_RECEIVER_TXT = 0; //接收的文本消息
-		private final int TYPE_SEND_TXT = 1;	//发送的文本消息
+		private final int TYPE_SEND_TXT = 0;	//发送的文本消息
+		private final int TYPE_RECEIVER_TXT = 1; //接收的文本消息
 		//图片
 		private final int TYPE_SEND_IMAGE = 2;	//发送的图片消息
 		private final int TYPE_RECEIVER_IMAGE = 3;	//接收的图片消息
@@ -96,6 +97,8 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 		@Override
 		public int getCount() {
 			// TODO 自动生成的方法存根
+			if(list==null)
+				return 0;
 			return list.size();
 		}
 
@@ -144,20 +147,14 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 			
 			final ChatDetailBean item = list.get(position);
 			System.out.println("1click item type = "+item.getMessage_type());
-			if (convertView == null) {
-				convertView = createViewByType(item, position);
-				convertView.setTag(R.id.tv_time,item.getMessage_type());
-			}
-			if(Integer.parseInt(convertView.getTag(R.id.tv_time).toString())!=item.getMessage_type())
-			{
-				convertView = createViewByType(item, position);
-			}
+			convertView = createViewByType(item, position);
 			System.out.println("2click item type = "+item.getMessage_type());
 			//文本类型
 			ImageView iv_avatar = ViewHolder.get(convertView, R.id.iv_avatar);
 			final ImageView iv_fail_resend = ViewHolder.get(convertView, R.id.iv_fail_resend);//失败重发
 			TextView tv_time = ViewHolder.get(convertView, R.id.tv_time);
-			TextView tv_message = ViewHolder.get(convertView, R.id.tv_message);
+			EmojiTextView tv_message = ViewHolder.get(convertView, R.id.tv_message);
+			
 			//图片
 			ImageView iv_picture = ViewHolder.get(convertView, R.id.iv_picture);
 			final ProgressBar progress_load = ViewHolder.get(convertView, R.id.progress_load);//进度条
@@ -203,6 +200,11 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 					||getItemViewType(position)==TYPE_SEND_LOCATION
 					||getItemViewType(position)==TYPE_SEND_VOICE){//只有自己发送的消息才有重发机制
 				//发送状态描述
+				if(progress_load==null)
+				{
+					System.out.println("message progress == null");
+					System.out.println("message progress "+getItemViewType(position));
+				}
 				if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_SUCCEED){//发送成功
 					progress_load.setVisibility(View.INVISIBLE);
 					iv_fail_resend.setVisibility(View.INVISIBLE);

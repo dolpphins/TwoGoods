@@ -73,14 +73,14 @@
         <LinearLayout
             android:id="@+id/chat_layout_emo_content"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone" >
 
-            <ViewFlipper
-                android:id="@+id/message_chat_pager_emo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <com.lym.twogoods.widget.WrapContentViewPager
+		        android:id="@+id/message_chat_emoji_viewpager"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" />
         </LinearLayout>
             
         <include

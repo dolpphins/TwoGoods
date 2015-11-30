@@ -249,9 +249,7 @@ public class ChatFragment extends PullListFragment{
 	 */
 	private void sendVoice2Db(Boolean isUpload,final View parentV, Object values) {
 		// TODO 自动生成的方法存根
-		//mChatDetailBean = new ChatDetailBean();
 		String username = currentUser.getUsername();
-		//String username = currentUser.getUsername();
 		mChatDetailBean.setUsername(username);
 		mChatDetailBean.setGUID(DatabaseHelper.getUUID().toString());
 		mChatDetailBean.setOther_username(otherUser.getUsername());
@@ -261,6 +259,7 @@ public class ChatFragment extends PullListFragment{
 		if(isUpload){
 			mChatDetailBean.setMessage(voiceUrl);
 			mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_SUCCEED);
+			mChatDetailBean.setMessage_read_status(MessageConfig.MESSAGE_NOT_RECEIVED);
 			mChatDetailBean.save(getActivity(), new SaveListener() {
 				
 				@Override
@@ -426,6 +425,7 @@ public class ChatFragment extends PullListFragment{
 			mChatDetailBean.setGUID(DatabaseHelper.getUUID().toString());
 			mChatDetailBean.setOther_username(otherUser.getUsername());
 			mChatDetailBean.setMessage_type(ChatConfiguration.TYPE_MESSAGE_PICTURE);
+			mChatDetailBean.setMessage_read_status(MessageConfig.MESSAGE_NOT_RECEIVED);
 			mChatDetailBean.setPublish_time(System.currentTimeMillis());
 			//文件上传成功
 			if(isUpload){
@@ -540,23 +540,17 @@ public class ChatFragment extends PullListFragment{
 		{
 			mOrmDatabaseHelper = new OrmDatabaseHelper(getActivity());
 			mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
-			
 		}
 		QueryBuilder<ChatDetailBean, Integer>mQueryBuilder = mChatDetailDao.queryBuilder();
-		if(mQueryBuilder==null)
-		{
-			System.out.println("mQueryBuilder==null");
-		}
 		try {
-			Where<ChatDetailBean, Integer> where = mQueryBuilder.where().eq("username", currentUser.getUsername()).
-					or().eq("other_username", currentUser.getUsername());
 			
-			
+			Where<ChatDetailBean, Integer> where = mQueryBuilder.orderBy("publish_time", true).where().eq("username",otherUser.getUsername()).
+					or().eq("other_username", otherUser.getUsername());
 			list = where.query();
+			
 		} catch (Exception e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
-			System.out.println("查询本地聊天信息数据库失败");
 		}
 		return list;
 	}
