@@ -14,23 +14,13 @@
 		    android:id="@+id/message_list_iv_recent_avatar"
 		    android:layout_width="70dip"
 		    android:layout_height="match_parent">
-        <ImageView
-            android:id="@+id/message_list_iv_recent_avatar_head"
-            style="@style/Message_Smile_avadar"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/user_default_head" />
+	        <ImageView
+	            android:id="@+id/message_list_iv_recent_avatar_head"
+	            style="@style/Message_Smile_avadar"
+	            android:layout_gravity="center_vertical"
+	            android:layout_marginLeft="10dp"
+	            android:src="@drawable/user_default_head" />
         
-        <TextView
-            android:id="@+id/message_list_tv_recent_unread"
-            android:layout_width="16dip"
-            android:layout_height="16.0dip"
-            android:layout_marginRight="10.0dip"
-            android:layout_marginTop="5.0dip"
-            android:visibility="gone"
-            android:background="@drawable/message_list_newmessage2"
-            android:textColor="#ffffffff"
-            android:textSize="10.0dip" />
         </LinearLayout>
 
         <TextView

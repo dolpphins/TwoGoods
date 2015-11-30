@@ -25,17 +25,12 @@ public class TwoGoodsApplication extends Application{
 		super.onCreate();
 		
 		initConfig();
-		
+		/*User user = new User();
+		user.setUsername("阿尧yao");
+		user.setPhone("15603005669");
+		UserInfoManager.getInstance().setmCurrent(user);*/
 		prepare();
 		
-		//免登录 测试使用
-		User user = new User();
-		user.setUsername("qqqQQ");
-		user.setBrowse_num(100);
-		user.setFocus_num(10);
-		user.setPhone("15603005716");
-		user.setSex("男");
-		UserInfoManager.getInstance().setmCurrent(user);
 	}
 	
 	//初始化应用配置

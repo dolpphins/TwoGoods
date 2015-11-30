@@ -65,6 +65,8 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 	private NetworkTipsBroadcastReceiver mNetworkTipsBroadcastReceiver = new NetworkTipsBroadcastReceiver();
 	/**要显示的Tab*/
 	private int showTabIndex = 0;
+	/**接收新消息的服务*/
+	Intent chatService;
 	
 	
 	@Override
@@ -72,7 +74,7 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		super.onCreate(savedInstanceState);
 		
 		initTabFragment();
-	//	startService();
+		startService();
 		EventBus.getDefault().register(this);
 	}
 
@@ -100,8 +102,8 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 	 */
 	private void startService() {
 		
-		if(!UserInfoManager.getInstance().isLogining()){//如果用户已经登录,开启service,否则不开启
-			Intent chatService = new Intent(MainActivity.this,ChatService.class);
+		if(UserInfoManager.getInstance().isLogining()){//如果用户已经登录,开启service,否则不开启
+			chatService = new Intent(MainActivity.this,ChatService.class);
 			this.startService(chatService);
 		}
 	}
