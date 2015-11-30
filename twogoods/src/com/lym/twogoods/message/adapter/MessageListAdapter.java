@@ -122,9 +122,11 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 		}
 		
 		String name = item.getOther_username();
-		if(name==UserInfoManager.getInstance().getmCurrent().getUsername())
+		if(name.equals(UserInfoManager.getInstance().getmCurrent().getUsername()))
 			name = item.getUsername();
-		tv_recent_name.setText(item.getOther_username());
+		System.out.println("item"+item.getOther_username());
+		System.out.println("item"+item.getUsername());
+		tv_recent_name.setText(name);
 		tv_recent_time.setText(TimeUtil.getDescriptionTimeFromTimestamp(item.getLast_time()));
 		if(item.getLast_message_type()==ChatConfiguration.TYPE_MESSAGE_TEXT){
 			tv_recent_msg.setText(item.getLast_message());

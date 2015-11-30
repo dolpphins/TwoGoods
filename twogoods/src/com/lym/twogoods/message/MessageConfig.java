@@ -37,4 +37,7 @@ public class MessageConfig {
 	public static final String EXTRA_STRING = "extra_string";
 	
 	
+	public static final int MESSAGE_RECEIVED = 0;       //对方已经接收到消息
+	public static final int MESSAGE_NOT_RECEIVED = 2;      //对方还未接收到消息
+	 
 }

@@ -20,6 +20,7 @@ import cn.bmob.im.BmobChatManager;
 import cn.bmob.im.BmobUserManager;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.ChatSnapshot;
@@ -64,14 +65,12 @@ public class MessageFragment extends PullListFragment implements
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		System.out.println("life"+"onCreate");
 		super.onCreate(savedInstanceState);
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		System.out.println("life"+"onCreateView");
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
@@ -80,15 +79,7 @@ public class MessageFragment extends PullListFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		
 		super.onActivityCreated(savedInstanceState);
-		System.out.println("life"+"onActivityCreated");
 		init();
-	}
-	
-	@Override
-	public void onStart() {
-		System.out.println("life"+"onStart");
-		super.onStart();
-	
 	}
 	
 
@@ -112,12 +103,7 @@ public class MessageFragment extends PullListFragment implements
 		mDatabaseHelper = new OrmDatabaseHelper(getActivity());
 		mChatSnapshotDao = mDatabaseHelper.getChatSnapshotDao();
 		chatSnapshotList = new ArrayList<ChatSnapshot>();
-		try {
-			chatSnapshotList = mChatSnapshotDao.queryForAll();
-		} catch (SQLException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		}
+		chatSnapshotList = queryRecent();
 	}
 
 
@@ -138,13 +124,11 @@ public class MessageFragment extends PullListFragment implements
 			mMessageListAdapter = new MessageListAdapter(getActivity(),
 					R.layout.message_list_item_conversation, chatSnapshotList);
 			super.setAdapter(mMessageListAdapter);
-			System.out.println("life123");
 			
 		}else{
 			int images[] = {R.drawable.user_default_head,R.drawable.user_default_head,
 					R.drawable.user_default_head,R.drawable.user_default_head,
 					R.drawable.user_default_head};
-			System.out.println("life123456");
 			TestAdapter adapter = new TestAdapter(getActivity(), images);
 			super.setAdapter(adapter);
 		}
@@ -159,16 +143,11 @@ public class MessageFragment extends PullListFragment implements
 		List<ChatSnapshot> list = null;
 		OrmDatabaseHelper helper = new OrmDatabaseHelper(getActivity());
 		Dao<ChatSnapshot,Integer> mChatDao = helper.getChatSnapshotDao();
-		Map<String, Object>map = new HashMap<String, Object>();
-		map.put("username", getCurrentErHuoHao());
-		map.put("other_username", getCurrentErHuoHao());
 		try {
-			list = mChatDao.queryForFieldValues(map);
+			list = mChatDao.queryBuilder().orderBy("last_time", false).query();
 		} catch (SQLException e) {
-			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
-		System.out.println("time1  "+TimeUtil.getCurrentMilliSecond());
 		return list;
 	}
 	
@@ -177,7 +156,7 @@ public class MessageFragment extends PullListFragment implements
 	 * 获取当前用户名
 	 * @return
 	 */
-	public String getCurrentErHuoHao() {
+	public String getCurrentUsername() {
 		if(currentUser==null)
 		{
 			currentUser = UserInfoManager.getInstance().getmCurrent();
@@ -207,31 +186,40 @@ public class MessageFragment extends PullListFragment implements
 	
 	public void showDeleteDialog(final ChatSnapshot recent) {
 		
-		final List<ChatSnapshot>list = queryRecent();
 		dialogTips = new ArrayList<String>();
 		dialogTips.add("删除会话");
-		dialogTips.add("消息置顶");
 		
 		final MessageDialog mDialog = new MessageDialog(getActivity(), dialogTips);
 		mDialog.show();
 		mDialog.setItemOnClickListener(new MyItemOnClickListener() {
-
 			@Override
 			public void itemOnClick(int position) {
-				
-				ChatSnapshot mChatSnapshot = list.get(position);
-				
-				mMessageListAdapter.remove(mChatSnapshot); // 此处只是模仿数据删除，如果mTestList用的是数据库的数据或者是别的，需先删除数据库，否则下次进入程序还是会出现删除的数据
-				
-				try {
-					mChatSnapshotDao.delete(mChatSnapshot);
-				} catch (SQLException e) {
-					// TODO 自动生成的 catch 块
-					e.printStackTrace();
-					System.out.println("从本地数据库中删除聊天失败");
+				String name = recent.getUsername();
+				if(name.equals(currentUser.getUsername())){
+					
+					try {
+						
+						DeleteBuilder<ChatSnapshot, Integer> deleteBuilder = mChatSnapshotDao.deleteBuilder();
+						deleteBuilder.where().eq("other_username", recent.getOther_username());
+						deleteBuilder.delete();
+					} catch (SQLException e) {
+						// TODO 自动生成的 catch 块
+						e.printStackTrace();
+					}
+					
+				}else{
+					try {
+						DeleteBuilder<ChatSnapshot, Integer> deleteBuilder = mChatSnapshotDao.deleteBuilder();
+						deleteBuilder.where().eq("username", recent.getUsername());
+						deleteBuilder.delete();
+					} catch (SQLException e) {
+						// TODO 自动生成的 catch 块
+						e.printStackTrace();
+					}
+					
 				}
+				refreshMessage();
 				mMessageListAdapter.notifyDataSetChanged();
-				
 				mDialog.cancel();
 			}
 		});
@@ -241,24 +229,44 @@ public class MessageFragment extends PullListFragment implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		if(isLogining){
+		
 			Intent intent = new Intent(getActivity(), ChatActivity.class);
 			
 			ChatSnapshot chatSnapshot = (ChatSnapshot) mMessageListAdapter.getItem(position);
-			System.out.println("chatSnapshot username"+chatSnapshot.getUsername()+"otherusername"+chatSnapshot.getOther_username());
+			//有未读的消息点击后要将unread_num置为0
+			if(chatSnapshot.getUnread_num()>0){
+				if(chatSnapshot.getUsername().equals(getCurrentUsername())){//如果最近一条消息是用户自己发出去的
+					try {
+						String name = chatSnapshot.getOther_username();
+						mChatSnapshotDao.updateRaw("UPDATE chatsnapshot SET unread_num = 0 WHERE other_username = '"+name+"'");
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}else{
+					try {
+						String name = chatSnapshot.getUsername();
+						mChatSnapshotDao.updateRaw("UPDATE chatsnapshot SET unread_num = 0 WHERE username = '"+name+"'");
+					} catch (SQLException e) {
+						// TODO 自动生成的 catch 块
+						e.printStackTrace();
+					}
+				}
+			}
+			
 			User otherUser = new User();
-			System.out.println("chatSnapshot currentuserame"+chatSnapshot.getUsername());
-			String name = chatSnapshot.getUsername();
-			if(name.equals(currentUser.getUsername()))
+			String name;
+			if(chatSnapshot.getUsername().equals(getCurrentUsername()))
+			{
 				name = chatSnapshot.getOther_username();
-			otherUser.setUsername(name);
+			}else{
+				name = chatSnapshot.getUsername();
+			}
 			otherUser.setHead_url(chatSnapshot.getHead_url());
+			otherUser.setUsername(name);
 			
 			intent.putExtra("otherUser", otherUser);		
 			startActivity(intent);
-		}else{
-			
-		}
+		
 	}
 
 	/**判断当前fragment是否显示在屏幕上，如果显示，则刷新界面*/
@@ -270,7 +278,6 @@ public class MessageFragment extends PullListFragment implements
 		if(isLogining){
 			if(!ishidden){
 				refreshMessage();
-				System.out.println("12345message Fragment refreah");
 			}
 		}
 	}
@@ -308,7 +315,6 @@ public class MessageFragment extends PullListFragment implements
 	 */
 	public void refreshMessage()
 	{
-		System.out.println("refreshMessage<<<<<<<<<<<<<<<<<<<<<<");
 		try {
 			getActivity().runOnUiThread(new Runnable() {
 				public void run() {

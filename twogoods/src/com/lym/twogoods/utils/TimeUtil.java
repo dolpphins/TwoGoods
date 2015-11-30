@@ -261,10 +261,8 @@ public class TimeUtil {
 	
 	public static Long getCurrentMilliSecond()
 	{
-		Long time;
-		Date date = new Date();
-		time = date.getTime();
-		return time;
+		
+		return System.currentTimeMillis();
 	}
 	
 }
