@@ -38,29 +38,31 @@
 	    	android:layout_centerVertical="true"
 	    	android:layout_toRightOf="@id/app_common_actionbar_left_iv"
 	    	android:layout_toEndOf="@id/app_common_actionbar_left_iv"
-	    	android:visibility="gone"/> 
+	    	android:visibility="gone"
+	    	android:textColor="@color/white"/> 
 	</RelativeLayout>
 	
 	<RelativeLayout 
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_centerInParent="true">
+		<ImageView
+	        android:id="@+id/app_common_actionbar_center_iv"
+	        android:contentDescription="@null"
+	        android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:layout_centerVertical="true"
+	    	android:visibility="gone"/>
 	    <TextView
 	        android:id="@+id/app_common_actionbar_center_tv" 
 	        android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
 	    	android:textSize="@dimen/app_common_actionbar_centerTextSize"
 	    	android:layout_centerVertical="true"
-	    	android:visibility="gone"/>
-	    <ImageView
-	        android:id="@+id/app_common_actionbar_center_iv"
-	        android:contentDescription="@null"
-	        android:layout_width="wrap_content"
-	    	android:layout_height="wrap_content"
-	    	android:layout_centerVertical="true"
-	    	android:layout_toRightOf="@id/app_common_actionbar_center_tv"
-	    	android:layout_toEndOf="@id/app_common_actionbar_center_tv"
-	    	android:visibility="gone"/>
+	    	android:layout_toRightOf="@id/app_common_actionbar_center_iv"
+	    	android:layout_toEndOf="@id/app_common_actionbar_center_iv"
+	    	android:visibility="gone"
+	    	android:textColor="@color/white"/>
 	</RelativeLayout>
 	
 	<RelativeLayout 
@@ -75,7 +77,8 @@
 	    	android:layout_height="wrap_content"
 	    	android:textSize="@dimen/app_common_actionbar_rightTextSize"
 	    	android:layout_centerVertical="true"
-	    	android:visibility="gone"/>
+	    	android:visibility="gone"
+	    	android:textColor="@color/white"/>
 	    <ImageView
 	        android:id="@+id/app_common_actionbar_right_iv"
 	        android:contentDescription="@null"

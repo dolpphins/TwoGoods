@@ -1,5 +1,6 @@
 package com.lym.twogoods;
 
+import com.lym.twogoods.bean.Location;
 import com.lym.twogoods.bean.User;
 
 /**
@@ -18,6 +19,15 @@ public class UserInfoManager {
 	
 	/** 当前用户信息 */
 	private User mCurrentUser;
+	
+	/** 锁 */
+	private Object userLock = new Object();
+	
+	/** 当前位置 */
+	private Location mCurrentLocation;
+	
+	/** 锁 */
+	private Object locationLock = new Object();
 	
 	private UserInfoManager(){}
 	
@@ -46,8 +56,10 @@ public class UserInfoManager {
 	 * 
 	 * @param 当前登录用户User对象
 	 * */
-	public synchronized void setmCurrent(User mCurrent) {
-		this.mCurrentUser = mCurrent;
+	public void setmCurrent(User mCurrent) {
+		synchronized (userLock) {
+			this.mCurrentUser = mCurrent;
+		}
 	}
 	
 	/**
@@ -55,11 +67,34 @@ public class UserInfoManager {
 	 * 
 	 * @return 已登录返回true,否则返回false
 	 * */
-	public synchronized boolean isLogining() {
-		if(mCurrentUser == null) {
-			return false;
-		} else {
-			return true;
+	public boolean isLogining() {
+		synchronized (userLock) {
+			if(mCurrentUser == null) {
+				return false;
+			} else {
+				return true;
+			}
 		}
 	}
+	
+	/**
+	 * 设置当前位置信息，该方法是线程安全的
+	 * 
+	 * @param location
+	 */
+	public void setCurrentLocation(Location location) {
+		synchronized (locationLock) {
+			mCurrentLocation = location;
+		}
+	}
+	
+	/**
+	 * 获取当前位置信息
+	 * 
+	 * @return 返回当前位置信息
+	 */
+	public Location getCurrentLocation() {
+		return mCurrentLocation;
+	}
+	
 }

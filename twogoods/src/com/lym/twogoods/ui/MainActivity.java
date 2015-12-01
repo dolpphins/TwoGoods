@@ -2,6 +2,7 @@ package com.lym.twogoods.ui;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
+import com.lym.twogoods.bean.Location;
 import com.lym.twogoods.eventbus.event.ExitChatEvent;
 import com.lym.twogoods.fragment.IndexFragment;
 import com.lym.twogoods.fragment.MessageFragment;
@@ -11,11 +12,10 @@ import com.lym.twogoods.index.ui.GoodsSearchActivity;
 import com.lym.twogoods.nearby.ui.SelectCityActivity;
 import com.lym.twogoods.publish.ui.PublishGoodsActivity;
 import com.lym.twogoods.receiver.NetworkTipsBroadcastReceiver;
+import com.lym.twogoods.screen.DisplayUtils;
 import com.lym.twogoods.service.ChatService;
 import com.lym.twogoods.ui.base.BottomDockFragmentActivity;
 import com.lym.twogoods.viewholder.TabViewHolder;
-
-import de.greenrobot.event.EventBus;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -23,8 +23,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import de.greenrobot.event.EventBus;
 
 /**
  * <p>App主Activity</p>
@@ -206,7 +208,8 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		//设置新的Tab
 		tabTextView[selectTabIndex].setSelected(true);
 		currentTabIndex = selectTabIndex;
-		setCenterTitle(tabText[currentTabIndex]);
+		TextView tv = setCenterTitle(tabText[currentTabIndex]);
+		tv.setCompoundDrawables(null, null, null, null);
 		showTabIndex = currentTabIndex;
 	}
 	
@@ -224,17 +227,29 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 					Log.w(TAG, "set click event for index actionbar search icon fail");
 				}
 			}
-		//附近
-//		} else if(index == 1){
-//			Drawable nearbySearchIcon = getResources().getDrawable(R.drawable.index_search_icon);//跟主页搜索图标一样 
-//			ImageView nearbySearchIconIv = setRightDrawable(nearbySearchIcon);
-//			if(nearbySearchIconIv != null) {
-//				if(!setClickEventForImageView(nearbySearchIconIv, new NearByActionBarSearchIconClickListener())) {
-//					Log.w(TAG, "set click event for nearby actionbar search icon fail");
-//				}
-//			}
 		} else {
 			setRightDrawable(null);
+			//附近
+			if(index == 1){
+				Location location = UserInfoManager.getInstance().getCurrentLocation();
+				if(location != null) {
+					TextView tv = setCenterTitle(location.getDescription());
+					Drawable left = getResources().getDrawable(R.drawable.nearly_location_icon);
+					if(left != null) {
+						left.setBounds(0, 0, left.getIntrinsicWidth(), left.getIntrinsicHeight());
+						tv.setCompoundDrawables(left, null, null, null);
+						tv.setCompoundDrawablePadding(DisplayUtils.dp2px(getApplicationContext(), 5));
+					}
+					tv.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent(MainActivity.this, SelectCityActivity.class);
+							startActivity(intent);
+						}
+					});
+				}
+			}
 		}
 	}
 	
