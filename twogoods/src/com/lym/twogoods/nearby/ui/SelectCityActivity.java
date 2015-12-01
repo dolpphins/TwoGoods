@@ -1,15 +1,20 @@
 package com.lym.twogoods.nearby.ui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
+import android.app.ProgressDialog;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -21,14 +26,15 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.PictureThumbnailSpecification;
+import com.lym.twogoods.config.SharePreferencesConfiguration;
 import com.lym.twogoods.nearby.NearbyPositionModelBean;
 import com.lym.twogoods.nearby.adapter.NearbyHotCityGridViewAdapter;
 import com.lym.twogoods.nearby.adapter.SelectCityPositionListViewAdapter;
@@ -37,8 +43,8 @@ import com.lym.twogoods.nearby.config.NearbyConfig;
 import com.lym.twogoods.nearby.utils.CharacterParser;
 import com.lym.twogoods.nearby.utils.PinyinComparator;
 import com.lym.twogoods.screen.NearbyScreen;
-import com.lym.twogoods.ui.MainActivity;
 import com.lym.twogoods.ui.base.BackFragmentActivity;
+import com.lym.twogoods.utils.SharePreferencesManager;
 
 /**
  * <p>
@@ -67,11 +73,12 @@ public class SelectCityActivity extends BackFragmentActivity {
 	// 筛选结果适配器
 	private SelectCityPositionListViewAdapter selectCityPositionListViewAdapter;
 	// 定位相关
+	private Geocoder geocoder;
 	private boolean isFirst = false;
 	private LocationClient locationClient;
 	private MylocationListen mylocationListen;
-	//ActionbarTitle
-	private String title="";
+	// 加载器
+	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,23 +86,9 @@ public class SelectCityActivity extends BackFragmentActivity {
 		setContentView(R.layout.nearby_select_city_activity);
 		init();
 		initEvent();
-		
+
 	}
 
-	/*
-	 * 
-	 * 只有点返回的时候才会将地址返回
-	 * (non-Javadoc)
-	 * @see com.lym.twogoods.ui.base.BackFragmentActivity#onActionBarBack()
-	 */
-	@Override
-	public void onActionBarBack() {
-		super.onActionBarBack();
-		Intent intent=new Intent(SelectCityActivity.this,MainActivity.class);
-		intent.putExtra("city", title);
-		setResult(NearbyConfig.SEND_POSITION);
-		this.finish();
-	}
 	private void init() {
 		et_nearby_select_city_input = (SelectCityClearEditText) findViewById(R.id.et_nearby_select_city_replace_input);
 		btn_nearby_select_city_input_cancel = (Button) findViewById(R.id.btn_nearby_select_city_replace_input_cancel);
@@ -116,6 +109,13 @@ public class SelectCityActivity extends BackFragmentActivity {
 				getApplicationContext(), dataList);
 		lv_nearby_select_city_search_result
 				.setAdapter(selectCityPositionListViewAdapter);
+		// ProgressDialog初始化
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setTitle("正在保存位置信息");
+		progressDialog.setMessage("稍等一下......");
+		progressDialog.setProgress(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setIndeterminate(true);
+		progressDialog.setCancelable(false);
 	}
 
 	private void initEvent() {
@@ -144,13 +144,11 @@ public class SelectCityActivity extends BackFragmentActivity {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -173,25 +171,37 @@ public class SelectCityActivity extends BackFragmentActivity {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-						// 根据点击的结果设置为title
-						setCenterTitle(((NearbyPositionModelBean) selectCityPositionListViewAdapter
-								.getItem(position)).getName());
-						title=((NearbyPositionModelBean) selectCityPositionListViewAdapter
-								.getItem(position)).getName();
-						//隐藏操作
-						et_nearby_select_city_input.clearFocus();
-						InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-						imm.hideSoftInputFromWindow(
-								et_nearby_select_city_input.getWindowToken(), 0);
-						et_nearby_select_city_input.setText("");
+						// 设置Location
+						progressDialog.show();
+						setLocation(getLocation(((NearbyPositionModelBean) selectCityPositionListViewAdapter
+								.getItem(position)).getName()));
+						Log.v(TAG, UserInfoManager.getInstance()
+								.getCurrentLocation().getDescription()
+								+ '\n'
+								+ UserInfoManager.getInstance()
+										.getCurrentLocation().getLatitude()
+								+ '\n'
+								+ UserInfoManager.getInstance()
+										.getCurrentLocation().getLongitude());
+						finish();
+						// 隐藏操作
+						/*
+						 * et_nearby_select_city_input.clearFocus();
+						 * InputMethodManager imm = (InputMethodManager)
+						 * getSystemService(INPUT_METHOD_SERVICE);
+						 * imm.hideSoftInputFromWindow(
+						 * et_nearby_select_city_input.getWindowToken(), 0);
+						 * et_nearby_select_city_input.setText("");
+						 */
 					}
 				});
-		
+
 		ll_nearby_select_city_dingwei.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				isFirst = true;
+				progressDialog.show();
 				locationClient.requestLocation();
 			}
 		});
@@ -208,6 +218,7 @@ public class SelectCityActivity extends BackFragmentActivity {
 	 * 定位相关初始化
 	 */
 	private void initLocation() {
+		geocoder = new Geocoder(getApplicationContext(), Locale.CHINA);
 		locationClient = new LocationClient(getApplicationContext());
 		mylocationListen = new MylocationListen();
 		LocationClientOption option = new LocationClientOption();
@@ -227,12 +238,14 @@ public class SelectCityActivity extends BackFragmentActivity {
 		PictureThumbnailSpecification specification = new PictureThumbnailSpecification();
 		specification = NearbyScreen.getHotCityItemThumbnailSpecification(this);
 		nearbyHotCityGridViewAdapter = new NearbyHotCityGridViewAdapter(
-				getApplicationContext(), CityManger.hot_city,SelectCityActivity.this);
-		  LayoutParams params = (LayoutParams) gv_nearby_select_city_hot_city
-		  .getLayoutParams(); params.height = (int) (specification.getHeight()
-		 * (NearbyConfig.HOT_CITY_COUNT / NearbyConfig.CITY_COLUMNS) +
-		  (NearbyConfig.HOT_CITY_COUNT / NearbyConfig.CITY_COLUMNS - 1)
-		 * getResources().getDimension(R.dimen.division));
+				getApplicationContext(), CityManger.hot_city,
+				SelectCityActivity.this);
+		LayoutParams params = (LayoutParams) gv_nearby_select_city_hot_city
+				.getLayoutParams();
+		params.height = (int) (specification.getHeight()
+				* (NearbyConfig.HOT_CITY_COUNT / NearbyConfig.CITY_COLUMNS) + (NearbyConfig.HOT_CITY_COUNT
+				/ NearbyConfig.CITY_COLUMNS - 1)
+				* getResources().getDimension(R.dimen.division));
 		gv_nearby_select_city_hot_city.setNumColumns(NearbyConfig.CITY_COLUMNS);
 		gv_nearby_select_city_hot_city.setVerticalSpacing((int) getResources()
 				.getDimension(R.dimen.division));
@@ -246,10 +259,18 @@ public class SelectCityActivity extends BackFragmentActivity {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-						setCenterTitle((String)(nearbyHotCityGridViewAdapter
-								.getItem(position)));
-						title=(String)(nearbyHotCityGridViewAdapter
-								.getItem(position));
+						progressDialog.show();
+						setLocation(getLocation((String) (nearbyHotCityGridViewAdapter
+								.getItem(position))));
+						Log.v(TAG, UserInfoManager.getInstance()
+								.getCurrentLocation().getDescription()
+								+ '\n'
+								+ UserInfoManager.getInstance()
+										.getCurrentLocation().getLatitude()
+								+ '\n'
+								+ UserInfoManager.getInstance()
+										.getCurrentLocation().getLongitude());
+						finish();
 					}
 				});
 	}
@@ -321,14 +342,90 @@ public class SelectCityActivity extends BackFragmentActivity {
 		@Override
 		public void onReceiveLocation(BDLocation location) {
 			if (isFirst) {
-				Toast.makeText(getApplicationContext(), location.getAddrStr(),
-						Toast.LENGTH_SHORT).show();
-				setCenterTitle(location.getAddrStr());
-				title=location.getAddrStr();
-				isFirst = false;
+				com.lym.twogoods.bean.Location currentLocation = new com.lym.twogoods.bean.Location();
+				currentLocation.setDescription(location.getAddrStr());
+				currentLocation.setLatitude(location.getLatitude() + "");
+				currentLocation.setLongitude(location.getLongitude() + "");
+				setLocation(currentLocation);
+				Log.v(TAG, UserInfoManager.getInstance().getCurrentLocation()
+						.getDescription()
+						+ '\n'
+						+ UserInfoManager.getInstance().getCurrentLocation()
+								.getLatitude()
+						+ '\n'
+						+ UserInfoManager.getInstance().getCurrentLocation()
+								.getLongitude());
+				finish();
 			}
 		}
 
+	}
+
+	/**
+	 * <p>
+	 * 通过位置获取Location对象
+	 * </p>
+	 * 
+	 * @param description
+	 *            地理位置
+	 * @return
+	 */
+	private com.lym.twogoods.bean.Location getLocation(String description) {
+		com.lym.twogoods.bean.Location location = new com.lym.twogoods.bean.Location();
+		List<Address> addresses = null;
+		try {
+			addresses = geocoder.getFromLocationName(description, 1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (addresses.size() != 0) {
+			Address address = addresses.get(0);
+			location.setDescription(description);
+			location.setLatitude("" + address.getLatitude());
+			location.setLongitude("" + address.getLongitude());
+		} else {
+			Log.v(TAG, "没有成功");
+		}
+		return location;
+	}
+
+	/**
+	 * <p>
+	 * 设置Location实体类对象
+	 * </p>
+	 * 
+	 * @param description
+	 *            地理位置
+	 * @param latitude
+	 *            纬度
+	 * @param longitude
+	 *            经度
+	 */
+	private void setLocation(com.lym.twogoods.bean.Location location) {
+		UserInfoManager.getInstance().setCurrentLocation(location);
+		writeSharePreference(location);
+		progressDialog.dismiss();
+	}
+
+	/**
+	 * <p>
+	 * 将Location对象写入SharePreference中
+	 * 
+	 * @param location
+	 */
+	private void writeSharePreference(com.lym.twogoods.bean.Location location) {
+		SharePreferencesManager sharePreferencesManager = SharePreferencesManager
+				.getInstance();
+		sharePreferencesManager.setLocationString(getApplicationContext(),
+				SharePreferencesConfiguration.LOCATION_DESCRIPTION_KEY,
+				location.getDescription());
+		sharePreferencesManager.setLocationString(getApplicationContext(),
+				SharePreferencesConfiguration.LOCATION_LATITUDE_KEY,
+				location.getLatitude());
+		sharePreferencesManager.setLocationString(getApplicationContext(),
+				SharePreferencesConfiguration.LOCATION_LONGITUDE_KEY,
+				location.getLongitude());
+		sharePreferencesManager.notifyAll();
 	}
 
 	@Override
