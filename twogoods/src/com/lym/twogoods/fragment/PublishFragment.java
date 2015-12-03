@@ -11,6 +11,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.bmob.BmobProFile;
 import com.bmob.btp.callback.UploadBatchListener;
+import com.bmob.btp.callback.UploadListener;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
@@ -329,6 +330,7 @@ public class PublishFragment extends BaseFragment {
 				.getHead_url());
 		goodsBean
 				.setPictureUrlList((ArrayList<String>) PublishConfigManger.pictureCloudUrl);
+		goodsBean.setVoice_url(PublishConfigManger.voiceUrl);
 		goodsBean.setUsername(UserInfoManager.getInstance().getmCurrent()
 				.getUsername());
 	}
@@ -339,9 +341,7 @@ public class PublishFragment extends BaseFragment {
 	 */
 	private void publishGoods() {
 		// 最后一个条件是判断上传图片文件是否完全成功才去决定是否上传信息到服务器
-		if (judgeDescription()
-				&& judgeGoods()
-				&& (PublishConfigManger.pictureCloudUrl.size() == PublishConfigManger.publishPictureUrl
+		if ((PublishConfigManger.pictureCloudUrl.size() == PublishConfigManger.publishPictureUrl
 						.size())) {
 			getGoodsData();
 			goodsBean.save(getActivity(), new SaveListener() {
@@ -410,44 +410,79 @@ public class PublishFragment extends BaseFragment {
 	 * 图片信息上传
 	 */
 	public void pictureUpload() {
-		if (!PublishConfigManger.publishPictureUrl.isEmpty()) {
-			// List转String[]
-			final String[] files = PublishConfigManger.publishPictureUrl
-					.toArray(new String[PublishConfigManger.publishPictureUrl
-							.size()]);
-			progressDialog.show();
-			BmobProFile.getInstance(getActivity()).uploadBatch(files,
-					new UploadBatchListener() {
-						@Override
-						public void onError(int arg0, String arg1) {
-							Log.v(TAG, "pictureUpload上传失败" + arg1);
-							progressDialog.dismiss();
-						}
-
-						@Override
-						public void onProgress(int arg0, int arg1, int arg2,
-								int arg3) {
-							Log.i("PublishFrament", "onProgress :" + arg0
-									+ "---" + arg1 + "---" + arg2 + "----"
-									+ arg3);
-						}
-
-						@Override
-						public void onSuccess(boolean arg0, String[] arg1,
-								String[] arg2, BmobFile[] arg3) {
-							if (arg0) {
-								for (int i = 0; i < arg3.length; i++) {
-									PublishConfigManger.pictureCloudUrl
-											.add(arg3[i].getUrl());
-								}
-								publishGoods();
+		if (judgeGoods()) {
+			if (!PublishConfigManger.publishPictureUrl.isEmpty()) {
+				// List转String[]
+				final String[] files = PublishConfigManger.publishPictureUrl
+						.toArray(new String[PublishConfigManger.publishPictureUrl
+								.size()]);
+				progressDialog.show();
+				BmobProFile.getInstance(getActivity()).uploadBatch(files,
+						new UploadBatchListener() {
+							@Override
+							public void onError(int arg0, String arg1) {
+								Log.v(TAG, "pictureUpload上传失败" + arg1);
+								progressDialog.dismiss();
 							}
-						}
 
-					});
+							@Override
+							public void onProgress(int arg0, int arg1, int arg2,
+									int arg3) {
+								Log.i("PublishFrament", "onProgress :" + arg0
+										+ "---" + arg1 + "---" + arg2 + "----"
+										+ arg3);
+							}
+
+							@Override
+							public void onSuccess(boolean arg0, String[] arg1,
+									String[] arg2, BmobFile[] arg3) {
+								if (arg0) {
+									for (int i = 0; i < arg3.length; i++) {
+										PublishConfigManger.pictureCloudUrl
+												.add(arg3[i].getUrl());
+									}
+									uploadVoice();
+								}
+							}
+
+						});
+			}else {
+				progressDialog.show();
+				uploadVoice();
+			}
 		}
 	}
-
+	/**
+	 * <p>
+	 * 		语音上传
+	 * </p>
+	 */
+	private void uploadVoice() {
+		if(!PublishConfigManger.voicePath.equals("")){
+			Log.v(TAG, "语音本地路径"+PublishConfigManger.voicePath);
+			BmobProFile.getInstance(getActivity()).upload(PublishConfigManger.voicePath, new UploadListener() {
+				
+				@Override
+				public void onError(int arg0, String arg1) {
+					Toast.makeText(getActivity(), "语音上传失败", Toast.LENGTH_SHORT).show();
+				}
+				
+				@Override
+				public void onSuccess(String fileName, String url, BmobFile file) {
+					PublishConfigManger.voiceUrl=file.getUrl();
+					Log.v(TAG, "语音网络URL"+PublishConfigManger.voiceUrl);
+					publishGoods();
+				}
+				
+				@Override
+				public void onProgress(int arg0) {
+					
+				}
+			});
+		}else {
+			publishGoods();
+		}
+	}
 	/*
 	 * 
 	 * 初始化表情面板内容
