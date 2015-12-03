@@ -50,4 +50,26 @@ public class ImageLoaderHelper {
 		imageLoader.displayImage(url, iv, options, listener);
 				
 	}
+	
+	/**
+	 * 加载一张商品缩略图
+	 * 
+	 * @param context 上下文
+	 * @param url 缩略图图片路径
+	 * @param imageView 要显示的ImageView
+	 */
+	public static void loadGoodsPictureThumnail(Context context, String url, ImageView imageView) {
+		
+		if(context == null || imageView == null) {
+			return;
+		}
+		
+		ImageLoaderConfiguration configuration = UniversalImageLoaderConfigurationManager
+				.getGoodsListPictureThumbnailImageLoaderConfiguration(context.getApplicationContext());
+		ImageLoader imageLoader = UniversalImageLoaderManager.getImageLoader(configuration);
+		
+		DisplayImageOptions options = UniversalImageLoaderOptionManager.getGoodsListDisplayImageOption();
+		
+		imageLoader.displayImage(url, imageView, options);
+	}
 }

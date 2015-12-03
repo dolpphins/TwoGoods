@@ -1,31 +1,26 @@
 package com.lym.twogoods.fragment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.adapter.StoreDetailGoodsListAdapter;
-import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
+import com.lym.twogoods.adapter.base.BaseGoodsListViewAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.fragment.base.BaseListFragment;
 import com.lym.twogoods.fragment.base.PullListFragment;
 import com.lym.twogoods.index.manager.GoodsSortManager;
 import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
-import com.lym.twogoods.local.bean.LocalGoods;
 import com.lym.twogoods.manager.ImageLoaderHelper;
-import com.lym.twogoods.network.DefaultOnLoaderListener;
-import com.lym.twogoods.network.ListViewLoader;
+import com.lym.twogoods.network.AbsListViewLoader;
+import com.lym.twogoods.network.ListViewOnLoaderListener;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
 import com.lym.twogoods.ui.GoodsDetailActivity;
 import com.lym.twogoods.ui.PersonalityInfoActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,9 +29,9 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.bmob.v3.BmobQuery;
+import me.maxwin.view.XListView;
 
 
 /**
@@ -62,11 +57,11 @@ public class StoreDetailFragment extends PullListFragment {
 	private TextView user_detail_head_description;
 	private ImageView user_detail_head_back;
 	
-	private ListViewLoader mListViewLoader;
-	private BaseGoodsListAdapter mAdapter;
+	private AbsListViewLoader mAbsListViewLoader;
+	private BaseGoodsListViewAdapter mAdapter;
 	private List<Goods> mGoodsList;
 	private int perPageCount = 10;
-	private ListViewLoader.OnLoaderListener mOnLoaderListener;
+	private AbsListViewLoader.OnLoaderListener mOnLoaderListener;
 	
 	public StoreDetailFragment(User user) {
 		mUser = user;
@@ -119,9 +114,9 @@ public class StoreDetailFragment extends PullListFragment {
 		
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new StoreDetailGoodsListAdapter(mAttachActivity, mGoodsList);
-		mListViewLoader = new ListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
-		mOnLoaderListener = new StoreDetailOnLoaderListener(this, mListViewLoader);
-		mListViewLoader.setOnLoaderListener(mOnLoaderListener);
+		mAbsListViewLoader = new AbsListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
+		mOnLoaderListener = new StoreDetailOnLoaderListener(this, mAbsListViewLoader, mListView);
+		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		//mListViewLoader.setLoadCacheFromDisk(true);
 		//mListViewLoader.setSaveCacheToDisk(true);
 		mListView.setAdapter(mAdapter);
@@ -193,7 +188,7 @@ public class StoreDetailFragment extends PullListFragment {
 		query.addWhereEqualTo("username", mUser.getUsername());
 		String order = "-" + GoodsSortManager.getColumnString(GoodsSort.NEWEST_PUBLISH);
 		query.order(order);
-		mListViewLoader.requestLoadData(query, null, true, false);
+		mAbsListViewLoader.requestLoadData(query, null, true, false);
 	}
 	
 //	@Override
@@ -202,12 +197,12 @@ public class StoreDetailFragment extends PullListFragment {
 //	}
 	
 	//自定义加载监听器
-	private static class StoreDetailOnLoaderListener extends DefaultOnLoaderListener {
+	private static class StoreDetailOnLoaderListener extends ListViewOnLoaderListener {
 
 		private BaseListFragment mFragment;
 		
-		public StoreDetailOnLoaderListener(BaseListFragment fragment, ListViewLoader loader) {
-			super(fragment, loader);
+		public StoreDetailOnLoaderListener(BaseListFragment fragment, AbsListViewLoader loader, XListView listView) {
+			super(fragment, loader, listView);
 			mFragment = fragment;
 		}
 		
@@ -219,7 +214,7 @@ public class StoreDetailFragment extends PullListFragment {
 		@Override
 		public void onLoaderFail() {
 			super.onLoaderFail();
-			mFragment.showListView();
+			mFragment.showContentView();
 		}
 	}
 }

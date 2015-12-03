@@ -131,18 +131,18 @@
 	<dimen name="user_detail_more_list_item_padding">10dip</dimen>
 	<dimen name="user_detail_more_list_item_username_marginLeft">10dip</dimen>
 	<dimen name="user_detail_more_list_item_username_textSize">18sp</dimen>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	<!-- 附近 -->
+	<dimen name="app_base_goods_gridview_item_padding">0dip</dimen>
+	<dimen name="app_base_goods_gridview_horizontalSpacing">10dip</dimen>
+	<dimen name="app_base_goods_gridview_verticalSpacing">15dip</dimen>
+	<dimen name="app_base_goods_gridview_padding">10dip</dimen>
+	<dimen name="app_base_goods_gridview_detail_layout_padding">10dip</dimen>
+	<dimen name="app_base_goods_gridview_item_description_textSize">12sp</dimen>
+	<dimen name="app_base_goods_gridview_item_description_emoijSize">12sp</dimen>
+	<dimen name="app_base_goods_gridview_item_publishlocation_textSize">12sp</dimen>
+	<dimen name="app_base_goods_gridview_item_publishtime_textSize">12sp</dimen>
+	<dimen name="app_base_goods_gridview_item_price_marginTop">5dip</dimen>
+	<dimen name="app_base_goods_gridview_item_price_marginBottom">5dip</dimen>
 	
 	
 	

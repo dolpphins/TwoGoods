@@ -61,7 +61,7 @@ public class GoodsPictureListAdapter extends BaseAdapter{
 		
 		ImageView iv = new ImageView(mAcitity);
 		iv.setScaleType(ScaleType.CENTER_CROP);
-		PictureThumbnailSpecification specification = GoodsScreen.getGoodsPictureThumbnailSpecification(mAcitity);
+		PictureThumbnailSpecification specification = GoodsScreen.getIndexGoodsPictureThumbnailSpecification(mAcitity);
 		AbsListView.LayoutParams params = new AbsListView.LayoutParams(specification.getWidth(), specification.getHeight());
 		iv.setLayoutParams(params);
 		

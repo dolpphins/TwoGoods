@@ -2,7 +2,7 @@ package com.lym.twogoods.mine.adapter;
 
 import java.util.List;
 
-import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
+import com.lym.twogoods.adapter.base.BaseGoodsListViewAdapter;
 import com.lym.twogoods.bean.Goods;
 
 import android.app.Activity;
@@ -21,7 +21,7 @@ import cn.bmob.v3.listener.DeleteListener;
  * 
  * @author 麦灿标
  */
-public class MinePublishGoodsListAdapter extends BaseGoodsListAdapter {
+public class MinePublishGoodsListAdapter extends BaseGoodsListViewAdapter {
 
 	private final static String TAG = "MinePublishGoodsListAdapter";
 	

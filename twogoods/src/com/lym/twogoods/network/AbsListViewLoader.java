@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.j256.ormlite.dao.Dao;
 import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
+import com.lym.twogoods.adapter.base.BaseGoodsListViewAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.db.OrmDatabaseHelper;
 import com.lym.twogoods.local.bean.LocalGoods;
@@ -17,22 +18,21 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.Toast;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
-import me.maxwin.view.XListView;
 
 /**
  * 所有商品列表的通用加载工具类
  * 
  * @author 麦灿标
  * */
-public class ListViewLoader {
+public class AbsListViewLoader {
 
 	private final static String TAG = "ListViewLoader";
 	
 	/** 上下文 */
 	private Context mContext;
 	
-	/** 相关联的ListView */
-	private XListView mListView;
+	/** 相关联的AbsListView */
+	private AbsListView mAbsListView;
 	
 	/** 数据集 */
 	private List<Goods> mGoodsList;
@@ -77,9 +77,9 @@ public class ListViewLoader {
 	 * @param adapter
 	 * @param goodsList
 	 * */
-	public ListViewLoader(Context context, XListView listView, BaseGoodsListAdapter adapter, List<Goods> goodsList) {
+	public AbsListViewLoader(Context context, AbsListView absListView, BaseGoodsListAdapter adapter, List<Goods> goodsList) {
 		mContext = context;
-		mListView = listView;
+		mAbsListView = absListView;
 		mAdapter = adapter;
 		mGoodsList = goodsList;
 		init();
@@ -91,7 +91,7 @@ public class ListViewLoader {
 		//默认不保存数据到磁盘缓存中
 		mSaveCacheToDisk = false;
 
-		mListView.setOnScrollListener(new OnScrollListener() {
+		mAbsListView.setOnScrollListener(new OnScrollListener() {
 			
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -100,7 +100,7 @@ public class ListViewLoader {
 			
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				int lastItemPosition = mListView.getLastVisiblePosition();
+				int lastItemPosition = mAbsListView.getLastVisiblePosition();
 				if(lastItemPosition == totalItemCount - 1 && 
 						mScrollStatus == OnScrollListener.SCROLL_STATE_IDLE
 						&& mStatus == Status.NONE
@@ -262,16 +262,16 @@ public class ListViewLoader {
 				}
 			}
 		}
-		mListView.stopRefresh();
-		mListView.stopLoadMore();
+//		mListView.stopRefresh();
+//		mListView.stopLoadMore();
 		mStatus = Status.NONE;
 		
 	} 
 	
 	//获取数据准备工作失败调用
 	private void handleLoadDataForPrepareFail() {
-		mListView.stopRefresh();
-		mListView.stopLoadMore();
+//		mListView.stopRefresh();
+//		mListView.stopLoadMore();
 		mStatus = Status.NONE;
 		if(mOnLoaderListener != null) {
 			mOnLoaderListener.onLoaderFail();

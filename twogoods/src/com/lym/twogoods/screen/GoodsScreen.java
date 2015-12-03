@@ -1,9 +1,11 @@
 package com.lym.twogoods.screen;
 
+import com.lym.twogoods.R;
 import com.lym.twogoods.bean.PictureThumbnailSpecification;
 import com.lym.twogoods.utils.ImageUtil;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Rect;
 
 /**
@@ -36,14 +38,14 @@ public class GoodsScreen {
 	
 	/**
 	 * <p>
-	 * 	获取商品列表图片缩略图规格
+	 * 	获取首页商品列表图片缩略图规格
 	 * </p>
 	 * 
 	 *  @param at
 	 *  
 	 *  @return 商品列表图片缩略图规格
 	 * */
-	public static PictureThumbnailSpecification getGoodsPictureThumbnailSpecification(Activity at) {
+	public static PictureThumbnailSpecification getIndexGoodsPictureThumbnailSpecification(Activity at) {
 		if(at == null) {
 			return null;
 		}
@@ -54,4 +56,27 @@ public class GoodsScreen {
 		specification.setHeight(sideLength);
 		return specification;
 	}
+	
+	/**
+	 * <p>
+	 * 	获取附近商品图片缩略图规格
+	 * </p>
+	 * 
+	 *  @param at
+	 *  
+	 *  @return 商品列表图片缩略图规格
+	 * */
+	public static PictureThumbnailSpecification getNearbyGoodsPictureThumbnailSpecification(Activity at, int horizontalExtraDistance) {
+		if(at == null) {
+			return null;
+		}
+		PictureThumbnailSpecification specification = new PictureThumbnailSpecification();
+		int screenWidth = DisplayUtils.getScreenWidthPixels(at);
+		int sideLength = (screenWidth - horizontalExtraDistance) / 2;
+		specification.setWidth(sideLength);
+		specification.setHeight(sideLength);
+		return specification;
+	}
+	
+	
 }

@@ -25,15 +25,18 @@ public abstract class BaseListFragment extends BaseFragment {
 
 	private final static String TAG = "BaseListFragment";
 	
-	private LinearLayout mLoadingLayout;
+	protected LinearLayout mLoadingLayout;
 	private ProgressBar app_basefragment_listview_pb;
 	private TextView app_basefragment_listview_tv;
 	
 	/** ListView列表 */
 	protected XListView mListView;
 	
-	/** 标记ListView是否显示 */
-	private boolean mListViewIsShowing;
+	/** Content View */
+	protected View mContentView;
+	
+	/** 标记ContentView是否显示 */
+	private boolean mContentIsShowing;
 	
 	/** ListView适配器 */
 	protected ListAdapter mAdapter;
@@ -45,15 +48,29 @@ public abstract class BaseListFragment extends BaseFragment {
 		mListView = (XListView) mLoadingLayout.findViewById(R.id.app_basefragment_listview_lv);
 		initLoadingLayout();
 		
-		//在onCreateView方法调用前就已经给mAdapter赋值
-		if(mAdapter != null) {
-			mListView.setAdapter(mAdapter);
+		mContentView = onCreateContentView();
+		mContentIsShowing = !requestDelayShowAbsListView();
+		if(mContentView != null) {
+			replaceView(mListView, mContentView);
+			mListView = null;
+			if(!mContentIsShowing) {
+				mContentView.setVisibility(View.GONE);
+			}
+		} else {
+			//在onCreateView方法调用前就已经给mAdapter赋值
+			if(mAdapter != null) {
+				mListView.setAdapter(mAdapter);
+			}
+			mContentView = mListView;
+			configListView();
+			if(!mContentIsShowing) {
+				mListView.setVisibility(View.GONE);
+			}
 		}
-		mListViewIsShowing = !requestDelayShowListView();
-		if(!mListViewIsShowing) {
-			mListView.setVisibility(View.GONE);
-		}
-		configListView();
+		
+		mContentIsShowing = mContentView.getVisibility() == View.VISIBLE ? true : false;
+		
+		onCreateViewAfter();
 		
 		return mLoadingLayout;
 	}
@@ -63,7 +80,7 @@ public abstract class BaseListFragment extends BaseFragment {
 		//不可上拉加载
 		mListView.setPullLoadEnable(false);
 		//不可下拉刷新
-		mListView.setPullRefreshEnable(false);
+		mListView.setPullRefreshEnable(false); 
 	}
 	
 	/**
@@ -139,32 +156,62 @@ public abstract class BaseListFragment extends BaseFragment {
 	}
 	
 	/**
-	 * 显示ListView
+	 * 显示Content View
 	 * */
-	public void showListView() {
-		if(!mListViewIsShowing && mListView != null) {
-			mListView.setVisibility(View.VISIBLE);
-			mListViewIsShowing = true;
+	public void showContentView() {
+		if(mContentView != null && !mContentIsShowing) {
+			mContentView.setVisibility(View.VISIBLE);
+			mContentIsShowing = true;
+		} 
+	}
+	
+	/**
+	 * 隐藏Content View
+	 * */
+	public void hideContentView() {
+		if(mContentView != null && mContentIsShowing) {
+			mContentView.setVisibility(View.GONE);
+			mContentIsShowing = false;
 		}
 	}
 	
 	/**
-	 * 隐藏ListView
-	 * */
-	public void hideListView() {
-		if(mListViewIsShowing && mListView != null) {
-			mListView.setVisibility(View.GONE);
-			mListViewIsShowing = false;
-		}
-	}
-	
-	/**
-	 * 请求开始隐藏ListView,你可以重写该方法使ListView开始时隐藏,在你想要显示的时候
-	 * 调用{@link BaseListFragment#showListView()}进行显示
+	 * 请求开始隐藏AbsListView,你可以重写该方法使AbsListView开始时隐藏,在你想要显示的时候
+	 * 调用{@link BaseListFragment#showAbsListView()}进行显示
 	 * 
-	 * @return 返回true表示开始隐藏ListView,false表示开始显示ListView
+	 * @return 返回true表示开始隐藏AbsListView,false表示开始显示ListView
 	 * */
-	protected boolean requestDelayShowListView() {
+	protected boolean requestDelayShowAbsListView() {
+		return false;
+	}
+	
+	/**
+	 * 当执行完onCreateView时会回调该方法
+	 */
+	protected void onCreateViewAfter(){
+	}
+	
+	/**
+	 * 重新创建View,默认为ListView,子类可以重写该方法以
+	 * 替换成自己的View
+	 * 
+	 * @return 返回新的View,如果返回null则使用默认的View
+	 */
+	protected View onCreateContentView() {
+		return null;
+	}
+	
+	private boolean replaceView(View oldView, View newView) {
+		if(oldView == null || newView == null) {
+			return false;
+		}
+		int index = mLoadingLayout.indexOfChild(oldView);
+		if(index >= 0) {
+			mLoadingLayout.removeViewAt(index);
+			LayoutParams params = oldView.getLayoutParams();
+			mLoadingLayout.addView(newView, index, params);//使用之前的LayoutParams
+			return true;
+		}
 		return false;
 	}
 }

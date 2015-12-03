@@ -2,7 +2,7 @@ package com.lym.twogoods.mine.adapter;
 
 import java.util.List;
 
-import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
+import com.lym.twogoods.adapter.base.BaseGoodsListViewAdapter;
 import com.lym.twogoods.bean.Goods;
 
 import android.app.Activity;
@@ -12,7 +12,7 @@ import android.app.Activity;
  * 
  * @author 麦灿标
  */
-public class MineFocusGoodsListAdapter extends BaseGoodsListAdapter {
+public class MineFocusGoodsListAdapter extends BaseGoodsListViewAdapter {
 
 	public MineFocusGoodsListAdapter(Activity at, List<Goods> goodsList) {
 		super(at, goodsList);

@@ -1,39 +1,17 @@
 package com.lym.twogoods.adapter;
 
-import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+import java.util.List;
 
-public class NearbyAdapter extends BaseAdapter{
+import com.lym.twogoods.adapter.base.BaseGoodsGridViewAdapter;
+import com.lym.twogoods.bean.Goods;
+import com.lym.twogoods.fragment.base.PullGridViewFragment;
 
-	private Context mContext;
-	
-	public NearbyAdapter(Context context) {
-		mContext = context;
-	}
-	
-	@Override
-	public int getCount() {
-		return 100;
-	}
+import android.app.Activity;
 
-	@Override
-	public Object getItem(int position) {
-		return null;
-	}
+public class NearbyAdapter extends BaseGoodsGridViewAdapter{
 
-	@Override
-	public long getItemId(int position) {
-		return 0;
-	}
-
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		TextView tv = new TextView(mContext);
-		tv.setText(position + "");
-		return tv;
+	public NearbyAdapter(Activity at, List<Goods> goodsList, PullGridViewFragment fragment) {
+		super(at, goodsList, fragment);
 	}
 	
 }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	基本的商品GridView Item布局
+
+	@author 麦灿标
+ -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/app_base_goods_gridview_item_padding"
+    android:background="@color/white" xmlns:app="http://schemas.android.com/apk/res/com.lym.twogoods">
+    
+    <!-- 第一张商品图片 -->
+    <ImageView 
+        android:id="@+id/app_base_goods_gridview_item_iv"
+       	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:contentDescription="@null"
+    	android:scaleType="centerCrop"/>
+    
+    <!-- 详细信息总布局 -->
+    <RelativeLayout 
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:padding="@dimen/app_base_goods_gridview_detail_layout_padding">
+    	<!-- 描述 -->
+        <com.lym.twogoods.widget.EmojiTextView 
+            android:id="@+id/app_base_goods_gridview_item_description"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:singleLine="true"
+        	android:ellipsize="end"
+        	app:emojiSize="@dimen/app_base_goods_gridview_item_description_emoijSize"
+        	android:textSize="@dimen/app_base_goods_gridview_item_description_textSize"/><!-- 太多内容用省略号表示 -->
+        <!-- 价格 -->
+        <TextView
+            android:id="@+id/app_base_goods_gridview_item_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/app_base_goods_gridview_item_description"
+            android:textColor="@color/red"
+            android:layout_marginTop="@dimen/app_base_goods_gridview_item_price_marginTop"
+            android:layout_marginBottom="@dimen/app_base_goods_gridview_item_price_marginBottom"/>
+        <!-- 发布位置 -->
+        <TextView 
+            android:id="@+id/app_base_goods_gridview_item_publishlocation"
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_below="@id/app_base_goods_gridview_item_price"
+        	android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="@dimen/app_base_goods_gridview_item_publishlocation_textSize"
+            android:singleLine="true"
+            android:maxLength="6"/>
+        <!-- 发布时间 -->
+        <TextView 
+            android:id="@+id/app_base_goods_gridview_item_publishtime" 
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_alignBaseline="@id/app_base_goods_gridview_item_publishlocation"
+        	android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textSize="@dimen/app_base_goods_gridview_item_publishtime_textSize"
+            android:singleLine="true"/>
+        
+    </RelativeLayout>
+
+
+</LinearLayout>

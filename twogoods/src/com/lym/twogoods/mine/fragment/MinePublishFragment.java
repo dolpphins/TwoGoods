@@ -1,20 +1,17 @@
 package com.lym.twogoods.mine.fragment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.lym.twogoods.adapter.StoreDetailGoodsListAdapter;
-import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
+import com.lym.twogoods.adapter.base.BaseGoodsListViewAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.fragment.base.PullListFragment;
 import com.lym.twogoods.index.manager.GoodsSortManager;
 import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
-import com.lym.twogoods.local.bean.LocalGoods;
 import com.lym.twogoods.mine.adapter.MinePublishGoodsListAdapter;
+import com.lym.twogoods.network.AbsListViewLoader;
 import com.lym.twogoods.network.DefaultOnLoaderListener;
-import com.lym.twogoods.network.ListViewLoader;
+import com.lym.twogoods.network.ListViewOnLoaderListener;
 import com.lym.twogoods.ui.GoodsDetailActivity;
 
 import android.content.Intent;
@@ -36,11 +33,11 @@ public class MinePublishFragment extends PullListFragment {
 	/** 当前用户名 */
 	private String mUsername;
 	
-	private ListViewLoader mListViewLoader;
-	private BaseGoodsListAdapter mAdapter;
+	private AbsListViewLoader mAbsListViewLoader;
+	private BaseGoodsListViewAdapter mAdapter;
 	private List<Goods> mGoodsList;
 	private int perPageCount = 10;
-	private ListViewLoader.OnLoaderListener mOnLoaderListener;
+	private AbsListViewLoader.OnLoaderListener mOnLoaderListener;
 	
 	/**
 	 * 构造函数
@@ -67,9 +64,9 @@ public class MinePublishFragment extends PullListFragment {
 		
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new MinePublishGoodsListAdapter(mAttachActivity, mGoodsList);
-		mListViewLoader = new ListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
-		mOnLoaderListener = new DefaultOnLoaderListener(this, mListViewLoader);
-		mListViewLoader.setOnLoaderListener(mOnLoaderListener);
+		mAbsListViewLoader = new AbsListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
+		mOnLoaderListener = new ListViewOnLoaderListener(this, mAbsListViewLoader, mListView);
+		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		mListView.setAdapter(mAdapter);
 		
 		if(mListView != null) {
@@ -102,11 +99,11 @@ public class MinePublishFragment extends PullListFragment {
 		query.addWhereEqualTo("username", mUsername);
 		String order = "-" + GoodsSortManager.getColumnString(GoodsSort.NEWEST_PUBLISH);
 		query.order(order);
-		mListViewLoader.requestLoadData(query, null, true, false);
+		mAbsListViewLoader.requestLoadData(query, null, true, false);
 	}
 	
 	@Override
-	protected boolean requestDelayShowListView() {
+	protected boolean requestDelayShowAbsListView() {
 		return true;
 	}
 }

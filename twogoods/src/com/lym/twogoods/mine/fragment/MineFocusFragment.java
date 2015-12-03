@@ -3,17 +3,15 @@ package com.lym.twogoods.mine.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lym.twogoods.adapter.StoreDetailGoodsListAdapter;
-import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
+import com.lym.twogoods.adapter.base.BaseGoodsListViewAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.GoodsFocus;
 import com.lym.twogoods.fragment.base.PullListFragment;
-import com.lym.twogoods.fragment.base.PullListFragment.Mode;
 import com.lym.twogoods.index.manager.GoodsSortManager;
 import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.mine.adapter.MineFocusGoodsListAdapter;
-import com.lym.twogoods.network.DefaultOnLoaderListener;
-import com.lym.twogoods.network.ListViewLoader;
+import com.lym.twogoods.network.AbsListViewLoader;
+import com.lym.twogoods.network.ListViewOnLoaderListener;
 import com.lym.twogoods.ui.GoodsDetailActivity;
 
 import android.content.Intent;
@@ -40,11 +38,11 @@ public class MineFocusFragment extends PullListFragment {
 	
 	private String mUsername;
 	
-	private ListViewLoader mListViewLoader;
-	private BaseGoodsListAdapter mAdapter;
+	private AbsListViewLoader mAbsListViewLoader;
+	private BaseGoodsListViewAdapter mAdapter;
 	private List<Goods> mGoodsList;
 	private int perPageCount = 10;
-	private ListViewLoader.OnLoaderListener mOnLoaderListener;
+	private AbsListViewLoader.OnLoaderListener mOnLoaderListener;
 	
 	private List<GoodsFocus> mFocusGoodsInfoList = new ArrayList<GoodsFocus>();
 	private List<String> mFocusGoodsObjectIdList = new ArrayList<String>();
@@ -76,9 +74,9 @@ public class MineFocusFragment extends PullListFragment {
 		
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new MineFocusGoodsListAdapter(mAttachActivity, mGoodsList);
-		mListViewLoader = new ListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
-		mOnLoaderListener = new DefaultOnLoaderListener(this, mListViewLoader);
-		mListViewLoader.setOnLoaderListener(mOnLoaderListener);
+		mAbsListViewLoader = new AbsListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
+		mOnLoaderListener = new ListViewOnLoaderListener(this, mAbsListViewLoader, mListView);
+		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		mListView.setAdapter(mAdapter);
 		
 		if(mListView != null) {
@@ -139,11 +137,11 @@ public class MineFocusFragment extends PullListFragment {
 		query.addWhereContainedIn("objectId", mFocusGoodsObjectIdList);
 		String order = "-" + GoodsSortManager.getColumnString(GoodsSort.NEWEST_PUBLISH);
 		query.order(order);
-		mListViewLoader.requestLoadData(query, null, true, isInit);
+		mAbsListViewLoader.requestLoadData(query, null, true, isInit);
 	}
 	
 	@Override
-	protected boolean requestDelayShowListView() {
+	protected boolean requestDelayShowAbsListView() {
 		return true;
 	}
 }

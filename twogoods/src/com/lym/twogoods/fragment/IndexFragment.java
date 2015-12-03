@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lym.twogoods.R;
-import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
+import com.lym.twogoods.adapter.base.BaseGoodsListViewAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.config.GoodsCategory;
 import com.lym.twogoods.config.GoodsCategory.Category;
@@ -17,8 +17,8 @@ import com.lym.twogoods.index.manager.GoodsSortManager;
 import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.index.widget.DropdownLinearLayout;
 import com.lym.twogoods.index.widget.MaskLayer;
-import com.lym.twogoods.network.DefaultOnLoaderListener;
-import com.lym.twogoods.network.ListViewLoader;
+import com.lym.twogoods.network.AbsListViewLoader;
+import com.lym.twogoods.network.ListViewOnLoaderListener;
 import com.lym.twogoods.ui.GoodsDetailActivity;
 
 import android.content.Intent;
@@ -108,11 +108,11 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 	/**
 	 * 商品列表加载器相关
 	 * */
-	private ListViewLoader mListViewLoader;
-	private BaseGoodsListAdapter mAdapter;
+	private AbsListViewLoader mAbsListViewLoader;
+	private BaseGoodsListViewAdapter mAdapter;
 	private List<Goods> mGoodsList;
 	private int perPageCount = 10;
-	private ListViewLoader.OnLoaderListener mOnLoaderListener;
+	private AbsListViewLoader.OnLoaderListener mOnLoaderListener;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -495,9 +495,9 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 		//ListView加载器
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new IndexGoodsListAdapter(mAttachActivity, mGoodsList);
-		mListViewLoader = new ListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
-		mOnLoaderListener = new DefaultOnLoaderListener(this, mListViewLoader);
-		mListViewLoader.setOnLoaderListener(mOnLoaderListener);
+		mAbsListViewLoader = new AbsListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
+		mOnLoaderListener = new ListViewOnLoaderListener(this, mAbsListViewLoader, mListView);
+		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		//mListViewLoader.setLoadCacheFromDisk(true);
 		//mListViewLoader.setSaveCacheToDisk(true);
 		mListView.setAdapter(mAdapter);
@@ -532,11 +532,11 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 		}
 		String order = GoodsSortManager.getBmobQueryOrderString(mCurrentGoodsSort);
 		query.order(order);
-		mListViewLoader.requestLoadData(query, null, true, isInit);
+		mAbsListViewLoader.requestLoadData(query, null, true, isInit);
 	}
 	
 	@Override
-	protected boolean requestDelayShowListView() {
+	protected boolean requestDelayShowAbsListView() {
 		return true;
 	}
 }

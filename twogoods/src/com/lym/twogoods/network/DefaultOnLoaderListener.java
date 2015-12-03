@@ -17,13 +17,13 @@ import android.widget.TextView;
  * 
  * @author 麦灿标
  * */
-public class DefaultOnLoaderListener implements ListViewLoader.OnLoaderListener{
+public class DefaultOnLoaderListener implements AbsListViewLoader.OnLoaderListener{
 	
 	private final static String TAG = "DefaultOnLoaderListener";
 	
 	private BaseListFragment mFragment;
 	
-	private ListViewLoader mListViewLoader;
+	private AbsListViewLoader mListViewLoader;
 	
 	/**
 	 * 构造函数
@@ -31,7 +31,7 @@ public class DefaultOnLoaderListener implements ListViewLoader.OnLoaderListener{
 	 * @param fragment 
 	 * @param loader
 	 * */
-	public DefaultOnLoaderListener(BaseListFragment fragment, ListViewLoader loader) {
+	public DefaultOnLoaderListener(BaseListFragment fragment, AbsListViewLoader loader) {
 		mFragment = fragment;
 		mListViewLoader = loader;
 	}
@@ -44,7 +44,7 @@ public class DefaultOnLoaderListener implements ListViewLoader.OnLoaderListener{
 	@Override
 	public void onLoaderSuccess(List<Goods> goodsList) {
 		mFragment.hideLoadingAnimation();
-		mFragment.showListView();
+		mFragment.showContentView();
 	}
 
 	@Override
