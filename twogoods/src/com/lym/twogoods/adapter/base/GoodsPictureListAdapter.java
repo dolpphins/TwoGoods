@@ -1,24 +1,28 @@
 package com.lym.twogoods.adapter.base;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.lym.twogoods.R;
+import com.bmob.BmobProFile;
+import com.bmob.btp.callback.GetAccessUrlListener;
+import com.bmob.btp.callback.ThumbnailListener;
+import com.lym.twogoods.ThumbnailMap;
 import com.lym.twogoods.bean.PictureThumbnailSpecification;
+import com.lym.twogoods.manager.ImageLoaderHelper;
+import com.lym.twogoods.manager.ThumbnailMapManager;
 import com.lym.twogoods.screen.GoodsScreen;
-import com.lym.twogoods.manager.UniversalImageLoaderConfigurationManager;
-import com.lym.twogoods.manager.UniversalImageLoaderManager;
-import com.lym.twogoods.manager.UniversalImageLoaderOptionManager;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * <p>
@@ -66,22 +70,12 @@ public class GoodsPictureListAdapter extends BaseAdapter{
 		iv.setLayoutParams(params);
 		
 		String url = (String) getItem(position);
-
 		setItemContent(url, iv);
-		
 		
 		return iv;
 	}
 
-	private void setItemContent(String url, ImageView imageView) {	
-		
-		ImageLoaderConfiguration configuration = UniversalImageLoaderConfigurationManager
-				.getGoodsListPictureThumbnailImageLoaderConfiguration(mAcitity.getApplicationContext());
-		ImageLoader imageLoader = UniversalImageLoaderManager.getImageLoader(configuration);
-		
-		DisplayImageOptions options = UniversalImageLoaderOptionManager.getGoodsListDisplayImageOption();
-		
-		imageLoader.displayImage(url, imageView, options);
+	private void setItemContent(final String url, final ImageView imageView) {	
+		ThumbnailMapManager.loadGoodsPictureThumnail(mAcitity, url, imageView, ThumbnailMapManager.DisplayType.ListViewType);
 	}
-	
 }

@@ -52,13 +52,13 @@ public class ImageLoaderHelper {
 	}
 	
 	/**
-	 * 加载一张商品缩略图
+	 * 加载一张商品缩略图(该缩略图在ListView中显示)
 	 * 
 	 * @param context 上下文
 	 * @param url 缩略图图片路径
 	 * @param imageView 要显示的ImageView
 	 */
-	public static void loadGoodsPictureThumnail(Context context, String url, ImageView imageView) {
+	public static void loadGoodsListPictureThumnail(Context context, String url, ImageView imageView) {
 		
 		if(context == null || imageView == null) {
 			return;
@@ -69,6 +69,28 @@ public class ImageLoaderHelper {
 		ImageLoader imageLoader = UniversalImageLoaderManager.getImageLoader(configuration);
 		
 		DisplayImageOptions options = UniversalImageLoaderOptionManager.getGoodsListDisplayImageOption();
+		
+		imageLoader.displayImage(url, imageView, options);
+	}
+	
+	/**
+	 * 加载一张商品缩略图(该缩略图在GridView中显示)
+	 * 
+	 * @param context 上下文
+	 * @param url 缩略图图片路径
+	 * @param imageView 要显示的ImageView
+	 */
+	public static void loadGoodsGridViewPictureThumnail(Context context, String url, ImageView imageView) {
+		
+		if(context == null || imageView == null) {
+			return;
+		}
+		
+		ImageLoaderConfiguration configuration = UniversalImageLoaderConfigurationManager
+				.getGoodsListPictureThumbnailImageLoaderConfiguration(context.getApplicationContext());
+		ImageLoader imageLoader = UniversalImageLoaderManager.getImageLoader(configuration);
+		
+		DisplayImageOptions options = UniversalImageLoaderOptionManager.getGoodsGridViewDisplayImageOption();
 		
 		imageLoader.displayImage(url, imageView, options);
 	}

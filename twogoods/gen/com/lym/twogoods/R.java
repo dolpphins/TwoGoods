@@ -128,34 +128,35 @@ containing a value of this type.
         public static final int white=0x7f050000;
     }
     public static final class dimen {
-        public static final int app_base_goods_gridview_detail_layout_padding=0x7f060072;
-        public static final int app_base_goods_gridview_horizontalSpacing=0x7f06006f;
-        public static final int app_base_goods_gridview_item_description_emoijSize=0x7f060074;
-        public static final int app_base_goods_gridview_item_description_textSize=0x7f060073;
+        public static final int app_base_goods_gridview_detail_layout_padding=0x7f060073;
+        public static final int app_base_goods_gridview_horizontalSpacing=0x7f060070;
+        public static final int app_base_goods_gridview_item_description_emoijSize=0x7f060075;
+        public static final int app_base_goods_gridview_item_description_textSize=0x7f060074;
         /**  附近 
          */
-        public static final int app_base_goods_gridview_item_padding=0x7f06006e;
-        public static final int app_base_goods_gridview_item_price_marginBottom=0x7f060078;
-        public static final int app_base_goods_gridview_item_price_marginTop=0x7f060077;
-        public static final int app_base_goods_gridview_item_publishlocation_textSize=0x7f060075;
-        public static final int app_base_goods_gridview_item_publishtime_textSize=0x7f060076;
-        public static final int app_base_goods_gridview_padding=0x7f060071;
-        public static final int app_base_goods_gridview_verticalSpacing=0x7f060070;
+        public static final int app_base_goods_gridview_item_padding=0x7f06006f;
+        public static final int app_base_goods_gridview_item_price_marginBottom=0x7f060079;
+        public static final int app_base_goods_gridview_item_price_marginTop=0x7f060078;
+        public static final int app_base_goods_gridview_item_publishlocation_textSize=0x7f060076;
+        public static final int app_base_goods_gridview_item_publishtime_textSize=0x7f060077;
+        public static final int app_base_goods_gridview_padding=0x7f060072;
+        public static final int app_base_goods_gridview_verticalSpacing=0x7f060071;
+        public static final int app_base_goods_listview_item_dscription_emoijSize=0x7f06000f;
         public static final int app_base_goods_listview_item_dscription_marginBottom=0x7f06000c;
         public static final int app_base_goods_listview_item_dscription_marginTop=0x7f06000b;
         public static final int app_base_goods_listview_item_dscription_textSize=0x7f06000e;
         public static final int app_base_goods_listview_item_headpicture_marginRight=0x7f06000a;
-        public static final int app_base_goods_listview_item_location_marginTop=0x7f060010;
-        public static final int app_base_goods_listview_item_location_textSize=0x7f060012;
-        public static final int app_base_goods_listview_item_location_text_marginLeft=0x7f060011;
+        public static final int app_base_goods_listview_item_location_marginTop=0x7f060011;
+        public static final int app_base_goods_listview_item_location_textSize=0x7f060013;
+        public static final int app_base_goods_listview_item_location_text_marginLeft=0x7f060012;
         /**  商品列表Item 
          */
         public static final int app_base_goods_listview_item_padding=0x7f060009;
-        public static final int app_base_goods_listview_item_picture_interval=0x7f06000f;
+        public static final int app_base_goods_listview_item_picture_interval=0x7f060010;
         public static final int app_base_goods_listview_item_publishtime_marginRight=0x7f06000d;
         /**  加载动画 
          */
-        public static final int app_basefragment_listview_laodfail_tip_textSize=0x7f060013;
+        public static final int app_basefragment_listview_laodfail_tip_textSize=0x7f060014;
         public static final int app_common_actionbar_centerTextSize=0x7f060005;
         public static final int app_common_actionbar_leftTextSize=0x7f060004;
         public static final int app_common_actionbar_rightTextSize=0x7f060006;
@@ -166,153 +167,153 @@ containing a value of this type.
          */
         public static final int app_coomon_actionbar_paddingLeft=0x7f060000;
         public static final int app_coomon_actionbar_paddingRight=0x7f060001;
-        public static final int app_goods_detail_write_comment_edittext_marginLeft=0x7f060028;
-        public static final int app_goods_detail_write_comment_edittext_marginRight=0x7f060029;
-        public static final int app_goods_details_write_comment_padding=0x7f060027;
-        public static final int app_goods_details_write_comment_top_padding=0x7f06002a;
+        public static final int app_goods_detail_write_comment_edittext_marginLeft=0x7f060029;
+        public static final int app_goods_detail_write_comment_edittext_marginRight=0x7f06002a;
+        public static final int app_goods_details_write_comment_padding=0x7f060028;
+        public static final int app_goods_details_write_comment_top_padding=0x7f06002b;
         /**  app_login_choice
          */
-        public static final int app_login_choice_marRight_Left=0x7f06007a;
-        public static final int app_login_choice_marTop=0x7f06007b;
+        public static final int app_login_choice_marRight_Left=0x7f06007b;
+        public static final int app_login_choice_marTop=0x7f06007c;
         public static final int app_main_bottomdock_tab_paddingBottom=0x7f060008;
         /**  公共底部Tab 
          */
         public static final int app_main_bottomdock_tab_paddingTop=0x7f060007;
-        public static final int app_publish_fragment_et_heigth=0x7f060082;
-        public static final int app_publish_fragment_gridview_left_right_padding=0x7f060085;
-        public static final int app_publish_fragment_marginletf_right=0x7f060081;
+        public static final int app_publish_fragment_et_heigth=0x7f060083;
+        public static final int app_publish_fragment_gridview_left_right_padding=0x7f060086;
+        public static final int app_publish_fragment_marginletf_right=0x7f060082;
         /**  app_publish_fragment 
          */
-        public static final int app_publish_fragment_margintop=0x7f060080;
-        public static final int app_publish_fragment_sort_marginright=0x7f060084;
-        public static final int app_publish_fragment_textsize=0x7f060083;
-        public static final int app_register_left_right_margin=0x7f06007e;
-        public static final int app_register_margintop=0x7f06007d;
+        public static final int app_publish_fragment_margintop=0x7f060081;
+        public static final int app_publish_fragment_sort_marginright=0x7f060085;
+        public static final int app_publish_fragment_textsize=0x7f060084;
+        public static final int app_register_left_right_margin=0x7f06007f;
+        public static final int app_register_margintop=0x7f06007e;
         /**  app_login 
  app_register 
          */
-        public static final int app_register_parenttop=0x7f06007c;
+        public static final int app_register_parenttop=0x7f06007d;
         /**  app_reset_password 
          */
-        public static final int app_reset_passwrod_left_right_marigin=0x7f06007f;
-        public static final int base_scrollview_top_height=0x7f060099;
-        public static final int division=0x7f060094;
-        public static final int index_fragment_head_category_gridview_paddingBottom=0x7f06001e;
-        public static final int index_fragment_head_category_gridview_paddingLeft=0x7f06001f;
-        public static final int index_fragment_head_category_gridview_paddingRight=0x7f060020;
-        public static final int index_fragment_head_category_gridview_paddingTop=0x7f06001d;
-        public static final int index_fragment_head_category_item_marginBottom=0x7f06001a;
-        public static final int index_fragment_head_category_item_marginLeft=0x7f06001b;
-        public static final int index_fragment_head_category_item_marginRight=0x7f06001c;
-        public static final int index_fragment_head_category_item_marginTop=0x7f060019;
-        public static final int index_fragment_head_gridview_textSize=0x7f060018;
-        public static final int index_fragment_head_listview_textSize=0x7f060021;
-        public static final int index_fragment_head_paddingBottom=0x7f060016;
-        public static final int index_fragment_head_paddingTop=0x7f060015;
-        public static final int index_fragment_head_sort_item_icon_marginRight=0x7f060026;
-        public static final int index_fragment_head_sort_item_marginBottom=0x7f060023;
-        public static final int index_fragment_head_sort_item_marginLeft=0x7f060024;
-        public static final int index_fragment_head_sort_item_marginRight=0x7f060025;
-        public static final int index_fragment_head_sort_item_marginTop=0x7f060022;
+        public static final int app_reset_passwrod_left_right_marigin=0x7f060080;
+        public static final int base_scrollview_top_height=0x7f06009a;
+        public static final int division=0x7f060095;
+        public static final int index_fragment_head_category_gridview_paddingBottom=0x7f06001f;
+        public static final int index_fragment_head_category_gridview_paddingLeft=0x7f060020;
+        public static final int index_fragment_head_category_gridview_paddingRight=0x7f060021;
+        public static final int index_fragment_head_category_gridview_paddingTop=0x7f06001e;
+        public static final int index_fragment_head_category_item_marginBottom=0x7f06001b;
+        public static final int index_fragment_head_category_item_marginLeft=0x7f06001c;
+        public static final int index_fragment_head_category_item_marginRight=0x7f06001d;
+        public static final int index_fragment_head_category_item_marginTop=0x7f06001a;
+        public static final int index_fragment_head_gridview_textSize=0x7f060019;
+        public static final int index_fragment_head_listview_textSize=0x7f060022;
+        public static final int index_fragment_head_paddingBottom=0x7f060017;
+        public static final int index_fragment_head_paddingTop=0x7f060016;
+        public static final int index_fragment_head_sort_item_icon_marginRight=0x7f060027;
+        public static final int index_fragment_head_sort_item_marginBottom=0x7f060024;
+        public static final int index_fragment_head_sort_item_marginLeft=0x7f060025;
+        public static final int index_fragment_head_sort_item_marginRight=0x7f060026;
+        public static final int index_fragment_head_sort_item_marginTop=0x7f060023;
         /**  mcb 
          */
-        public static final int index_fragment_head_textSize=0x7f060014;
-        public static final int index_fragment_head_tv_marginRight=0x7f060017;
-        public static final int index_goods_detail_comment_item_content_marginTop=0x7f060042;
-        public static final int index_goods_detail_comment_item_hp_marginRight=0x7f060040;
-        public static final int index_goods_detail_comment_item_padding=0x7f06003f;
-        public static final int index_goods_detail_comment_item_personality_marginBottom=0x7f060041;
-        public static final int index_goods_detail_comment_title_marginBottom=0x7f06003e;
-        public static final int index_goods_detail_comment_title_marginLeft=0x7f06003c;
-        public static final int index_goods_detail_comment_title_marginTop=0x7f06003d;
-        public static final int index_goods_detail_comment_title_textSize=0x7f06003b;
-        public static final int index_goods_detail_description_marginBottom=0x7f06002d;
-        public static final int index_goods_detail_description_textSize=0x7f06002e;
-        public static final int index_goods_detail_fouse_num_marginBottom=0x7f060032;
-        public static final int index_goods_detail_head_picture_marginBottom=0x7f060035;
-        public static final int index_goods_detail_head_picture_marginRight=0x7f060034;
-        public static final int index_goods_detail_head_picture_marginTop=0x7f060033;
-        public static final int index_goods_detail_message_padding=0x7f06002c;
-        public static final int index_goods_detail_phone_marginTop=0x7f06003a;
-        public static final int index_goods_detail_price_marginBottom=0x7f060031;
-        public static final int index_goods_detail_price_marginTop=0x7f060030;
-        public static final int index_goods_detail_price_textSize=0x7f06002f;
-        public static final int index_goods_detail_publish_time_marginLeft=0x7f060039;
-        public static final int index_goods_detail_publish_time_marginRight=0x7f060036;
-        public static final int index_goods_detail_share_listview_item_padding=0x7f06002b;
-        public static final int index_goods_detail_username_marginLeft=0x7f060037;
-        public static final int index_goods_detail_username_textSize=0x7f060038;
-        public static final int index_goods_search_edittext_textSize=0x7f060045;
-        public static final int index_goods_search_header_padding=0x7f060043;
-        public static final int index_goods_search_history_clear_drawablePadding=0x7f06004e;
-        public static final int index_goods_search_history_footer_paddingBottom=0x7f06004d;
-        public static final int index_goods_search_history_footer_paddingTop=0x7f06004c;
-        public static final int index_goods_search_history_marginBottom=0x7f060049;
-        public static final int index_goods_search_history_marginTop=0x7f060048;
-        public static final int index_goods_search_history_textSize=0x7f060047;
-        public static final int index_goods_search_history_tip_marginBottom=0x7f06004b;
-        public static final int index_goods_search_history_tip_marginTop=0x7f06004a;
-        public static final int index_goods_search_input_delete_marginLeft=0x7f06004f;
-        public static final int index_goods_search_input_delete_marginRight=0x7f060050;
-        public static final int index_goods_search_search_button_marginLeft=0x7f060044;
-        public static final int index_goods_search_search_button_textSize=0x7f060046;
+        public static final int index_fragment_head_textSize=0x7f060015;
+        public static final int index_fragment_head_tv_marginRight=0x7f060018;
+        public static final int index_goods_detail_comment_item_content_marginTop=0x7f060043;
+        public static final int index_goods_detail_comment_item_hp_marginRight=0x7f060041;
+        public static final int index_goods_detail_comment_item_padding=0x7f060040;
+        public static final int index_goods_detail_comment_item_personality_marginBottom=0x7f060042;
+        public static final int index_goods_detail_comment_title_marginBottom=0x7f06003f;
+        public static final int index_goods_detail_comment_title_marginLeft=0x7f06003d;
+        public static final int index_goods_detail_comment_title_marginTop=0x7f06003e;
+        public static final int index_goods_detail_comment_title_textSize=0x7f06003c;
+        public static final int index_goods_detail_description_marginBottom=0x7f06002e;
+        public static final int index_goods_detail_description_textSize=0x7f06002f;
+        public static final int index_goods_detail_fouse_num_marginBottom=0x7f060033;
+        public static final int index_goods_detail_head_picture_marginBottom=0x7f060036;
+        public static final int index_goods_detail_head_picture_marginRight=0x7f060035;
+        public static final int index_goods_detail_head_picture_marginTop=0x7f060034;
+        public static final int index_goods_detail_message_padding=0x7f06002d;
+        public static final int index_goods_detail_phone_marginTop=0x7f06003b;
+        public static final int index_goods_detail_price_marginBottom=0x7f060032;
+        public static final int index_goods_detail_price_marginTop=0x7f060031;
+        public static final int index_goods_detail_price_textSize=0x7f060030;
+        public static final int index_goods_detail_publish_time_marginLeft=0x7f06003a;
+        public static final int index_goods_detail_publish_time_marginRight=0x7f060037;
+        public static final int index_goods_detail_share_listview_item_padding=0x7f06002c;
+        public static final int index_goods_detail_username_marginLeft=0x7f060038;
+        public static final int index_goods_detail_username_textSize=0x7f060039;
+        public static final int index_goods_search_edittext_textSize=0x7f060046;
+        public static final int index_goods_search_header_padding=0x7f060044;
+        public static final int index_goods_search_history_clear_drawablePadding=0x7f06004f;
+        public static final int index_goods_search_history_footer_paddingBottom=0x7f06004e;
+        public static final int index_goods_search_history_footer_paddingTop=0x7f06004d;
+        public static final int index_goods_search_history_marginBottom=0x7f06004a;
+        public static final int index_goods_search_history_marginTop=0x7f060049;
+        public static final int index_goods_search_history_textSize=0x7f060048;
+        public static final int index_goods_search_history_tip_marginBottom=0x7f06004c;
+        public static final int index_goods_search_history_tip_marginTop=0x7f06004b;
+        public static final int index_goods_search_input_delete_marginLeft=0x7f060050;
+        public static final int index_goods_search_input_delete_marginRight=0x7f060051;
+        public static final int index_goods_search_search_button_marginLeft=0x7f060045;
+        public static final int index_goods_search_search_button_textSize=0x7f060047;
         /**  lyw 
  lyw_publish 
          */
-        public static final int margintop=0x7f060079;
-        public static final int message_base_scrollview_top_height=0x7f060096;
+        public static final int margintop=0x7f06007a;
+        public static final int message_base_scrollview_top_height=0x7f060097;
         /**  yjf 
          */
-        public static final int message_list_item_height=0x7f060095;
-        public static final int message_margin_chat_top=0x7f060098;
-        public static final int mine_exit_button_marginBottom=0x7f060069;
-        public static final int mine_exit_button_marginLeft=0x7f060066;
-        public static final int mine_exit_button_marginRight=0x7f060067;
-        public static final int mine_exit_button_marginTop=0x7f060068;
-        public static final int mine_exit_button_textSize=0x7f060065;
-        public static final int mine_list_item_paddingBottom=0x7f060062;
-        public static final int mine_list_item_paddingLeft=0x7f06005f;
-        public static final int mine_list_item_paddingRight=0x7f060060;
-        public static final int mine_list_item_paddingTop=0x7f060061;
-        public static final int mine_list_item_textSize=0x7f060064;
-        public static final int mine_publish_goods_marginTop=0x7f06006a;
-        public static final int mine_settings_item_marginTop=0x7f060063;
-        public static final int nearby_select_city_dingwei_paddingBottom=0x7f060091;
-        public static final int nearby_select_city_dingwei_paddingTop=0x7f060090;
-        public static final int nearby_select_city_dingwei_textsize=0x7f06008e;
+        public static final int message_list_item_height=0x7f060096;
+        public static final int message_margin_chat_top=0x7f060099;
+        public static final int mine_exit_button_marginBottom=0x7f06006a;
+        public static final int mine_exit_button_marginLeft=0x7f060067;
+        public static final int mine_exit_button_marginRight=0x7f060068;
+        public static final int mine_exit_button_marginTop=0x7f060069;
+        public static final int mine_exit_button_textSize=0x7f060066;
+        public static final int mine_list_item_paddingBottom=0x7f060063;
+        public static final int mine_list_item_paddingLeft=0x7f060060;
+        public static final int mine_list_item_paddingRight=0x7f060061;
+        public static final int mine_list_item_paddingTop=0x7f060062;
+        public static final int mine_list_item_textSize=0x7f060065;
+        public static final int mine_publish_goods_marginTop=0x7f06006b;
+        public static final int mine_settings_item_marginTop=0x7f060064;
+        public static final int nearby_select_city_dingwei_paddingBottom=0x7f060092;
+        public static final int nearby_select_city_dingwei_paddingTop=0x7f060091;
+        public static final int nearby_select_city_dingwei_textsize=0x7f06008f;
         /**  nearby_select_city 
          */
-        public static final int nearby_select_city_division=0x7f060086;
-        public static final int nearby_select_city_hot_city_gridview_marginTop=0x7f060092;
-        public static final int nearby_select_city_hot_city_textsize=0x7f06008f;
-        public static final int nearby_select_city_letter_sort_height=0x7f06008d;
-        public static final int nearby_select_city_marginleft=0x7f060088;
-        public static final int nearby_select_city_marginright=0x7f060089;
-        public static final int nearby_select_city_margintop=0x7f060087;
-        public static final int nearby_select_city_position_letter_top_letter_bottom=0x7f06008a;
-        public static final int nearby_select_city_position_name_left=0x7f06008c;
-        public static final int nearby_select_city_position_name_top_bottom=0x7f06008b;
-        public static final int nearby_select_city_position_textsize=0x7f060093;
-        public static final int tab_padding_left_right=0x7f060097;
-        public static final int user_detail_head_browse_num_marginTop=0x7f060057;
-        public static final int user_detail_head_browse_num_textSize=0x7f06005a;
-        public static final int user_detail_head_description_marginBottom=0x7f06005d;
-        public static final int user_detail_head_description_marginTop=0x7f06005c;
-        public static final int user_detail_head_description_textSize=0x7f060059;
-        public static final int user_detail_head_head_picture_marginTop=0x7f06005b;
-        public static final int user_detail_head_layout_paddingBottom=0x7f060052;
-        public static final int user_detail_head_layout_paddingLeft=0x7f060053;
-        public static final int user_detail_head_layout_paddingRight=0x7f060054;
+        public static final int nearby_select_city_division=0x7f060087;
+        public static final int nearby_select_city_hot_city_gridview_marginTop=0x7f060093;
+        public static final int nearby_select_city_hot_city_textsize=0x7f060090;
+        public static final int nearby_select_city_letter_sort_height=0x7f06008e;
+        public static final int nearby_select_city_marginleft=0x7f060089;
+        public static final int nearby_select_city_marginright=0x7f06008a;
+        public static final int nearby_select_city_margintop=0x7f060088;
+        public static final int nearby_select_city_position_letter_top_letter_bottom=0x7f06008b;
+        public static final int nearby_select_city_position_name_left=0x7f06008d;
+        public static final int nearby_select_city_position_name_top_bottom=0x7f06008c;
+        public static final int nearby_select_city_position_textsize=0x7f060094;
+        public static final int tab_padding_left_right=0x7f060098;
+        public static final int user_detail_head_browse_num_marginTop=0x7f060058;
+        public static final int user_detail_head_browse_num_textSize=0x7f06005b;
+        public static final int user_detail_head_description_marginBottom=0x7f06005e;
+        public static final int user_detail_head_description_marginTop=0x7f06005d;
+        public static final int user_detail_head_description_textSize=0x7f06005a;
+        public static final int user_detail_head_head_picture_marginTop=0x7f06005c;
+        public static final int user_detail_head_layout_paddingBottom=0x7f060053;
+        public static final int user_detail_head_layout_paddingLeft=0x7f060054;
+        public static final int user_detail_head_layout_paddingRight=0x7f060055;
         /**  我的 
          */
-        public static final int user_detail_head_layout_paddingTop=0x7f060051;
-        public static final int user_detail_head_more_marginRight=0x7f06005e;
-        public static final int user_detail_head_more_textSize=0x7f060055;
-        public static final int user_detail_head_username_marginTop=0x7f060056;
-        public static final int user_detail_head_username_textSize=0x7f060058;
-        public static final int user_detail_more_list_item_padding=0x7f06006b;
-        public static final int user_detail_more_list_item_username_marginLeft=0x7f06006c;
-        public static final int user_detail_more_list_item_username_textSize=0x7f06006d;
+        public static final int user_detail_head_layout_paddingTop=0x7f060052;
+        public static final int user_detail_head_more_marginRight=0x7f06005f;
+        public static final int user_detail_head_more_textSize=0x7f060056;
+        public static final int user_detail_head_username_marginTop=0x7f060057;
+        public static final int user_detail_head_username_textSize=0x7f060059;
+        public static final int user_detail_more_list_item_padding=0x7f06006c;
+        public static final int user_detail_more_list_item_username_marginLeft=0x7f06006d;
+        public static final int user_detail_more_list_item_username_textSize=0x7f06006e;
     }
     public static final class drawable {
         public static final int add_emotion_icon=0x7f020000;
@@ -519,26 +520,28 @@ containing a value of this type.
         public static final int publish_btn=0x7f0200c9;
         public static final int publish_gridview_item_delect=0x7f0200ca;
         public static final int publish_voice=0x7f0200cb;
-        public static final int selectcity_letterview_background=0x7f0200cc;
-        public static final int spinner_dropdown=0x7f0200cd;
-        public static final int tab_home_btn=0x7f0200ce;
-        public static final int tab_home_normal_button=0x7f0200cf;
-        public static final int tab_home_pressed_button=0x7f0200d0;
-        public static final int tab_message_btn=0x7f0200d1;
-        public static final int tab_message_normal_button=0x7f0200d2;
-        public static final int tab_message_pressed_button=0x7f0200d3;
-        public static final int tab_mine_btn=0x7f0200d4;
-        public static final int tab_mine_normal_button=0x7f0200d5;
-        public static final int tab_mine_pressed_button=0x7f0200d6;
-        public static final int tab_near_normal_button=0x7f0200d7;
-        public static final int tab_near_pressed_button=0x7f0200d8;
-        public static final int tab_nearby_btn=0x7f0200d9;
-        public static final int tab_textcolor=0x7f0200da;
-        public static final int user_default_head=0x7f0200db;
-        public static final int user_default_head_circle=0x7f0200dc;
-        public static final int user_detail_head_layout_bg=0x7f0200dd;
-        public static final int user_detail_header_back_icon=0x7f0200de;
-        public static final int xlistview_arrow=0x7f0200df;
+        public static final int pulltorefresh_down_arrow=0x7f0200cc;
+        public static final int pulltorefresh_up_arrow=0x7f0200cd;
+        public static final int selectcity_letterview_background=0x7f0200ce;
+        public static final int spinner_dropdown=0x7f0200cf;
+        public static final int tab_home_btn=0x7f0200d0;
+        public static final int tab_home_normal_button=0x7f0200d1;
+        public static final int tab_home_pressed_button=0x7f0200d2;
+        public static final int tab_message_btn=0x7f0200d3;
+        public static final int tab_message_normal_button=0x7f0200d4;
+        public static final int tab_message_pressed_button=0x7f0200d5;
+        public static final int tab_mine_btn=0x7f0200d6;
+        public static final int tab_mine_normal_button=0x7f0200d7;
+        public static final int tab_mine_pressed_button=0x7f0200d8;
+        public static final int tab_near_normal_button=0x7f0200d9;
+        public static final int tab_near_pressed_button=0x7f0200da;
+        public static final int tab_nearby_btn=0x7f0200db;
+        public static final int tab_textcolor=0x7f0200dc;
+        public static final int user_default_head=0x7f0200dd;
+        public static final int user_default_head_circle=0x7f0200de;
+        public static final int user_detail_head_layout_bg=0x7f0200df;
+        public static final int user_detail_header_back_icon=0x7f0200e0;
+        public static final int xlistview_arrow=0x7f0200e1;
     }
     public static final class id {
         public static final int app_base_goods_gridview_item_description=0x7f0a0001;

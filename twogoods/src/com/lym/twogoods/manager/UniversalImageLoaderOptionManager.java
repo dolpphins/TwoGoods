@@ -75,6 +75,27 @@ public class UniversalImageLoaderOptionManager {
 	
 	/**
 	 * <p>
+	 * 	获取GridView显示的商品UIL的DisplayImageOption,其中指定的有:内存缓存,
+	 * 	磁盘缓存,加载失败显示R.drawable.empty_picture图片
+	 * </p>
+	 * 
+	 * @return 返回GridView显示的商品UIL的DisplayImageOption
+	 * */
+	public static DisplayImageOptions getGoodsGridViewDisplayImageOption() {
+
+		DisplayImageOptions options = new DisplayImageOptions.Builder()
+							.showImageOnLoading(R.drawable.empty_picture)
+							.showImageForEmptyUri(R.drawable.empty_picture)
+							.showImageOnFail(R.drawable.empty_picture)
+							.cacheInMemory(true)
+							.cacheOnDisk(true)
+							.considerExifParams(true)
+							.build();
+		return options;
+	}
+	
+	/**
+	 * <p>
 	 * 	获取头像UIL的DisplayImageOption,其中指定的有:内存缓存,
 	 * 	磁盘缓存,线性渐入显示,加载失败显示R.drawable.user_default_head图片
 	 * </p>

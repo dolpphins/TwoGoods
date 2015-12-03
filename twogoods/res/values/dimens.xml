@@ -20,6 +20,7 @@
     <dimen name="app_base_goods_listview_item_dscription_marginBottom">10dip</dimen>
     <dimen name="app_base_goods_listview_item_publishtime_marginRight">10dip</dimen>
     <dimen name="app_base_goods_listview_item_dscription_textSize">16sp</dimen>
+    <dimen name="app_base_goods_listview_item_dscription_emoijSize">18sp</dimen>
     <dimen name="app_base_goods_listview_item_picture_interval">10dip</dimen>
     <dimen name="app_base_goods_listview_item_location_marginTop">10dip</dimen>
     <dimen name="app_base_goods_listview_item_location_text_marginLeft">5dip</dimen>
@@ -138,7 +139,7 @@
 	<dimen name="app_base_goods_gridview_padding">10dip</dimen>
 	<dimen name="app_base_goods_gridview_detail_layout_padding">10dip</dimen>
 	<dimen name="app_base_goods_gridview_item_description_textSize">12sp</dimen>
-	<dimen name="app_base_goods_gridview_item_description_emoijSize">12sp</dimen>
+	<dimen name="app_base_goods_gridview_item_description_emoijSize">14sp</dimen>
 	<dimen name="app_base_goods_gridview_item_publishlocation_textSize">12sp</dimen>
 	<dimen name="app_base_goods_gridview_item_publishtime_textSize">12sp</dimen>
 	<dimen name="app_base_goods_gridview_item_price_marginTop">5dip</dimen>

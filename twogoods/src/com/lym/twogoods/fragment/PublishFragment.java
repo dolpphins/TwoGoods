@@ -1,6 +1,8 @@
 package com.lym.twogoods.fragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,6 +12,8 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.bmob.BmobProFile;
+import com.bmob.btp.callback.GetAccessUrlListener;
+import com.bmob.btp.callback.ThumbnailListener;
 import com.bmob.btp.callback.UploadBatchListener;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
@@ -28,8 +32,8 @@ import com.lym.twogoods.widget.WrapContentViewPager;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -438,9 +442,13 @@ public class PublishFragment extends BaseFragment {
 							if (arg0) {
 								for (int i = 0; i < arg3.length; i++) {
 									PublishConfigManger.pictureCloudUrl
-											.add(arg3[i].getUrl());
+											.add(arg3[i].getUrl());	
 								}
-								publishGoods();
+								ArrayList<String> picFileUrlList = new ArrayList<String>();
+								for(int i = 0; i < arg1.length; i++) {
+									picFileUrlList.add(arg1[i]);
+								}
+								goodsBean.setPicFileUrlList(picFileUrlList);
 							}
 						}
 

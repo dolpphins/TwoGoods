@@ -1,11 +1,21 @@
 package com.lym.twogoods.fragment.base;
 
-import com.lym.twogoods.R;
+import java.util.ArrayList;
+import java.util.List;
 
-import android.view.Gravity;
+import com.lym.twogoods.R;
+import com.lym.twogoods.adapter.NearbyAdapter;
+import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
+import com.lym.twogoods.bean.Goods;
+import com.lym.twogoods.network.AbsListViewLoader;
+import com.lym.twogoods.network.GridViewOnLoaderListener;
+import com.lym.twogoods.ui.GoodsDetailActivity;
+
+import android.content.Intent;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.GridView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import cn.bmob.v3.BmobQuery;
 import me.maxwin.view.XGridView;
 
 /**
@@ -14,13 +24,25 @@ import me.maxwin.view.XGridView;
  * @author 麦灿标
  *
  */
-public class PullGridViewFragment extends BaseListFragment {
+public abstract class PullGridViewFragment extends BaseListFragment {
 
 	protected XGridView mGridView;
 	
 	/** 水平方向上占用的额外宽度 */
 	private int mHorizontalExtraDistance;
 		
+	private static int mGridViewColumnNum = 2;
+	
+	/**
+	 * 商品列表加载器相关
+	 * */
+	private AbsListViewLoader mAbsListViewLoader;
+	private BaseGoodsListAdapter mAdapter;
+	private List<Goods> mGoodsList;
+	private int perPageCount = 10;
+	private AbsListViewLoader.OnLoaderListener mOnLoaderListener;
+	
+	private BmobQuery<Goods> mBmobquery;
 	
 	@Override
 	protected View onCreateContentView() {
@@ -32,6 +54,23 @@ public class PullGridViewFragment extends BaseListFragment {
 		return mGridView;
 	}
 	
+	@Override
+	protected void onCreateViewAfter() {
+		super.onCreateViewAfter();
+		
+		setClickEvent();
+		
+		mGoodsList = new ArrayList<Goods>();
+		mAdapter = new NearbyAdapter(mAttachActivity, mGoodsList, this);
+		mAbsListViewLoader = new AbsListViewLoader(mAttachActivity, mGridView.getAbsListView(), mAdapter, mGoodsList);
+		mOnLoaderListener = new GridViewOnLoaderListener(this, mAbsListViewLoader, mGridView);
+		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
+		mGridView.setNumColumns(mGridViewColumnNum);
+		mGridView.setAdapter(mAdapter);
+		
+		loadDataInit();
+	}
+	
 	private void initGridView() {
 		int horizontalSpacing = (int) mAttachActivity.getResources().getDimension(R.dimen.app_base_goods_gridview_horizontalSpacing);
 		int verticalSpacing = (int) mAttachActivity.getResources().getDimension(R.dimen.app_base_goods_gridview_verticalSpacing);
@@ -41,6 +80,20 @@ public class PullGridViewFragment extends BaseListFragment {
 		mGridView.setPadding(padding, 0, padding, 0);
 		mHorizontalExtraDistance = horizontalSpacing + 2 * padding;
 		mGridView.setVerticalScrollBarEnabled(false);//隐藏滚动条
+	}
+	
+	private void setClickEvent() {
+		if(mGridView != null) {
+			mGridView.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					Intent intent = new Intent(mAttachActivity, GoodsDetailActivity.class);
+					intent.putExtra("goods", mGoodsList.get(position));
+					startActivity(intent);
+				}
+			});
+		}
 	}
 	
 	/**
@@ -55,5 +108,29 @@ public class PullGridViewFragment extends BaseListFragment {
 	@Override
 	protected boolean requestDelayShowAbsListView() {
 		return true;
+	}
+	
+	/**
+	 * 创建合适的BmobQuery<Goods>对象
+	 * 
+	 * @return
+	 */
+	protected abstract BmobQuery<Goods> onCreateBmobQuery();
+	
+	private void loadDataInit() {
+		reloadData(true);
+	}
+	
+	private void reloadData(boolean isInit) {
+		if(mBmobquery == null) {
+			mBmobquery = onCreateBmobQuery();
+		}
+		if(mBmobquery == null) {
+			return;
+		}
+		
+		mBmobquery.setSkip(0);
+		mBmobquery.setLimit(perPageCount);
+		mAbsListViewLoader.requestLoadData(mBmobquery, null, true, isInit);
 	}
 }

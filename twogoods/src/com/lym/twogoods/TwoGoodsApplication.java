@@ -64,11 +64,17 @@ public class TwoGoodsApplication extends Application{
 				SharePreferencesConfiguration.LOCATION_DESCRIPTION_KEY, 
 				SharePreferencesConfiguration.LOCATION_DESCRIPTION_DEFAULT_VALUE));
 		location.setLongitude(spm.getLocationString(getApplicationContext(),
-				SharePreferencesConfiguration.LOCATION_LONGITUDE_KEY, null));
+				SharePreferencesConfiguration.LOCATION_LONGITUDE_KEY, 
+				SharePreferencesConfiguration.LOCATION_LONGITUDE_DEFAULT_VALUE));
 		location.setLatitude(spm.getLocationString(getApplicationContext(), 
-				SharePreferencesConfiguration.LOCATION_LATITUDE_KEY, null));
+				SharePreferencesConfiguration.LOCATION_LATITUDE_KEY, 
+				SharePreferencesConfiguration.LOCATION_LATITUDE_DEFAULT_VALUE));
 		UserInfoManager.getInstance().setCurrentLocation(location);
+		
+		ThumbnailMap.init(getApplicationContext());
 	}
+	
+	
 	
 	
 }

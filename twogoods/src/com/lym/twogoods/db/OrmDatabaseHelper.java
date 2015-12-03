@@ -9,6 +9,7 @@ import com.lym.twogoods.bean.ChatSnapshot;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.GoodsComment;
 import com.lym.twogoods.bean.GoodsFocus;
+import com.lym.twogoods.bean.ThumbnailBean;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.local.bean.LocalGoods;
 
@@ -41,6 +42,9 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
  *  </li>
  *  <li>
  *  	chat_snapshot表
+ *  </li>
+ *  <li>
+ *  	thumbnailbean表
  *  </li>
  *	<pre>
  *	Example:											
@@ -83,6 +87,8 @@ public class OrmDatabaseHelper extends OrmLiteSqliteOpenHelper{
 	private Dao<ChatDetailBean, Integer> chatDetailBeanDAO;
 	/** chat_snapshot表DAO */
 	private Dao<ChatSnapshot, Integer> chatSnapshotDAO;
+	/** thumbnailbean表DAO */
+	private Dao<ThumbnailBean, Integer> thumbnailBeanDAO;
 	
 	public OrmDatabaseHelper(Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
@@ -101,6 +107,7 @@ public class OrmDatabaseHelper extends OrmLiteSqliteOpenHelper{
 			TableUtils.createTable(connectionSource, GoodsFocus.class);
 			TableUtils.createTable(connectionSource, ChatDetailBean.class);
 			TableUtils.createTable(connectionSource, ChatSnapshot.class);
+			TableUtils.createTable(connectionSource, ThumbnailBean.class);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -212,13 +219,29 @@ public class OrmDatabaseHelper extends OrmLiteSqliteOpenHelper{
 		if(chatSnapshotDAO == null) {
 			try {
 				chatSnapshotDAO = getDao(ChatSnapshot.class);
-				System.out.println(chatDetailBeanDAO);
 			} catch(Exception e) {
-				System.out.println("getChatSnapshotDao()");
 				e.printStackTrace();
 			}
 		}
 		return chatSnapshotDAO;
+	}
+	
+	/**
+	 * <p>
+	 * 	获取thumbnailbean表
+	 * </p>
+	 * 
+	 * @return 获取成功返回相应的Dao,获取失败返回null.
+	 */
+	public Dao<ThumbnailBean, Integer> getThumbnailBeanDao() {
+		if(thumbnailBeanDAO == null) {
+			try {
+				thumbnailBeanDAO = getDao(ThumbnailBean.class);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return thumbnailBeanDAO;
 	}
 	
 	/**

@@ -122,7 +122,8 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 		//商品描述
 		viewHolder.base_goods_listview_item_description.setText(item.getDescription());
 		//左右可滑动图片
-		final ArrayList<String> picturesUrlList = item.getPictureUrlList();
+		//final ArrayList<String> picturesUrlList = item.getPictureUrlList();
+		final ArrayList<String> picturesUrlList = item.getPicFileUrlList();
 		if(picturesUrlList != null && picturesUrlList.size() > 0) {
 			GoodsPictureListAdapter adapter = new GoodsPictureListAdapter(mActivity, picturesUrlList);
 			PictureThumbnailSpecification goodsPictureThumbnailSpecification = GoodsScreen.getIndexGoodsPictureThumbnailSpecification(mActivity);
@@ -144,6 +145,8 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 					mActivity.startActivity(intent);
 				}
 			});
+		} else {//防止View重用错乱
+			viewHolder.base_goods_gridview_item_pictures.setAdapter(null);
 		}
 		//用户相关信息子布局点击事件,跳转到某一用户主页
 		viewHolder.base_goods_listview_item_user_layout.setOnTouchListener(new OnTouchListener() {

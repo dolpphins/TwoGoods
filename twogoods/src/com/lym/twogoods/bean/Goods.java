@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.j256.ormlite.field.DatabaseField;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobGeoPoint;
 
 /**
  * <p>
@@ -61,6 +62,10 @@ public class Goods extends BmobObject implements Serializable{
 	@DatabaseField
 	private String description;
 	
+	/** 商品图片网络缩略图可访问url集合 */
+	@DatabaseField
+	private ArrayList<String> picFileUrlList;
+	
 	/** 商品图片网络可访问url集合 */
 	@DatabaseField
 	private ArrayList<String> picturesUrlList;
@@ -97,6 +102,12 @@ public class Goods extends BmobObject implements Serializable{
 	@DatabaseField
 	private long update_time;
 
+	private BmobGeoPoint geoPoint;
+	
+	public Goods() {
+		geoPoint = new BmobGeoPoint();
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -151,6 +162,7 @@ public class Goods extends BmobObject implements Serializable{
 
 	public void setLocation_longitude(String location_longitude) {
 		this.location_longitude = location_longitude;
+		geoPoint.setLongitude(Double.parseDouble(location_longitude));
 	}
 
 	public String getLocation_latitude() {
@@ -159,6 +171,7 @@ public class Goods extends BmobObject implements Serializable{
 
 	public void setLocation_latitude(String location_latitude) {
 		this.location_latitude = location_latitude;
+		geoPoint.setLatitude(Double.parseDouble(location_latitude));
 	}
 
 	public int getPrice() {
@@ -248,6 +261,25 @@ public class Goods extends BmobObject implements Serializable{
 	public void setPictureUrlList(ArrayList<String> picturesUrlList) {
 		this.picturesUrlList = picturesUrlList;
 	}
+
+	public BmobGeoPoint getGeoPoint() {
+		return geoPoint;
+	}
+
+	public void setGeoPoint(BmobGeoPoint geoPoint) {
+		this.geoPoint = geoPoint;
+	}
+
+	public ArrayList<String> getPicFileUrlList() {
+		return picFileUrlList;
+	}
+
+	public void setPicFileUrlList(ArrayList<String> picFileUrlList) {
+		this.picFileUrlList = picFileUrlList;
+	}
+	
+	
+	
 }
 
 

@@ -12,7 +12,7 @@
     android:orientation="vertical" 
     android:background="@color/white"
     android:padding="@dimen/app_base_goods_listview_item_padding"
-    android:descendantFocusability="blocksDescendants">  <!-- 该属性解决ListView点击Item获取不了焦点问题 -->
+    android:descendantFocusability="blocksDescendants" xmlns:app="http://schemas.android.com/apk/res/com.lym.twogoods">  <!-- 该属性解决ListView点击Item获取不了焦点问题 -->
     
     <!-- 顶部布局 -->
     <RelativeLayout 
@@ -82,7 +82,9 @@
         android:layout_marginTop="@dimen/app_base_goods_listview_item_dscription_marginTop"
         android:layout_marginBottom="@dimen/app_base_goods_listview_item_dscription_marginBottom"
         android:textSize="@dimen/app_base_goods_listview_item_dscription_textSize"
-        android:maxLines="3"/>
+        android:maxLines="3"
+        app:emojiSize="@dimen/app_base_goods_listview_item_dscription_emoijSize"
+        android:gravity="center_vertical"/>
 
     <!-- 左右可滑动图片 -->
     <HorizontalScrollView 

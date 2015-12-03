@@ -84,7 +84,7 @@ public class UniversalImageLoaderConfigurationManager {
 							new ImageLoaderConfiguration.Builder(context)
 							.threadPriority(Thread.NORM_PRIORITY - 2)
 							.threadPoolSize(5) // five thread
-							.memoryCache(new LruMemoryCache(2 * 1024 * 1024)) //2MB
+							.memoryCache(new LruMemoryCache(20 * 1024 * 1024)) //2MB
 							.denyCacheImageMultipleSizesInMemory() 
 							.tasksProcessingOrder(QueueProcessingType.LIFO) //LIFO
 							.diskCache(new UnlimitedDiskCache(new File(DiskCacheManager.getInstance(context).getGoodsPictureCachePath())))

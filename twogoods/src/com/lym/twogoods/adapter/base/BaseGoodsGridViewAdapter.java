@@ -5,11 +5,14 @@ import java.util.List;
 import com.lym.twogoods.R;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.fragment.base.PullGridViewFragment;
-import com.lym.twogoods.manager.ImageLoaderHelper;
+import com.lym.twogoods.manager.ThumbnailMapManager;
 import com.lym.twogoods.screen.GoodsScreen;
 import com.lym.twogoods.utils.TimeUtil;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,8 @@ import android.widget.TextView;
  */
 public class BaseGoodsGridViewAdapter extends BaseGoodsListAdapter {
 
+	private final static String TAG = "BaseGoodsGridViewAdapter";
+	
 	private PullGridViewFragment mFragment;
 	
 	public BaseGoodsGridViewAdapter(Activity at, List<Goods> goodsList, PullGridViewFragment fragment) {
@@ -68,7 +73,12 @@ public class BaseGoodsGridViewAdapter extends BaseGoodsListAdapter {
 			viewHolder.app_base_goods_gridview_item_iv.setLayoutParams(params);
 		}
 		params.width = params.height = GoodsScreen.getNearbyGoodsPictureThumbnailSpecification(mActivity, mFragment.getHorizontalExtraDistance()).getWidth();
-		ImageLoaderHelper.loadGoodsPictureThumnail(mActivity, url, viewHolder.app_base_goods_gridview_item_iv);
+		String bmobFileName = null;
+		List<String> picFileUrlList = item.getPicFileUrlList();
+		if(picFileUrlList != null && picFileUrlList.size() > 0) {
+			bmobFileName = picFileUrlList.get(0);
+		}
+		ThumbnailMapManager.loadGoodsPictureThumnail(mActivity, bmobFileName, viewHolder.app_base_goods_gridview_item_iv, ThumbnailMapManager.DisplayType.GridViewType);
 		//描述
 		viewHolder.app_base_goods_gridview_item_description.setText(item.getDescription());
 		//价格

@@ -1,6 +1,7 @@
 package com.lym.twogoods.ui;
 
 import com.lym.twogoods.R;
+import com.lym.twogoods.ThumbnailMap;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.Location;
 import com.lym.twogoods.eventbus.event.ExitChatEvent;
@@ -304,6 +305,9 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		// TODO 自动生成的方法存根
 		super.onDestroy();
 		EventBus.getDefault().unregister(this);
+		
+		//保存缩略图映射缓存
+		ThumbnailMap.save(getApplicationContext());
 	}
 	
 	
