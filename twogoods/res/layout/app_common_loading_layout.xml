@@ -11,11 +11,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     
-   	<me.maxwin.view.XListView
+    <me.maxwin.view.XListView
 	   android:id="@+id/app_basefragment_listview_lv"
 	   android:layout_width="match_parent"
 	   android:layout_height="match_parent"
-	   android:scrollbars="none"/>
+	   android:scrollbars="none"/> 
    	
    	<RelativeLayout 
    	    android:layout_width="match_parent"

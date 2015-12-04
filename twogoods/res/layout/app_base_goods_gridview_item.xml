@@ -7,11 +7,12 @@
  -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.lym.twogoods"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/app_base_goods_gridview_item_padding"
-    android:background="@color/white" xmlns:app="http://schemas.android.com/apk/res/com.lym.twogoods">
+    android:paddingTop="@dimen/app_base_goods_gridview_item_paddingTop"
+    android:background="#00ffffff" >
     
     <!-- 第一张商品图片 -->
     <ImageView 
@@ -25,7 +26,8 @@
     <RelativeLayout 
         android:layout_width="match_parent"
     	android:layout_height="wrap_content"
-    	android:padding="@dimen/app_base_goods_gridview_detail_layout_padding">
+    	android:padding="@dimen/app_base_goods_gridview_detail_layout_padding"
+    	android:background="@color/white">
     	<!-- 描述 -->
         <com.lym.twogoods.widget.EmojiTextView 
             android:id="@+id/app_base_goods_gridview_item_description"

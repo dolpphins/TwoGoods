@@ -2,6 +2,7 @@ package com.lym.twogoods.fragment.base;
 
 import android.view.View;
 import android.widget.AbsListView;
+import me.maxwin.view.IAbsListViewListener;
 import me.maxwin.view.XListView;
 
 /**
@@ -18,7 +19,7 @@ import me.maxwin.view.XListView;
  * @author 麦灿标
  * */
 public abstract class PullListFragment extends BaseListFragment 
-			implements XListView.IXListViewListener,XListView.OnXScrollListener{
+			implements IAbsListViewListener,XListView.OnXScrollListener{
 
 	public static enum Mode {
 		BOTH, PULLDOWN, PULLUP,NONE

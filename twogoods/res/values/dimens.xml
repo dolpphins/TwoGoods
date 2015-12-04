@@ -27,8 +27,8 @@
     <dimen name="app_base_goods_listview_item_location_textSize">12sp</dimen>
     <!-- 加载动画 -->
     <dimen name="app_basefragment_listview_laodfail_tip_textSize">16sp</dimen>
-    
-    
+    <!-- 下拉刷新头部底部布局 -->
+    <dimen name="xlistview_header_height">60dp</dimen>
     
     
     
@@ -133,7 +133,7 @@
 	<dimen name="user_detail_more_list_item_username_marginLeft">10dip</dimen>
 	<dimen name="user_detail_more_list_item_username_textSize">18sp</dimen>
 	<!-- 附近 -->
-	<dimen name="app_base_goods_gridview_item_padding">0dip</dimen>
+	<dimen name="app_base_goods_gridview_item_paddingTop">10dip</dimen>
 	<dimen name="app_base_goods_gridview_horizontalSpacing">10dip</dimen>
 	<dimen name="app_base_goods_gridview_verticalSpacing">15dip</dimen>
 	<dimen name="app_base_goods_gridview_padding">10dip</dimen>

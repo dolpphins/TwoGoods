@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	附近页面GridView每一个Item的Selector
+	
+	@author 麦灿标
+ -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:state_pressed="true">
+        <color android:color="#00000000"/>
+    </item>
+    <item>
+        <color android:color="#00000000"/>
+    </item>
+
+</selector>

@@ -12,14 +12,12 @@ import com.lym.twogoods.R;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
-import android.widget.ImageView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -34,7 +32,7 @@ public class XListView extends ListView implements OnScrollListener {
 	private OnScrollListener mScrollListener; // user's scroll listener
 
 	// the interface to trigger refresh and load more.
-	private IXListViewListener mListViewListener;
+	private IAbsListViewListener mListViewListener;
 
 	// -- header view
 	private XListViewHeader mHeaderView;
@@ -186,6 +184,7 @@ public class XListView extends ListView implements OnScrollListener {
 		if (mPullLoading == true) {
 			mPullLoading = false;
 			mFooterView.setState(XListViewFooter.STATE_NORMAL);
+			resetFooterHeight(mFooterView.getHeight());
 		}
 	}
 
@@ -266,6 +265,13 @@ public class XListView extends ListView implements OnScrollListener {
 			mScrollBack = SCROLLBACK_FOOTER;
 			mScroller.startScroll(0, bottomMargin, 0, -bottomMargin,
 					SCROLL_DURATION);
+			invalidate();
+		}
+	}
+	
+	private void resetFooterHeight(int deltaY) {
+		if (deltaY > 0) {
+			mScroller.startScroll(0, deltaY, 0, -deltaY);
 			invalidate();
 		}
 	}
@@ -384,9 +390,8 @@ public class XListView extends ListView implements OnScrollListener {
 		}
 	}
 
-	public void setXListViewListener(IXListViewListener l) {
+	public void setXListViewListener(IAbsListViewListener l) {
 		mListViewListener = l;
-		System.out.println(134);
 	}
 
 	/**
@@ -395,15 +400,6 @@ public class XListView extends ListView implements OnScrollListener {
 	 */
 	public interface OnXScrollListener extends OnScrollListener {
 		public void onXScrolling(View view);
-	}
-
-	/**
-	 * implements this interface to get refresh/load more event.
-	 */
-	public interface IXListViewListener {
-		public void onRefresh();
-
-		public void onLoadMore();
 	}
 	
 	
@@ -472,4 +468,15 @@ public class XListView extends ListView implements OnScrollListener {
 			mHeaderView.clearHeader();
 		}
 	}
+	
+	public void showLoadMore() {
+		mFooterView.show();
+	}
+	
+	public void hideLoadMore() {
+		System.out.println("hideLoadMore");
+		mFooterView.hide();
+	}
+	
+	
 }

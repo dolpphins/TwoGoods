@@ -5,7 +5,6 @@ import java.util.List;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.fragment.base.BaseListFragment;
 
-import android.util.Log;
 import me.maxwin.view.XListView;
 
 /**
@@ -23,6 +22,11 @@ public class ListViewOnLoaderListener extends DefaultOnLoaderListener {
 	public ListViewOnLoaderListener(BaseListFragment fragment, AbsListViewLoader loader, XListView listView) {
 		super(fragment, loader);
 		mListView = listView;
+	}
+	
+	@Override
+	public void onLoadMoreStart() {
+		super.onLoadMoreStart();
 	}
 	
 	@Override

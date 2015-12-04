@@ -133,6 +133,10 @@ public class XListViewHeader extends LinearLayout {
 		mState = state;
 	}
 	
+	public int getState() {
+		return mState;
+	}
+	
 	public void setVisiableHeight(int height) {
 		if (height < 0)
 			height = 0;

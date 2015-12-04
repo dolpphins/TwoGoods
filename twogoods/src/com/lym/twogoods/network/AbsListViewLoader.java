@@ -26,7 +26,7 @@ import cn.bmob.v3.listener.FindListener;
  * */
 public class AbsListViewLoader {
 
-	private final static String TAG = "ListViewLoader";
+	private final static String TAG = "AbsListViewLoader";
 	
 	/** 上下文 */
 	private Context mContext;

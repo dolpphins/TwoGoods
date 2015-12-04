@@ -3,18 +3,16 @@ package me.maxwin.view;
 import com.lym.twogoods.R;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
 public class XGridView extends LinearLayout{
@@ -22,12 +20,19 @@ public class XGridView extends LinearLayout{
 	private final static String TAG = "XGridView";
 	
 	private XListViewHeader mHeaderView;
-	private RelativeLayout mHeaderViewContent;
-	private int mHeaderViewHeight;
 	
-	private GridView mGridView;
+	private ScrollGridView mGridView;
 	
 	private Context mContext;
+	
+	private Scroller mScroller;
+	
+	private int mHeaderViewHeight;
+	
+	private boolean mIsRefreshing;
+	
+	/** 刷新监听器 */
+	private IAbsListViewListener mGridViewListener;
 	
 	public XGridView(Context context) {
 		this(context, null);
@@ -48,28 +53,21 @@ public class XGridView extends LinearLayout{
 		setOrientation(LinearLayout.VERTICAL);
 		
 		mHeaderView = new XListViewHeader(context);
-		mGridView = new GridView(context);
+		mGridView = new ScrollGridView(context);
 		initGridView();
 		
 		removeAllViews();
 		addView(mHeaderView, android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		addView(mGridView, android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		
-		mHeaderViewContent = (RelativeLayout) mHeaderView
-				.findViewById(R.id.xlistview_header_content);
-		mHeaderView.getViewTreeObserver().addOnGlobalLayoutListener(
-				new OnGlobalLayoutListener() {
-					@Override
-					public void onGlobalLayout() {
-						mHeaderViewHeight = mHeaderViewContent.getHeight();
-						getViewTreeObserver()
-								.removeGlobalOnLayoutListener(this);
-					}
-				});
+		mScroller = new Scroller(context, new DecelerateInterpolator());
+
+		mHeaderViewHeight = (int) context.getResources().getDimension(R.dimen.xlistview_header_height);
 	}
 	
 	private void initGridView() {
 		mGridView.setOnTouchListener(new OnGridViewTouchListener());
+		mGridView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 	}
 	
 	/**
@@ -144,6 +142,63 @@ public class XGridView extends LinearLayout{
 		mGridView.setOnItemClickListener(listener);
 	}
 	
+	/**
+	 * 设置Item Selector
+	 * 
+	 * @param sel 注意不能为null
+	 */
+	public void setSelector(Drawable sel) {
+		mGridView.setSelector(sel);
+	}
+	
+	private void updateHeaderHeight(float delta) {
+		mHeaderView.setVisiableHeight((int) delta
+				+ mHeaderView.getVisiableHeight());
+		if(mIsRefreshing) {
+			
+		} else {
+			if (mHeaderView.getVisiableHeight() > mHeaderViewHeight) {
+				mHeaderView.setState(XListViewHeader.STATE_READY);
+			} else {
+				mHeaderView.setState(XListViewHeader.STATE_NORMAL);
+			}
+		}
+	}
+
+	private void scrollHeaderView() {
+		Log.i(TAG, "scrollHeaderView");
+		int dy = -mHeaderView.getVisiableHeight();
+		if(mHeaderView.getState() == XListViewHeader.STATE_READY && mHeaderView.getVisiableHeight() > mHeaderViewHeight) {
+			dy += mHeaderViewHeight;
+		}
+		mScroller.startScroll(0, mHeaderView.getVisiableHeight(), 0, dy);
+		invalidate();
+	}
+	
+	@Override
+	public void computeScroll() {
+		if(mScroller.computeScrollOffset()) {
+			mHeaderView.setVisiableHeight(mScroller.getCurrY());
+			postInvalidate();//重要
+		}
+		super.computeScroll();
+	}
+	
+	public void stopRefresh() {
+		if(mIsRefreshing) {
+			mIsRefreshing = false;
+			mHeaderView.setState(XListViewHeader.STATE_NORMAL);
+			scrollHeaderView();
+		}
+	}
+	
+	public void setXGridViewListener(IAbsListViewListener l) {
+		mGridViewListener = l;
+	}
+	
+	public IAbsListViewListener getXGridViewListener() {
+		return mGridViewListener;
+	}
 	
 	/**
 	 * GridView触摸事件监听器
@@ -152,18 +207,11 @@ public class XGridView extends LinearLayout{
 
 		private float mLastY;
 		
-		private boolean mIsPullHeaderView;
-		
-		private int mHeaderViewVisibleHeight;
-		
 		private final static float OFFSET_RADIO = 1.8f;
 		
-		private Scroller mScroller;
-		
+		private boolean mDisablePerformClick = false;
 		
 		public OnGridViewTouchListener() {
-			mScroller = new Scroller(mContext, new DecelerateInterpolator());
-			
 		}
 		
 		@Override
@@ -173,7 +221,7 @@ public class XGridView extends LinearLayout{
 			}
 			
 			int action = event.getAction();
-			
+
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
 				mLastY = event.getRawY();
@@ -183,35 +231,33 @@ public class XGridView extends LinearLayout{
 				mLastY = event.getRawY();
 				
 				if(mGridView.getFirstVisiblePosition() == 0) {
-					View child = mGridView.getChildAt(0);
-					if(child.getTop() >= 0) {
-							if(deltaY > 0) {
-								updateHeaderHeight(deltaY / OFFSET_RADIO);
-							}
+					if(mGridView.computeVerticalScrollOffset() == 0) {
+						if(deltaY <= 0 && mHeaderView.getVisiableHeight() <= 0) {
+							break;
 						}
+						updateHeaderHeight(deltaY / OFFSET_RADIO);
+						mDisablePerformClick = true;
+						return true;
 					}
+				}
 				break;
-			case MotionEvent.ACTION_UP: 
-				
+			//case MotionEvent.ACTION_UP:
+			  default:
+				scrollHeaderView();
+				if(mHeaderView.getVisiableHeight() > mHeaderViewHeight) {
+					mHeaderView.setState(XListViewHeader.STATE_REFRESHING);
+					mIsRefreshing = true;
+					if(mGridViewListener != null) {
+						mGridViewListener.onRefresh();
+					}
+				}
+				if(mDisablePerformClick) {
+					mDisablePerformClick = false;
+					return true;
+				}
 				break;
 			}
 			return false;
 		}
-		
-		private void updateHeaderHeight(float delta) {
-			mHeaderView.setVisiableHeight((int) delta
-					+ mHeaderView.getVisiableHeight());
-			System.out.println("delta:" + delta);
-			System.out.println("mHeaderView.getVisiableHeight():" + mHeaderView.getVisiableHeight());
-//			if (mEnablePullRefresh && !mPullRefreshing) { // 未处于刷新状态，更新箭头
-//				if (mHeaderView.getVisiableHeight() > mHeaderViewHeight) {
-//					mHeaderView.setState(XListViewHeader.STATE_READY);
-//				} else {
-//					mHeaderView.setState(XListViewHeader.STATE_NORMAL);
-//				}
-//			}
-//			setSelection(0); // scroll to top each time
-		}
-		
 	}
 }
