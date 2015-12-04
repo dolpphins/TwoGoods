@@ -425,7 +425,6 @@ public class SelectCityActivity extends BackFragmentActivity {
 		sharePreferencesManager.setLocationString(getApplicationContext(),
 				SharePreferencesConfiguration.LOCATION_LONGITUDE_KEY,
 				location.getLongitude());
-		sharePreferencesManager.notifyAll();
 	}
 
 	@Override

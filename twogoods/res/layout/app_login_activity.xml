@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- 
 	App登录页面布局
 	
@@ -51,6 +51,7 @@
         android:layout_alignRight="@+id/et_login_password"
         android:layout_alignTop="@+id/et_login_code"
         android:layout_toRightOf="@+id/btn_login_land"
+	android:background="@color/transparent"
         android:text="@string/get_code" />
 
     <Button

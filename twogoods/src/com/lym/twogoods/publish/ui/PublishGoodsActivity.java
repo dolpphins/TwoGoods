@@ -5,20 +5,22 @@ import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
 import com.lym.twogoods.fragment.PublishFragment;
 import com.lym.twogoods.message.MessageConfig;
 import com.lym.twogoods.message.listener.RecondTouchListener;
-import com.lym.twogoods.message.ui.ChatActivity;
 import com.lym.twogoods.publish.manger.PublishConfigManger;
 import com.lym.twogoods.ui.SendPictureActivity;
 import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
 import com.lym.twogoods.widget.WrapContentViewPager;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -126,8 +128,25 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 		super.onStart();
 		emotionViewPagerAdapter.attachEditext(publishFragment
 				.getEditTextDescription());
+		hideBottomLayout();
 	}
 
+	private void hideBottomLayout() {
+		/**
+		 * 点击最外层布局隐藏底部控件
+		 */
+		publishFragment.getRelativeLayoutMain().setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// 隐藏键盘
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+				hideEmotionLayout();
+				hideChatLayout();
+			}
+		});
+	}
 	private void initEvent() {
 		iv_publish_fragment_add_photo.setOnClickListener(new OnClickListener() {
 
@@ -244,6 +263,29 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 			break;
 		}
 	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode==KeyEvent.KEYCODE_BACK) {
+			new AlertDialog.Builder(this).setMessage("你真的要放弃发布吗......").setPositiveButton("我确定...", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					finish();
+				}
+			}).setNegativeButton("我后悔了...", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					
+				}
+			}).show();
+			return true;
+		}else {
+			return super.onKeyDown(keyCode, event);
+		}
+	}
+	
 	/**ChatActivity的Handler*/
 	private Handler mHandler = new Handler()
 	{
@@ -275,6 +317,7 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 				PublishConfigManger.voicePath=path;
 				Toast.makeText(getApplicationContext(), "录音结束", Toast.LENGTH_SHORT).show();
 				hideChatLayout();
+				updateVoiceImageView(publishFragment.getVoiceImageView());
 				break;
 				
 			case MessageConfig.HIDE_BOTTOM:
@@ -283,4 +326,32 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 		}
 
 	};
+	/**
+	 * <p>
+	 * 		当用户使用了语音功能，这时候语音控件会显示出来，并设置语音控件相关点击事件。
+	 * </p>
+	 * @param imageView		语音控件
+	 */
+	private void updateVoiceImageView(ImageView imageView) {
+		//有发表语音
+		if(!PublishConfigManger.voicePath.equals("")){
+			imageView.setVisibility(View.VISIBLE);
+			imageView.setOnLongClickListener(new OnLongClickListener() {
+				
+				@Override
+				public boolean onLongClick(View v) {
+					v.setVisibility(View.GONE);
+					PublishConfigManger.voicePath="";
+					return true;
+				}
+			});
+			imageView.setOnClickListener(new OnClickListener() {
+				//播放语音
+				@Override
+				public void onClick(View v) {
+					
+				}
+			});
+		}
+	}
 }

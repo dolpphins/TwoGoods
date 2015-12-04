@@ -221,7 +221,7 @@ public class RegisterActivity extends BackActivity {
 	 * @author 龙宇文
 	 **/
 	private void codeMatch() {
-		BmobSMS.verifySmsCode(getApplicationContext(), et_register_phone
+		/*BmobSMS.verifySmsCode(getApplicationContext(), et_register_phone
 				.getText().toString(), et_register_code.getText().toString(),
 				new VerifySMSCodeListener() {
 
@@ -233,7 +233,9 @@ public class RegisterActivity extends BackActivity {
 							codeVerify = false;
 						}
 					}
-				});
+				});*/
+		//以下测试代码（为了方便）
+		codeVerify = true;
 	}
 
 	/**
