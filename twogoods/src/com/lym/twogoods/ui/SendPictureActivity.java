@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lym.twogoods.R;
-import com.lym.twogoods.message.MessageConfig;
+import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.message.fragment.CameraFragment;
 import com.lym.twogoods.message.fragment.PictureFragment;
 import com.lym.twogoods.ui.base.BackActivity;

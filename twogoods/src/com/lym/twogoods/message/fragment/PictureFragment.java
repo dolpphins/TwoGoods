@@ -10,9 +10,9 @@ import com.lym.twogoods.R;
 import com.lym.twogoods.fragment.base.BaseFragment;
 import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.message.ImageFloder;
-import com.lym.twogoods.message.MessageConfig;
 import com.lym.twogoods.message.adapter.ImageAdapter;
 import com.lym.twogoods.message.adapter.PicturePathAdapter;
+import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.message.view.ListImageDirPopupWindow;
 import com.lym.twogoods.message.view.ListImageDirPopupWindow.OnImageDirSelected;
 

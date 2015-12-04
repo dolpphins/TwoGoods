@@ -41,16 +41,16 @@ import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.ChatConfiguration;
 import com.lym.twogoods.db.OrmDatabaseHelper;
 import com.lym.twogoods.fragment.base.PullListFragment;
-import com.lym.twogoods.message.MessageConfig;
 import com.lym.twogoods.message.NewMessageReceiver;
 import com.lym.twogoods.message.adapter.MessageChatAdapter;
+import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.message.ui.ChatActivity;
 import com.lym.twogoods.utils.DatabaseHelper;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 
 public class ChatFragment extends PullListFragment{
 	
-	
+	private final String TAG = "ChatFragment" ;
 	OrmDatabaseHelper mOrmDatabaseHelper;
 	/**聊天表*/
 	private Dao<ChatDetailBean, Integer> mChatDetailDao;
@@ -144,24 +144,19 @@ public class ChatFragment extends PullListFragment{
 		mListView.setHeaderDividersEnabled(false);
 		mListView.setDivider(null);
 		mListView.setOnTouchListener(new OnTouchListener() {
-
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
-				// TODO Auto-generated method stub
 				hideSoftInputView();
 				hideBottom();
 				return false;
 			}
 		});
-		
-		
 		// 重发按钮的点击事件
 		mMessageChatAdapter.setOnInViewClickListener(R.id.iv_fail_resend,
 					new MessageChatAdapter.onInternalClickListener() {
 					@Override
-					public void OnClickListener(View parentV, View v,
-							Integer position, Object values) {
-								// 重发消息
+					public void OnClickListener(View parentV, View v,Integer position, Object values) {
+						// 重发消息
 						reSendMessage(parentV, v, values);
 					}
 				});
@@ -186,7 +181,6 @@ public class ChatFragment extends PullListFragment{
 			resendTextMsg(parentV, values);
 			break;
 		}
-		
 	}
 	
 	/**暂存语音的可访问网络url*/
@@ -204,42 +198,33 @@ public class ChatFragment extends PullListFragment{
 	 */
 	
 	private void resendVoiceMsg(final View parentV, final Object values) {
-		// TODO 自动生成的方法存根
 		resendVoicePath = ((ChatDetailBean)values).getMessage();
-		BmobProFile.getInstance(
-				getActivity()).upload(resendVoicePath, new UploadListener() {
-			
+		BmobProFile.getInstance(getActivity()).upload(resendVoicePath, new UploadListener() {
 			@Override
 			public void onError(int arg0, String arg1) {
 				sendVoice2Db(false,parentV,values);
 			}
-			
 			@Override
 			public void onSuccess(String arg0, String arg1, BmobFile arg2) {
 				voiceFileName = arg0; //获取文件上传成功后的文件名
-				System.out.println("URL:" + voiceUrl);
 				BmobProFile.getInstance(getActivity()).getAccessURL(voiceFileName, new GetAccessUrlListener() {
-
 		            @Override
 		            public void onError(int errorcode, String errormsg) {
-		                Log.i("bmob","获取文件的服务器地址失败："+errormsg+"("+errorcode+")");
+		                Log.i(TAG,"获取文件的服务器地址失败："+errormsg+"("+errorcode+")");
 		                sendVoice2Db(false,parentV,values);
 		            }
-
 		            @Override
 		            public void onSuccess(BmobFile file) {
 		            	voiceUrl = file.getUrl();//获取文件的有效url;
-		                Log.i("bmob", "源文件名："+file.getFilename()+"，可访问的地址："+voiceUrl);
+		                Log.i(TAG, "源文件名："+file.getFilename()+"，可访问的地址："+voiceUrl);
 		                sendVoice2Db(true,parentV,values);
 		            }
 		        });
-
 			}
 			
 			@Override
 			public void onProgress(int arg0) {
-				System.out.println("onProgress");
-				System.out.println(arg0);
+				Log.i(TAG,"onProgress");
 			}
 		});
 		
@@ -247,8 +232,7 @@ public class ChatFragment extends PullListFragment{
 	/**
 	 * 将voice消息插入到数据库中
 	 */
-	private void sendVoice2Db(Boolean isUpload,final View parentV, Object values) {
-		// TODO 自动生成的方法存根
+	private void sendVoice2Db(Boolean isUpload,final View parentV, final Object values) {
 		String username = currentUser.getUsername();
 		mChatDetailBean.setUsername(username);
 		mChatDetailBean.setGUID(DatabaseHelper.getUUID().toString());
@@ -261,42 +245,40 @@ public class ChatFragment extends PullListFragment{
 			mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_SUCCEED);
 			mChatDetailBean.setMessage_read_status(MessageConfig.MESSAGE_NOT_RECEIVED);
 			mChatDetailBean.save(getActivity(), new SaveListener() {
-				
 				@Override
 				public void onSuccess() {
-					// TODO 自动生成的方法存根
 					 try {
-						 parentV.findViewById(R.id.progress_load).setVisibility(
-									View.INVISIBLE);
-						 parentV.findViewById(R.id.iv_fail_resend)
-									.setVisibility(View.INVISIBLE);
-						 parentV.findViewById(R.id.tv_send_status)
-							.setVisibility(View.GONE);
-						 parentV.findViewById(R.id.tv_voice_length)
-								.setVisibility(View.VISIBLE);
-						 System.out.println("bmob将语音插入到服务器的数据库成功");
+						 parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
+						 parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.INVISIBLE);
+						 parentV.findViewById(R.id.tv_send_status).setVisibility(View.GONE);
+						 parentV.findViewById(R.id.tv_voice_length).setVisibility(View.VISIBLE);
+						 Log.i(TAG,"bmob将语音插入到服务器的数据库成功");
+						 mChatDetailDao.delete((ChatDetailBean)values);
+						 Log.i(TAG,"bmob将语音插入到服务器的数据库成功");
+						 mChatDetailBean.setMessage(resendVoicePath);
 						 mChatDetailDao.create(mChatDetailBean);
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
 				}
-				
 				@Override
 				public void onFailure(int arg0, String arg1) {
-					parentV.findViewById(R.id.progress_load).setVisibility(
-							View.INVISIBLE);
-					parentV.findViewById(R.id.iv_fail_resend)
-							.setVisibility(View.VISIBLE);
-					parentV.findViewById(R.id.tv_send_status)
-							.setVisibility(View.INVISIBLE);
+					parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
+					parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.VISIBLE);
+					parentV.findViewById(R.id.tv_send_status).setVisibility(View.INVISIBLE);
+					 try {
+						 Log.i(TAG,"bmob将语音插入到服务器的数据库失败");
+						 mChatDetailDao.delete((ChatDetailBean)values);
+					} catch (SQLException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					}
 					mChatDetailBean.setMessage(resendVoicePath);
 					mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
 					try {
-						System.out.println("bmob将语音插入到服务器的数据库失败");
 						mChatDetailDao.create(mChatDetailBean);
 					} catch (SQLException e) {
-						// TODO 自动生成的 catch 块
-						System.out.println("将聊天信息插入本地数据库失败");
+						Log.i(TAG,"bmob将语音插入到服务器的数据库失败");
 						e.printStackTrace();
 					}
 				}
@@ -313,8 +295,7 @@ public class ChatFragment extends PullListFragment{
 			try {
 				mChatDetailDao.create(mChatDetailBean);
 			} catch (SQLException e) {
-				// TODO 自动生成的 catch 块
-				System.out.println("将聊天信息插入本地数据库失败");
+				Log.i(TAG,"将聊天信息插入本地数据库失败");
 				e.printStackTrace();
 			}
 		}
@@ -332,18 +313,13 @@ public class ChatFragment extends PullListFragment{
 			
 			@Override
 			public void onSuccess() {
-				// TODO 自动生成的方法存根
 				try {
 					mChatDetailDao.delete(msg);
 					msg.setLast_Message_Status(MessageConfig.SEND_MESSAGE_SUCCEED);
 					mChatDetailDao.create(msg);
-					parentV.findViewById(R.id.progress_load).setVisibility(
-							View.INVISIBLE);
-					parentV.findViewById(R.id.iv_fail_resend)
-							.setVisibility(View.INVISIBLE);
-					parentV.findViewById(R.id.tv_send_status)
-							.setVisibility(View.VISIBLE);
-					
+					parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
+					parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.INVISIBLE);
+					parentV.findViewById(R.id.tv_send_status).setVisibility(View.VISIBLE);
 				} catch (SQLException e) {
 					// TODO 自动生成的 catch 块
 					e.printStackTrace();
@@ -389,107 +365,91 @@ public class ChatFragment extends PullListFragment{
 			@Override
 			public void onSuccess(String arg0, String arg1, BmobFile arg2) {
 				fileName = arg0; //获取文件上传成功后的文件名
-				System.out.println("URL:" + picUrl);
+				Log.i(TAG,"URL:" + picUrl);
 				BmobProFile.getInstance(getActivity()).getAccessURL(fileName, new GetAccessUrlListener() {
-
 		            @Override
 		            public void onError(int errorcode, String errormsg) {
-		                Log.i("bmob","获取文件的服务器地址失败："+errormsg+"("+errorcode+")");
+		                Log.i(TAG,"获取文件的服务器地址失败："+errormsg+"("+errorcode+")");
 		                sendPicture2Db(false,parentV,values);
 		            }
 
 		            @Override
 		            public void onSuccess(BmobFile file) {
 		            	picUrl = file.getUrl();//获取文件的有效url;
-		                Log.i("bmob", "源文件名："+file.getFilename()+"，可访问的地址："+picUrl);
+		                Log.i(TAG, "源文件名："+file.getFilename()+"，可访问的地址："+picUrl);
 		                sendPicture2Db(true,parentV,values);
 		            }
 		        });
-
 			}
-			
 			@Override
 			public void onProgress(int arg0) {
-				System.out.println("onProgress");
-				System.out.println(arg0);
 			}
 		});
 	}
 	
-	//把数据传到数据库
-		private void sendPicture2Db(Boolean isUpload,final View parentV, Object values)
-		{
-			String username = currentUser.getUsername();
-			//String username = currentUser.getUsername();
-			mChatDetailBean.setUsername(username);
-			mChatDetailBean.setGUID(DatabaseHelper.getUUID().toString());
-			mChatDetailBean.setOther_username(otherUser.getUsername());
-			mChatDetailBean.setMessage_type(ChatConfiguration.TYPE_MESSAGE_PICTURE);
-			mChatDetailBean.setMessage_read_status(MessageConfig.MESSAGE_NOT_RECEIVED);
-			mChatDetailBean.setPublish_time(System.currentTimeMillis());
-			//文件上传成功
-			if(isUpload){
-				mChatDetailBean.setMessage(picUrl);
-				mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_SUCCEED);
-				mChatDetailBean.save(getActivity(), new SaveListener() {
-					
-					@Override
-					public void onSuccess() {
-						 try {
-							 parentV.findViewById(R.id.progress_load).setVisibility(
-										View.INVISIBLE);
-							 parentV.findViewById(R.id.iv_fail_resend)
-										.setVisibility(View.INVISIBLE);
-							 parentV.findViewById(R.id.tv_send_status)
-								.setVisibility(View.VISIBLE);
-								((TextView) parentV
-										.findViewById(R.id.tv_send_status)).setText("已发送");
-							 mChatDetailDao.create(mChatDetailBean);
-						} catch (SQLException e) {
-							
-							e.printStackTrace();
-						}
+//把数据传到数据库
+	private void sendPicture2Db(Boolean isUpload,final View parentV, final Object values)
+	{
+		String username = currentUser.getUsername();
+		final ChatDetailBean chatDetailBean = new ChatDetailBean();
+		chatDetailBean.setUsername(username);
+		chatDetailBean.setGUID(DatabaseHelper.getUUID().toString());
+		chatDetailBean.setOther_username(otherUser.getUsername());
+		chatDetailBean.setMessage_type(ChatConfiguration.TYPE_MESSAGE_PICTURE);
+		chatDetailBean.setMessage_read_status(MessageConfig.MESSAGE_NOT_RECEIVED);
+		chatDetailBean.setPublish_time(System.currentTimeMillis());
+		//文件上传成功
+		if(isUpload){
+			chatDetailBean.setMessage(picUrl);
+			chatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_SUCCEED);
+			chatDetailBean.save(getActivity(), new SaveListener() {
+				@Override
+				public void onSuccess() {
+					 try {
+						 mChatDetailDao.delete((ChatDetailBean)values);
+						 parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
+						 parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.INVISIBLE);
+						 parentV.findViewById(R.id.tv_send_status).setVisibility(View.VISIBLE);
+						 mChatDetailDao.create(chatDetailBean);
+					} catch (SQLException e) {
+						
+						e.printStackTrace();
 					}
-					
-					@Override
-					public void onFailure(int arg0, String arg1) {
-						// 插入聊天信息到服务器的数据库中失败也当做是发送失败
-						parentV.findViewById(R.id.progress_load).setVisibility(
-								View.INVISIBLE);
-						parentV.findViewById(R.id.iv_fail_resend)
-								.setVisibility(View.VISIBLE);
-						parentV.findViewById(R.id.tv_send_status)
-								.setVisibility(View.INVISIBLE);
-						mChatDetailBean.setMessage(resendPicLocalPath);
-						mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
-						try {
-							mChatDetailDao.create(mChatDetailBean);
-						} catch (SQLException e) {
-							// TODO 自动生成的 catch 块
-							System.out.println("将聊天信息插入本地数据库失败");
-							e.printStackTrace();
-						}
-					}
-				});
-			}else{//文件上传失败
-				parentV.findViewById(R.id.progress_load).setVisibility(
-						View.INVISIBLE);
-				parentV.findViewById(R.id.iv_fail_resend)
-						.setVisibility(View.VISIBLE);
-				parentV.findViewById(R.id.tv_send_status)
-						.setVisibility(View.INVISIBLE);
-				mChatDetailBean.setMessage(resendPicLocalPath);
-				mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
-				try {
-					mChatDetailDao.create(mChatDetailBean);
-				} catch (SQLException e) {
-					// TODO 自动生成的 catch 块
-					e.printStackTrace();
 				}
+				@Override
+				public void onFailure(int arg0, String arg1) {
+					// 插入聊天信息到服务器的数据库中失败也当做是发送失败
+					parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
+					parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.VISIBLE);
+					parentV.findViewById(R.id.tv_send_status).setVisibility(View.INVISIBLE);
+					chatDetailBean.setMessage(resendPicLocalPath);
+					chatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
+					try {
+						mChatDetailDao.delete((ChatDetailBean)values);
+						mChatDetailDao.create(chatDetailBean);
+					} catch (SQLException e) {
+						// TODO 自动生成的 catch 块
+						Log.i(TAG,"将聊天信息插入本地数据库失败");
+						e.printStackTrace();
+					}
+				}
+			});
+		}else{//文件上传失败
+			parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
+			parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.VISIBLE);
+			parentV.findViewById(R.id.tv_send_status).setVisibility(View.INVISIBLE);
+			mChatDetailBean.setMessage(resendPicLocalPath);
+			mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
+			try {
+				mChatDetailDao.delete((ChatDetailBean)values);
+				mChatDetailDao.create(mChatDetailBean);
+			} catch (SQLException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
 			}
 		}
-	
-	
+	}
+
 
 	/**
 	 * 初始化和刷新聊天信息数据
@@ -507,10 +467,9 @@ public class ChatFragment extends PullListFragment{
 				}
 				mListView.setSelection(mAdapter.getCount() - 1);
 			} else {
-				System.out.println("12345添加记录到adapter中");
 			}
 		}else{
-			System.out.println("12345new一个adapter");
+			Log.i(TAG,"12345new一个adapter");
 			setAdapter();
 		}
 		mListView.setSelection(mMessageChatAdapter.getCount()-1);
@@ -519,7 +478,6 @@ public class ChatFragment extends PullListFragment{
 	
 	public void sendNewMessage(ChatDetailBean chatBean)
 	{
-		System.out.println("click"+chatBean.getMessage_type());
 		mList.add(chatBean);
 		initOrRefresh();
 	}

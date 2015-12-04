@@ -174,9 +174,19 @@ public class LoginActivity extends BackActivity {
 									.getText().toString())) {
 						if (StringUtil.isPassword(et_login_password.getText()
 								.toString())) {
-							if (StringUtil.isSecurityCode(et_login_code
+							//新加的代码需要删除
+							judgePassword();
+							/*Intent intent = new Intent(
+									LoginActivity.this,
+									MainActivity.class);
+							startActivity(intent);
+							finish();*/
+							//新加的代码到此为止
+							
+							
+							/*if (StringUtil.isSecurityCode(et_login_code
 									.getText().toString())) {
-								/*judgePassword();
+								judgePassword();
 								codeMatch();
 								if (find_succeed && codeVerify) {
 									Intent intent = new Intent(
@@ -184,13 +194,13 @@ public class LoginActivity extends BackActivity {
 											MainActivity.class);
 									startActivity(intent);
 									finish();
-								}*/
+								}
 								progressDialog.show();
 								codeMatch();
 							} else {
 								Toast.makeText(getApplicationContext(),
 										"验证码格式有误", Toast.LENGTH_SHORT).show();
-							}
+							}*/
 						} else {
 
 							Toast.makeText(getApplicationContext(), "密码格式有误",

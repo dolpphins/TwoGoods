@@ -86,7 +86,7 @@
         <include
             android:id="@+id/chat_layout_voice_content"
             android:visibility="gone"
-            layout="@layout/app_chat_record_content" />
+            layout="@layout/message_chat_record_content" />
 
         <include
             android:id="@+id/chat_layout_add_content"

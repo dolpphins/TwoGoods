@@ -3,7 +3,7 @@ package com.lym.twogoods.publish.ui;
 import com.lym.twogoods.R;
 import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
 import com.lym.twogoods.fragment.PublishFragment;
-import com.lym.twogoods.message.MessageConfig;
+import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.publish.manger.PublishConfigManger;
 import com.lym.twogoods.ui.SendPictureActivity;
 import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;

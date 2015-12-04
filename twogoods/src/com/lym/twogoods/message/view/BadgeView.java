@@ -22,7 +22,7 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 
 /**
- * 用来显示聊天列表新消息提醒
+ * 用来显示聊天列表新消息提醒,头像右上角加上新消息数目
  */
 public class BadgeView extends TextView {
 
