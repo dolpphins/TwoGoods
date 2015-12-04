@@ -20,8 +20,12 @@ public class PublishConfigManger {
 	public final static int requestCode=0;
 	//图片列表本地url集合
 	public final static List<String> publishPictureUrl=new ArrayList<String>();
-	//图片列表本地url集合
+	//图片列表网络url集合
 	public final static List<String> pictureCloudUrl=new ArrayList<String>();
+	//语音本地文件路径
+	public static String voicePath="";
+	//语音网络url
+	public static String voiceUrl="";
 	//图片之间的距离比
 	public final static int PICTURE_RATE=6;
 }
