@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+	<com.lym.twogoods.message.view.ImageCusView
+	     android:id="@+id/message_chat_record_view"
+        android:layout_width="fill_parent"
+        android:layout_height="140dp">
+     </com.lym.twogoods.message.view.ImageCusView>
+</LinearLayout>

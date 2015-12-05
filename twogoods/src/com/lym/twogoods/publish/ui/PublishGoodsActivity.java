@@ -3,8 +3,8 @@ package com.lym.twogoods.publish.ui;
 import com.lym.twogoods.R;
 import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
 import com.lym.twogoods.fragment.PublishFragment;
-import com.lym.twogoods.message.MessageConfig;
-import com.lym.twogoods.message.listener.RecondTouchListener;
+import com.lym.twogoods.message.config.MessageConfig;
+import com.lym.twogoods.message.listener.RecordPlayClickListener;
 import com.lym.twogoods.publish.manger.PublishConfigManger;
 import com.lym.twogoods.ui.SendPictureActivity;
 import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
@@ -52,7 +52,7 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 	private LinearLayout tv_finish_recond_tip;
 	private ImageView iv_recondVoice;
 	/**录音监听器*/
-	private RecondTouchListener mRecondTouchListener;
+	//private RecondTouchListener mRecondTouchListener;
 	/**话筒动画*/
 	private Drawable[] drawable_Anims;
 	// 表情适配器
@@ -114,8 +114,8 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 		tv_finish_recond_tip = (LinearLayout) publish_bottom.findViewById(R.id.message_chat_finish_recond_tip_tv);
 		iv_recondVoice = (ImageView) publish_bottom.findViewById(R.id.message_chat_record);
 		//给录音控件设置触摸事件
-		mRecondTouchListener = new RecondTouchListener(getApplicationContext(),mHandler);
-		iv_recondVoice.setOnTouchListener(mRecondTouchListener);
+		//mRecondTouchListener = new RecondTouchListener(getApplicationContext(),mHandler);
+		//iv_recondVoice.setOnTouchListener(mRecondTouchListener);
 		//初始化在录音时音量改变的动画
 		drawable_Anims = new Drawable[] {
 		getResources().getDrawable(R.drawable.message_chat_reconding_audio1),

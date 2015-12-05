@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.lym.twogoods.R;
-import com.lym.twogoods.message.MessageConfig;
+import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.message.viewHolder.ViewHolder;
 
 import android.content.Context;

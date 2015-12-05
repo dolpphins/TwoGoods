@@ -98,12 +98,6 @@ public class ChatDetailBean extends BmobObject{
     {
         return last_message_status;
     }
-	public int getLast_message_status() {
-		return last_message_status;
-	}
-	public void setLast_message_status(int last_message_status) {
-		this.last_message_status = last_message_status;
-	}
 	public int getMessage_read_status() {
 		return message_read_status;
 	}

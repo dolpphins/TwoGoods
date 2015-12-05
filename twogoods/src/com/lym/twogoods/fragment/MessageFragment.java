@@ -77,7 +77,6 @@ public class MessageFragment extends PullListFragment implements
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		
 		super.onActivityCreated(savedInstanceState);
 		init();
 	}
@@ -92,7 +91,6 @@ public class MessageFragment extends PullListFragment implements
 	}
 	//初始化当前用户的信息
 	private void intiUser() {
-		// TODO 自动生成的方法存根
 		currentUser = UserInfoManager.getInstance().getmCurrent();
 	}
 	
@@ -111,7 +109,6 @@ public class MessageFragment extends PullListFragment implements
 	 * 初始化mListView
 	 */
 	private void initView() {
-		
 		setMode(Mode.PULLDOWN);
 		setAdapter();
 		mListView.setOnItemClickListener(this);
@@ -138,8 +135,7 @@ public class MessageFragment extends PullListFragment implements
 	 *查询全部最近的消息
 	 * @return
 	 */
-	public List<ChatSnapshot> queryRecent()
-	{
+	public List<ChatSnapshot> queryRecent(){
 		List<ChatSnapshot> list = null;
 		OrmDatabaseHelper helper = new OrmDatabaseHelper(getActivity());
 		Dao<ChatSnapshot,Integer> mChatDao = helper.getChatSnapshotDao();
@@ -151,32 +147,26 @@ public class MessageFragment extends PullListFragment implements
 		return list;
 	}
 	
-	
 	/**
 	 * 获取当前用户名
 	 * @return
 	 */
 	public String getCurrentUsername() {
-		if(currentUser==null)
-		{
+		if(currentUser==null){
 			currentUser = UserInfoManager.getInstance().getmCurrent();
 		}
 		return currentUser.getUsername();
 	}
 	
-	public User getCurrentUser()
-	{
-		if(currentUser==null)
-		{
+	public User getCurrentUser(){
+		if(currentUser==null){
 			currentUser = UserInfoManager.getInstance().getmCurrent();
 		}
-			
 		return currentUser;
 	}
 
 	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view,
-			int position, long id) {
+	public boolean onItemLongClick(AdapterView<?> parent, View view,int position, long id) {
 		if(isLogining){
 			ChatSnapshot recent = mMessageListAdapter.getItem(position);
 			showDeleteDialog(recent);
@@ -185,7 +175,6 @@ public class MessageFragment extends PullListFragment implements
 	}
 	
 	public void showDeleteDialog(final ChatSnapshot recent) {
-		
 		dialogTips = new ArrayList<String>();
 		dialogTips.add("删除会话");
 		
@@ -196,14 +185,11 @@ public class MessageFragment extends PullListFragment implements
 			public void itemOnClick(int position) {
 				String name = recent.getUsername();
 				if(name.equals(currentUser.getUsername())){
-					
 					try {
-						
 						DeleteBuilder<ChatSnapshot, Integer> deleteBuilder = mChatSnapshotDao.deleteBuilder();
 						deleteBuilder.where().eq("other_username", recent.getOther_username());
 						deleteBuilder.delete();
 					} catch (SQLException e) {
-						// TODO 自动生成的 catch 块
 						e.printStackTrace();
 					}
 					

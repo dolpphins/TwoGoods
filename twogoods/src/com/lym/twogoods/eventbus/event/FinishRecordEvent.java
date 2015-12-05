@@ -7,16 +7,16 @@ package com.lym.twogoods.eventbus.event;
  */
 public class FinishRecordEvent {
 	
-	
-	
 	String path;
 	
-	
+	public FinishRecordEvent() {
+	}
+
 	public FinishRecordEvent(String str)
 	{
 		path = str;
 	}
-	
+
 	public String getPath()
 	{
 		return path;

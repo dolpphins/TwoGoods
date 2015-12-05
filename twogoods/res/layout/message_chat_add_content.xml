@@ -7,38 +7,9 @@
       android:weightSum="3"
   	  android:layout_marginBottom="10dp">
   	 
-	    <TextView 
-	        android:layout_weight="1"
-	        android:clickable="true"
-	        android:onClick="toAction"
-	        android:id="@+id/message_chat_tv_picture"
-	        android:layout_width="50dp"
-	        android:layout_height="100dip"
-	        android:drawablePadding="10dp"
-	        android:gravity="center"
-	        android:drawableTop="@drawable/message_chat_add_picture_selector"
-	        android:text="@string/chat_picture"/>
-	    <TextView 
-	        android:layout_weight="1"
-	        android:clickable="true"
-	        android:onClick="toAction"
-	        android:id="@+id/message_chat_tv_voice"
-	        android:layout_width="50dp"
-	        android:drawablePadding="10dp"
-	        android:gravity="center"
-	        android:layout_height="100dp"
-	        android:drawableTop="@drawable/message_chat_add_voice_selector"
-	        android:text="@string/chat_voice"/>
-	    <TextView 
-	        android:layout_weight="1"
-	        android:clickable="true"
-	        android:onClick="toAction"
-	        android:id="@+id/message_chat_tv_location"
-	        android:layout_width="50dip"
-	        android:drawablePadding="10dp"
-	        android:gravity="center"
-	        android:layout_height="100dip"
-	        android:drawableTop="@drawable/message_chat_add_location_selector"
-	        android:text="@string/chat_location"/>
+	    <com.lym.twogoods.widget.WrapContentViewPager
+		        android:id="@+id/message_chat_add_viewpager"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content" />
 	    
 </LinearLayout>
