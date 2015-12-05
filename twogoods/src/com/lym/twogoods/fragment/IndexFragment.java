@@ -366,7 +366,7 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 					//分类发生改变那么需要重新请求数据
 					if(!mCurrentCategory.equals(category)) {
 						mCurrentCategory = category;
-						reloadData(false);
+						reloadData(AbsListViewLoader.Type.INIT, true);
 					}
 				}
 			});
@@ -390,7 +390,7 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 					//
 					if(!mCurrentGoodsSort.equals(goodsSort)) {
 						mCurrentGoodsSort = goodsSort;
-						reloadData(false);
+						reloadData(AbsListViewLoader.Type.INIT, true);
 					}
 				}
 			});
@@ -514,15 +514,15 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 	}
 	
 	private void loadDataInit() {
-		reloadData(true);
+		reloadData(AbsListViewLoader.Type.INIT, true);
 	}
 	
 	@Override
 	public void onRefresh() {
-		reloadData(false);
+		reloadData(AbsListViewLoader.Type.REFRESH, false);
 	}
 	
-	private void reloadData(boolean isInit) {
+	private void reloadData(AbsListViewLoader.Type type, boolean clear) {
 		BmobQuery<Goods> query = new BmobQuery<Goods>();
 		query.setSkip(0);
 		query.setLimit(perPageCount);
@@ -532,7 +532,7 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 		}
 		String order = GoodsSortManager.getBmobQueryOrderString(mCurrentGoodsSort);
 		query.order(order);
-		mAbsListViewLoader.requestLoadData(query, null, true, isInit);
+		mAbsListViewLoader.requestLoadData(query, null, clear, type);
 	}
 	
 	@Override

@@ -173,22 +173,22 @@ public class StoreDetailFragment extends PullListFragment {
 	
 	//加载初始化数据
 	private void loadDataInit() {
-		reloadData();
+		reloadData(AbsListViewLoader.Type.INIT, true);
 	}
 	
 	@Override
 	public void onRefresh() {
-		reloadData();
+		reloadData(AbsListViewLoader.Type.REFRESH, false);
 	}
 	
-	private void reloadData() {
+	private void reloadData(AbsListViewLoader.Type type, boolean clear) {
 		BmobQuery<Goods> query = new BmobQuery<Goods>();
 		query.setSkip(0);
 		query.setLimit(perPageCount);
 		query.addWhereEqualTo("username", mUser.getUsername());
 		String order = "-" + GoodsSortManager.getColumnString(GoodsSort.NEWEST_PUBLISH);
 		query.order(order);
-		mAbsListViewLoader.requestLoadData(query, null, true, false);
+		mAbsListViewLoader.requestLoadData(query, null, clear, type);
 	}
 	
 //	@Override
@@ -207,14 +207,11 @@ public class StoreDetailFragment extends PullListFragment {
 		}
 		
 		@Override
-		public void onLoaderStart() {
-			mFragment.showLoadingAnimation();
-		}
-		
-		@Override
-		public void onLoaderFail() {
-			super.onLoaderFail();
-			mFragment.showContentView();
+		public void onInitLoaderFinish(boolean success) {
+			super.onInitLoaderFinish(success);
+			if(!success && mFragment != null) {
+				mFragment.showContentView();
+			}
 		}
 	}
 }

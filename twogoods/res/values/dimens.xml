@@ -15,6 +15,7 @@
     <dimen name="app_main_bottomdock_tab_paddingBottom">5dip</dimen>
     	<!-- 商品列表Item -->
     <dimen name="app_base_goods_listview_item_padding">10dip</dimen>
+    <dimen name="base_goods_listview_item_price_textSize">18sp</dimen>
     <dimen name="app_base_goods_listview_item_headpicture_marginRight">10dip</dimen>
     <dimen name="app_base_goods_listview_item_dscription_marginTop">10dip</dimen>
     <dimen name="app_base_goods_listview_item_dscription_marginBottom">10dip</dimen>

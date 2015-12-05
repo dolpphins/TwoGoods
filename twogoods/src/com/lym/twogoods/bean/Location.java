@@ -41,5 +41,19 @@ public class Location {
 		this.latitude = latitude;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{description:");
+		sb.append(description);
+		sb.append(",");
+		sb.append("longitude:");
+		sb.append(longitude);
+		sb.append(",");
+		sb.append("latitude:");
+		sb.append(latitude);
+		sb.append("}");
+		return sb.toString();
+	}
 	
 }

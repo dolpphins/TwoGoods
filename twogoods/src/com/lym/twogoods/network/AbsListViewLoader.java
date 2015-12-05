@@ -3,19 +3,14 @@ package com.lym.twogoods.network;
 import java.util.List;
 import java.util.Map;
 
-import com.j256.ormlite.dao.Dao;
 import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
-import com.lym.twogoods.adapter.base.BaseGoodsListViewAdapter;
 import com.lym.twogoods.bean.Goods;
-import com.lym.twogoods.db.OrmDatabaseHelper;
-import com.lym.twogoods.local.bean.LocalGoods;
 import com.lym.twogoods.utils.NetworkHelper;
 
 import android.content.Context;
 import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.Toast;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 
@@ -40,13 +35,9 @@ public class AbsListViewLoader {
 	/** 适配器 */
 	private BaseGoodsListAdapter mAdapter;
 	
-	/** 是否从磁盘中读取缓存 */
-	private boolean mLoadCacheFromDisk;
+	private AbsListViewLoaderConfiguration mConfiguration;//暂时没用到
 	
-	/** 是否将获取到的信息保存到磁盘缓存中 */
-	private boolean mSaveCacheToDisk;
-	
-	private enum Status {
+	private static enum Status {
 		LOADING, NONE
 	}
 	
@@ -62,12 +53,19 @@ public class AbsListViewLoader {
 	BmobQuery<Goods> mBmobQuery;
 	
 	/**
+	 * 请求的加载数据类型
+	 */
+	public static enum Type {
+		INIT, REFRESH, LOADMORE
+	}
+	
+	/**
 	 * 重试相关
 	 * */
 	private BmobQuery<Goods> mLastBmobQuery;
 	private boolean mLastClear;
-	private boolean mLastInit;
 	private Map<String, Object> mLastDbMap;
+	private Type mType;
 	
 	/**
 	 * 构造函数
@@ -82,15 +80,33 @@ public class AbsListViewLoader {
 		mAbsListView = absListView;
 		mAdapter = adapter;
 		mGoodsList = goodsList;
+		//默认配置
+		mConfiguration = new AbsListViewLoaderConfiguration.Builder()
+							.setReadDiskCache(false)
+							.setSaveDiskCache(false)
+							.build();
 		init();
 	}
 	
+	/**
+	 * 设置加载器配置
+	 * 
+	 * @param configuration 要设置的配置
+	 */
+	public void setConfiguration(AbsListViewLoaderConfiguration configuration) {
+		mConfiguration = configuration;
+	}
+	
+	/**
+	 * 获取加载器配置
+	 * 
+	 * @return 返回加载器配置
+	 */
+	public AbsListViewLoaderConfiguration getConfiguration() {
+		return mConfiguration;
+	}
+	
 	private void init() {
-		//默认不从磁盘读取缓存
-		mLoadCacheFromDisk = false;
-		//默认不保存数据到磁盘缓存中
-		mSaveCacheToDisk = false;
-
 		mAbsListView.setOnScrollListener(new OnScrollListener() {
 			
 			@Override
@@ -101,13 +117,14 @@ public class AbsListViewLoader {
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 				int lastItemPosition = mAbsListView.getLastVisiblePosition();
-				if(lastItemPosition == totalItemCount - 1 && 
-						mScrollStatus == OnScrollListener.SCROLL_STATE_IDLE
+				
+				if(lastItemPosition == totalItemCount - 1 
+						//&& mScrollStatus == OnScrollListener.SCROLL_STATE_IDLE
 						&& mStatus == Status.NONE
 						&& visibleItemCount < totalItemCount) {
 					if(mBmobQuery != null) {
 						mBmobQuery.setSkip(mGoodsList.size());
-						prepareLoadDataFromNetwork(mBmobQuery, false);
+						prepareLoadDataFromNetwork(mBmobQuery, Type.LOADMORE);
 					}
 					if(mOnLoaderListener != null) {
 						mOnLoaderListener.onLoadMoreStart();
@@ -118,52 +135,13 @@ public class AbsListViewLoader {
 	}
 
 	/**
-	 * 判断是否允许从磁盘读取缓存
-	 * 
-	 * @return 如果允许从缓存读取缓存返回true,否则返回false.
-	 * */
-	public boolean isLoadCacheFromDisk() {
-		return mLoadCacheFromDisk;
-	}
-
-	/**
-	 * 设置是否从磁盘读取缓存
-	 * 
-	 * @param mLoadCacheFromDisk true表示从磁盘读取缓存,false表示
-	 * 		  不从磁盘读取缓存
-	 * */
-	public void setLoadCacheFromDisk(boolean loadCacheFromDisk) {
-		this.mLoadCacheFromDisk = loadCacheFromDisk;
-	}
-	
-	/**
-	 * 判断是否允许将获取到的数据写入到磁盘缓存
-	 * 
-	 * @return 如果允许保存数据到磁盘缓存中返回true,否则返回false.
-	 * */
-	public boolean isSaveCacheToDisk() {
-		return mSaveCacheToDisk;
-	}
-	
-	/**
-	 * 设置是否运行将获取到的数据保存到磁盘缓存中
-	 * 
-	 * @param saveCacheToDisk true表示允许将获取到的数据保存到磁盘缓存中,
-	 *        false表示不允许将获取到的数据保存到磁盘缓存中
-	 */
-	public void setSaveCacheToDisk(boolean saveCacheToDisk) {
-		this.mSaveCacheToDisk = saveCacheToDisk;
-	}
-	
-	/**
 	 * 请求加载数据
 	 * 
 	 * @param query
 	 * @param dbMap
 	 * @param clear
-	 * @param isInit
 	 */
-	public void requestLoadData(BmobQuery<Goods> query, Map<String, Object> dbMap, boolean clear, boolean isInit) {
+	public void requestLoadData(BmobQuery<Goods> query, Map<String, Object> dbMap, boolean clear, Type type) {
 		if(query == null) {
 			return;
 		}
@@ -172,111 +150,76 @@ public class AbsListViewLoader {
 		//用于重试
 		mLastBmobQuery = query;
 		mLastClear = clear;
-		mLastInit = isInit;
 		mLastDbMap = dbMap;
+		mType = type;
 		
-		prepareLoadData(query, dbMap, clear, isInit);
+		prepareLoadData(query, dbMap, clear, type);
 	}
 	
-	private void prepareLoadData(BmobQuery<Goods> query, Map<String, Object> dbMap, boolean clear, boolean isInit) {
-		//如果是初始加载
-		if(isInit) {
-			//允许读取磁盘缓存
-			if(mLoadCacheFromDisk) {
-				List<LocalGoods> goodsList = readCacheFromDisk(dbMap);
-				//有缓存
-				if(goodsList != null && goodsList.size() > 0) {
-					for(LocalGoods g : goodsList) {
-						mGoodsList.add(LocalGoods.toGoods(g));
-					}
-					return;
-				}
-			}
+	private void prepareLoadData(BmobQuery<Goods> query, Map<String, Object> dbMap, boolean clear, Type type) {
+		if(clear) {
+			mGoodsList.clear();
 		}
-		prepareLoadDataFromNetwork(query, clear);
+		invokeListenerStart(type);
+		prepareLoadDataFromNetwork(query, type);
 	}
 	
-	private void prepareLoadDataFromNetwork(BmobQuery<Goods> query, boolean clear) {
+	private void prepareLoadDataFromNetwork(BmobQuery<Goods> query, Type type) {
 		if(!NetworkHelper.isNetworkAvailable(mContext)) {
-			handleLoadDataForPrepareFail();
+			handleLoadDataForPrepareFail(type);
 			return;
 		}
-		loadDataFromNetwork(query, clear);
+		loadDataFromNetwork(query, type);
 	}
 	
-	private void loadDataFromNetwork(BmobQuery<Goods> query, boolean clear) {
-		Log.i(TAG, "loadDataFromNetwork");
-		if(mOnLoaderListener != null) {
-			mOnLoaderListener.onLoaderStart();
-		}
+	private void loadDataFromNetwork(BmobQuery<Goods> query, Type type) {
+		//Log.i(TAG, "loadDataFromNetwork");
 		mStatus = Status.LOADING;
-		final boolean c = clear;
+		final Type fType = type;
 		query.findObjects(mContext, new FindListener<Goods>() {
 			
 			@Override
 			public void onSuccess(List<Goods> goodsList) {
-				Log.i(TAG, "onSuccess");
-				handleLoadDataFromNetworkFinish(goodsList, c);
+				//Log.i(TAG, "onSuccess");
+				handleLoadDataFromNetworkFinish(goodsList, fType);
 			}
 			
 			@Override
 			public void onError(int arg0, String arg1) {
-				Log.i(TAG, "onError " + arg0 + " " + arg1);
-				handleLoadDataFromNetworkFinish(null, c);
+				//Log.i(TAG, "onError " + arg0 + " " + arg1);
+				handleLoadDataFromNetworkFinish(null, fType);
 			}
 		});
 	}
 	
 	//通过网络获取数据唯一出口
-	private void handleLoadDataFromNetworkFinish(List<Goods> goodsList, boolean clear) {
+	private void handleLoadDataFromNetworkFinish(List<Goods> goodsList, Type type) {
 		if(goodsList == null) {
 			//获取失败
 			if(mOnLoaderListener != null) {
-				mOnLoaderListener.onLoaderFail();
+				invokeListenerFinish(type, false);
 			}
 		} else {
-			if(clear) {
-				mGoodsList.clear();
-			}
 			if(goodsList.size() <= 0) {
-				Toast.makeText(mContext, "没有更多的数据了", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(mContext, "没有更多的数据了", Toast.LENGTH_SHORT).show();
 			} else {
 				mGoodsList.addAll(goodsList);
 				mAdapter.notifyDataSetChanged();
 			}
+			
 			if(mOnLoaderListener != null) {
-				mOnLoaderListener.onLoaderSuccess(goodsList);
+				invokeListenerFinish(type, true);
 			}
 		}
-		//保存缓存
-		if(mSaveCacheToDisk) {
-			OrmDatabaseHelper helper = new OrmDatabaseHelper(mContext);
-			//先清空表
-			helper.clearTable(LocalGoods.class);
-			Dao<LocalGoods, Integer> dao = helper.getGoodsDao();
-			for(Goods g : mGoodsList) {
-				try {
-					dao.create(LocalGoods.valueOf(g));
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-//		mListView.stopRefresh();
-//		mListView.stopLoadMore();
 		mStatus = Status.NONE;
-		
 	} 
 	
 	//获取数据准备工作失败调用
-	private void handleLoadDataForPrepareFail() {
-//		mListView.stopRefresh();
-//		mListView.stopLoadMore();
+	private void handleLoadDataForPrepareFail(Type type) {
 		mStatus = Status.NONE;
 		if(mOnLoaderListener != null) {
-			mOnLoaderListener.onLoaderFail();
+			invokeListenerFinish(type, false);
 		}
-		
 	}
 	
 	/**
@@ -302,22 +245,41 @@ public class AbsListViewLoader {
 	 */
 	public void requestRetryLoadData() {
 		if(mLastBmobQuery != null) {
-			requestLoadData(mLastBmobQuery, mLastDbMap, mLastClear, mLastInit);
+			requestLoadData(mLastBmobQuery, mLastDbMap, mLastClear, mType);
 		}
 	}
 	
-	private List<LocalGoods> readCacheFromDisk(Map<String, Object> dbMap) {
-		OrmDatabaseHelper helper = new OrmDatabaseHelper(mContext);
-		Dao<LocalGoods, Integer> dao = helper.getGoodsDao();
-		try {
-			if(dbMap != null && dbMap.size() > 0) {
-				return dao.queryForFieldValuesArgs(dbMap);
-			} else {
-				return dao.queryForAll();
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
+	private void invokeListenerStart(Type type) {
+		if(mOnLoaderListener == null) {
+			return;
+		}
+		switch (type) {
+		case INIT:
+			mOnLoaderListener.onInitLoaderStart();
+			break;
+		case REFRESH:
+			mOnLoaderListener.onRefreshStart();
+			break;
+		case LOADMORE:
+			mOnLoaderListener.onLoadMoreStart();
+			break;
+		}
+	}
+	
+	private void invokeListenerFinish(Type type, boolean success) {
+		if(mOnLoaderListener == null) {
+			return;
+		}
+		switch (type) {
+		case INIT:
+			mOnLoaderListener.onInitLoaderFinish(success);
+			break;
+		case REFRESH:
+			mOnLoaderListener.onRefreshFinish(success);
+			break;
+		case LOADMORE:
+			mOnLoaderListener.onLoadMoreFinish(success);
+			break;
 		}
 	}
 	
@@ -328,13 +290,17 @@ public class AbsListViewLoader {
 	 */
 	public interface OnLoaderListener {
 		
-		void onLoaderStart();
+		void onInitLoaderStart();
 		
-		void onLoaderSuccess(List<Goods> goodsList);
+		void onInitLoaderFinish(boolean success);
 		
-		void onLoaderFail();
+		void onRefreshStart();
+		
+		void onRefreshFinish(boolean success);
 		
 		void onLoadMoreStart();
+		
+		void onLoadMoreFinish(boolean success);
 	}
 	
 }

@@ -122,22 +122,22 @@ public class MineFocusFragment extends PullListFragment {
 	
 	//加载初始化数据
 	private void loadDataInit() {
-		reloadData(true);
+		reloadData(AbsListViewLoader.Type.INIT, true);
 	}
 	
 	@Override
 	public void onRefresh() {
-		reloadData(false);
+		reloadData(AbsListViewLoader.Type.REFRESH, false);
 	}
 	
-	private void reloadData(boolean isInit) {
+	private void reloadData(AbsListViewLoader.Type type, boolean clear) {
 		BmobQuery<Goods> query = new BmobQuery<Goods>();
 		query.setSkip(0);
 		query.setLimit(perPageCount);
 		query.addWhereContainedIn("objectId", mFocusGoodsObjectIdList);
 		String order = "-" + GoodsSortManager.getColumnString(GoodsSort.NEWEST_PUBLISH);
 		query.order(order);
-		mAbsListViewLoader.requestLoadData(query, null, true, isInit);
+		mAbsListViewLoader.requestLoadData(query, null, clear, type);
 	}
 	
 	@Override

@@ -74,16 +74,14 @@ public abstract class PullGridViewFragment extends BaseListFragment implements I
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		mGridView.setNumColumns(mGridViewColumnNum);
 		mGridView.setAdapter(mAdapter);
-		
-		loadDataInit();
 	}
 	
 	private void initGridView() {
 		int horizontalSpacing = (int) mAttachActivity.getResources().getDimension(R.dimen.app_base_goods_gridview_horizontalSpacing);
-		int verticalSpacing = (int) mAttachActivity.getResources().getDimension(R.dimen.app_base_goods_gridview_verticalSpacing);
+		//int verticalSpacing = (int) mAttachActivity.getResources().getDimension(R.dimen.app_base_goods_gridview_verticalSpacing);
 		int padding = (int) mAttachActivity.getResources().getDimension(R.dimen.app_base_goods_gridview_padding);
 		mGridView.setHorizontalSpacing(horizontalSpacing);
-		mGridView.setVerticalSpacing(verticalSpacing);
+		//mGridView.setVerticalSpacing(verticalSpacing);
 		mGridView.setPadding(padding, 0, padding, 0);
 		mHorizontalExtraDistance = horizontalSpacing + 2 * padding;
 		mGridView.setVerticalScrollBarEnabled(false);//隐藏滚动条
@@ -130,11 +128,11 @@ public abstract class PullGridViewFragment extends BaseListFragment implements I
 	 */
 	protected abstract BmobQuery<Goods> onCreateBmobQuery();
 	
-	private void loadDataInit() {
-		reloadData(true);
+	public void loadDataInit() {
+		reloadData(AbsListViewLoader.Type.INIT, true);
 	}
 	
-	private void reloadData(boolean isInit) {
+	private void reloadData(AbsListViewLoader.Type type, boolean clear) {
 		if(mBmobquery == null) {
 			mBmobquery = onCreateBmobQuery();
 		}
@@ -144,13 +142,12 @@ public abstract class PullGridViewFragment extends BaseListFragment implements I
 		
 		mBmobquery.setSkip(0);
 		mBmobquery.setLimit(perPageCount);
-		mAbsListViewLoader.requestLoadData(mBmobquery, null, true, isInit);
+		mAbsListViewLoader.requestLoadData(mBmobquery, null, clear, type);
 	}
 	
 	@Override
 	public void onRefresh() {
-		Log.i(TAG, "onRefresh");
-		reloadData(true);
+		reloadData(AbsListViewLoader.Type.REFRESH, false);
 	}
 	
 	@Override
