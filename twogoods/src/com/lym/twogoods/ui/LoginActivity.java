@@ -179,11 +179,11 @@ public class LoginActivity extends BackActivity {
 								judgePassword();
 //								codeMatch();
 //								if (find_succeed && codeVerify) {
-									Intent intent = new Intent(
+									/*Intent intent = new Intent(
 											LoginActivity.this,
 											MainActivity.class);
 									startActivity(intent);
-									finish();
+									finish();*/
 //								}*/
 //								progressDialog.show();
 //								codeMatch();

@@ -1,8 +1,6 @@
 package com.lym.twogoods.fragment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,8 +10,6 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.bmob.BmobProFile;
-import com.bmob.btp.callback.GetAccessUrlListener;
-import com.bmob.btp.callback.ThumbnailListener;
 import com.bmob.btp.callback.UploadBatchListener;
 import com.bmob.btp.callback.UploadListener;
 import com.lym.twogoods.R;
@@ -25,6 +21,7 @@ import com.lym.twogoods.fragment.base.BaseFragment;
 import com.lym.twogoods.publish.adapter.PublishGridViewAdapter;
 import com.lym.twogoods.publish.manger.PublishConfigManger;
 import com.lym.twogoods.publish.ui.PublishGoodsActivity;
+import com.lym.twogoods.publish.util.DataMangerUtils;
 import com.lym.twogoods.screen.PublishGoodsScreen;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
 import com.lym.twogoods.utils.DatabaseHelper;
@@ -32,6 +29,7 @@ import com.lym.twogoods.utils.SensitiveUtils;
 import com.lym.twogoods.widget.WrapContentViewPager;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
@@ -51,6 +49,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,8 +68,11 @@ public class PublishFragment extends BaseFragment {
 
 	private String TAG = "PublishFragment";
 	// 上下文
+	private Context context;
 	private PublishGoodsActivity publishGoodsActivity;
 	// 定义控件
+	private RelativeLayout rl_publish_fragment_main;
+	private ImageView iv_publish_fragment_voice;
 	private TextView tv_publish_fragment_text_number;
 	private Spinner sp_publish_fragment_sort;
 	private Spinner sp_publish_fragment_date;
@@ -121,6 +124,10 @@ public class PublishFragment extends BaseFragment {
 		// 清空图片信息
 		PublishConfigManger.publishPictureUrl.clear();
 		PublishConfigManger.pictureCloudUrl.clear();
+		PublishConfigManger.voiceUrl="";
+		PublishConfigManger.voicePath="";
+		rl_publish_fragment_main=(RelativeLayout) view.findViewById(R.id.rl_publish_fragment_main);
+		iv_publish_fragment_voice=(ImageView) view.findViewById(R.id.iv_publish_fragment_voice);
 		tv_publish_fragment_text_number = (TextView) view
 				.findViewById(R.id.tv_publish_fragment_text_number);
 		sp_publish_fragment_sort = (Spinner) view
@@ -135,27 +142,12 @@ public class PublishFragment extends BaseFragment {
 				.findViewById(R.id.et_publish_fragment_tel);
 		tv_publish_fragment_position_set = (TextView) view
 				.findViewById(R.id.tv_publish_fragment_position_set);
-		/*
-		 * iv_publish_fragment_add_photo = (ImageView) view
-		 * .findViewById(R.id.iv_publish_fragment_add_photo);
-		 * iv_publish_fragment_add_smile = (ImageView) view
-		 * .findViewById(R.id.iv_publish_fragment_add_smile);
-		 * iv_publish_fragment_add_voice = (ImageView) view
-		 * .findViewById(R.id.iv_publish_fragment_add_voice);
-		 */
-		/*
-		 * vp_publish_fragement_emoji = (WrapContentViewPager) view
-		 * .findViewById(R.id.vp_publish_fragment_emoji);
-		 */
 		publishGoodsActivity = (PublishGoodsActivity) getActivity();
+		context=publishGoodsActivity.getApplicationContext();
 		vp_publish_fragement_emoji = (WrapContentViewPager) publishGoodsActivity
 				.attrachEmotionViewPager();
 		btn_publish_fragment_position = (Button) view
 				.findViewById(R.id.btn_publish_fragment_position);
-		/*
-		 * ll_publish_fragment_emoji = (LinearLayout) view
-		 * .findViewById(R.id.ll_publish_fragment_emoji);
-		 */
 		gv_publish_fragment_photo = (GridView) view
 				.findViewById(R.id.gv_publish_fragment_photo);
 		// 定位相关
@@ -171,13 +163,7 @@ public class PublishFragment extends BaseFragment {
 
 		// 货品信息相关
 		goodsBean = new Goods();
-		progressDialog = new ProgressDialog(getActivity());
-		progressDialog.setTitle("正在发布货品信息");
-		progressDialog.setMessage("稍等一下......");
-		progressDialog.setCancelable(true);
-		progressDialog.setProgress(ProgressDialog.STYLE_HORIZONTAL);
-		progressDialog.setIndeterminate(true);
-
+		progressDialog=PublishConfigManger.getLoadProgressDialog(getActivity(),"正在发布货品信息","稍等一下......", true);
 	}
 
 	/*
@@ -187,7 +173,6 @@ public class PublishFragment extends BaseFragment {
 	private void initEvent() {
 		et_publish_fragment_description.addTextChangedListener(mTextWatcher);
 		setSpinner();
-
 		// 定位监听按钮
 		btn_publish_fragment_position.setOnClickListener(new OnClickListener() {
 
@@ -360,11 +345,13 @@ public class PublishFragment extends BaseFragment {
 
 				@Override
 				public void onFailure(int arg0, String arg1) {
+					progressDialog.dismiss();
 					Toast.makeText(getActivity(), "发布失败", Toast.LENGTH_SHORT)
 							.show();
 				}
 			});
 		} else {
+			progressDialog.dismiss();
 			Toast.makeText(getActivity(), "发布失败", Toast.LENGTH_SHORT).show();
 		}
 
@@ -389,32 +376,13 @@ public class PublishFragment extends BaseFragment {
 		return true;
 	}
 
-	/*
-	 * 判断货品描述是否为空
-	 */
-	public boolean judgeGoods() {
-		if (((et_publish_fragment_description.getText().toString()).equals(""))
-				|| ((sp_publish_fragment_sort.getSelectedItem().toString())
-						.equals(""))
-				|| ((et_publish_fragment_tel.getText().toString()).equals(""))
-				|| ((et_publish_fragment_price.getText().toString()).equals(""))
-				|| ((sp_publish_fragment_date.getSelectedItem().toString())
-						.equals(""))
-				|| ((tv_publish_fragment_position_set.getText().toString())
-						.equals(""))) {
-			Toast.makeText(getActivity(), "你发布的商品信息不全哦", Toast.LENGTH_SHORT)
-					.show();
-			return false;
-		}
-		return true;
-	}
 
 	/*
 	 * 
 	 * 图片信息上传
 	 */
 	public void pictureUpload() {
-		if (judgeGoods()) {
+		if (DataMangerUtils.judgeGoods(context,et_publish_fragment_description,sp_publish_fragment_sort,et_publish_fragment_tel,et_publish_fragment_price,sp_publish_fragment_date,tv_publish_fragment_position_set)) {
 			if (!PublishConfigManger.publishPictureUrl.isEmpty()) {
 				// List转String[]
 				final String[] files = PublishConfigManger.publishPictureUrl
@@ -425,6 +393,7 @@ public class PublishFragment extends BaseFragment {
 						new UploadBatchListener() {
 							@Override
 							public void onError(int arg0, String arg1) {
+								progressDialog.dismiss();
 								Log.v(TAG, "pictureUpload上传失败" + arg1);
 								progressDialog.dismiss();
 							}
@@ -473,6 +442,7 @@ public class PublishFragment extends BaseFragment {
 				
 				@Override
 				public void onError(int arg0, String arg1) {
+					progressDialog.dismiss();
 					Toast.makeText(getActivity(), "语音上传失败", Toast.LENGTH_SHORT).show();
 				}
 				
@@ -540,6 +510,27 @@ public class PublishFragment extends BaseFragment {
 		return et_publish_fragment_description;
 	}
 
+	/**
+	 * <p>
+	 * 取得最外层布局
+	 * </p>
+	 * 
+	 * @return	返回最外层RelativeLayout
+	 */
+	public RelativeLayout getRelativeLayoutMain() {
+		return rl_publish_fragment_main;
+	}
+	/**
+	 * <p>
+	 * 取得语音控件
+	 * </p>
+	 * 
+	 * @return	返回最外层RelativeLayout
+	 */
+	public ImageView getVoiceImageView() {
+		return iv_publish_fragment_voice;
+	}
+	
 	public void notifyGridView(List<String> paths) {
 		if (PublishConfigManger.publishPictureUrl.size() != 0) {
 			publishGridViewAdapter = new PublishGridViewAdapter(getActivity(),

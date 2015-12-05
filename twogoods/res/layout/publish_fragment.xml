@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:scrollbars="none">
 <RelativeLayout 
+    android:id="@+id/rl_publish_fragment_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -27,21 +28,21 @@
         android:id="@+id/tv_publish_fragment_text_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btn_publish_fragment_voice"
         android:layout_alignRight="@+id/et_publish_fragment_description"
         android:layout_below="@+id/et_publish_fragment_description"
         android:gravity="center"
         android:text="@string/publish_text_number"
         android:textSize="@dimen/app_publish_fragment_textsize" />
 
-    <ImageButton
-        android:id="@+id/btn_publish_fragment_voice"
+    <ImageView
+        android:id="@+id/iv_publish_fragment_voice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/et_publish_fragment_description"
         android:layout_toLeftOf="@+id/tv_publish_fragment_text_number"
         android:contentDescription="@string/publish_voice_description"
-        android:src="@drawable/publish_voice" />
+        android:src="@drawable/publish_voice_have"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/ll_publish_fragment_category"
