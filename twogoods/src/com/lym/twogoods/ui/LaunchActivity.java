@@ -7,11 +7,13 @@ import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.UserConfiguration;
+import com.lym.twogoods.screen.DisplayUtils;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -44,6 +46,7 @@ public class LaunchActivity extends Activity {
 	private void init() {
 		btn_login_choice_direct = (Button) findViewById(R.id.btn_login_choice_direct);
 		btn_login_choice_login = (Button) findViewById(R.id.btn_login_choice_login);
+		setButtonParams();
 	}
 
 	private void clickEvent() {
@@ -67,6 +70,9 @@ public class LaunchActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-
+	}
+	private void setButtonParams() {
+		btn_login_choice_direct.setY(DisplayUtils.getScreenHeightPixels(this)/3*2);
+		btn_login_choice_login.setY(DisplayUtils.getScreenHeightPixels(this)/3*2);
 	}
 }

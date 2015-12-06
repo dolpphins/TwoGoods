@@ -46,7 +46,7 @@
 
     <include
         android:id="@+id/ll_publish_fragment_bottom_chat"
-        layout="@layout/app_chat_record_content"
+        layout="@layout/message_chat_record_content"
         android:visibility="gone" />
 
 </LinearLayout>

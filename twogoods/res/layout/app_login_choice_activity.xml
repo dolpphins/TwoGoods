@@ -13,11 +13,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/login_direct"
-        android:layout_marginLeft="@dimen/app_login_choice_marRight_Left"
-        android:layout_marginRight="@dimen/app_login_choice_marRight_Left"
         android:layout_weight="1"
-        android:layout_marginTop="@dimen/app_login_choice_marTop"
         style="?android:attr/buttonBarButtonStyle"
+        android:textSize="@dimen/app_login_choice_button_textsize"
+        android:layout_marginLeft="@dimen/app_login_choice_marginLeft"
         android:background="@drawable/edittext_circle_shape"
         />
     
@@ -25,11 +24,11 @@
         android:layout_width="wrap_content"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/app_login_choice_marRight_Left"
-        android:layout_marginRight="@dimen/app_login_choice_marRight_Left"
-        android:layout_marginTop="@dimen/app_login_choice_marTop"
         android:text="@string/login"
+        android:layout_marginLeft="@dimen/app_login_choice_marginmiddle"
+        android:layout_marginRight="@dimen/app_login_choice_marginLeft"
         style="?android:attr/buttonBarButtonStyle"
+        android:textSize="@dimen/app_login_choice_button_textsize"
         android:background="@drawable/edittext_circle_shape"
         />
 </LinearLayout>

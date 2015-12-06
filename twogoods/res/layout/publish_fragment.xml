@@ -10,7 +10,7 @@
 <RelativeLayout 
     android:id="@+id/rl_publish_fragment_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content" >
 
     <EditText
         android:id="@+id/et_publish_fragment_description"
@@ -60,10 +60,11 @@
             android:text="@string/publish_sort"
             android:textSize="@dimen/app_publish_fragment_textsize" />
 
-        <Spinner
+        <com.lym.twogoods.publish.ui.PublishSpinner
             android:id="@+id/sp_publish_fragment_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:background="@drawable/publish_spinner_background" />
     </LinearLayout>
 
     <LinearLayout
@@ -136,10 +137,11 @@
             android:text="@string/publish_date"
             android:textSize="@dimen/app_publish_fragment_textsize" />
 
-        <Spinner
+        <com.lym.twogoods.publish.ui.PublishSpinner
             android:id="@+id/sp_publish_fragment_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:background="@drawable/publish_spinner_background" />
 
         <TextView
             android:id="@+id/tv_publish_fragment_tian"
