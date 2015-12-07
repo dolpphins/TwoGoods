@@ -65,7 +65,7 @@ public class StringUtil {
 	        if (isEmpty(str)) {  
 	            return false;  
 	        }  
-	        String regExp = "^[\u4e00-\u9fa5a-zA-Z0-9]{4,15}$";  
+	        String regExp = "^[\u4e00-\u9fa5a-zA-Z0-9]{4,10}$";//最大长度修改为10  
 	        Pattern p = Pattern.compile(regExp); 
 	        Matcher m = p.matcher(str);  
 	        return m.find();  

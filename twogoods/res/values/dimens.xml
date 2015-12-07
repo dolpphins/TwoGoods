@@ -15,6 +15,7 @@
     <dimen name="app_main_bottomdock_tab_paddingBottom">5dip</dimen>
     	<!-- 商品列表Item -->
     <dimen name="app_base_goods_listview_item_padding">10dip</dimen>
+    <dimen name="base_goods_listview_item_price_textSize">18sp</dimen>
     <dimen name="app_base_goods_listview_item_headpicture_marginRight">10dip</dimen>
     <dimen name="app_base_goods_listview_item_dscription_marginTop">10dip</dimen>
     <dimen name="app_base_goods_listview_item_dscription_marginBottom">10dip</dimen>
@@ -29,16 +30,16 @@
     <dimen name="app_basefragment_listview_laodfail_tip_textSize">16sp</dimen>
     <!-- 下拉刷新头部底部布局 -->
     <dimen name="xlistview_header_height">60dp</dimen>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    <!-- 快速登录对话框 -->
+    <dimen name="app_fast_login_dialog_paddingTop">20dip</dimen>
+    <dimen name="app_fast_login_dialog_title_textSize">18sp</dimen>
+    <dimen name="app_fast_login_dialog_login_textSize">16sp</dimen>
+    <dimen name="app_fast_login_dialog_login_marginTop">15dip</dimen>
+    <dimen name="app_fast_login_dialog_login_marginBottom">15dip</dimen>
+    <dimen name="app_fast_login_dialog_input_marginTop">10dip</dimen>
+    <dimen name="app_fast_login_dialog_input_marginBottom">10dip</dimen>
+    <dimen name="app_fast_login_edittext_textSize">14sp</dimen>
+    <dimen name="app_fast_login_tip_textSize">14sp</dimen>
     
     <!-- mcb -->
     <dimen name="index_fragment_head_textSize">16sp</dimen>

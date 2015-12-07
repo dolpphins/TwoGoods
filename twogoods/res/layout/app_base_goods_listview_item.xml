@@ -60,7 +60,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_alignTop="@id/base_goods_listview_item_user_layout"/>
+            android:layout_alignTop="@id/base_goods_listview_item_user_layout"
+            android:textColor="@color/red"
+            android:textSize="@dimen/base_goods_listview_item_price_textSize"/>
         <!-- 操作，默认为gone -->
         <TextView
             android:id="@+id/base_goods_listview_item_operation"

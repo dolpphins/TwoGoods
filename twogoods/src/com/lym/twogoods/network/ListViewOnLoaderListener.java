@@ -25,25 +25,17 @@ public class ListViewOnLoaderListener extends DefaultOnLoaderListener {
 	}
 	
 	@Override
-	public void onLoadMoreStart() {
-		super.onLoadMoreStart();
-	}
-	
-	@Override
-	public void onLoaderFail() {
-		super.onLoaderFail();
-		stopRefreshAndLoadMore();
-	}
-	
-	@Override
-	public void onLoaderSuccess(List<Goods> goodsList) {
-		super.onLoaderSuccess(goodsList);
-		stopRefreshAndLoadMore();
-	}
-
-	private void stopRefreshAndLoadMore() {
+	public void onRefreshFinish(boolean success) {
+		super.onRefreshFinish(success);
 		if(mListView != null) {
 			mListView.stopRefresh();
+		}
+	}
+	
+	@Override
+	public void onLoadMoreFinish(boolean success) {
+		super.onLoadMoreFinish(success);
+		if(mListView != null) {
 			mListView.stopLoadMore();
 		}
 	}

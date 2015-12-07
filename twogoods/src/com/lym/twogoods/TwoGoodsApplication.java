@@ -1,20 +1,22 @@
 package com.lym.twogoods;
 
 import com.lym.twogoods.bean.Location;
+import com.lym.twogoods.bean.Login;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.SharePreferencesConfiguration;
-import com.lym.twogoods.config.UserConfiguration;
 import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.manager.UniversalImageLoaderConfigurationManager;
 import com.lym.twogoods.manager.UniversalImageLoaderManager;
+import com.lym.twogoods.user.Loginer;
+import com.lym.twogoods.user.Loginer.LoginListener;
 import com.lym.twogoods.utils.FileUtil;
-import com.lym.twogoods.utils.ImageUtil;
 import com.lym.twogoods.utils.SharePreferencesManager;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import android.app.Application;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.text.TextUtils;
+import android.util.Log;
+import cn.bmob.v3.Bmob;
 
 /**
  * <p>自定义Application</p>
@@ -23,9 +25,13 @@ import android.graphics.BitmapFactory;
  * */
 public class TwoGoodsApplication extends Application{
 
+	private final static String TAG = "TwoGoodsApplication";
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		bmobInit();
 		
 		initConfig();
 		/*User user = new User();
@@ -36,8 +42,14 @@ public class TwoGoodsApplication extends Application{
 		
 	}
 	
+	//Bmob初始化
+	private void bmobInit() {
+		Bmob.initialize(this, AccessTokenKeeper.Bmob_ApplicationID);
+	}
+	
 	//初始化应用配置
 	private void initConfig() {
+		
 		//初始化ImageLoader默认配置
 		ImageLoaderConfiguration configuration = UniversalImageLoaderConfigurationManager.getDefaultImageLoaderConfiguration(getApplicationContext());
 		UniversalImageLoaderManager.initDefaultImageLoader(configuration);
@@ -57,9 +69,9 @@ public class TwoGoodsApplication extends Application{
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		SharePreferencesManager spm = SharePreferencesManager.getInstance();
 		//读取位置缓存
 		Location location = new Location();
-		SharePreferencesManager spm = SharePreferencesManager.getInstance();
 		location.setDescription(spm.getLocationString(getApplicationContext(), 
 				SharePreferencesConfiguration.LOCATION_DESCRIPTION_KEY, 
 				SharePreferencesConfiguration.LOCATION_DESCRIPTION_DEFAULT_VALUE));
@@ -70,11 +82,8 @@ public class TwoGoodsApplication extends Application{
 				SharePreferencesConfiguration.LOCATION_LATITUDE_KEY, 
 				SharePreferencesConfiguration.LOCATION_LATITUDE_DEFAULT_VALUE));
 		UserInfoManager.getInstance().setCurrentLocation(location);
-		
+		//初始化缩略图URL映射
 		ThumbnailMap.init(getApplicationContext());
+		
 	}
-	
-	
-	
-	
 }

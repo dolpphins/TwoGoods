@@ -23,7 +23,7 @@ public class DefaultOnLoaderListener implements AbsListViewLoader.OnLoaderListen
 	
 	private BaseListFragment mFragment;
 	
-	private AbsListViewLoader mListViewLoader;
+	private AbsListViewLoader mAbsListViewLoader;
 	
 	/**
 	 * 构造函数
@@ -33,40 +33,88 @@ public class DefaultOnLoaderListener implements AbsListViewLoader.OnLoaderListen
 	 * */
 	public DefaultOnLoaderListener(BaseListFragment fragment, AbsListViewLoader loader) {
 		mFragment = fragment;
-		mListViewLoader = loader;
+		mAbsListViewLoader = loader;
 	}
-	
+
 	@Override
-	public void onLoaderStart() {
+	public void onInitLoaderStart() {
+		mFragment.hideRetryText();
+		mFragment.hideContentView();
 		mFragment.showLoadingAnimation();
 	}
 
 	@Override
-	public void onLoaderSuccess(List<Goods> goodsList) {
-		mFragment.hideLoadingAnimation();
-		mFragment.showContentView();
+	public void onInitLoaderFinish(boolean success) {
+		if(success) {
+			mFragment.hideLoadingAnimation();
+			mFragment.showContentView();
+		} else {
+			mFragment.hideLoadingAnimation();
+			TextView tv = mFragment.showRetryText("请点击屏幕，重新加载！", Color.GRAY, -1);
+			tv.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					mFragment.hideRetryText();
+					mFragment.showLoadingAnimation();//重新显示加载动画
+					mAbsListViewLoader.requestRetryLoadData();
+				}
+			});
+		}
 	}
 
 	@Override
-	public void onLoaderFail() {
-		mFragment.hideLoadingAnimation();
-		TextView tv = mFragment.showRetryText("请点击屏幕，重新加载！", Color.GRAY, -1);
-		tv.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Log.i(TAG, "onClick");
-				mFragment.hideRetryText();
-				mFragment.showLoadingAnimation();//重新显示加载动画
-				mListViewLoader.requestRetryLoadData();
-			}
-		});
+	public void onRefreshStart() {
+		
+	}
+
+	@Override
+	public void onRefreshFinish(boolean success) {
+		
 	}
 
 	@Override
 	public void onLoadMoreStart() {
 		
 	}
+
+	@Override
+	public void onLoadMoreFinish(boolean success) {
+		
+	}
+	
+//	@Override
+//	public void onLoaderStart() {
+//		mFragment.hideRetryText();
+//		mFragment.hideContentView();
+//		mFragment.showLoadingAnimation();
+//	}
+//
+//	@Override
+//	public void onLoaderSuccess(List<Goods> goodsList) {
+//		mFragment.hideLoadingAnimation();
+//		mFragment.showContentView();
+//	}
+//
+//	@Override
+//	public void onLoaderFail() {
+//		mFragment.hideLoadingAnimation();
+//		TextView tv = mFragment.showRetryText("请点击屏幕，重新加载！", Color.GRAY, -1);
+//		tv.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				mFragment.hideRetryText();
+//				mFragment.showLoadingAnimation();//重新显示加载动画
+//				mListViewLoader.requestRetryLoadData();
+//			}
+//		});
+//	}
+//
+//	@Override
+//	public void onLoadMoreStart() {
+//		
+//	}
 
 	
 }

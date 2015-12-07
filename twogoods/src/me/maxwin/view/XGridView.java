@@ -166,7 +166,6 @@ public class XGridView extends LinearLayout{
 	}
 
 	private void scrollHeaderView() {
-		Log.i(TAG, "scrollHeaderView");
 		int dy = -mHeaderView.getVisiableHeight();
 		if(mHeaderView.getState() == XListViewHeader.STATE_READY && mHeaderView.getVisiableHeight() > mHeaderViewHeight) {
 			dy += mHeaderViewHeight;

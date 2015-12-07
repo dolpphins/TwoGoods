@@ -184,7 +184,6 @@ public class XListView extends ListView implements OnScrollListener {
 		if (mPullLoading == true) {
 			mPullLoading = false;
 			mFooterView.setState(XListViewFooter.STATE_NORMAL);
-			resetFooterHeight(mFooterView.getHeight());
 		}
 	}
 
@@ -269,13 +268,6 @@ public class XListView extends ListView implements OnScrollListener {
 		}
 	}
 	
-	private void resetFooterHeight(int deltaY) {
-		if (deltaY > 0) {
-			mScroller.startScroll(0, deltaY, 0, -deltaY);
-			invalidate();
-		}
-	}
-
 	private void startLoadMore() {
 		mPullLoading = true;
 		mFooterView.setState(XListViewFooter.STATE_LOADING);
@@ -467,16 +459,5 @@ public class XListView extends ListView implements OnScrollListener {
 		if(mHeaderView != null) {
 			mHeaderView.clearHeader();
 		}
-	}
-	
-	public void showLoadMore() {
-		mFooterView.show();
-	}
-	
-	public void hideLoadMore() {
-		System.out.println("hideLoadMore");
-		mFooterView.hide();
-	}
-	
-	
+	}	
 }

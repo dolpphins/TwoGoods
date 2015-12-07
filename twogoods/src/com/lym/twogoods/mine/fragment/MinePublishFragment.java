@@ -84,22 +84,22 @@ public class MinePublishFragment extends PullListFragment {
 	
 	//加载初始化数据
 	private void loadDataInit() {
-		reloadData();
+		reloadData(AbsListViewLoader.Type.INIT, true);
 	}
 	
 	@Override
 	public void onRefresh() {
-		reloadData();
+		reloadData(AbsListViewLoader.Type.REFRESH, false);
 	}
 	
-	private void reloadData() {
+	private void reloadData(AbsListViewLoader.Type type, boolean clear) {
 		BmobQuery<Goods> query = new BmobQuery<Goods>();
 		query.setSkip(0);
 		query.setLimit(perPageCount);
 		query.addWhereEqualTo("username", mUsername);
 		String order = "-" + GoodsSortManager.getColumnString(GoodsSort.NEWEST_PUBLISH);
 		query.order(order);
-		mAbsListViewLoader.requestLoadData(query, null, true, false);
+		mAbsListViewLoader.requestLoadData(query, null, clear, type);
 	}
 	
 	@Override

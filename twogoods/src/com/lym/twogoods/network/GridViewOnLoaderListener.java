@@ -24,16 +24,12 @@ public class GridViewOnLoaderListener extends DefaultOnLoaderListener {
 		super(fragment, loader);
 		mGridView = gridView;
 	}
-
-	@Override
-	public void onLoaderSuccess(List<Goods> goodsList) {
-		super.onLoaderSuccess(goodsList);
-		mGridView.stopRefresh();
-	}
 	
 	@Override
-	public void onLoaderFail() {
-		super.onLoaderFail();
-		mGridView.stopRefresh();
+	public void onRefreshFinish(boolean success) {
+		super.onRefreshFinish(success);
+		if(mGridView != null) {
+			mGridView.stopRefresh();
+		}
 	}
 }

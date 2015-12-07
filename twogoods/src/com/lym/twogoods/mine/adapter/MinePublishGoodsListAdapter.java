@@ -2,6 +2,7 @@ package com.lym.twogoods.mine.adapter;
 
 import java.util.List;
 
+import com.bmob.BmobProFile;
 import com.lym.twogoods.adapter.base.BaseGoodsListViewAdapter;
 import com.lym.twogoods.bean.Goods;
 
@@ -69,6 +70,10 @@ public class MinePublishGoodsListAdapter extends BaseGoodsListViewAdapter {
 			
 			@Override
 			public void onSuccess() {
+				//删除文件,不管成功与失败
+				deletePictures(item.getPicFileUrlList());
+				//删除语音
+				
 				Toast.makeText(mActivity, "删除成功", Toast.LENGTH_SHORT).show();
 				mGoodsList.remove(item);
 				notifyDataSetChanged();
@@ -80,5 +85,13 @@ public class MinePublishGoodsListAdapter extends BaseGoodsListViewAdapter {
 				pb.dismiss();
 			}
 		});
+	}
+	
+	private void deletePictures(List<String> picturesList) {
+		if(picturesList != null && picturesList.size() > 0) {
+			for(String filename : picturesList) {
+				BmobProFile.getInstance(mActivity).deleteFile(filename, null);
+			}
+		}
 	}
 }

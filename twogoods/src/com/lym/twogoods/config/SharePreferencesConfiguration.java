@@ -25,4 +25,13 @@ public class SharePreferencesConfiguration {
 	
 	/** 位置SharePreferences文件中位置纬度key */
 	public final static String LOCATION_LATITUDE_KEY = "latitude";
+	
+	/** 用户信息用户名key */
+	public final static String LOGIN_USERNAME_KEY = "username";
+	
+	/** 用户信息密码key */
+	public final static String LOGIN_PASSWORD_KEY = "password";
+	
+	/** 版本号key */
+	public final static String APP_VERSION_CODE_KEY = "version_code";
 }

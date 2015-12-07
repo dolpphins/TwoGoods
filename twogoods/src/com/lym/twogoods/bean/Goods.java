@@ -62,7 +62,7 @@ public class Goods extends BmobObject implements Serializable{
 	@DatabaseField
 	private String description;
 	
-	/** 商品图片网络缩略图可访问url集合 */
+	/** 商品图片Bmob上传后得到的文件名 */
 	@DatabaseField
 	private ArrayList<String> picFileUrlList;
 	
@@ -85,6 +85,10 @@ public class Goods extends BmobObject implements Serializable{
 	/** 语音在网络服务器上的可访问url */
 	@DatabaseField
 	private String voice_url;
+	
+	/** 语音上传得到的Bmob文件名 */
+	@DatabaseField
+	private String voice_filename;
 	
 	/** 联系方式,非空 */
 	@DatabaseField
@@ -277,8 +281,14 @@ public class Goods extends BmobObject implements Serializable{
 	public void setPicFileUrlList(ArrayList<String> picFileUrlList) {
 		this.picFileUrlList = picFileUrlList;
 	}
-	
-	
+
+	public String getVoice_filename() {
+		return voice_filename;
+	}
+
+	public void setVoice_filename(String voice_filename) {
+		this.voice_filename = voice_filename;
+	}
 	
 }
 
