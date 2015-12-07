@@ -37,6 +37,7 @@ import com.lym.twogoods.message.config.ChatBottomConfig;
 import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.message.fragment.ChatFragment;
 import com.lym.twogoods.message.view.EmoticonsEditText;
+import com.lym.twogoods.message.view.ImageCusView;
 import com.lym.twogoods.ui.SendPictureActivity;
 import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
 import com.lym.twogoods.utils.DatabaseHelper;
@@ -64,6 +65,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	private View bottomView;
 	private LinearLayout moreLinearLayout,emoLinearLayout,voiceLinearLayout,addLinearLayout;
 	private EmoticonsEditText edit_user_comment;
+	private ImageCusView mImageCusView;
 	
 	/**当前用户*/
 	private User currentUser;
@@ -169,11 +171,12 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	
 	//初始化底部布局
 	private void initBottom() {
-		// TODO 自动生成的方法存根
 		moreLinearLayout = (LinearLayout) bottomView.findViewById(R.id.chat_layout_more);
 		emoLinearLayout = (LinearLayout) bottomView.findViewById(R.id.chat_layout_emo_content);
 		voiceLinearLayout = (LinearLayout) bottomView.findViewById(R.id.chat_layout_voice_content);
 		addLinearLayout = (LinearLayout) bottomView.findViewById(R.id.chat_layout_add_content);
+		
+		mImageCusView = (ImageCusView) findViewById(R.id.message_chat_record_view);
 		
 		edit_user_comment = (EmoticonsEditText) bottomView.findViewById(R.id.message_chat_edit_user_comment);
 		mWrapContentViewPagerOfEmoji = (WrapContentViewPager) findViewById(R.id.message_chat_emoji_viewpager);
@@ -189,7 +192,6 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	//实现控件点击事件
 	public void toAction(View view)
 	{
-		
 		switch(view.getId()){
 		case R.id.message_chat_btn_send:
 			if(edit_user_comment.getText().equals("")){
@@ -639,6 +641,11 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	@Override
 	protected void onStop() {
 		super.onStop();
+		if(moreLinearLayout.getVisibility()==View.VISIBLE){
+			moreLinearLayout.setVisibility(View.GONE);
+			voiceLinearLayout.setVisibility(View.GONE);
+			addLinearLayout.setVisibility(View.GONE);
+		}
 	}
 	
 	/**
@@ -662,10 +669,10 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	 **/
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();EventBus.getDefault().unregister(this);
+		super.onDestroy();
+		EventBus.getDefault().unregister(this);
+		mImageCusView.release();
 	}
-	
-	
 	/**
 	 * 刷新消息列表
 	 **/
