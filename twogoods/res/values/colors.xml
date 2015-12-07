@@ -58,7 +58,9 @@
 	<color name="nearby_select_city_position_cancel_text">#87CEEB</color>		<!-- 天蓝色 -->
 	<color name="nearby_select_city_position_dingwei_textcolor">#87CEEB</color>	<!-- 天蓝色 -->
 	<color name="nearby_select_city_position_hotcity_textcolor">#696969</color>	<!-- 淡灰色 -->
-	
+	<!-- publish_spinner_layout -->
+	<color name="publish_spinner_title_background">#defafd</color>
+	<color name="publish_spinner_title_textcolor">#0182af</color>
 	
 	
 	

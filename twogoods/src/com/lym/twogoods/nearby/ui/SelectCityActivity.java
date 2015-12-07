@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -26,6 +29,7 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -42,8 +46,11 @@ import com.lym.twogoods.nearby.config.CityManger;
 import com.lym.twogoods.nearby.config.NearbyConfig;
 import com.lym.twogoods.nearby.utils.CharacterParser;
 import com.lym.twogoods.nearby.utils.PinyinComparator;
+import com.lym.twogoods.publish.manger.PublishConfigManger;
+import com.lym.twogoods.publish.ui.PublishGoodsActivity;
 import com.lym.twogoods.screen.NearbyScreen;
 import com.lym.twogoods.ui.base.BackFragmentActivity;
+import com.lym.twogoods.utils.NetworkHelper;
 import com.lym.twogoods.utils.SharePreferencesManager;
 
 /**
@@ -55,7 +62,7 @@ import com.lym.twogoods.utils.SharePreferencesManager;
  * */
 public class SelectCityActivity extends BackFragmentActivity {
 
-	private String TAG = "ReplaceActivity";
+	private String TAG = "SelectCityActivity";
 	// 定义控件
 	private SelectCityClearEditText et_nearby_select_city_input;
 	private Button btn_nearby_select_city_input_cancel;
@@ -110,12 +117,16 @@ public class SelectCityActivity extends BackFragmentActivity {
 		lv_nearby_select_city_search_result
 				.setAdapter(selectCityPositionListViewAdapter);
 		// ProgressDialog初始化
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle("正在保存位置信息");
-		progressDialog.setMessage("稍等一下......");
-		progressDialog.setProgress(ProgressDialog.STYLE_HORIZONTAL);
-		progressDialog.setIndeterminate(true);
-		progressDialog.setCancelable(false);
+		// progressDialog = new ProgressDialog(this);
+		progressDialog = PublishConfigManger.getLoadProgressDialog(this,
+				"正在保存位置信息", "稍等一下......", false);
+		/*
+		 * progressDialog.setTitle("正在保存位置信息");
+		 * progressDialog.setMessage("稍等一下......");
+		 * progressDialog.setProgress(ProgressDialog.STYLE_HORIZONTAL);
+		 * progressDialog.setIndeterminate(true);
+		 * progressDialog.setCancelable(false);
+		 */
 	}
 
 	private void initEvent() {
@@ -172,27 +183,17 @@ public class SelectCityActivity extends BackFragmentActivity {
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
 						// 设置Location
-						progressDialog.show();
-						setLocation(getLocation(((NearbyPositionModelBean) selectCityPositionListViewAdapter
-								.getItem(position)).getName()));
-						Log.v(TAG, UserInfoManager.getInstance()
-								.getCurrentLocation().getDescription()
-								+ '\n'
-								+ UserInfoManager.getInstance()
-										.getCurrentLocation().getLatitude()
-								+ '\n'
-								+ UserInfoManager.getInstance()
-										.getCurrentLocation().getLongitude());
+						if (NetworkHelper
+								.isMobileDataEnable(getApplicationContext())
+								|| NetworkHelper
+										.isWifiDataEnable(getApplicationContext())) {
+							progressDialog.show();
+							setLocation(getLocation(((NearbyPositionModelBean) selectCityPositionListViewAdapter
+									.getItem(position)).getName()));
+						}else {
+							Toast.makeText(getApplicationContext(), "当前网络不佳哦", Toast.LENGTH_SHORT).show();
+						}
 						finish();
-						// 隐藏操作
-						/*
-						 * et_nearby_select_city_input.clearFocus();
-						 * InputMethodManager imm = (InputMethodManager)
-						 * getSystemService(INPUT_METHOD_SERVICE);
-						 * imm.hideSoftInputFromWindow(
-						 * et_nearby_select_city_input.getWindowToken(), 0);
-						 * et_nearby_select_city_input.setText("");
-						 */
 					}
 				});
 
@@ -200,9 +201,16 @@ public class SelectCityActivity extends BackFragmentActivity {
 
 			@Override
 			public void onClick(View v) {
-				isFirst = true;
-				progressDialog.show();
-				locationClient.requestLocation();
+				if (NetworkHelper
+						.isMobileDataEnable(getApplicationContext())
+						|| NetworkHelper
+								.isWifiDataEnable(getApplicationContext())) {
+					isFirst = true;
+					progressDialog.show();
+					locationClient.requestLocation();
+				}else {
+					Toast.makeText(getApplicationContext(), "当前网络不佳哦", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 	}
@@ -259,17 +267,16 @@ public class SelectCityActivity extends BackFragmentActivity {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-						progressDialog.show();
-						setLocation(getLocation((String) (nearbyHotCityGridViewAdapter
-								.getItem(position))));
-						Log.v(TAG, UserInfoManager.getInstance()
-								.getCurrentLocation().getDescription()
-								+ '\n'
-								+ UserInfoManager.getInstance()
-										.getCurrentLocation().getLatitude()
-								+ '\n'
-								+ UserInfoManager.getInstance()
-										.getCurrentLocation().getLongitude());
+						if (NetworkHelper
+								.isMobileDataEnable(getApplicationContext())
+								|| NetworkHelper
+										.isWifiDataEnable(getApplicationContext())) {
+							progressDialog.show();
+							setLocation(getLocation((String) (nearbyHotCityGridViewAdapter
+									.getItem(position))));
+						}else {
+							Toast.makeText(getApplicationContext(), "当前网络不佳哦", Toast.LENGTH_SHORT).show();
+						}
 						finish();
 					}
 				});
@@ -341,20 +348,13 @@ public class SelectCityActivity extends BackFragmentActivity {
 
 		@Override
 		public void onReceiveLocation(BDLocation location) {
+
 			if (isFirst) {
 				com.lym.twogoods.bean.Location currentLocation = new com.lym.twogoods.bean.Location();
 				currentLocation.setDescription(location.getAddrStr());
 				currentLocation.setLatitude(location.getLatitude() + "");
 				currentLocation.setLongitude(location.getLongitude() + "");
 				setLocation(currentLocation);
-				Log.v(TAG, UserInfoManager.getInstance().getCurrentLocation()
-						.getDescription()
-						+ '\n'
-						+ UserInfoManager.getInstance().getCurrentLocation()
-								.getLatitude()
-						+ '\n'
-						+ UserInfoManager.getInstance().getCurrentLocation()
-								.getLongitude());
 				finish();
 			}
 		}
@@ -402,9 +402,19 @@ public class SelectCityActivity extends BackFragmentActivity {
 	 *            经度
 	 */
 	private void setLocation(com.lym.twogoods.bean.Location location) {
-		UserInfoManager.getInstance().setCurrentLocation(location);
-		writeSharePreference(location);
-		progressDialog.dismiss();
+		String activityName = getIntent().getStringExtra(
+				PublishConfigManger.publishActivityIdentificationKey);
+		if (activityName.equals("PublishGoodsActivity")) {
+			Intent intent = new Intent();
+			intent.putExtra(
+					PublishConfigManger.publishBackActivityIdentificationKey,
+					location.getDescription());
+			setResult(PublishConfigManger.PUBLISH_RESULT_OK, intent);
+		} else {
+			UserInfoManager.getInstance().setCurrentLocation(location);
+			writeSharePreference(location);
+			progressDialog.dismiss();
+		}
 	}
 
 	/**
@@ -425,6 +435,8 @@ public class SelectCityActivity extends BackFragmentActivity {
 		sharePreferencesManager.setLocationString(getApplicationContext(),
 				SharePreferencesConfiguration.LOCATION_LONGITUDE_KEY,
 				location.getLongitude());
+		Toast.makeText(getApplicationContext(), "亲，你的位置信息已成功保存",
+				Toast.LENGTH_SHORT).show();
 	}
 
 	@Override

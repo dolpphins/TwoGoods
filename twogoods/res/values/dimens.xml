@@ -154,8 +154,9 @@
 	<!-- lyw_publish -->
 	<dimen name="margintop">30dp</dimen>
 	<!-- app_login_choice-->
-	<dimen name="app_login_choice_marRight_Left">30dp</dimen>
-	<dimen name="app_login_choice_marTop">450dp</dimen>
+	<dimen name="app_login_choice_marginLeft">20dp</dimen>
+	<dimen name="app_login_choice_button_textsize">20sp</dimen>
+	<dimen name="app_login_choice_marginmiddle">40dp</dimen>
 	<!-- app_login -->
 	<!-- app_register -->
 	<dimen name="app_register_parenttop">60dp</dimen>
@@ -170,6 +171,12 @@
 	<dimen name="app_publish_fragment_textsize">18sp</dimen>
 	<dimen name="app_publish_fragment_sort_marginright">30dp</dimen>
 	<dimen name="app_publish_fragment_gridview_left_right_padding">10dp</dimen>
+	<!-- publish_spinner_layout -->
+	<dimen name="publish_spinner_layout_title_padding">10dp</dimen>
+	<dimen name="publish_spinner_layout_title_icon_marginRight">10dp</dimen>
+	<dimen name="publish_spinner_layout_title_textsize">20sp</dimen>
+	<dimen name="publish_spinner_layout_listview_item_textsize">20sp</dimen>
+	<dimen name="publish_spinner_layout_listview_item_top_bottom">10dp</dimen>
 	<!-- nearby_select_city -->
 	<dimen name="nearby_select_city_division">1dp</dimen>
 	<dimen name="nearby_select_city_margintop">10dp</dimen>

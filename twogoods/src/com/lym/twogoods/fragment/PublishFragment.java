@@ -5,10 +5,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.bmob.BmobProFile;
 import com.bmob.btp.callback.UploadBatchListener;
 import com.bmob.btp.callback.UploadListener;
@@ -18,9 +14,11 @@ import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.PictureThumbnailSpecification;
 import com.lym.twogoods.fragment.base.BaseFragment;
+import com.lym.twogoods.nearby.ui.SelectCityActivity;
 import com.lym.twogoods.publish.adapter.PublishGridViewAdapter;
 import com.lym.twogoods.publish.manger.PublishConfigManger;
 import com.lym.twogoods.publish.ui.PublishGoodsActivity;
+import com.lym.twogoods.publish.ui.PublishSpinner;
 import com.lym.twogoods.publish.util.DataMangerUtils;
 import com.lym.twogoods.screen.PublishGoodsScreen;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
@@ -51,7 +49,6 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.bmob.v3.datatype.BmobFile;
@@ -74,8 +71,8 @@ public class PublishFragment extends BaseFragment {
 	private RelativeLayout rl_publish_fragment_main;
 	private ImageView iv_publish_fragment_voice;
 	private TextView tv_publish_fragment_text_number;
-	private Spinner sp_publish_fragment_sort;
-	private Spinner sp_publish_fragment_date;
+	private PublishSpinner sp_publish_fragment_type;
+	private PublishSpinner sp_publish_fragment_date;
 	private EditText et_publish_fragment_tel;
 	private EditText et_publish_fragment_price;
 	private EditText et_publish_fragment_description;
@@ -86,14 +83,6 @@ public class PublishFragment extends BaseFragment {
 
 	// 设置日期
 	private List<String> items = new ArrayList<String>();
-
-	// 定位相关
-	private boolean isFirst = false;
-	private LocationClient locationClient;
-	private MylocationListen mylocationListen;
-	private double longitude;
-	private double latitude;
-
 	// 货品信息相关
 	private Goods goodsBean;
 	private EmotionViewPagerAdapter emotionViewPagerAdapter;
@@ -124,15 +113,17 @@ public class PublishFragment extends BaseFragment {
 		// 清空图片信息
 		PublishConfigManger.publishPictureUrl.clear();
 		PublishConfigManger.pictureCloudUrl.clear();
-		PublishConfigManger.voiceUrl="";
-		PublishConfigManger.voicePath="";
-		rl_publish_fragment_main=(RelativeLayout) view.findViewById(R.id.rl_publish_fragment_main);
-		iv_publish_fragment_voice=(ImageView) view.findViewById(R.id.iv_publish_fragment_voice);
+		PublishConfigManger.voiceUrl = "";
+		PublishConfigManger.voicePath = "";
+		rl_publish_fragment_main = (RelativeLayout) view
+				.findViewById(R.id.rl_publish_fragment_main);
+		iv_publish_fragment_voice = (ImageView) view
+				.findViewById(R.id.iv_publish_fragment_voice);
 		tv_publish_fragment_text_number = (TextView) view
 				.findViewById(R.id.tv_publish_fragment_text_number);
-		sp_publish_fragment_sort = (Spinner) view
+		sp_publish_fragment_type = (PublishSpinner) view
 				.findViewById(R.id.sp_publish_fragment_category);
-		sp_publish_fragment_date = (Spinner) view
+		sp_publish_fragment_date = (PublishSpinner) view
 				.findViewById(R.id.sp_publish_fragment_date);
 		et_publish_fragment_description = (EditText) view
 				.findViewById(R.id.et_publish_fragment_description);
@@ -143,27 +134,17 @@ public class PublishFragment extends BaseFragment {
 		tv_publish_fragment_position_set = (TextView) view
 				.findViewById(R.id.tv_publish_fragment_position_set);
 		publishGoodsActivity = (PublishGoodsActivity) getActivity();
-		context=publishGoodsActivity.getApplicationContext();
+		context = publishGoodsActivity.getApplicationContext();
 		vp_publish_fragement_emoji = (WrapContentViewPager) publishGoodsActivity
 				.attrachEmotionViewPager();
 		btn_publish_fragment_position = (Button) view
 				.findViewById(R.id.btn_publish_fragment_position);
 		gv_publish_fragment_photo = (GridView) view
 				.findViewById(R.id.gv_publish_fragment_photo);
-		// 定位相关
-		locationClient = new LocationClient(getActivity());
-		mylocationListen = new MylocationListen();
-		LocationClientOption option = new LocationClientOption();
-		option.setCoorType("bd09ll");
-		option.setIsNeedAddress(true);
-		option.setOpenGps(true);
-		option.setScanSpan(1000);
-		locationClient.setLocOption(option);
-		locationClient.registerLocationListener(mylocationListen);
-
 		// 货品信息相关
 		goodsBean = new Goods();
-		progressDialog=PublishConfigManger.getLoadProgressDialog(getActivity(),"正在发布货品信息","稍等一下......", true);
+		progressDialog = PublishConfigManger.getLoadProgressDialog(
+				getActivity(), "正在发布货品信息", "稍等一下......", true);
 	}
 
 	/*
@@ -175,11 +156,11 @@ public class PublishFragment extends BaseFragment {
 		setSpinner();
 		// 定位监听按钮
 		btn_publish_fragment_position.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
-				isFirst = true;
-				locationClient.requestLocation();
+				Intent intent=new Intent(getActivity(),SelectCityActivity.class);
+				intent.putExtra(PublishConfigManger.publishActivityIdentificationKey, "PublishGoodsActivity");
+				startActivityForResult(intent, PublishConfigManger.PUBLISH_REQUESTCODE);
 			}
 		});
 		gv_publish_fragment_photo
@@ -233,17 +214,18 @@ public class PublishFragment extends BaseFragment {
 	 */
 	private void setSpinner() {
 		// 设置分类内容
-		ArrayAdapter<CharSequence> sortaAdapter = ArrayAdapter
-				.createFromResource(getActivity(), R.array.publish_sort_array,
-						android.R.layout.simple_spinner_item);
-		sortaAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		sp_publish_fragment_sort.setAdapter(sortaAdapter);
+		sp_publish_fragment_type
+				.setList((ArrayList<String>) PublishConfigManger.publishGoodsType);
+		ArrayAdapter<String> typeAdapter = new ArrayAdapter<String>(
+				getActivity(), android.R.layout.simple_spinner_item,
+				PublishConfigManger.publishGoodsType);
+		sp_publish_fragment_type.setAdapter(typeAdapter);
 
 		// 设置价格内容
 		for (int i = 0; i < 30; i++) {
 			items.add((i + 1) + "");
 		}
+		sp_publish_fragment_date.setList((ArrayList<String>) items);
 		ArrayAdapter<String> dateAdapter = new ArrayAdapter<String>(
 				getActivity(), android.R.layout.simple_spinner_item, items);
 		sp_publish_fragment_date.setAdapter(dateAdapter);
@@ -302,7 +284,7 @@ public class PublishFragment extends BaseFragment {
 	private void getGoodsData() {
 		goodsBean.setDescription(et_publish_fragment_description.getText()
 				.toString());
-		goodsBean.setCategory(sp_publish_fragment_sort.getSelectedItem()
+		goodsBean.setCategory(sp_publish_fragment_type.getSelectedItem()
 				.toString());
 		goodsBean.setPhone(et_publish_fragment_tel.getText().toString());
 		goodsBean.setPrice(Integer.parseInt(et_publish_fragment_price.getText()
@@ -313,8 +295,6 @@ public class PublishFragment extends BaseFragment {
 		goodsBean.setPublish_time(System.currentTimeMillis());
 		goodsBean.setPublish_location(tv_publish_fragment_position_set
 				.getText().toString());
-		goodsBean.setLocation_latitude(String.valueOf(latitude));
-		goodsBean.setLocation_longitude(String.valueOf(longitude));
 		goodsBean.setHead_url(UserInfoManager.getInstance().getmCurrent()
 				.getHead_url());
 		goodsBean
@@ -331,7 +311,7 @@ public class PublishFragment extends BaseFragment {
 	private void publishGoods() {
 		// 最后一个条件是判断上传图片文件是否完全成功才去决定是否上传信息到服务器
 		if ((PublishConfigManger.pictureCloudUrl.size() == PublishConfigManger.publishPictureUrl
-						.size())) {
+				.size())) {
 			getGoodsData();
 			goodsBean.save(getActivity(), new SaveListener() {
 
@@ -376,13 +356,15 @@ public class PublishFragment extends BaseFragment {
 		return true;
 	}
 
-
 	/*
 	 * 
 	 * 图片信息上传
 	 */
 	public void pictureUpload() {
-		if (DataMangerUtils.judgeGoods(context,et_publish_fragment_description,sp_publish_fragment_sort,et_publish_fragment_tel,et_publish_fragment_price,sp_publish_fragment_date,tv_publish_fragment_position_set)) {
+		if (DataMangerUtils.judgeGoods(context,
+				et_publish_fragment_description, sp_publish_fragment_type,
+				et_publish_fragment_tel, et_publish_fragment_price,
+				sp_publish_fragment_date, tv_publish_fragment_position_set)) {
 			if (!PublishConfigManger.publishPictureUrl.isEmpty()) {
 				// List转String[]
 				final String[] files = PublishConfigManger.publishPictureUrl
@@ -399,8 +381,8 @@ public class PublishFragment extends BaseFragment {
 							}
 
 							@Override
-							public void onProgress(int arg0, int arg1, int arg2,
-									int arg3) {
+							public void onProgress(int arg0, int arg1,
+									int arg2, int arg3) {
 								Log.i("PublishFrament", "onProgress :" + arg0
 										+ "---" + arg1 + "---" + arg2 + "----"
 										+ arg3);
@@ -415,7 +397,7 @@ public class PublishFragment extends BaseFragment {
 												.add(arg3[i].getUrl());
 									}
 									ArrayList<String> picFileUrlList = new ArrayList<String>();
-									for(int i = 0; i < arg1.length; i++) {
+									for (int i = 0; i < arg1.length; i++) {
 										picFileUrlList.add(arg1[i]);
 									}
 									goodsBean.setPicFileUrlList(picFileUrlList);
@@ -424,44 +406,49 @@ public class PublishFragment extends BaseFragment {
 							}
 
 						});
-			}else {
+			} else {
 				progressDialog.show();
 				uploadVoice();
 			}
 		}
 	}
+
 	/**
 	 * <p>
-	 * 		语音上传
+	 * 语音上传
 	 * </p>
 	 */
 	private void uploadVoice() {
-		if(!PublishConfigManger.voicePath.equals("")){
-			Log.v(TAG, "语音本地路径"+PublishConfigManger.voicePath);
-			BmobProFile.getInstance(getActivity()).upload(PublishConfigManger.voicePath, new UploadListener() {
-				
-				@Override
-				public void onError(int arg0, String arg1) {
-					progressDialog.dismiss();
-					Toast.makeText(getActivity(), "语音上传失败", Toast.LENGTH_SHORT).show();
-				}
-				
-				@Override
-				public void onSuccess(String fileName, String url, BmobFile file) {
-					PublishConfigManger.voiceUrl=file.getUrl();
-					Log.v(TAG, "语音网络URL"+PublishConfigManger.voiceUrl);
-					publishGoods();
-				}
-				
-				@Override
-				public void onProgress(int arg0) {
-					
-				}
-			});
-		}else {
+		if (!PublishConfigManger.voicePath.equals("")) {
+			Log.v(TAG, "语音本地路径" + PublishConfigManger.voicePath);
+			BmobProFile.getInstance(getActivity()).upload(
+					PublishConfigManger.voicePath, new UploadListener() {
+
+						@Override
+						public void onError(int arg0, String arg1) {
+							progressDialog.dismiss();
+							Toast.makeText(getActivity(), "语音上传失败",
+									Toast.LENGTH_SHORT).show();
+						}
+
+						@Override
+						public void onSuccess(String fileName, String url,
+								BmobFile file) {
+							PublishConfigManger.voiceUrl = file.getUrl();
+							Log.v(TAG, "语音网络URL" + PublishConfigManger.voiceUrl);
+							publishGoods();
+						}
+
+						@Override
+						public void onProgress(int arg0) {
+
+						}
+					});
+		} else {
 			publishGoods();
 		}
 	}
+
 	/*
 	 * 
 	 * 初始化表情面板内容
@@ -472,65 +459,51 @@ public class PublishFragment extends BaseFragment {
 		vp_publish_fragement_emoji.setAdapter(emotionViewPagerAdapter);
 	}
 
-	/*
-	 * 
-	 * 自定义定位监听器
-	 */
-	private class MylocationListen implements BDLocationListener {
-
-		@Override
-		public void onReceiveLocation(BDLocation location) {
-			if (isFirst) {
-				Toast.makeText(getActivity(), location.getAddrStr(),
-						Toast.LENGTH_SHORT).show();
-				tv_publish_fragment_position_set.setText(location.getAddrStr());
-				isFirst = false;
-				latitude = location.getLatitude();
-				longitude = location.getLongitude();
-			}
-		}
-
-	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		if (!locationClient.isStarted()) {
-			locationClient.start();
-		}
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		locationClient.stop();
 	}
 
 	public EditText getEditTextDescription() {
 		return et_publish_fragment_description;
 	}
-
+	public EditText getEditTextTel() {
+		return et_publish_fragment_tel;
+	}
+	public EditText getEditTextPrice() {
+		return et_publish_fragment_price;
+	}
+	public TextView getTextViewLocation() {
+		return tv_publish_fragment_position_set;
+	}
 	/**
 	 * <p>
 	 * 取得最外层布局
 	 * </p>
 	 * 
-	 * @return	返回最外层RelativeLayout
+	 * @return 返回最外层RelativeLayout
 	 */
 	public RelativeLayout getRelativeLayoutMain() {
 		return rl_publish_fragment_main;
 	}
+
 	/**
 	 * <p>
 	 * 取得语音控件
 	 * </p>
 	 * 
-	 * @return	返回最外层RelativeLayout
+	 * @return 返回最外层RelativeLayout
 	 */
 	public ImageView getVoiceImageView() {
 		return iv_publish_fragment_voice;
 	}
-	
+
 	public void notifyGridView(List<String> paths) {
 		if (PublishConfigManger.publishPictureUrl.size() != 0) {
 			publishGridViewAdapter = new PublishGridViewAdapter(getActivity(),
@@ -556,5 +529,14 @@ public class PublishFragment extends BaseFragment {
 			gv_publish_fragment_photo.setAdapter(publishGridViewAdapter);
 		}
 	}
-
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (resultCode) {
+		case PublishConfigManger.PUBLISH_RESULT_OK:
+			tv_publish_fragment_position_set.setText(data.getStringExtra(PublishConfigManger.publishBackActivityIdentificationKey));
+			break;
+		default:
+			break;
+		}
+	}
 }

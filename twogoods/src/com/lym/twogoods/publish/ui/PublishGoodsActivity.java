@@ -2,21 +2,24 @@ package com.lym.twogoods.publish.ui;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
+import com.lym.twogoods.eventbus.event.FinishRecordEvent;
 import com.lym.twogoods.fragment.PublishFragment;
 import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.message.listener.RecordPlayClickListener;
 import com.lym.twogoods.publish.manger.PublishConfigManger;
+import com.lym.twogoods.publish.util.DataMangerUtils;
 import com.lym.twogoods.ui.SendPictureActivity;
 import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
 import com.lym.twogoods.widget.WrapContentViewPager;
+
+import de.greenrobot.event.EventBus;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,7 +28,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * <p>
@@ -46,18 +48,8 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 	private ImageView iv_publish_fragment_add_voice;
 	private WrapContentViewPager vp_publish_fragement_emoji;
 	private LinearLayout ll_publish_fragment_bottom_chat;
-	//语音相关控件
-	private ImageView iv_showIsReconding;
-	private TextView tv_recondPressTip;
-	private LinearLayout tv_finish_recond_tip;
-	private ImageView iv_recondVoice;
-	/**录音监听器*/
-	//private RecondTouchListener mRecondTouchListener;
-	/**话筒动画*/
-	private Drawable[] drawable_Anims;
 	// 表情适配器
 	private EmotionViewPagerAdapter emotionViewPagerAdapter;
-
 	// 表情布局和语音是否显示的标志
 	private boolean mEmotionLayoutIsShowing = false;
 	private boolean mChatLayoutIsShowing = false;
@@ -84,6 +76,7 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		EventBus.getDefault().register(this);
 		init();
 		emotionViewPagerAdapter = new EmotionViewPagerAdapter(
 				PublishGoodsActivity.this, null);
@@ -105,22 +98,6 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 		publishFragment = new PublishFragment();
 		addFragment(publishFragment);
 		showFragment(publishFragment);
-		initVoiceConfig();
-	}
-	//初始化语音相关配置
-	private void initVoiceConfig() {
-		iv_showIsReconding=(ImageView) publish_bottom.findViewById(R.id.message_chat_show_is_recording_iv);
-		tv_recondPressTip = (TextView)publish_bottom.findViewById(R.id.message_chat_recond_press_tip);
-		tv_finish_recond_tip = (LinearLayout) publish_bottom.findViewById(R.id.message_chat_finish_recond_tip_tv);
-		iv_recondVoice = (ImageView) publish_bottom.findViewById(R.id.message_chat_record);
-		//给录音控件设置触摸事件
-		//mRecondTouchListener = new RecondTouchListener(getApplicationContext(),mHandler);
-		//iv_recondVoice.setOnTouchListener(mRecondTouchListener);
-		//初始化在录音时音量改变的动画
-		drawable_Anims = new Drawable[] {
-		getResources().getDrawable(R.drawable.message_chat_reconding_audio1),
-		getResources().getDrawable(R.drawable.message_chat_reconding_audio2),
-		getResources().getDrawable(R.drawable.message_chat_reconding_audio3) };
 	}
 
 	@Override
@@ -131,6 +108,23 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 		hideBottomLayout();
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		EventBus.getDefault().unregister(this);
+	}
+	
+	/**
+	 * 通过eventBus来监听完成录音的操作，
+	 * @param event 完成录音的事件
+	 */
+	public void onEventMainThread(FinishRecordEvent event) {  
+		 String path = event.getPath();
+		 PublishConfigManger.voicePath=path;
+		 updateVoiceImageView(publishFragment.getVoiceImageView());
+		 Log.v(TGA, path+"是录音的路径");
+   }  
+	
 	private void hideBottomLayout() {
 		/**
 		 * 点击最外层布局隐藏底部控件
@@ -267,65 +261,30 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode==KeyEvent.KEYCODE_BACK) {
-			new AlertDialog.Builder(this).setMessage("你真的要放弃发布吗......").setPositiveButton("我确定...", new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					finish();
-				}
-			}).setNegativeButton("我后悔了...", new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
+			if (DataMangerUtils.goodsDescriptionIsWrote(this, publishFragment.getEditTextDescription(), publishFragment.getEditTextTel(), publishFragment.getEditTextPrice(), publishFragment.getTextViewLocation())) {
+				new AlertDialog.Builder(this).setMessage("你真的要放弃发布吗......").setPositiveButton("我确定...", new DialogInterface.OnClickListener() {
 					
-				}
-			}).show();
-			return true;
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						finish();
+					}
+				}).setNegativeButton("我后悔了...", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						
+					}
+				}).show();
+				return true;
+			}else {
+				finish();
+				return true;
+			}
 		}else {
 			return super.onKeyDown(keyCode, event);
 		}
 	}
 	
-	/**ChatActivity的Handler*/
-	private Handler mHandler = new Handler()
-	{
-		public void handleMessage(android.os.Message msg)
-		{
-			switch(msg.what){
-			//开始录音
-			case MessageConfig.START_RECORD:
-				iv_showIsReconding.setVisibility(View.VISIBLE);
-				tv_recondPressTip.setVisibility(View.INVISIBLE);
-				tv_finish_recond_tip.setVisibility(View.VISIBLE);
-				break;
-			//放弃录音
-			case MessageConfig.ABANDON_RECORD:
-				Toast.makeText(getApplicationContext(), "放弃录音", Toast.LENGTH_LONG).show();
-				iv_showIsReconding.setVisibility(View.INVISIBLE);
-				tv_recondPressTip.setVisibility(View.INVISIBLE);
-				tv_finish_recond_tip.setVisibility(View.INVISIBLE);
-				break;
-			//结束录音	
-			case MessageConfig.FINISH_RECORD:
-				iv_showIsReconding.setVisibility(View.INVISIBLE);
-				tv_recondPressTip.setVisibility(View.VISIBLE);
-				tv_finish_recond_tip.setVisibility(View.INVISIBLE);
-				
-				Bundle data = msg.getData();
-				//拿到音频文件的路径
-				String path = data.getString("filename");
-				PublishConfigManger.voicePath=path;
-				Toast.makeText(getApplicationContext(), "录音结束", Toast.LENGTH_SHORT).show();
-				hideChatLayout();
-				updateVoiceImageView(publishFragment.getVoiceImageView());
-				break;
-				
-			case MessageConfig.HIDE_BOTTOM:
-				hideChatLayout();
-			}
-		}
-
-	};
 	/**
 	 * <p>
 	 * 		当用户使用了语音功能，这时候语音控件会显示出来，并设置语音控件相关点击事件。
@@ -345,13 +304,11 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 					return true;
 				}
 			});
-			imageView.setOnClickListener(new OnClickListener() {
-				//播放语音
-				@Override
-				public void onClick(View v) {
-					
-				}
-			});
+			RecordPlayClickListener recordPlayClickListener=new RecordPlayClickListener(getApplicationContext());
+			recordPlayClickListener.setFilePath(PublishConfigManger.voicePath);
+			recordPlayClickListener.setImageView(imageView);
+			recordPlayClickListener.setIsChatMsg(false);
+			//imageView.setOnClickListener(recordPlayClickListener);
 		}
 	}
 }

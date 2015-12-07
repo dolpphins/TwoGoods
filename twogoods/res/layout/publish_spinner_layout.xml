@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	发布商品中spinner布局
+	@author lyw
+ -->
+ 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/ll_publish_spinner_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/publish_spinner_title_background"
+        android:orientation="horizontal"
+        android:padding="@dimen/publish_spinner_layout_title_padding" >
+
+        <ImageView
+            android:id="@+id/iv_publish_spinner_title_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/publish_spinner_layout_title_icon_marginRight"
+            android:src="@drawable/publish_spinner_title_tick" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/publish_spinner_title"
+            android:textColor="@color/publish_spinner_title_textcolor"
+            android:textSize="@dimen/publish_spinner_layout_title_textsize" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_publish_spinner_list"
+        android:layout_width="fill_parent"
+        android:padding="0.0dp"
+        android:layout_height="0.0dp"
+        android:layout_weight="1"
+        android:cacheColorHint="@null"
+        android:divider="@android:drawable/divider_horizontal_bright"
+        android:scrollbars="none" >
+    </ListView>
+
+</LinearLayout>

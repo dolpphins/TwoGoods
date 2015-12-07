@@ -38,14 +38,10 @@ public class DataMangerUtils {
 		return true;
 	}
 	
-	public static boolean goodsDescriptionIsWrote(Activity activity,EditText et_publish_fragment_description,Spinner sp_publish_fragment_sort,EditText et_publish_fragment_tel,EditText et_publish_fragment_price,Spinner sp_publish_fragment_date,TextView tv_publish_fragment_position_set) {
+	public static boolean goodsDescriptionIsWrote(Activity activity,EditText et_publish_fragment_description,EditText et_publish_fragment_tel,EditText et_publish_fragment_price,TextView tv_publish_fragment_position_set) {
 		if (((et_publish_fragment_description.getText().toString()).equals(""))
-				&& ((sp_publish_fragment_sort.getSelectedItem().toString())
-						.equals(""))
 				&& ((et_publish_fragment_tel.getText().toString()).equals(""))
 				&& ((et_publish_fragment_price.getText().toString()).equals(""))
-				&& ((sp_publish_fragment_date.getSelectedItem().toString())
-						.equals(""))
 				&& ((tv_publish_fragment_position_set.getText().toString())
 						.equals(""))){
 			return false;

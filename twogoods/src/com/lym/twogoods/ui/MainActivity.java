@@ -11,6 +11,7 @@ import com.lym.twogoods.fragment.MineFragment;
 import com.lym.twogoods.fragment.NearbyFragment;
 import com.lym.twogoods.index.ui.GoodsSearchActivity;
 import com.lym.twogoods.nearby.ui.SelectCityActivity;
+import com.lym.twogoods.publish.manger.PublishConfigManger;
 import com.lym.twogoods.publish.ui.PublishGoodsActivity;
 import com.lym.twogoods.receiver.NetworkTipsBroadcastReceiver;
 import com.lym.twogoods.screen.DisplayUtils;
@@ -246,6 +247,7 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 						@Override
 						public void onClick(View v) {
 							Intent intent = new Intent(MainActivity.this, SelectCityActivity.class);
+							intent.putExtra(PublishConfigManger.publishActivityIdentificationKey, "MainActivity");
 							startActivity(intent);
 						}
 					});
