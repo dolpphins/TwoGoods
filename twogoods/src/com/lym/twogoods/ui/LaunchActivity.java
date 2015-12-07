@@ -1,19 +1,20 @@
 package com.lym.twogoods.ui;
 
-import cn.bmob.v3.Bmob;
-
-import com.lym.twogoods.AccessTokenKeeper;
+import com.lym.twogoods.AppManager;
 import com.lym.twogoods.R;
-import com.lym.twogoods.UserInfoManager;
+import com.lym.twogoods.bean.Login;
 import com.lym.twogoods.bean.User;
-import com.lym.twogoods.config.UserConfiguration;
+import com.lym.twogoods.config.SharePreferencesConfiguration;
+import com.lym.twogoods.user.Loginer;
+import com.lym.twogoods.user.listener.DefaultLoginListener;
+import com.lym.twogoods.utils.SharePreferencesManager;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 
 /**
@@ -27,18 +28,64 @@ public class LaunchActivity extends Activity {
 	private Button btn_login_choice_direct;
 	private Button btn_login_choice_login;
 
+	//private ProgressDialog pd;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		// 初始化Bmob SDK
-		Bmob.initialize(this, AccessTokenKeeper.Bmob_ApplicationID);
+		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.app_login_choice_activity);
 
 		init();
 		clickEvent();
-
+		
+		//自动登录
+		autoLogin();
+	}
+	
+	private void autoLogin() {
+		SharePreferencesManager spm = SharePreferencesManager.getInstance();
+		int versionCode = spm.getInt(getApplicationContext(), SharePreferencesConfiguration.APP_VERSION_CODE_KEY, -1);
+		if(AppManager.isUpdate(getApplicationContext(), versionCode)) {
+			spm.putInt(getApplicationContext(), SharePreferencesConfiguration.APP_VERSION_CODE_KEY, AppManager.getAppVersion(getApplicationContext()));
+			btn_login_choice_direct.setVisibility(View.VISIBLE);
+			btn_login_choice_login.setVisibility(View.VISIBLE);
+		} else {
+			String username = spm.getLoginMessageString(getApplicationContext(), SharePreferencesConfiguration.LOGIN_USERNAME_KEY, null);
+			String password = spm.getLoginMessageString(getApplicationContext(), SharePreferencesConfiguration.LOGIN_PASSWORD_KEY, null);
+			//自动登录
+			Login item = new Login();
+			item.setUsername(username);
+			item.setPassword(password);
+			//显示进度框
+//			if(pd == null) {
+//				pd = new ProgressDialog(this);
+//				pd.setCancelable(false);
+//			}
+//			pd.show();
+			Loginer.getInstance().login(getApplicationContext(), item, new DefaultLoginListener(getApplicationContext()){
+				
+				@Override
+				public void onError(int errorCode) {
+					super.onError(errorCode);
+					handleLoginFinish();
+				}
+				
+				@Override
+				public void onSuccess(User user) {
+					super.onSuccess(user);
+					handleLoginFinish();
+				}
+			});
+		}
+	}
+	
+	private void handleLoginFinish() {
+		//pd.dismiss();
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 	private void init() {
@@ -55,6 +102,7 @@ public class LaunchActivity extends Activity {
 				Intent intent = new Intent(LaunchActivity.this,
 						MainActivity.class);
 				startActivity(intent);
+				finish();
 			}
 		});
 

@@ -3,6 +3,7 @@
     <color name="white">#ffffff</color>
     <color name="red">#ff0000</color>
     <color name="black">#000000</color>
+    <color name="gray">#cccccc</color>
     <!-- common -->
     	<!-- ActionBar -->
     <color name="app_common_actionbar_bg">#3190e8</color>    <!-- ActionBar背景颜色 -->
@@ -12,8 +13,8 @@
     <color name="app_tab_backgound_bg">#ffffff</color>       <!-- Tab背景颜色 -->
     
 	<color name="common_listview_item_sel">#eaeaea</color>    
-    
-    
+    <!-- 快速登录对话框 -->
+    <color name="app_fast_login_dialog_login_textColor">#fecd99</color>
     
     
     

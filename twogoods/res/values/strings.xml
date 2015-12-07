@@ -2,7 +2,21 @@
 
     <!-- common string -->
     <string name="app_name">twogoods</string>
-
+    
+    <!-- 快速登录对话框 -->
+	<string name="app_fast_login_register_tip">还没账号? 去注册</string>
+	<string name="app_fast_login_unknown_tip">未知错误</string>
+	<string name="app_fast_login_illegalarguments_tip">非法参数</string>
+	<string name="app_fast_login_usernameempty_tip">用户名不能为空</string>
+	<string name="app_fast_login_usernameillegal_tip">用户名格式错误</string>
+    <string name="app_fast_login_passwordempty_tip">密码不能为空</string>
+    <string name="app_fast_login_passwordillegal_tip">密码格式错误</string>
+    <string name="app_fast_login_phoneempty_tip">手机号码为空</string>
+    <string name="app_fast_login_phoneillegal_tip">手机号码格式错误</string>
+    <string name="app_fast_login_vertifycodeempty_tip">验证码不能为空</string>
+	<string name="app_fast_login_vertifycodeincorrect_tip">验证码不正确</string>
+    <string name="app_fast_login_username_password_incorrect_tip">用户名或密码不正确</string>
+	
     <!-- XListView -->
 	<string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>

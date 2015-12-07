@@ -6,6 +6,7 @@ import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.GoodsComment;
 import com.lym.twogoods.config.ShareConfiguration;
+import com.lym.twogoods.dialog.FastLoginDialog;
 import com.lym.twogoods.fragment.GoodsDetailFragment;
 import com.lym.twogoods.index.adapter.GoodsShareListViewAdapter;
 import com.lym.twogoods.index.interf.OnGoodsCommentReplyListener;
@@ -147,7 +148,7 @@ public class GoodsDetailActivity extends BottomDockBackFragmentActivity {
 				public void onClick(View v) {
 					String comment = app_goods_detail_write_comment_input.getText().toString();
 					if(!UserInfoManager.getInstance().isLogining()) {
-						
+						showFastLoginDialog();
 					} else if(TextUtils.isEmpty(comment)) {
 						
 					} else {
@@ -255,6 +256,14 @@ public class GoodsDetailActivity extends BottomDockBackFragmentActivity {
 			mSharePopupWindow.dismiss();
 			mShareLayoutIsShowing = false;
 		}
+	}
+	
+	//显示快速登录对话框
+	private void showFastLoginDialog() {
+		//注意显示Dialog不能用Application上下文
+		//FastLoginDialog dialog = new FastLoginDialog(getApplicationContext());
+		FastLoginDialog dialog = new FastLoginDialog(this);
+		dialog.show();
 	}
 	
 	private class GoodsCommentPublishListener implements OnPublishCommentListener {
