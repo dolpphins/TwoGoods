@@ -106,10 +106,12 @@ public class ImageCusView extends LinearLayout implements View.OnTouchListener{
 	public void setTextViewText(String text) {
 		press_tip.setText(text);
 	}
+	
 	/**
+	 * 设置文件的保存路径，有语音和商品两个缓存路径可选择
 	 * @param i 该参数的取值只能在RecordConfig中选择。
 	 */
-	public void setFilePath(int i){
+	public void setFileSavePath(int i){
 		if(i<1||i>2)
 			return;
 		whichPath = i;

@@ -203,28 +203,23 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 				if(item.getMessage_type()==ChatConfiguration.TYPE_MESSAGE_VOICE){
 					if(tv_voice_length!=null)
 						tv_voice_length.setVisibility(View.VISIBLE);
-			}else if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_FAILED){//服务器无响应或者查询失败等原因造成的发送失败，均需要重发
+				}
+			}else {
+				if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_FAILED){//服务器无响应或者查询失败等原因造成的发送失败，均需要重发
 				Log.i(TAG,"发送状态：失败");
 				progress_load.setVisibility(View.INVISIBLE);
 				iv_fail_resend.setVisibility(View.VISIBLE);
 				if(item.getMessage_type()==ChatConfiguration.TYPE_MESSAGE_VOICE){
 					tv_voice_length.setVisibility(View.GONE);
+					}
+				}else if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_ING){//开始上传
+					Log.i(TAG,"发送状态：开始上传");
+					progress_load.setVisibility(View.VISIBLE);
+					iv_fail_resend.setVisibility(View.INVISIBLE);
+					if(item.getMessage_type()==ChatConfiguration.TYPE_MESSAGE_VOICE){
+						tv_voice_length.setVisibility(View.GONE);
+					}
 				}
-			}else if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_RECEIVERED){//对方已接收到
-				Log.i(TAG,"发送状态：对方已经接收");
-				progress_load.setVisibility(View.INVISIBLE);
-				iv_fail_resend.setVisibility(View.INVISIBLE);
-				if(item.getMessage_type()==ChatConfiguration.TYPE_MESSAGE_VOICE){
-					tv_voice_length.setVisibility(View.VISIBLE);
-				}
-			}else if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_START){//开始上传
-				Log.i(TAG,"发送状态：开始上传");
-				progress_load.setVisibility(View.VISIBLE);
-				iv_fail_resend.setVisibility(View.INVISIBLE);
-				if(item.getMessage_type()==ChatConfiguration.TYPE_MESSAGE_VOICE){
-					tv_voice_length.setVisibility(View.GONE);
-				}
-			}
 			}
 		}
 		//根据消息内容的类别来显示
@@ -291,6 +286,7 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 		last_message_time = item.getPublish_time();
 		return convertView;
 	}
+	
 	private String getImageUrl(ChatDetailBean item){
 		String showUrl = "";
 		String content = item.getMessage();
