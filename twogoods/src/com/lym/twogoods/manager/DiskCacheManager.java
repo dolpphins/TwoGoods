@@ -1,5 +1,7 @@
 package com.lym.twogoods.manager;
 
+import com.lym.twogoods.utils.FileUtil;
+
 import android.content.Context;
 import android.os.Environment;
 
@@ -17,6 +19,10 @@ public class DiskCacheManager {
 
 	/** 磁盘缓存基本路径 */
 	private String sBaseDiskCachePath;
+	
+	/** 应用SD卡目录 */
+	private String appSdPath;
+	
 	
 	/** 头像缓存子目录 */
 	private final String sHeadPictureCachePath = "/user/header/";
@@ -60,8 +66,10 @@ public class DiskCacheManager {
 				if(sBaseDiskCachePath == null) {
 					if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
 						sBaseDiskCachePath = context.getExternalCacheDir().getAbsolutePath();
+						appSdPath = Environment.getExternalStorageDirectory().getPath() + "/twogoods/";
 					} else {
 						sBaseDiskCachePath = context.getCacheDir().getAbsolutePath();
+						appSdPath = "";
 					}
 				}
 			}
@@ -145,4 +153,21 @@ public class DiskCacheManager {
 		return sBaseDiskCachePath + defaultPictureCachePath;
 	}
 	
+	/**
+	 * 获取缓存大小
+	 * 
+	 * @return 返回缓存大小,以字节为单位
+	 */
+	public long getCacheSize() {
+		return FileUtil.getFolderSize(sBaseDiskCachePath);
+	}
+	
+	/**
+	 * 获取应用SD卡目录
+	 * 
+	 * @return 返回应用SD卡目录 
+	 */
+	public String getAppSdPath() {
+		return appSdPath;
+	}
 }

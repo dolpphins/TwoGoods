@@ -80,7 +80,7 @@
     <dimen name="index_goods_detail_username_marginLeft">5dip</dimen> 
     <dimen name="index_goods_detail_username_textSize">16sp</dimen> 
     <dimen name="index_goods_detail_publish_time_marginLeft">5dip</dimen>
-	<dimen name="index_goods_detail_phone_marginTop">5dip</dimen>
+	<dimen name="index_goods_detail_phone_marginTop">10dip</dimen>
 	<dimen name="index_goods_detail_comment_title_textSize">18sp</dimen>
 	<dimen name="index_goods_detail_comment_title_marginLeft">10dip</dimen>
 	<dimen name="index_goods_detail_comment_title_marginTop">10dip</dimen>
@@ -89,6 +89,7 @@
 	<dimen name="index_goods_detail_comment_item_hp_marginRight">10dip</dimen>
 	<dimen name="index_goods_detail_comment_item_personality_marginBottom">10dip</dimen>
 	<dimen name="index_goods_detail_comment_item_content_marginTop">10dip</dimen>
+	<dimen name="index_goods_detail_comment_item_content_emojiSize">16sp</dimen>
 	<dimen name="index_goods_search_header_padding">10dip</dimen>
 	<dimen name="index_goods_search_search_button_marginLeft">5dip</dimen>
 	<dimen name="index_goods_search_edittext_textSize">18sp</dimen>
@@ -124,11 +125,6 @@
 	<dimen name="mine_list_item_paddingBottom">10dip</dimen>
 	<dimen name="mine_settings_item_marginTop">20dip</dimen>
 	<dimen name="mine_list_item_textSize">18sp</dimen>
-	<dimen name="mine_exit_button_textSize">20sp</dimen>
-	<dimen name="mine_exit_button_marginLeft">50dip</dimen>
-	<dimen name="mine_exit_button_marginRight">50dip</dimen>
-	<dimen name="mine_exit_button_marginTop">25dip</dimen>
-	<dimen name="mine_exit_button_marginBottom">25dip</dimen>
 	<dimen name="mine_publish_goods_marginTop">10dip</dimen>
 	<dimen name="user_detail_more_list_item_padding">10dip</dimen>
 	<dimen name="user_detail_more_list_item_username_marginLeft">10dip</dimen>
@@ -145,9 +141,14 @@
 	<dimen name="app_base_goods_gridview_item_publishtime_textSize">12sp</dimen>
 	<dimen name="app_base_goods_gridview_item_price_marginTop">5dip</dimen>
 	<dimen name="app_base_goods_gridview_item_price_marginBottom">5dip</dimen>
-	
-	
-	
+	<!-- 设置 -->
+	<dimen name="settings_marginTop">10dip</dimen>
+	<dimen name="settings_list_item_textSize">18sp</dimen>
+	<dimen name="settings_exit_button_textSize">20sp</dimen>
+	<dimen name="settings_exit_button_marginLeft">50dip</dimen>
+	<dimen name="settings_exit_button_marginRight">50dip</dimen>
+	<dimen name="settings_exit_button_marginTop">25dip</dimen>
+	<dimen name="settings_exit_button_marginBottom">25dip</dimen>
 	
 	
 	<!-- lyw -->

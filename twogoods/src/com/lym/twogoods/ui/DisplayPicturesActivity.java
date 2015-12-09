@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -75,7 +76,6 @@ public class DisplayPicturesActivity extends BackActivity implements MultiPictur
 			app_dispaly_pictures_viewpager.setOnPageChangeListener(this);
 			app_dispaly_pictures_viewpager.setAdapter(new PicturesViewPagerAdapter());
 			app_dispaly_pictures_viewpager.setCurrentItem(currentIndex);
-			Log.i(TAG, "currentIndex:" + currentIndex);
 			setTitleTip(currentIndex);
 			createImageViews();
 			//开始获取图片
@@ -176,6 +176,7 @@ public class DisplayPicturesActivity extends BackActivity implements MultiPictur
 	@Override
 	public void onPreExecute(int position) {
 		Animation anim = AnimationUtils.loadAnimation(this, R.anim.display_pictures_loading_anim);
+		//anim.setInterpolator(new LinearInterpolator());
 		mImageViews[position].startAnimation(anim);
 	}
 

@@ -2,6 +2,7 @@ package com.lym.twogoods.dialog;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.bean.Login;
+import com.lym.twogoods.bean.User;
 import com.lym.twogoods.ui.RegisterActivity;
 import com.lym.twogoods.user.Loginer;
 import com.lym.twogoods.user.listener.DefaultLoginListener;
@@ -34,6 +35,8 @@ public class FastLoginDialog {
 	private TextView app_fast_login_tip;
 	private TextView app_fast_login_button;
 	private TextView app_fast_login_register;
+	
+	private OnFastLoginListener mFastLoginListener;
 	
 	public FastLoginDialog(Context context) {
 		mContext = context;
@@ -97,6 +100,14 @@ public class FastLoginDialog {
 		}
 	}
 	
+	public void setOnFastLoginListener(OnFastLoginListener listener) {
+		mFastLoginListener = listener;
+	}
+	
+	public OnFastLoginListener getOnFastLoginListener() {
+		return mFastLoginListener;
+	}
+	
 	private class FastLoginListener extends DefaultLoginListener {
 		
 		public FastLoginListener(Context context) {
@@ -113,6 +124,25 @@ public class FastLoginDialog {
 			super.onError(errorCode);
 			String message = Loginer.getErrorMessage(mContext, errorCode);
 			app_fast_login_tip.setText(message);
+			if(mFastLoginListener != null) {
+				mFastLoginListener.onError(errorCode);
+			}
 		}
+		
+		@Override
+		public void onSuccess(User user) {
+			super.onSuccess(user);
+			hide();
+			if(mFastLoginListener != null) {
+				mFastLoginListener.onSuccess(user);
+			}
+		}
+	}
+	
+	public interface OnFastLoginListener {
+		
+		void onError(int errorCode);
+		
+		void onSuccess(User user);
 	}
 }

@@ -10,7 +10,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/index_goods_detail_comment_item_padding"
-    android:background="@color/white">
+    android:background="@color/white" xmlns:app="http://schemas.android.com/apk/res/com.lym.twogoods">
  
    	<!-- 头像 -->
     <ImageView
@@ -45,6 +45,7 @@
         android:layout_toRightOf="@id/index_goods_detail_comment_item_hp"
         android:layout_toEndOf="@id/index_goods_detail_comment_item_hp"
         android:layout_below="@id/index_goods_detail_comment_item_hp"
-        android:layout_marginTop="@dimen/index_goods_detail_comment_item_content_marginTop"/>
+        android:layout_marginTop="@dimen/index_goods_detail_comment_item_content_marginTop"
+        app:emojiSize="@dimen/index_goods_detail_comment_item_content_emojiSize"/>
 
 </RelativeLayout>

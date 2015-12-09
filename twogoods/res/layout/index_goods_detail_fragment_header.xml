@@ -49,7 +49,7 @@
         	android:layout_below="@id/index_goods_detail_price"
         	android:layout_marginRight="@dimen/index_goods_detail_fouse_num_marginBottom"
         	android:layout_marginEnd="@dimen/index_goods_detail_fouse_num_marginBottom"/>
-        <!-- 浏览数 -->
+<!--         浏览数
         <TextView
             android:id="@+id/index_goods_detail_browse_num" 
             android:layout_width="wrap_content"
@@ -57,7 +57,7 @@
         	android:layout_toRightOf="@id/index_goods_detail_fouse_num"
         	android:layout_toEndOf="@id/index_goods_detail_fouse_num"
         	android:layout_alignBaseline="@id/index_goods_detail_fouse_num"
-        	android:text="浏览数200"/>
+        	android:text="浏览数200"/> -->
         <!-- 头像 -->
         <ImageView
             android:id="@+id/index_goods_detail_head_picture" 
@@ -92,15 +92,6 @@
             android:layout_marginStart="@dimen/index_goods_detail_publish_time_marginLeft"
             android:layout_marginRight="@dimen/index_goods_detail_publish_time_marginRight"
             android:layout_marginEnd="@dimen/index_goods_detail_publish_time_marginRight"/>
-        <!-- 发布位置 -->
-        <TextView 
-            android:id="@+id/index_goods_detail_publish_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/index_goods_detail_publish_time"
-            android:layout_toEndOf="@id/index_goods_detail_publish_time"
-            android:layout_alignBaseline="@id/index_goods_detail_publish_time"/>
-        <!-- 联系方式 -->
         <TextView 
             android:id="@+id/index_goods_detail_phone"
             android:layout_width="wrap_content"
@@ -147,6 +138,17 @@
             android:layout_alignEnd="@id/index_goods_detail_description"
             android:layout_alignBaseline="@id/index_goods_detail_phone"
             android:text="@string/goods_report"/>
+        <!-- 发布位置 -->
+        <TextView 
+            android:id="@+id/index_goods_detail_publish_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/index_goods_detail_publish_time"
+            android:layout_toEndOf="@id/index_goods_detail_publish_time"
+            android:layout_toLeftOf="@id/index_goods_detail_contact"
+            android:layout_toStartOf="@id/index_goods_detail_contact"
+            android:layout_alignBaseline="@id/index_goods_detail_publish_time"/>
+        <!-- 联系方式 -->
         
     </RelativeLayout>
     

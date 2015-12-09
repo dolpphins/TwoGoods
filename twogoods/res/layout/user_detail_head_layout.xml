@@ -64,7 +64,7 @@
 	    android:layout_marginTop="@dimen/user_detail_head_username_marginTop"
 	    android:textColor="@color/white"
 	    android:textSize="@dimen/user_detail_head_username_textSize"/>
-	<!-- 浏览数 -->
+ 	<!-- 浏览数 
 	<TextView 
 	    android:id="@+id/user_detail_head_browse_num"
 	    android:layout_width="wrap_content"
@@ -73,13 +73,13 @@
 	    android:layout_below="@id/user_detail_head_username"
 	    android:layout_marginTop="@dimen/user_detail_head_browse_num_marginTop"
 	    android:textColor="@color/white"
-	    android:textSize="@dimen/user_detail_head_browse_num_textSize"/>
+	    android:textSize="@dimen/user_detail_head_browse_num_textSize"/> -->
 	<!-- 简介 -->
 		<TextView
 		    android:id="@+id/user_detail_head_description" 
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:layout_below="@id/user_detail_head_browse_num"
+		    android:layout_below="@id/user_detail_head_username"
 		    android:textSize="@dimen/user_detail_head_description_textSize"
 			android:layout_marginTop="@dimen/user_detail_head_description_marginTop"
 			android:layout_marginBottom="@dimen/user_detail_head_description_marginBottom"/>

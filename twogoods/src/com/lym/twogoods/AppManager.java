@@ -53,4 +53,23 @@ public class AppManager {
 			return false;
 		}
 	}
+	
+	/**
+	 * 获取版本名,即配置清单versionName指定的值
+	 * 
+	 * @param context 上下文,不能为空
+	 * @return 获取成功返回版本名,获取失败返回null.
+	 */
+	public static String getVersionName(Context context) {
+		if(context == null) {
+			return null;
+		}
+		try {
+			PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			return pi.versionName;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

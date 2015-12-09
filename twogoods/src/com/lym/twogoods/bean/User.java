@@ -56,6 +56,10 @@ public class User extends BmobObject implements Serializable{
 	/** 该用户头像网络可访问url */
 	@DatabaseField
 	private String head_url;
+	
+	/** 头像Bmob上传后得到的filename */
+	@DatabaseField
+	private String head_filename;
 
 	/** 发布的贰货数,默认为0 */
 	@DatabaseField
@@ -65,6 +69,9 @@ public class User extends BmobObject implements Serializable{
 	@DatabaseField
 	private int focus_num;
 
+	public User() {
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -154,4 +161,14 @@ public class User extends BmobObject implements Serializable{
 		this.focus_num = focus_num;
 	}
 
+	public String getHead_filename() {
+		return head_filename;
+	}
+
+	public void setHead_filename(String head_filename) {
+		this.head_filename = head_filename;
+	}
+
+	
+	
 }

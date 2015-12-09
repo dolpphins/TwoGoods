@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	公共EditText背景
+
+	@author 麦灿标
+ -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners
+        android:radius="1dip"/>
+    <padding
+        android:left="5dip"
+        android:top="5dip"
+        android:right="5dip"
+        android:bottom="5dip"/>
+    <stroke
+        android:width="1dip"
+        android:color="@color/gray"/>
+</shape>

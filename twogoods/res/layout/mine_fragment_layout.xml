@@ -104,24 +104,6 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="1dip"
 	        android:background="#ccc"/>
-		    
-		<TextView
-		    android:id="@+id/mine_exit_button" 
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:text="@string/exit_account"
-		    android:clickable="true"
-		    android:textSize="@dimen/mine_exit_button_textSize"
-		    android:textColor="@color/white"
-		    android:background="@drawable/mine_exit_button_bg_selector"
-		    android:gravity="center_horizontal"
-		    android:layout_marginLeft="@dimen/mine_exit_button_marginLeft"
-		    android:layout_marginStart="@dimen/mine_exit_button_marginLeft"
-		    android:layout_marginRight="@dimen/mine_exit_button_marginRight"
-		    android:layout_marginEnd="@dimen/mine_exit_button_marginRight"
-		    android:layout_marginTop="@dimen/mine_exit_button_marginTop"
-		    android:layout_marginBottom="@dimen/mine_exit_button_marginBottom"/>
-		
 		
     </LinearLayout>
 </ScrollView>

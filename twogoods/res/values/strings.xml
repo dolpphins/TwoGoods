@@ -2,7 +2,10 @@
 
     <!-- common string -->
     <string name="app_name">twogoods</string>
-    
+    <string name="female">女</string>
+    <string name="select_sex_tip">请选择性别</string>
+    <string name="change_phone_tip">更换联系方式</string>
+    <string name="ok">确定</string>
     <!-- 快速登录对话框 -->
 	<string name="app_fast_login_register_tip">还没账号? 去注册</string>
 	<string name="app_fast_login_unknown_tip">未知错误</string>
@@ -59,6 +62,9 @@
     <string name="goods_report">举报</string>
     <string name="goods_comment">评论</string>
     <string name="goods_comment_reply">回复</string>
+    <string name="goods_report_input_hint">请输入您要举报该商品的原因</string>
+    <string name="goods_report_cancel">取消</string>
+    <string name="goods_report_ok">确定</string>
     <!-- 搜索 -->
     <string name="search_goods">搜贰货</string>
     <string name="search">搜索</string>
@@ -70,17 +76,16 @@
     <string name="mine_publish_goods">我发布的贰货</string>
     <string name="mine_focus_goods">我关注的贰货</string>
     <string name="settings">设置</string>
-    <string name="exit_account">退出</string>
+    <string name="exit_account">退出账号</string>
     <string name="more_personality">更多信息</string>
     <string name="mine_sex">性别</string>
     <string name="mine_phone">联系方式</string>
-    
-    
-    
-    
-    
-    
-    
+    <!-- 设置 -->
+    <string name="settings_version">版本更新</string>
+    <string name="settings_clear_cache">清除缓存</string>
+    <string name="settings_feedback">意见反馈</string>
+    <string name="settings_manual">用户须知</string>
+    <string name="settings_cache_tip">正在计算</string>
     
     
     

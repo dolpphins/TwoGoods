@@ -198,6 +198,37 @@ public class StringUtil {
 	        return buf+"MB";
 	    }  
 	  
-	  
+	    /**
+	     * 将字节大小转换为符合正常习惯的单位字符串
+	     * 
+	     * @param size 注意不能小于0
+	     * @return 返回相应的字符串,如果size小于0件返回null.
+	     * 
+	     * @author 麦灿标
+	     */
+	    public static String byteSize2String(long size) {
+	    	if(size < 0) {
+	    		return null;
+	    	//小于1KB
+	    	} else if(size < 1024) {
+	    		return size + "B";
+	    	} else { 
+	    		DecimalFormat f = new DecimalFormat("#.00");
+	    		long KB = 1024;
+	    		long MB = 1024 * KB;
+	    		long GB = 1024 * MB;
+	    		long TB = 1024 * GB;
+	    		//小于1MB
+	    		if(size < MB) {
+	    			return f.format(((double)size) / KB) + "KB";
+	    		} else if(size < GB) {
+	    			return f.format(((double)size) / MB) + "MB";
+	    		} else if(size < TB) {
+	    			return f.format(((double)size) / GB) + "GB";
+	    		} else {
+	    			return f.format(((double)size) / TB) + "TB";
+	    		}
+	    	}
+	    }
 	    
 }  

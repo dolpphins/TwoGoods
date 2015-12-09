@@ -69,7 +69,7 @@ public abstract class PullGridViewFragment extends BaseListFragment implements I
 		
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new BaseGoodsGridViewAdapter(mAttachActivity, mGoodsList, this);
-		mAbsListViewLoader = new AbsListViewLoader(mAttachActivity, mGridView.getAbsListView(), mAdapter, mGoodsList);
+		mAbsListViewLoader = new AbsListViewLoader(this, mGridView.getAbsListView(), mAdapter, mGoodsList);
 		mOnLoaderListener = new GridViewOnLoaderListener(this, mAbsListViewLoader, mGridView);
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		mGridView.setNumColumns(mGridViewColumnNum);

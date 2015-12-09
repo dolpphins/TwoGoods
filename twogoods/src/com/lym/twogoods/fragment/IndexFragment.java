@@ -23,6 +23,7 @@ import com.lym.twogoods.ui.GoodsDetailActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -495,22 +496,12 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 		//ListView加载器
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new IndexGoodsListAdapter(mAttachActivity, mGoodsList);
-		mAbsListViewLoader = new AbsListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
+		mAbsListViewLoader = new AbsListViewLoader(this, mListView, mAdapter, mGoodsList);
 		mOnLoaderListener = new ListViewOnLoaderListener(this, mAbsListViewLoader, mListView);
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		//mListViewLoader.setLoadCacheFromDisk(true);
 		//mListViewLoader.setSaveCacheToDisk(true);
 		mListView.setAdapter(mAdapter);
-		
-		mListView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent(mAttachActivity, GoodsDetailActivity.class);
-				intent.putExtra("goods", mGoodsList.get(position - 1));
-				startActivity(intent);
-			}
-		});
 	}
 	
 	private void loadDataInit() {
@@ -519,6 +510,7 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 	
 	@Override
 	public void onRefresh() {
+		Log.i(TAG, "onRefresh");
 		reloadData(AbsListViewLoader.Type.REFRESH, false);
 	}
 	

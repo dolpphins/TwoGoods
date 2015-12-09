@@ -10,17 +10,21 @@ import com.lym.twogoods.async.MultiPicturesAsyncTaskExecutor;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.GoodsComment;
 import com.lym.twogoods.bean.GoodsFocus;
+import com.lym.twogoods.bean.Report;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.GoodsConfiguration;
+import com.lym.twogoods.dialog.FastLoginDialog;
 import com.lym.twogoods.fragment.base.PullListFragment;
 import com.lym.twogoods.index.adapter.GoodsCommentListViewAdapter;
 import com.lym.twogoods.index.interf.OnGoodsCommentReplyListener;
 import com.lym.twogoods.index.interf.OnPublishCommentListener;
 import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.manager.ImageLoaderHelper;
+import com.lym.twogoods.message.listener.RecordPlayClickListener;
 import com.lym.twogoods.message.ui.ChatActivity;
 import com.lym.twogoods.screen.DisplayUtils;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
+import com.lym.twogoods.ui.StoreDetailActivity;
 import com.lym.twogoods.utils.NetworkHelper;
 import com.lym.twogoods.utils.TimeUtil;
 import com.lym.twogoods.widget.EmojiTextView;
@@ -31,6 +35,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.LayoutParams;
@@ -39,12 +44,16 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -82,7 +91,11 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 	//包含详细信息所有控件
 	private DetailMessageViewHolder detailMessageViewHolder = new DetailMessageViewHolder();
 	
-	
+	/**
+	 * 关注相关
+	 */
+	private boolean mInitFocusInit = false;
+	private GoodsFocus mGoodsFocusItem;
 	/**
 	 * 评论相关
 	 * */
@@ -90,6 +103,19 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 	private int perPageCount = 10;
 	private GoodsCommentListViewAdapter mGoodsCommentListViewAdapter;
 	private OnGoodsCommentReplyListener mOnGoodsCommentReplyListener;
+	
+	/**
+	 * 举报相关
+	 */
+	private AlertDialog mReportDialog;
+	private EditText report_input;
+	private Button report_ok;
+	private Button report_cancel;
+	
+	/**
+	 * 语音相关
+	 */
+	private RecordPlayClickListener mRecognitionListener;
 	
 	/**
 	 * 构造函数
@@ -125,6 +151,8 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 
 		//开始获取数据
 		getData();
+		//开始更新数据
+		updateData();
 		
 		return v;
 	}
@@ -144,7 +172,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 				mImageViews[i].setScaleType(ScaleType.CENTER);
 				mImageViews[i].setImageResource(R.drawable.message_chat_pictures_no);
 				mWrapLayouts[i].addView(mImageViews[i]);
-				setOnClickForImageView(mImageViews[i]);
+				setOnClickForImageView(mImageViews[i], i);
 			}
 			
 			PicturesViewPagerAdapter adapter = new PicturesViewPagerAdapter();
@@ -156,7 +184,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 			mPicturesViewPager.setAdapter(adapter);
 		}
 		
-		detailMessageViewHolder.index_goods_detail_browse_num = (TextView) mHeaderLayout.findViewById(R.id.index_goods_detail_browse_num);
+		//detailMessageViewHolder.index_goods_detail_browse_num = (TextView) mHeaderLayout.findViewById(R.id.index_goods_detail_browse_num);
 		detailMessageViewHolder.index_goods_detail_contact = (ImageView) mHeaderLayout.findViewById(R.id.index_goods_detail_contact);
 		detailMessageViewHolder.index_goods_detail_description = (EmojiTextView) mHeaderLayout.findViewById(R.id.index_goods_detail_description);
 		detailMessageViewHolder.index_goods_detail_focus = (TextView) mHeaderLayout.findViewById(R.id.index_goods_detail_focus);
@@ -179,7 +207,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 			//关注数
 			detailMessageViewHolder.index_goods_detail_fouse_num.setText("关注数 " + mData.getFocus_num());
 			//浏览数
-			detailMessageViewHolder.index_goods_detail_browse_num.setText("浏览数 " + mData.getBrowse_num() + "");
+			//detailMessageViewHolder.index_goods_detail_browse_num.setText("浏览数 " + mData.getBrowse_num() + "");
 			//联系方式
 			detailMessageViewHolder.index_goods_detail_phone.setText("联系方式 " + mData.getPhone());
 			//价格
@@ -192,30 +220,19 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 			detailMessageViewHolder.index_goods_detail_username.setText(mData.getUsername());
 			
 			//头像
-			ImageLoaderHelper.loadUserHeadPictureThumnail(mAttachActivity,
-					detailMessageViewHolder.index_goods_detail_head_picture, mData.getHead_url(), null);
-
+			initHeadPicture();
+			
 			//关注
 			initForFocus();
 			
+			//语音
+			initForVoice();
+			
 			//联系商家
 			initForContact();
-
-			detailMessageViewHolder.index_goods_detail_contact.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					//检查是否登录
-					//跳转到聊天页面
-					User user = new User();
-					user.setUsername(mData.getUsername());
-					user.setHead_url(mData.getHead_url());
-					Intent intent = new Intent(mAttachActivity, ChatActivity.class);
-					intent.putExtra("otherUser", user);
-					startActivity(intent);
-					getActivity().finish();
-				}
-			});
+			
+			//举报
+			initForReport();
 		}
 	}
 	
@@ -266,7 +283,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		});
 	}
 	
-	private void setOnClickForImageView(ImageView iv) {
+	private void setOnClickForImageView(ImageView iv, final int position) {
 		if(iv == null) {
 			return;
 		}
@@ -276,6 +293,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 			public void onClick(View v) {
 				Intent intent = new Intent(mAttachActivity, DisplayPicturesActivity.class);
 				intent.putStringArrayListExtra("picturesUrlList", mData.getPictureUrlList());
+				intent.putExtra("currentIndex", position);
 				startActivity(intent);
 			}
 		});
@@ -302,6 +320,25 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		
 		//尝试加载评论信息
 		tryLoadCommentDataFromNetwork();
+	}
+	
+	private void updateData() {
+//		BmobQuery<Goods> query = new BmobQuery<Goods>();
+//		query.addWhereEqualTo("objectId", mData.getObjectId());
+//		query.findObjects(mAttachActivity, new FindListener<Goods>() {
+//			
+//			@Override
+//			public void onSuccess(List<Goods> goodsList) {
+//				if(goodsList != null && goodsList.size() == 1) {
+//					Goods item = goodsList.get(0);
+//					item.setBrowse_num(item.getBrowse_num() + 1);
+//					item.update(mAttachActivity);
+//				}
+//			}
+//			@Override
+//			public void onError(int arg0, String arg1) {				
+//			}
+//		});
 	}
 	
 	//尝试从网络获取评论信息
@@ -354,35 +391,328 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		}
 	}
 	
-	private class PicturesViewPagerAdapter extends PagerAdapter {
-		
-		@Override
-		public int getCount() {
-			if(mData.getPictureUrlList() != null) {
-				return mData.getPictureUrlList().size();
+	private void initHeadPicture() {
+		ImageLoaderHelper.loadUserHeadPictureThumnail(mAttachActivity,
+				detailMessageViewHolder.index_goods_detail_head_picture, mData.getHead_url(), null);
+		//用户相关信息子布局点击事件,跳转到某一用户主页
+		detailMessageViewHolder.index_goods_detail_head_picture.setOnTouchListener(new OnTouchListener() {
+					
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					
+					break;
+				case MotionEvent.ACTION_UP:
+					Intent intent = new Intent(mAttachActivity, StoreDetailActivity.class);
+					User user = buildUserByGoods(mData);
+					intent.putExtra("user", user);
+					mAttachActivity.startActivity(intent);
+					break;
+				default:
+					break;
+				}
+				return true;
 			}
-			return 0;
+		});
+	}
+	
+	//由Goods对象转User对象
+	private User buildUserByGoods(Goods g) {
+		if(g == null) {
+			return null;
 		}
-
-		@Override
-		public boolean isViewFromObject(View arg0, Object arg1) {
-			return arg0 == arg1;
-		}
-		
-		@Override
-		public void destroyItem(View container, int position, Object object) {
-			((ViewPager)container).removeView(mWrapLayouts[position % mWrapLayouts.length]);
+		User user = new User();
+		user.setUsername(g.getUsername());
+		user.setHead_url(g.getHead_url());
+		return user;
+	}
+	
+	//初始化关注
+	private void initForFocus() {
+		setClickForFocus();
+		requestFocusData();
+	}
+	
+	private void requestFocusData() {
+		//请求初始化数据
+		if(UserInfoManager.getInstance().isLogining()) {
+			final User user = UserInfoManager.getInstance().getmCurrent();
+			if(user.getUsername().equals(mData.getUsername())) {
+				detailMessageViewHolder.index_goods_detail_focus.setVisibility(View.GONE);
+			} else {
+				BmobQuery<GoodsFocus> query = new BmobQuery<GoodsFocus>();
+				query.addWhereEqualTo("username", user.getUsername());
+				query.addWhereEqualTo("goods_objectId", mData.getObjectId());
+				query.findObjects(mAttachActivity, new FindListener<GoodsFocus>() {
+					
+					@Override
+					public void onSuccess(List<GoodsFocus> goodsFocusList) {
+						if(goodsFocusList != null && goodsFocusList.size() == 0) {
+							detailMessageViewHolder.index_goods_detail_focus.setText("关注");
+//									mGoodsFocusItem = new GoodsFocus();
+//									mGoodsFocusItem.setUsername(user.getUsername());
+						} else if(goodsFocusList != null && goodsFocusList.size() == 1) {
+							detailMessageViewHolder.index_goods_detail_focus.setText("已关注");
+							mGoodsFocusItem = goodsFocusList.get(0);
+						}
+						mInitFocusInit = true;
+					}
+					
+					@Override
+					public void onError(int arg0, String arg1) {						
+					}
+				});
+			}
+		} else {
 			
 		}
-
-		@Override
-		public Object instantiateItem(View container, int position) {
-			((ViewPager)container).addView(mWrapLayouts[position % mWrapLayouts.length], 0);
-			return mWrapLayouts[position % mWrapLayouts.length];
-		}
-		
 	}
+	
+	//item可能为null
+	private void setClickForFocus() {
+		detailMessageViewHolder.index_goods_detail_focus.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(!UserInfoManager.getInstance().isLogining()) {
+					//提示登录
+					showFastLoginDialog();
+				} else {
+					//已关注
+					if(mGoodsFocusItem != null) {
+						mGoodsFocusItem.delete(mAttachActivity, new DeleteListener() {
+							@Override
+							public void onSuccess() {
+								detailMessageViewHolder.index_goods_detail_focus.setText("关注");
+								mGoodsFocusItem = null;
+								//更新关注数
+								mData.setFocus_num(mData.getFocus_num() - 1);
+								mData.update(mAttachActivity);
+								updateUI();
+							}
+							@Override
+							public void onFailure(int arg0, String arg1) {}
+						});
+					//未关注
+					} else if(mInitFocusInit) {
+						mGoodsFocusItem = new GoodsFocus();
+						mGoodsFocusItem.setUsername(UserInfoManager.getInstance().getmCurrent().getUsername());
+						mGoodsFocusItem.setGoods_objectId(mData.getObjectId());
+						mGoodsFocusItem.save(mAttachActivity, new SaveListener() {
+							@Override
+							public void onSuccess() {
+								detailMessageViewHolder.index_goods_detail_focus.setText("已关注");
+								mData.setFocus_num(mData.getFocus_num() + 1);
+								mData.update(mAttachActivity);
+								updateUI();
+							}
+							@Override
+							public void onFailure(int arg0, String arg1) {
+								mGoodsFocusItem = null;//请求关注失败
+							}
+						});
+					}
+				}
+			}
+		});
+	}
+	
+	//未测试
+	private void initForVoice() {
+		String url = mData.getVoice_url();
+		Log.i(TAG, "voice url:" + url);
+		if(TextUtils.isEmpty(url)) {
+			detailMessageViewHolder.index_goods_detail_voice.setVisibility(View.GONE);
+		} else {
+			if(mRecognitionListener == null) {
+				mRecognitionListener = new RecordPlayClickListener(mAttachActivity, url,
+						detailMessageViewHolder.index_goods_detail_voice, true, false);
+			}
+		}
+	}
+	
+	private void initForContact() {
+		String username = UserInfoManager.getInstance().isLogining() ? UserInfoManager.getInstance().getmCurrent().getUsername() : null; 
+		if(username != null && username.equals(mData.getUsername())) {
+			detailMessageViewHolder.index_goods_detail_contact.setVisibility(View.GONE);
+		} else {
+			detailMessageViewHolder.index_goods_detail_contact.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(!UserInfoManager.getInstance().isLogining()) {
+						//提示登录
+						showFastLoginDialog();
+					} else {
+						//跳转到聊天页面
+						User user = new User();
+						user.setUsername(mData.getUsername());
+						user.setHead_url(mData.getHead_url());
+						Intent intent = new Intent(mAttachActivity, ChatActivity.class);
+						intent.putExtra("otherUser", user);
+						mAttachActivity.startActivity(intent);
+						mAttachActivity.finish();
+					}
+				}
+			});
+		}
+	}
+	
+	private void initForReport() {
+		initWriteReportDialog();
+		String username = UserInfoManager.getInstance().isLogining() ? UserInfoManager.getInstance().getmCurrent().getUsername() : null; 
+		if(username != null && username.equals(mData.getUsername())) {
+			detailMessageViewHolder.index_goods_detail_report.setVisibility(View.GONE);
+		} else {
+			detailMessageViewHolder.index_goods_detail_report.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(!UserInfoManager.getInstance().isLogining()) {
+						//提示登录
+						showFastLoginDialog();
+					} else {
+						//弹出举报框
+						mReportDialog.show();
+					}
+				}
+			});
+		}
+	}
+	
+	private void initWriteReportDialog() {
+		mReportDialog = new AlertDialog.Builder(mAttachActivity).create();
+		mReportDialog.setCanceledOnTouchOutside(false);
+        View v = LayoutInflater.from(mAttachActivity).inflate(R.layout.write_report_layout, null);
+        mReportDialog.setView(v);
 
+        report_input = (EditText) v.findViewById(R.id.report_input);
+        report_cancel = (Button) v.findViewById(R.id.report_cancel);
+        report_ok = (Button) v.findViewById(R.id.report_ok);
+
+        report_cancel.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+            	mReportDialog.cancel();
+            }
+        });
+        report_ok.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                String text = report_input.getText().toString();
+                if(!TextUtils.isEmpty(text)) {
+                	//再次检查是否登录
+                	if(UserInfoManager.getInstance().isLogining()) {
+                		String username = UserInfoManager.getInstance().getmCurrent().getUsername();
+                		Report report = new Report();
+                        report.setMessage(text);
+                        report.setGoods_objectId(mData.getObjectId());
+                        report.setTime(System.currentTimeMillis());
+                        report.setUsername(username);
+                        report.save(mAttachActivity, new SaveListener() {
+							
+							@Override
+							public void onSuccess() {
+								mReportDialog.cancel();
+								Toast.makeText(mAttachActivity, "举报成功", Toast.LENGTH_SHORT).show();
+							}
+							
+							@Override
+							public void onFailure(int arg0, String arg1) {
+								mReportDialog.cancel();
+								Toast.makeText(mAttachActivity, "举报失败", Toast.LENGTH_SHORT).show();
+							}
+						});
+                	}
+                }
+                report_input.setText("");
+            }
+        });
+    }
+	
+	/**
+	 * 发表评论
+	 * 
+	 * @param comment
+	 * @param replyUsername
+	 * @param replyId
+	 */
+	public void publishComment(String comment, String replyUsername, String replyObjectId, final OnPublishCommentListener listener) {
+		final GoodsComment goodsComment = new GoodsComment();
+		User user = UserInfoManager.getInstance().getmCurrent();
+		goodsComment.setUsername(user.getUsername());
+		goodsComment.setComment_username(replyUsername);
+		goodsComment.setContent(comment);
+		goodsComment.setGood_objectId(mData.getObjectId());
+		goodsComment.setParent_objectId(replyObjectId);
+		goodsComment.setTime(System.currentTimeMillis());
+		goodsComment.save(mAttachActivity, new SaveListener() {
+			
+			@Override
+			public void onSuccess() {
+				notifyPublishNewComment(goodsComment);
+				if(listener != null) {
+					listener.onSuccess();
+				}
+				//将评论列表滚到最底部
+				mListView.setSelection(mListView.getCount() - 1);
+				//更新
+				BmobQuery<Goods> query = new BmobQuery<Goods>();
+				query.addWhereEqualTo("objectId", mData.getObjectId());
+				query.findObjects(mAttachActivity, new FindListener<Goods>() {
+					
+					@Override
+					public void onSuccess(List<Goods> goodsList) {
+						if(goodsList != null && goodsList.size() == 1) {
+							Goods item = goodsList.get(0);
+							item.setComment_num(item.getComment_num() + 1);
+							item.update(mAttachActivity);
+						}
+					}
+					@Override
+					public void onError(int arg0, String arg1) {				
+					}
+				});
+			}
+			
+			@Override
+			public void onFailure(int arg0, String arg1) {
+				//Toast.makeText(mAttachActivity, "发表评论失败", Toast.LENGTH_SHORT).show();
+				if(listener != null) {
+					listener.onFail();
+				}
+			}
+		});
+	}
+	
+	/**
+	 * 通知发表新的评论,该方法会导致UI更新
+	 * 
+	 * @param goodsComment
+	 */
+	public void notifyPublishNewComment(GoodsComment goodsComment) {
+		if(goodsComment != null) {
+			mGoodsCommentList.add(goodsComment);
+			mGoodsCommentListViewAdapter.notifyDataSetChanged();
+			
+		}
+	}
+	
+	private void showFastLoginDialog() {
+		FastLoginDialog dialog = new FastLoginDialog(mAttachActivity);
+		dialog.setOnFastLoginListener(new GoodsDetailOnFastLoginListener());
+		dialog.show();
+	}
+	
+	//更新UI
+	private void updateUI() {
+		//关注数
+		detailMessageViewHolder.index_goods_detail_fouse_num.setText("关注数 " + mData.getFocus_num());
+	}
+	
 	@Override
 	public void onPageScrollStateChanged(int arg0) {		
 	}
@@ -413,157 +743,33 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		}
 	}
 	
-	//初始化关注
-	private void initForFocus() {
-		if(UserInfoManager.getInstance().isLogining()) {
-			final User user = UserInfoManager.getInstance().getmCurrent();
-			if(user.getUsername().equals(mData.getUsername())) {
-				detailMessageViewHolder.index_goods_detail_focus.setVisibility(View.GONE);
-			} else {
-				BmobQuery<GoodsFocus> query = new BmobQuery<GoodsFocus>();
-				query.addWhereEqualTo("username", user.getUsername());
-				query.addWhereEqualTo("goods_objectId", mData.getObjectId());
-				query.findObjects(mAttachActivity, new FindListener<GoodsFocus>() {
-					
-					@Override
-					public void onSuccess(List<GoodsFocus> goodsFocusList) {
-						if(goodsFocusList != null && goodsFocusList.size() == 0) {
-							detailMessageViewHolder.index_goods_detail_focus.setText("关注");
-							GoodsFocus item = new GoodsFocus();
-							item.setGoods_objectId(mData.getObjectId());
-							item.setUsername(user.getUsername());
-							setClickForFocus(item, false);
-						} else if(goodsFocusList != null && goodsFocusList.size() == 1) {
-							detailMessageViewHolder.index_goods_detail_focus.setText("已关注");
-							setClickForFocus(goodsFocusList.get(0), true);
-						}
-					}
-					
-					@Override
-					public void onError(int arg0, String arg1) {						
-					}
-				});
+	private class PicturesViewPagerAdapter extends PagerAdapter {
+		
+		@Override
+		public int getCount() {
+			if(mData.getPictureUrlList() != null) {
+				return mData.getPictureUrlList().size();
 			}
-		} else {
+			return 0;
+		}
+
+		@Override
+		public boolean isViewFromObject(View arg0, Object arg1) {
+			return arg0 == arg1;
+		}
+		
+		@Override
+		public void destroyItem(View container, int position, Object object) {
+			((ViewPager)container).removeView(mWrapLayouts[position % mWrapLayouts.length]);
 			
 		}
-	}
-	
-	//item可能为null
-	private void setClickForFocus(final GoodsFocus item, final boolean isFocus) {
-		detailMessageViewHolder.index_goods_detail_focus.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				if(isFocus) {
-					if(item != null) {
-						item.delete(mAttachActivity, new DeleteListener() {
-							
-							@Override
-							public void onSuccess() {
-								detailMessageViewHolder.index_goods_detail_focus.setText("关注");
-							}
-							
-							@Override
-							public void onFailure(int arg0, String arg1) {
-								
-							}
-						});
-					}
-				} else {
-					if(item != null) {
-						item.save(mAttachActivity, new SaveListener() {
-							
-							@Override
-							public void onSuccess() {
-								detailMessageViewHolder.index_goods_detail_focus.setText("已关注");
-							}
-							
-							@Override
-							public void onFailure(int arg0, String arg1) {
-								
-							}
-						});
-					}
-				}
-			}
-		});
-	}
-	
-	private void initForContact() {
-		if(UserInfoManager.getInstance().isLogining()) {
-			User user = UserInfoManager.getInstance().getmCurrent();
-			if(user.getUsername().equals(mData.getUsername())) {
-				detailMessageViewHolder.index_goods_detail_contact.setVisibility(View.GONE);
-			} else {
-				detailMessageViewHolder.index_goods_detail_contact.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						//跳转到聊天页面
-						User user = new User();
-						user.setUsername(mData.getUsername());
-						user.setHead_url(mData.getHead_url());
-						Intent intent = new Intent(mAttachActivity, ChatActivity.class);
-						intent.putExtra("otherUser", user);
-						mAttachActivity.startActivity(intent);
-					}
-				});
-			}
-		} else {
-			
+
+		@Override
+		public Object instantiateItem(View container, int position) {
+			((ViewPager)container).addView(mWrapLayouts[position % mWrapLayouts.length], 0);
+			return mWrapLayouts[position % mWrapLayouts.length];
 		}
-	}
-	
-	/**
-	 * 发表评论
-	 * 
-	 * @param comment
-	 * @param replyUsername
-	 * @param replyId
-	 */
-	public void publishComment(String comment, String replyUsername, String replyObjectId, final OnPublishCommentListener listener) {
-		final GoodsComment goodsComment = new GoodsComment();
-		User user = UserInfoManager.getInstance().getmCurrent();
-		goodsComment.setUsername(user.getUsername());
-		goodsComment.setComment_username(replyUsername);
-		goodsComment.setContent(comment);
-		goodsComment.setGood_objectId(mData.getObjectId());
-		goodsComment.setParent_objectId(replyObjectId);
-		goodsComment.setTime(System.currentTimeMillis());
-		goodsComment.save(mAttachActivity, new SaveListener() {
-			
-			@Override
-			public void onSuccess() {
-				notifyPublishNewComment(goodsComment);
-				if(listener != null) {
-					listener.onSuccess();
-				}
-				//将评论列表滚到最底部
-				mListView.setSelection(mListView.getCount() - 1);
-			}
-			
-			@Override
-			public void onFailure(int arg0, String arg1) {
-				Toast.makeText(mAttachActivity, "发表评论失败", Toast.LENGTH_SHORT).show();
-				if(listener != null) {
-					listener.onFail();
-				}
-			}
-		});
-	}
-	
-	/**
-	 * 通知发表新的评论,该方法会导致UI更新
-	 * 
-	 * @param goodsComment
-	 */
-	public void notifyPublishNewComment(GoodsComment goodsComment) {
-		if(goodsComment != null) {
-			mGoodsCommentList.add(goodsComment);
-			mGoodsCommentListViewAdapter.notifyDataSetChanged();
-			
-		}
+		
 	}
 	
 	private static class DetailMessageViewHolder {
@@ -578,7 +784,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		private TextView index_goods_detail_fouse_num;
 		
 		/** 浏览数 */
-		private TextView index_goods_detail_browse_num;
+		//private TextView index_goods_detail_browse_num;
 		
 		/** 头像 */
 		private ImageView index_goods_detail_head_picture; 
@@ -606,6 +812,19 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		
 		/** 举报 */
 		private TextView index_goods_detail_report;
+	}
+	
+	//快速登录监听器
+	private class GoodsDetailOnFastLoginListener implements FastLoginDialog.OnFastLoginListener {
+
+		@Override
+		public void onError(int errorCode) {			
+		}
+
+		@Override
+		public void onSuccess(User user) {
+			requestFocusData();
+		}
 	}
 
 }

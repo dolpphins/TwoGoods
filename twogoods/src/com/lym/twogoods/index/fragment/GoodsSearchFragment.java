@@ -227,7 +227,7 @@ public class GoodsSearchFragment extends HeaderListFragment {
 			} else {
 				//这里如果连续点击多次会不断得显示多次，而Toast的cancel只针对正在showing有效，因此必须使用自定义
 				//的Toast队列对Toast进行管理
-				Toast.makeText(mAttachActivity, "请输入关键字", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(mAttachActivity, "请输入关键字", Toast.LENGTH_SHORT).show();
 			}
 		}
 		return false;
@@ -269,7 +269,7 @@ public class GoodsSearchFragment extends HeaderListFragment {
 	private void trySearchFromNetwork(String keyword) {
 		//检查网络
 		if(!NetworkHelper.isNetworkAvailable(mAttachActivity)) {
-			Toast.makeText(mAttachActivity, "网络不可用", Toast.LENGTH_SHORT).show();
+			//Toast.makeText(mAttachActivity, "网络不可用", Toast.LENGTH_SHORT).show();
 		} else {
 			startSearchActivity(keyword);
 		}
@@ -278,6 +278,7 @@ public class GoodsSearchFragment extends HeaderListFragment {
 	private void startSearchActivity(String keyword) {
 		//先设置编辑框
 		index_goods_search_edittext.setText(keyword);
+		index_goods_search_edittext.setSelection(index_goods_search_edittext.length());
 		
 		Intent intent = new Intent(mAttachActivity, GoodsSearchResultActivity.class);
 		intent.putExtra("keyword", keyword);

@@ -64,22 +64,10 @@ public class MinePublishFragment extends PullListFragment {
 		
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new MinePublishGoodsListAdapter(mAttachActivity, mGoodsList);
-		mAbsListViewLoader = new AbsListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
+		mAbsListViewLoader = new AbsListViewLoader(this, mListView, mAdapter, mGoodsList);
 		mOnLoaderListener = new ListViewOnLoaderListener(this, mAbsListViewLoader, mListView);
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		mListView.setAdapter(mAdapter);
-		
-		if(mListView != null) {
-			mListView.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					Intent intent = new Intent(mAttachActivity, GoodsDetailActivity.class);
-					intent.putExtra("goods", mGoodsList.get(position - 1));
-					startActivity(intent);
-				}
-			});
-		}
 	}
 	
 	//加载初始化数据

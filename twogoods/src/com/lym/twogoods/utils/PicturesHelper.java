@@ -3,6 +3,7 @@ package com.lym.twogoods.utils;
 import java.io.File;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,7 +13,7 @@ import android.provider.MediaStore;
 /**
  * 图片相关工具类
  * 
- * @author mao
+ * @author 麦灿标
  *
  */
 public class PicturesHelper {
@@ -20,55 +21,52 @@ public class PicturesHelper {
 	/**
 	 * 调用系统相机拍照
 	 * 
-	 * @param activity 当前的Activity对象
+	 * @param Fragment 当前的Fragment对象
 	 * @param filePath 拍照后保存的文件夹路径,为null表示不保存
 	 * @param fileName 文件名
 	 * @param requestCode 请求码
+	 * 
+	 * @return 返回存放拍照结果的Uri
 	 * */
-	public static void takePhotoByCamera(Activity activity,String filePath,String fileName,int requestCode)
+	public static Uri takePhotoByCamera(Fragment fragment,String filePath,String fileName,int requestCode)
 	{
-		if(activity == null)
-		{
-			return;
+		if(fragment == null){
+			return null;
 		}
 		
-		try
-		{
+		try {
 			File file = new File(Environment.getExternalStorageDirectory(),filePath);
-			if(!file.exists())
-			{
+			if(!file.exists()){
 				boolean isSuccess = file.mkdirs();
 				if(!isSuccess) {
-					return;
+					return null;
 				}
 			}
 			file = new File(Environment.getExternalStorageDirectory(),filePath + fileName);
 			Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
 			Uri uri = Uri.fromFile(file);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-			activity.startActivityForResult(intent, requestCode);
-		}
-		catch(ActivityNotFoundException e)
-		{
+			fragment.startActivityForResult(intent, requestCode);
+			return uri;
+		} catch(ActivityNotFoundException e) {
 			e.printStackTrace();
-		}
-		catch(Exception e)
-		{
+			return null;
+		} catch(Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 	}
 	
 	/**
 	 * 调用系统裁切功能
 	 * 
-	 * @param activity 当前的Activity对象
-	 * @param uri 文件Uri对象
+	 * @param fragment 当前的Fragment对象,不能为null
+	 * @param uri 文件Uri对象, 不能为null
 	 * @param requestCode 请求码
 	 * */
-	public static void crop(Activity activity,Uri uri,int requestCode) {
+	public static void crop(Fragment fragment,Uri uri,int requestCode) {
 		
-		if(activity == null)
-		{
+		if(fragment == null || uri == null) {
 			return;
 		}
 		
@@ -85,31 +83,27 @@ public class PicturesHelper {
 		intent.putExtra("outputFormat", "JPEG");
 		intent.putExtra("noFaceDetection", true);
 		intent.putExtra("return-data", true);
-		activity.startActivityForResult(intent, requestCode);
+		fragment.startActivityForResult(intent, requestCode);
 	}
 	
 	/**
 	 * 调用相册选择图片
 	 * 
-	 * @param activity 当前的Activity对象
+	 * @param fragment 当前的Fragment对象
 	 * @param filePath 文件夹路径,为null表示不保存
 	 * @param fileName 文件名
 	 * @param requestCode 请求码
 	 * */
-	public static void takePhotoByGallery(Activity activity,String filePath,String fileName,int requestCode)
+	public static void takePhotoByGallery(Fragment fragment,String filePath,String fileName,int requestCode)
 	{
-		if(activity == null)
-		{
+		if(fragment == null) {
 			return;
 		}
-		try
-		{
+		try {
 			Intent intent = new Intent(Intent.ACTION_PICK);
 			intent.setType("image/*");
-			activity.startActivityForResult(intent, requestCode);
-		}
-		catch(Exception e)
-		{
+			fragment.startActivityForResult(intent, requestCode);
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}

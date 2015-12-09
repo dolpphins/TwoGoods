@@ -67,7 +67,7 @@ public class NearbyFragment extends PullGridViewFragment{
 		BmobQuery<Goods> query = new BmobQuery<Goods>();
 		Location location = UserInfoManager.getInstance().getCurrentLocation();
 		BmobGeoPoint point = new BmobGeoPoint(Double.parseDouble(location.getLongitude()), Double.parseDouble(location.getLatitude()));
-		query.addWhereWithinKilometers("geoPoint", point, 10000.0);
+		query.addWhereWithinKilometers("geoPoint", point, 1000000.0);
 		return query;
 	}
 }

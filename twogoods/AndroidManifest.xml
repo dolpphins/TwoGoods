@@ -76,7 +76,8 @@
         </activity>
 
         <!-- 主界面Activity -->
-        <activity android:name="com.lym.twogoods.ui.MainActivity" >
+        <activity android:name="com.lym.twogoods.ui.MainActivity"
+            	  android:launchMode="singleTask">
         </activity>
         <!-- 发布商品Activity -->
         <activity android:name="com.lym.twogoods.publish.ui.PublishGoodsActivity" >
@@ -86,17 +87,20 @@
         </activity>
         <!-- 商品详情Activity -->
         <activity android:name="com.lym.twogoods.ui.GoodsDetailActivity" 
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTop">
         </activity>
         <!-- 聊天Activity -->
         <activity android:name="com.lym.twogoods.message.ui.ChatActivity"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <!-- 我发布的商品Activity -->
-        <activity android:name="com.lym.twogoods.mine.ui.MinePublishActivity" >
+        <activity android:name="com.lym.twogoods.mine.ui.MinePublishActivity" 
+            android:launchMode="singleTop">
         </activity>
         <!-- 我关注的商品Activity -->
-        <activity android:name="com.lym.twogoods.mine.ui.MineFocusActivity" >
+        <activity android:name="com.lym.twogoods.mine.ui.MineFocusActivity" 
+            android:launchMode="singleTop">
         </activity>
         <!-- 选择城市Activity -->
         <activity
@@ -107,13 +111,16 @@
         <activity android:name="com.lym.twogoods.ui.AddPictureActivity" >
         </activity>
         <!-- 个人更多信息Activity -->
-        <activity android:name="com.lym.twogoods.ui.PersonalityInfoActivity" >
+        <activity android:name="com.lym.twogoods.ui.PersonalityInfoActivity" 
+            android:launchMode="singleTop">
         </activity>
         <!-- 设置Activity -->
-        <activity android:name="com.lym.twogoods.ui.SettingsActivity" >
+        <activity android:name="com.lym.twogoods.ui.SettingsActivity" 
+            android:launchMode="singleTop">
         </activity>
         <!-- 店铺详情Activity -->
-        <activity android:name="com.lym.twogoods.ui.StoreDetailActivity" >
+        <activity android:name="com.lym.twogoods.ui.StoreDetailActivity" 
+            android:launchMode="singleTop">
         </activity>
         <!-- 意见反馈Activity -->
         <activity android:name="com.lym.twogoods.ui.FeedbackActivity" >

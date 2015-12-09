@@ -290,6 +290,32 @@ public class Goods extends BmobObject implements Serializable{
 		this.voice_filename = voice_filename;
 	}
 	
+	public void update(Goods goods) {
+		if(goods != null) {
+			id = goods.getId();
+			GUID = goods.getGUID();
+			username = goods.getUsername();
+			head_url = goods.getHead_url();
+			publish_time = goods.getPublish_time();
+			publish_location = goods.getPublish_location();
+			location_longitude = goods.getLocation_longitude();
+			location_latitude = goods.getLocation_latitude();
+			price = goods.getPrice();
+			description = goods.getDescription();
+			picFileUrlList = goods.getPicFileUrlList();
+			picturesUrlList = goods.getPictureUrlList();
+			focus_num = goods.getFocus_num();
+			category = goods.getCategory();
+			browse_num = goods.getBrowse_num();
+			voice_url = goods.getVoice_url();
+			voice_filename = goods.getVoice_filename();
+			phone = goods.getPhone();
+			expire = goods.getExpire();
+			comment_num = goods.getComment_num();
+			update_time = goods.getUpdate_time();
+		}
+	}
+	
 }
 
 

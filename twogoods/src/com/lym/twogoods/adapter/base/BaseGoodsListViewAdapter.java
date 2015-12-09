@@ -8,23 +8,17 @@ import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.PictureThumbnailSpecification;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.manager.ImageLoaderHelper;
-import com.lym.twogoods.manager.UniversalImageLoaderConfigurationManager;
-import com.lym.twogoods.manager.UniversalImageLoaderManager;
-import com.lym.twogoods.manager.UniversalImageLoaderOptionManager;
+import com.lym.twogoods.network.BmobQueryHelper;
+import com.lym.twogoods.network.BmobQueryHelper.OnUsername2HeadPictureListener;
+import com.lym.twogoods.network.BmobUpdateHelper;
 import com.lym.twogoods.screen.GoodsScreen;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
 import com.lym.twogoods.ui.StoreDetailActivity;
 import com.lym.twogoods.utils.TimeUtil;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,7 +27,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -105,12 +98,35 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 		//return LayoutInflater.from(mActivity).inflate(R.layout.app_base_goods_listview_item, null);
 	}
 	
-	private void setItemContent(ItemViewHolder viewHolder, final Goods item) {
+	private void setItemContent(final ItemViewHolder viewHolder, final Goods item) {
 		if(viewHolder == null || item == null) {
 			return;
 		}
 		//头像
-		ImageLoaderHelper.loadUserHeadPictureThumnail(mActivity, viewHolder.base_goods_listview_item_headpic, item.getHead_url(), null);
+		if(TextUtils.isEmpty(item.getHead_url())) {
+			BmobQueryHelper.queryHeadPictureByUsername(mActivity, item.getUsername(), new OnUsername2HeadPictureListener() {
+				
+				@Override
+				public void onSuccess(String headUrl) {
+					ImageLoaderHelper.loadUserHeadPictureThumnail(mActivity, viewHolder.base_goods_listview_item_headpic, headUrl, null);
+					//设置缓存
+					List<Goods> goodsList = new ArrayList<Goods>();
+					for(Goods goods : mGoodsList) {
+						if(item.getUsername().equals(goods.getUsername())) {
+							goods.setHead_url(headUrl);
+							goodsList.add(goods);
+						}
+					}
+				}
+				
+				@Override
+				public void onError(int errorcode, String errormsg) {				
+					ImageLoaderHelper.loadUserHeadPictureThumnail(mActivity, viewHolder.base_goods_listview_item_headpic, null, null);
+				}
+			});
+		} else {
+			ImageLoaderHelper.loadUserHeadPictureThumnail(mActivity, viewHolder.base_goods_listview_item_headpic, item.getHead_url(), null);
+		}
 		//用户名
 		viewHolder.base_goods_listview_item_username.setText(item.getUsername());
 		//发布时间
@@ -122,17 +138,17 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 		//商品描述
 		viewHolder.base_goods_listview_item_description.setText(item.getDescription());
 		//左右可滑动图片
-		//final ArrayList<String> picturesUrlList = item.getPictureUrlList();
-		final ArrayList<String> picturesUrlList = item.getPicFileUrlList();
-		if(picturesUrlList != null && picturesUrlList.size() > 0) {
-			GoodsPictureListAdapter adapter = new GoodsPictureListAdapter(mActivity, picturesUrlList);
+		final ArrayList<String> picturesUrlList = item.getPictureUrlList();
+		final ArrayList<String> picFileUrlList = item.getPicFileUrlList();
+		if(picFileUrlList != null && picFileUrlList.size() > 0) {
+			GoodsPictureListAdapter adapter = new GoodsPictureListAdapter(mActivity, picFileUrlList);
 			PictureThumbnailSpecification goodsPictureThumbnailSpecification = GoodsScreen.getIndexGoodsPictureThumbnailSpecification(mActivity);
 			LayoutParams params = viewHolder.base_goods_gridview_item_pictures.getLayoutParams();
-			int picturesSize = picturesUrlList.size();
+			int picturesSize = picFileUrlList.size();
 			//用getHorizontalSpacing()要求API Level为16或以上
 			params.width = goodsPictureThumbnailSpecification.getWidth() *  picturesSize
 					+ mActivity.getResources().getDimensionPixelSize(R.dimen.app_base_goods_listview_item_picture_interval) * (picturesSize <= 0 ? 0 : picturesSize - 1);
-			viewHolder.base_goods_gridview_item_pictures.setNumColumns(picturesUrlList.size());
+			viewHolder.base_goods_gridview_item_pictures.setNumColumns(picFileUrlList.size());
 			viewHolder.base_goods_gridview_item_pictures.setAdapter(adapter);
 			//点击事件
 			viewHolder.base_goods_gridview_item_pictures.setOnItemClickListener(new OnItemClickListener() {

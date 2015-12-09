@@ -5,12 +5,19 @@ import java.util.Map;
 
 import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
 import com.lym.twogoods.bean.Goods;
+import com.lym.twogoods.config.ActivityRequestResultCode;
+import com.lym.twogoods.fragment.base.BaseFragment;
+import com.lym.twogoods.fragment.base.BaseFragment.OnFragmentActivityResultListener;
+import com.lym.twogoods.ui.GoodsDetailActivity;
 import com.lym.twogoods.utils.NetworkHelper;
 
-import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 
@@ -23,8 +30,8 @@ public class AbsListViewLoader {
 
 	private final static String TAG = "AbsListViewLoader";
 	
-	/** 上下文 */
-	private Context mContext;
+	/** 相关联 的Fragment */
+	private BaseFragment mFragment;
 	
 	/** 相关联的AbsListView */
 	private AbsListView mAbsListView;
@@ -75,8 +82,8 @@ public class AbsListViewLoader {
 	 * @param adapter
 	 * @param goodsList
 	 * */
-	public AbsListViewLoader(Context context, AbsListView absListView, BaseGoodsListAdapter adapter, List<Goods> goodsList) {
-		mContext = context;
+	public AbsListViewLoader(BaseFragment fragment, AbsListView absListView, BaseGoodsListAdapter adapter, List<Goods> goodsList) {
+		mFragment = fragment;
 		mAbsListView = absListView;
 		mAdapter = adapter;
 		mGoodsList = goodsList;
@@ -132,6 +139,28 @@ public class AbsListViewLoader {
 				}
 			}
 		});
+		mAbsListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(mFragment.getActivity(), GoodsDetailActivity.class);
+				//注意有Header的话position会发生移位
+				intent.putExtra("goods", (Goods) parent.getAdapter().getItem(position));
+				mFragment.startActivityForResult(intent, ActivityRequestResultCode.GOODS_ITEM_DETAIL_REQUESTCODE);
+			}
+		});
+		mFragment.setOnFragmentActivityResultListener(new OnFragmentActivityResultListener() {
+			
+			@Override
+			public void onActivityResult(int requestCode, int resultCode, Intent data) {
+				if(ActivityRequestResultCode.GOODS_ITEM_DETAIL_REQUESTCODE == requestCode
+						|| ActivityRequestResultCode.GOODS_ITEM_DETAIL_RESULTCODE == resultCode
+						|| data != null) {
+					Goods goods = (Goods) data.getSerializableExtra("goods");
+					updateGoodsItem(goods);
+				}
+			}
+		});
 	}
 
 	/**
@@ -165,7 +194,7 @@ public class AbsListViewLoader {
 	}
 	
 	private void prepareLoadDataFromNetwork(BmobQuery<Goods> query, Type type) {
-		if(!NetworkHelper.isNetworkAvailable(mContext)) {
+		if(!NetworkHelper.isNetworkAvailable(mFragment.getActivity())) {
 			handleLoadDataForPrepareFail(type);
 			return;
 		}
@@ -176,7 +205,7 @@ public class AbsListViewLoader {
 		//Log.i(TAG, "loadDataFromNetwork");
 		mStatus = Status.LOADING;
 		final Type fType = type;
-		query.findObjects(mContext, new FindListener<Goods>() {
+		query.findObjects(mFragment.getActivity(), new FindListener<Goods>() {
 			
 			@Override
 			public void onSuccess(List<Goods> goodsList) {
@@ -200,6 +229,10 @@ public class AbsListViewLoader {
 				invokeListenerFinish(type, false);
 			}
 		} else {
+			//如果是下拉刷新则先清除掉之前的数据
+			if(type == Type.REFRESH) {
+				mGoodsList.clear();
+			}
 			if(goodsList.size() <= 0) {
 				//Toast.makeText(mContext, "没有更多的数据了", Toast.LENGTH_SHORT).show();
 			} else {
@@ -282,6 +315,17 @@ public class AbsListViewLoader {
 			break;
 		}
 	}
+	
+	private void updateGoodsItem(Goods goods) {
+		if(goods != null) {
+			for(Goods g : mGoodsList) {
+				if(goods.getObjectId().equals(g.getObjectId())) {
+					g.update(goods);
+					return;
+				}
+			}
+		}
+	} 
 	
 	/**
 	 * 数据加载监听器接口

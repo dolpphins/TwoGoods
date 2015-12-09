@@ -7,23 +7,17 @@ import com.lym.twogoods.R;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.fragment.base.HeaderListFragment;
 import com.lym.twogoods.index.adapter.IndexGoodsListAdapter;
-import com.lym.twogoods.ui.GoodsDetailActivity;
-import com.lym.twogoods.utils.NetworkHelper;
+import com.lym.twogoods.network.AbsListViewLoader;
+import com.lym.twogoods.network.ListViewOnLoaderListener;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.listener.FindListener;
 
 
 /**
@@ -42,14 +36,11 @@ public class GoodsSearchResultFragment extends HeaderListFragment {
 	private EditText index_goods_search_edittext;
 	private TextView index_goods_search_button;
 	
-	private int perPageCount = 10;
-	private List<Goods> mSearchGoodsList = new ArrayList<Goods>();
+	private List<Goods> mSearchGoodsList;
 	private IndexGoodsListAdapter mGoodsListAdapter;
-	
-	/** 标记是否正在从网络加载数据 */
-	private boolean isLoadingFromNetwork = false;
-	/** ListView滚动状态 */
-	private int mListViewScrollStatus = OnScrollListener.SCROLL_STATE_IDLE;
+	private int perPageCount = 10;
+	private AbsListViewLoader mAbsListViewLoader; 
+	private ListViewOnLoaderListener mOnLoaderListener;
 	
 	public GoodsSearchResultFragment(String keyword) {
 		this.keyword = keyword;
@@ -68,12 +59,9 @@ public class GoodsSearchResultFragment extends HeaderListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
 		
-		mGoodsListAdapter = new IndexGoodsListAdapter(mAttachActivity, mSearchGoodsList);
-		mListView.setAdapter(mGoodsListAdapter);
-		
 		initListView();
 		
-		prepareLoadDataFromNetwork();
+		loadDataFromNetwork();
 		
 		return v;
 	}
@@ -84,6 +72,7 @@ public class GoodsSearchResultFragment extends HeaderListFragment {
 		index_goods_search_button.setVisibility(View.GONE);
 		
 		index_goods_search_edittext.setText(keyword);
+		index_goods_search_edittext.setSelection(index_goods_search_edittext.length());
 		index_goods_search_edittext.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -94,74 +83,19 @@ public class GoodsSearchResultFragment extends HeaderListFragment {
 	}
 	
 	private void initListView() {
-		mListView.setOnScrollListener(new OnScrollListener() {
-			
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				mListViewScrollStatus = scrollState;
-			}
-			
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				if(mListViewScrollStatus == OnScrollListener.SCROLL_STATE_IDLE 
-						&& mListView.getLastVisiblePosition() == totalItemCount - 1) {
-					loadDataFromNetwork();
-				}
-			}
-		});
-		mListView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				//注意position从1开始
-				Intent intent = new Intent(mAttachActivity, GoodsDetailActivity.class);
-				intent.putExtra("goodsList", mSearchGoodsList.get(position - 1));
-				startActivity(intent);
-			}
-		});
-	}
-	
-	private void prepareLoadDataFromNetwork() {
-		if(!NetworkHelper.isNetworkAvailable(mAttachActivity)) {
-			
-		} else if(isLoadingFromNetwork) {
-			return;
-		} else {
-			showLoadingAnimation();
-			loadDataFromNetwork();
-		}
+		mSearchGoodsList = new ArrayList<Goods>();
+		mGoodsListAdapter = new IndexGoodsListAdapter(mAttachActivity, mSearchGoodsList);
+		mAbsListViewLoader = new AbsListViewLoader(this, mListView, mGoodsListAdapter, mSearchGoodsList);
+		mOnLoaderListener = new ListViewOnLoaderListener(this, mAbsListViewLoader, mListView);
+		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
+		mListView.setAdapter(mGoodsListAdapter);
 	}
 	
 	private void loadDataFromNetwork() {
 		BmobQuery<Goods> query = new BmobQuery<Goods>();
 		query.addWhereMatches("description", keyword);
-		query.setSkip(mSearchGoodsList.size());
+		query.setSkip(0);
 		query.setLimit(perPageCount);
-		
-		query.findObjects(mAttachActivity, new FindListener<Goods>(){
-
-			@Override
-			public void onSuccess(List<Goods> goodsList) {
-				handleLoadDataFromNetowrkFinish(goodsList);
-			}
-			
-			@Override
-			public void onError(int arg0, String arg1) {
-				handleLoadDataFromNetowrkFinish(null);
-			}
-		});
-	}
-	
-	private void handleLoadDataFromNetowrkFinish(List<Goods> goodsList) {
-		System.out.println("goodsList:" + goodsList);
-		hideLoadingAnimation();
-		if(goodsList == null) {
-					
-		} else if(goodsList.size() <= 0) {
-			//Toast.makeText(mAttachActivity, "没有更多数据了", Toast.LENGTH_SHORT).show();
-		} else {
-			mSearchGoodsList.addAll(goodsList);
-			mGoodsListAdapter.notifyDataSetChanged();
-		}
+		mAbsListViewLoader.requestLoadData(query, null, true, AbsListViewLoader.Type.INIT);
 	}
 }

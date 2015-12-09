@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- 
+	填写举报信息对话框布局
+
+	@author 麦灿标
+ -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="40dip"
+    android:paddingBottom="30dip"
+    android:paddingLeft="20dip"
+    android:paddingRight="20dip">
+
+    <EditText
+        android:id="@+id/report_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/report_edittext_bg"
+        android:hint="@string/goods_report_input_hint"
+        android:lines="10"
+        android:maxLength="100"
+        android:maxEms="100"
+        android:gravity="top"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dip"
+        android:weightSum="2">
+        <Button
+            android:id="@+id/report_cancel"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/goods_report_cancel"
+            android:background="@drawable/report_button_selector"
+            android:layout_marginLeft="20dip"
+            android:layout_marginRight="20dip"/>
+        <Button
+            android:id="@+id/report_ok"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/goods_report_ok"
+            android:background="@drawable/report_button_selector"
+            android:layout_marginLeft="20dip"
+            android:layout_marginRight="20dip"/>
+    </LinearLayout>
+
+</LinearLayout>

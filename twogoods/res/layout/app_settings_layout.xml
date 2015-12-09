@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <LinearLayout 
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:orientation="vertical" >
+    	
+        <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	        android:background="#ccc"
+	        android:layout_marginTop="@dimen/settings_marginTop"/>
+        <!-- 版本更新 -->
+	    <RelativeLayout 
+	        android:id="@+id/settings_version"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        style="@style/settings_item_style">
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:text="@string/settings_version"
+	            android:textSize="@dimen/settings_list_item_textSize"/>
+	        <TextView 
+	            android:id="@+id/settings_version_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:layout_alignParentRight="true"
+	            android:layout_alignParentEnd="true"
+	            android:text="1.0.0"/>
+	    </RelativeLayout>
+	    
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	        android:background="#ccc"/>
+		
+		<!-- 清除缓存 -->
+	    <RelativeLayout 
+	        android:id="@+id/settings_clear_cache"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        style="@style/settings_item_style">
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:text="@string/settings_clear_cache"
+	            android:textSize="@dimen/settings_list_item_textSize"/>
+	        <TextView 
+	            android:id="@+id/settings_clear_cache_tv"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:layout_alignParentRight="true"/>
+	    </RelativeLayout>
+	    
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	        android:background="#ccc"/>
+	    
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	        android:background="#ccc"
+	        android:layout_marginTop="30dip"/>
+	    
+	   	<!-- 意见反馈 -->
+	    <RelativeLayout 
+	        android:id="@+id/settings_feedback"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        style="@style/settings_item_style">
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:text="@string/settings_feedback"
+	            android:textSize="@dimen/settings_list_item_textSize"/>
+	    </RelativeLayout>
+	    
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	        android:background="#ccc"/>
+	    
+	    <!-- 用户须知 -->
+	    <RelativeLayout 
+	        android:id="@+id/settings_manual"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        style="@style/settings_item_style">
+	        <TextView 
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:text="@string/settings_manual"
+	            android:textSize="@dimen/settings_list_item_textSize"/>
+	    </RelativeLayout>
+	    
+	    <TextView 
+	        android:layout_width="match_parent"
+	        android:layout_height="1dip"
+	        android:background="#ccc"/>
+	   
+	   <!-- 退出账号按钮 -->
+	   <TextView
+		    android:id="@+id/settings_exit_button" 
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:text="@string/exit_account"
+		    android:clickable="true"
+		    android:textSize="@dimen/settings_exit_button_textSize"
+		    android:textColor="@color/white"
+		    android:background="@drawable/settings_exit_button_bg_selector"
+		    android:gravity="center_horizontal"
+		    android:layout_marginLeft="@dimen/settings_exit_button_marginLeft"
+		    android:layout_marginStart="@dimen/settings_exit_button_marginLeft"
+		    android:layout_marginRight="@dimen/settings_exit_button_marginRight"
+		    android:layout_marginEnd="@dimen/settings_exit_button_marginRight"
+		    android:layout_marginTop="@dimen/settings_exit_button_marginTop"
+		    android:layout_marginBottom="@dimen/settings_exit_button_marginBottom"/>
+	    
+	</LinearLayout>
+    
+</ScrollView>

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -91,4 +91,14 @@
         <item name="android:gravity">center</item>
     </style>
 
+      
+    <!-- mcb  -->
+    <style name="settings_item_style">
+        <item name="android:paddingTop">10dip</item>
+        <item name="android:paddingBottom">10dip</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:paddingRight">10dip</item>
+        <item name="android:background">@drawable/settings_list_item_selector</item>
+        <item name="android:clickable">true</item>
+    </style>  
 </resources>

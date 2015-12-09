@@ -53,7 +53,7 @@ public class StoreDetailFragment extends PullListFragment {
 	private TextView user_detail_head_more;
 	private ImageView user_detail_head_head_picture;
 	private TextView user_detail_head_username;
-	private TextView user_detail_head_browse_num;
+	//private TextView user_detail_head_browse_num;
 	private TextView user_detail_head_description;
 	private ImageView user_detail_head_back;
 	
@@ -91,7 +91,7 @@ public class StoreDetailFragment extends PullListFragment {
 			user_detail_head_more = (TextView) mHeaderView.findViewById(R.id.user_detail_head_more);
 			user_detail_head_head_picture = (ImageView) mHeaderView.findViewById(R.id.user_detail_head_head_picture);
 			user_detail_head_username = (TextView) mHeaderView.findViewById(R.id.user_detail_head_username);
-			user_detail_head_browse_num = (TextView) mHeaderView.findViewById(R.id.user_detail_head_browse_num);
+			//user_detail_head_browse_num = (TextView) mHeaderView.findViewById(R.id.user_detail_head_browse_num);
 			user_detail_head_description = (TextView) mHeaderView.findViewById(R.id.user_detail_head_description);
 			user_detail_head_back = (ImageView) mHeaderView.findViewById(R.id.user_detail_head_back);
 			
@@ -100,7 +100,7 @@ public class StoreDetailFragment extends PullListFragment {
 			if(mUser != null) {
 				ImageLoaderHelper.loadUserHeadPictureThumnail(mAttachActivity, user_detail_head_head_picture, mUser.getHead_url(), null);
 				user_detail_head_username.setText(mUser.getUsername());
-				user_detail_head_browse_num.setText("浏览数:" + mUser.getBrowse_num());
+				//user_detail_head_browse_num.setText("浏览数:" + mUser.getBrowse_num());
 				user_detail_head_description.setText(mUser.getDeclaration());
 			}
 		}
@@ -114,7 +114,7 @@ public class StoreDetailFragment extends PullListFragment {
 		
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new StoreDetailGoodsListAdapter(mAttachActivity, mGoodsList);
-		mAbsListViewLoader = new AbsListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
+		mAbsListViewLoader = new AbsListViewLoader(this, mListView, mAdapter, mGoodsList);
 		mOnLoaderListener = new StoreDetailOnLoaderListener(this, mAbsListViewLoader, mListView);
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		//mListViewLoader.setLoadCacheFromDisk(true);
@@ -155,17 +155,6 @@ public class StoreDetailFragment extends PullListFragment {
 					picturesUrlList.add(mUser.getHead_url());
 					intent.putStringArrayListExtra("picturesUrlList", picturesUrlList);
 					mAttachActivity.startActivity(intent);
-				}
-			});
-		}
-		if(mListView != null) {
-			mListView.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					Intent intent = new Intent(mAttachActivity, GoodsDetailActivity.class);
-					intent.putExtra("goods", mGoodsList.get(position - 2));
-					startActivity(intent);
 				}
 			});
 		}

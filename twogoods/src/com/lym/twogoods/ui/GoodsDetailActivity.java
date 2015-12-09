@@ -5,16 +5,17 @@ import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.GoodsComment;
+import com.lym.twogoods.config.ActivityRequestResultCode;
 import com.lym.twogoods.config.ShareConfiguration;
 import com.lym.twogoods.dialog.FastLoginDialog;
 import com.lym.twogoods.fragment.GoodsDetailFragment;
 import com.lym.twogoods.index.adapter.GoodsShareListViewAdapter;
 import com.lym.twogoods.index.interf.OnGoodsCommentReplyListener;
 import com.lym.twogoods.index.interf.OnPublishCommentListener;
-import com.lym.twogoods.screen.DisplayUtils;
 import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -22,14 +23,12 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 
 /**
  * <p>
@@ -52,11 +51,11 @@ public class GoodsDetailActivity extends BottomDockBackFragmentActivity {
 	private boolean mEmotionLayoutIsShowing = false;
 	
 	//Actionbar分享图标
-	private ImageView shareIcon;
+	//private ImageView shareIcon;
 	//标记分享布局是否弹出
-	private boolean mShareLayoutIsShowing = false;
+	//private boolean mShareLayoutIsShowing = false;
 	//分享布局
-	private PopupWindow mSharePopupWindow;
+	//private PopupWindow mSharePopupWindow;
 	
 	private GoodsDetailFragment mFragment;
 	private Goods mData;
@@ -70,10 +69,10 @@ public class GoodsDetailActivity extends BottomDockBackFragmentActivity {
 		super.onCreate(savedInstanceState);
 		//设置ActionBar
 		setCenterTitle(getResources().getString(R.string.goods_detail));
-		shareIcon = setRightDrawable(getResources().getDrawable(R.drawable.goods_detail_share_icon));
+		//shareIcon = setRightDrawable(getResources().getDrawable(R.drawable.goods_detail_share_icon));
 		
 		initShareLayout();
-		setClickForShareIcon();
+		//setClickForShareIcon();
 		
 		
 		mData = (Goods) getIntent().getSerializableExtra("goods");
@@ -96,9 +95,9 @@ public class GoodsDetailActivity extends BottomDockBackFragmentActivity {
 		//index_goods_detail_share_gv.setLayoutParams(params);
 		BaseAdapter adapter = new GoodsShareListViewAdapter(this, ShareConfiguration.getShareList());
 		index_goods_detail_share_gv.setAdapter(adapter);
-		mSharePopupWindow = new PopupWindow(contentView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		//mSharePopupWindow = new PopupWindow(contentView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		
-		mSharePopupWindow.setWidth(DisplayUtils.getScreenWidthPixels(this) / 3);
+		//mSharePopupWindow.setWidth(DisplayUtils.getScreenWidthPixels(this) / 3);
 	}
 	
 	@Override
@@ -217,46 +216,58 @@ public class GoodsDetailActivity extends BottomDockBackFragmentActivity {
 				return true;
 			}
 		}
+		Intent data = new Intent();
+		data.putExtra("goods", mData);
+		setResult(ActivityRequestResultCode.GOODS_ITEM_DETAIL_RESULTCODE, data);
 		return super.onKeyDown(keyCode, event);
 	}
 	
-	//为分享图标设置点击事件
-	private void setClickForShareIcon() {
-		if(shareIcon != null) {
-			shareIcon.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					toggleShareLayout();
-				}
-			});
-		}
+	@Override
+	public void onActionBarBack() {
+		Intent data = new Intent();
+		data.putExtra("goods", mData);
+		setResult(ActivityRequestResultCode.GOODS_ITEM_DETAIL_RESULTCODE, data);
+		
+		super.onActionBarBack();
 	}
 	
-	//显示或隐藏分享布局
-	private void toggleShareLayout() {
-		if(mShareLayoutIsShowing) {
-			hideShareLayout();
-		} else {
-			showShareLayout();
-		}
-	}
+//	//为分享图标设置点击事件
+//	private void setClickForShareIcon() {
+//		if(shareIcon != null) {
+//			shareIcon.setOnClickListener(new OnClickListener() {
+//				
+//				@Override
+//				public void onClick(View v) {
+//					toggleShareLayout();
+//				}
+//			});
+//		}
+//	}
 	
-	//显示分享布局
-	private void showShareLayout() {
-		if(mSharePopupWindow != null) {
-			mSharePopupWindow.showAsDropDown(shareIcon);
-			mShareLayoutIsShowing = true;
-		}
-	}
+//	//显示或隐藏分享布局
+//	private void toggleShareLayout() {
+//		if(mShareLayoutIsShowing) {
+//			hideShareLayout();
+//		} else {
+//			showShareLayout();
+//		}
+//	}
 	
-	//隐藏分享布局
-	private void hideShareLayout() {
-		if(mSharePopupWindow != null) {
-			mSharePopupWindow.dismiss();
-			mShareLayoutIsShowing = false;
-		}
-	}
+//	//显示分享布局
+//	private void showShareLayout() {
+//		if(mSharePopupWindow != null) {
+//			mSharePopupWindow.showAsDropDown(shareIcon);
+//			mShareLayoutIsShowing = true;
+//		}
+//	}
+	
+//	//隐藏分享布局
+//	private void hideShareLayout() {
+//		if(mSharePopupWindow != null) {
+//			mSharePopupWindow.dismiss();
+//			mShareLayoutIsShowing = false;
+//		}
+//	}
 	
 	//显示快速登录对话框
 	private void showFastLoginDialog() {

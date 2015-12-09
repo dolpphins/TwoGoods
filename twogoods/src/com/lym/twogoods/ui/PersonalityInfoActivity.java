@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 
 
 /**
@@ -46,37 +47,22 @@ public class PersonalityInfoActivity extends BackFragmentActivity{
 	}
 	
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.i(TAG, "onActivityResult requestCode:" + requestCode + " resultCode:" + resultCode);
-		
-		//更换头像时从系统相机返回
-		if(requestCode == ActivityRequestResultCode.MINE_HEAD_PICTURE_TAKE_PHOTO_REQUESTCODE && resultCode == -1) {
-			
-			File file = new File(DiskCacheManager.getInstance(this).getUserHeadPictureCachePath(), mUser.getUsername());
-			Uri uri = Uri.fromFile(file);
-			int cropRequestCode = ActivityRequestResultCode.MINE_HEAD_PICTURE_CROP_PHOTO_REQUESTCODE;
-			PicturesHelper.crop(this, uri, cropRequestCode);
-			
-		//更换头像时从系统相册返回
-		} else if(requestCode == ActivityRequestResultCode.MINE_HEAD_PICTURE_GALLERY_PHOTO_REQUESTCODE
-				&& resultCode == -1 && data != null) {
-			
-			Uri uri = data.getData();
-			int cropRequestCode = ActivityRequestResultCode.MINE_HEAD_PICTURE_CROP_PHOTO_REQUESTCODE;
-			PicturesHelper.crop(this, uri, cropRequestCode);
-			
-		} else if(requestCode == ActivityRequestResultCode.MINE_HEAD_PICTURE_CROP_PHOTO_REQUESTCODE 
-				&& requestCode == -1 && data != null) {
-			Bitmap bitmap = data.getParcelableExtra("data");
-			if(bitmap != null) {
-				//上传头像到服务器
-			
-			}
-			
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK) {
+			setResultData();
 		}
+		return super.onKeyDown(keyCode, event);
 	}
 	
-	private void uploadHeadPicture() {
-		
+	@Override
+	public void onActionBarBack() {
+		setResultData();
+		super.onActionBarBack();
+	}
+	
+	private void setResultData() {
+		Intent data = new Intent();
+		data.putExtra("user", mUser);
+		setResult(ActivityRequestResultCode.MINE_MORE_RESULTCODE, data);
 	}
 }

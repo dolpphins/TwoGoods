@@ -12,17 +12,13 @@ import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.mine.adapter.MineFocusGoodsListAdapter;
 import com.lym.twogoods.network.AbsListViewLoader;
 import com.lym.twogoods.network.ListViewOnLoaderListener;
-import com.lym.twogoods.ui.GoodsDetailActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 
@@ -74,22 +70,10 @@ public class MineFocusFragment extends PullListFragment {
 		
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new MineFocusGoodsListAdapter(mAttachActivity, mGoodsList);
-		mAbsListViewLoader = new AbsListViewLoader(mAttachActivity, mListView, mAdapter, mGoodsList);
+		mAbsListViewLoader = new AbsListViewLoader(this, mListView, mAdapter, mGoodsList);
 		mOnLoaderListener = new ListViewOnLoaderListener(this, mAbsListViewLoader, mListView);
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		mListView.setAdapter(mAdapter);
-		
-		if(mListView != null) {
-			mListView.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					Intent intent = new Intent(mAttachActivity, GoodsDetailActivity.class);
-					intent.putExtra("goods", mGoodsList.get(position - 1));
-					startActivity(intent);
-				}
-			});
-		}
 	}
 	
 	//尝试获取我关注商品的所有ObjectId
