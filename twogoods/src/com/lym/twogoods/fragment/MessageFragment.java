@@ -328,5 +328,5 @@ public class MessageFragment extends PullListFragment implements
 		System.out.println("lifeonResume");
 		super.onResume();
 	}
-
+	
 }

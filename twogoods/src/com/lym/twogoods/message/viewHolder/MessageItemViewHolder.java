@@ -13,5 +13,7 @@ public class MessageItemViewHolder {
 	public TextView recent_msg;
 	//时间
 	public TextView time;
+	//状态
+	public ImageView status;
 	
 }

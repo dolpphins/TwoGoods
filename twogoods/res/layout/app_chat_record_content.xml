@@ -44,7 +44,7 @@
              android:layout_width="50dip"
              android:layout_height="match_parent">
 	         <ImageView
-	             android:src="@drawable/message_chat_reconding_audio1"
+	             android:src="@drawable/message_chat_voice_right1"
 	             android:id="@+id/message_chat_show_is_recording_iv"
 	             android:layout_width="50dip"
 	             android:visibility="invisible"

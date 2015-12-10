@@ -65,8 +65,6 @@ public class ChatFragment extends PullListFragment{
 	
 	Handler mHandler;
 	
-	/**要被重发的消息*/
-	private ChatDetailBean mChatDetailBean;
 	
 	public ChatFragment()
 	{
@@ -75,7 +73,6 @@ public class ChatFragment extends PullListFragment{
 	
 	@Override
 	public void onAttach(Activity activity) {
-		// TODO 自动生成的方法存根
 		super.onAttach(activity);
 	}
 	
@@ -104,7 +101,6 @@ public class ChatFragment extends PullListFragment{
 		//初始化本地聊天数据库
 		mOrmDatabaseHelper = new OrmDatabaseHelper(getActivity());
 		mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
-		mChatDetailBean = new ChatDetailBean();
 		
 		mList = initMsgData();
 	}
@@ -199,10 +195,28 @@ public class ChatFragment extends PullListFragment{
 	
 	private void resendVoiceMsg(final View parentV, final Object values) {
 		resendVoicePath = ((ChatDetailBean)values).getMessage();
+		String username = currentUser.getUsername();
+		final ChatDetailBean chatDetailBean = new ChatDetailBean();
+		chatDetailBean.setUsername(username);
+		chatDetailBean.setGUID(DatabaseHelper.getUUID().toString());
+		chatDetailBean.setOther_username(otherUser.getUsername());
+		chatDetailBean.setMessage_type(ChatConfiguration.TYPE_MESSAGE_VOICE);
+		chatDetailBean.setPublish_time(System.currentTimeMillis());
+		chatDetailBean.setMessage_read_status(MessageConfig.MESSAGE_NOT_RECEIVED);
+		chatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_ING);
+		chatDetailBean.setMessage(resendVoicePath);
+		
+		 try {
+			 mChatDetailDao.delete((ChatDetailBean)values);
+			 mChatDetailDao.create(chatDetailBean);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		BmobProFile.getInstance(getActivity()).upload(resendVoicePath, new UploadListener() {
 			@Override
 			public void onError(int arg0, String arg1) {
-				sendVoice2Db(false,parentV,values);
+				sendVoice2Db(false,parentV,chatDetailBean);
 			}
 			@Override
 			public void onSuccess(String arg0, String arg1, BmobFile arg2) {
@@ -211,13 +225,13 @@ public class ChatFragment extends PullListFragment{
 		            @Override
 		            public void onError(int errorcode, String errormsg) {
 		                Log.i(TAG,"获取文件的服务器地址失败："+errormsg+"("+errorcode+")");
-		                sendVoice2Db(false,parentV,values);
+		                sendVoice2Db(false,parentV,chatDetailBean);
 		            }
 		            @Override
 		            public void onSuccess(BmobFile file) {
 		            	voiceUrl = file.getUrl();//获取文件的有效url;
 		                Log.i(TAG, "源文件名："+file.getFilename()+"，可访问的地址："+voiceUrl);
-		                sendVoice2Db(true,parentV,values);
+		                sendVoice2Db(true,parentV,chatDetailBean);
 		            }
 		        });
 			}
@@ -232,19 +246,12 @@ public class ChatFragment extends PullListFragment{
 	/**
 	 * 将voice消息插入到数据库中
 	 */
-	private void sendVoice2Db(Boolean isUpload,final View parentV, final Object values) {
-		String username = currentUser.getUsername();
-		mChatDetailBean.setUsername(username);
-		mChatDetailBean.setGUID(DatabaseHelper.getUUID().toString());
-		mChatDetailBean.setOther_username(otherUser.getUsername());
-		mChatDetailBean.setMessage_type(ChatConfiguration.TYPE_MESSAGE_VOICE);
-		mChatDetailBean.setPublish_time(System.currentTimeMillis());
+	private void sendVoice2Db(Boolean isUpload,final View parentV, final ChatDetailBean chatDetailBean) {
 		//语音文件上传到服务器成功
 		if(isUpload){
-			mChatDetailBean.setMessage(voiceUrl);
-			mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_SUCCEED);
-			mChatDetailBean.setMessage_read_status(MessageConfig.MESSAGE_NOT_RECEIVED);
-			mChatDetailBean.save(getActivity(), new SaveListener() {
+			chatDetailBean.setMessage(voiceUrl);
+			chatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_SUCCEED);
+			chatDetailBean.save(getActivity(), new SaveListener() {
 				@Override
 				public void onSuccess() {
 					 try {
@@ -253,11 +260,10 @@ public class ChatFragment extends PullListFragment{
 						 parentV.findViewById(R.id.tv_send_status).setVisibility(View.GONE);
 						 parentV.findViewById(R.id.tv_voice_length).setVisibility(View.VISIBLE);
 						 Log.i(TAG,"bmob将语音插入到服务器的数据库成功");
-						 mChatDetailDao.delete((ChatDetailBean)values);
-						 Log.i(TAG,"bmob将语音插入到服务器的数据库成功");
-						 mChatDetailBean.setMessage(resendVoicePath);
-						 mChatDetailDao.create(mChatDetailBean);
-					} catch (SQLException e) {
+						 
+						 mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 0 WHERE GUID = '"+chatDetailBean.getGUID()+"'");
+						 notifyChange(MessageConfig.SEND_MESSAGE_SUCCEED);
+					 } catch (SQLException e) {
 						e.printStackTrace();
 					}
 				}
@@ -267,16 +273,15 @@ public class ChatFragment extends PullListFragment{
 					parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.VISIBLE);
 					parentV.findViewById(R.id.tv_send_status).setVisibility(View.INVISIBLE);
 					 try {
-						 Log.i(TAG,"bmob将语音插入到服务器的数据库失败");
-						 mChatDetailDao.delete((ChatDetailBean)values);
-					} catch (SQLException e1) {
-						// TODO 自动生成的 catch 块
+						 mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 1 WHERE GUID = '"+chatDetailBean.getGUID()+"'");
+						 notifyChange(MessageConfig.SEND_MESSAGE_FAILED);
+					 } catch (SQLException e1) {
 						e1.printStackTrace();
 					}
-					mChatDetailBean.setMessage(resendVoicePath);
-					mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
+					chatDetailBean.setMessage(resendVoicePath);
+					chatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
 					try {
-						mChatDetailDao.create(mChatDetailBean);
+						mChatDetailDao.create(chatDetailBean);
 					} catch (SQLException e) {
 						Log.i(TAG,"bmob将语音插入到服务器的数据库失败");
 						e.printStackTrace();
@@ -284,16 +289,12 @@ public class ChatFragment extends PullListFragment{
 				}
 			});
 		}else{//语音文件上传到服务器失败
-			parentV.findViewById(R.id.progress_load).setVisibility(
-					View.INVISIBLE);
-			parentV.findViewById(R.id.iv_fail_resend)
-					.setVisibility(View.VISIBLE);
-			parentV.findViewById(R.id.tv_send_status)
-					.setVisibility(View.INVISIBLE);
-			mChatDetailBean.setMessage(resendVoicePath);
-			mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
+			parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
+			parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.VISIBLE);
+			parentV.findViewById(R.id.tv_send_status).setVisibility(View.INVISIBLE);
 			try {
-				mChatDetailDao.create(mChatDetailBean);
+				mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 1 WHERE GUID = '"+chatDetailBean.getGUID()+"'");
+				notifyChange(MessageConfig.SEND_MESSAGE_FAILED);
 			} catch (SQLException e) {
 				Log.i(TAG,"将聊天信息插入本地数据库失败");
 				e.printStackTrace();
@@ -309,32 +310,38 @@ public class ChatFragment extends PullListFragment{
 	private void resendTextMsg(final View parentV, Object values) {
 		
 		final ChatDetailBean msg = (ChatDetailBean)values;
+		msg.setPublish_time(System.currentTimeMillis());
+		msg.setLast_Message_Status(MessageConfig.SEND_MESSAGE_ING);
+		try {
+			mChatDetailDao.delete((ChatDetailBean)values);
+			mChatDetailDao.create(msg);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 		msg.save(getActivity(),new SaveListener() {
-			
 			@Override
 			public void onSuccess() {
+				parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
+				parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.INVISIBLE);
+				parentV.findViewById(R.id.tv_send_status).setVisibility(View.VISIBLE);
 				try {
-					mChatDetailDao.delete(msg);
-					msg.setLast_Message_Status(MessageConfig.SEND_MESSAGE_SUCCEED);
-					mChatDetailDao.create(msg);
-					parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
-					parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.INVISIBLE);
-					parentV.findViewById(R.id.tv_send_status).setVisibility(View.VISIBLE);
+					mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 0 WHERE GUID = '"+msg.getGUID()+"'");
+					notifyChange(MessageConfig.SEND_MESSAGE_SUCCEED);
 				} catch (SQLException e) {
-					// TODO 自动生成的 catch 块
 					e.printStackTrace();
 				}
 			}
-			
 			@Override
 			public void onFailure(int arg0, String arg1) {
-				// TODO 自动生成的方法存根
-				parentV.findViewById(R.id.progress_load).setVisibility(
-						View.INVISIBLE);
-				parentV.findViewById(R.id.iv_fail_resend)
-						.setVisibility(View.VISIBLE);
-				parentV.findViewById(R.id.tv_send_status)
-						.setVisibility(View.INVISIBLE);
+				parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
+				parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.VISIBLE);
+				parentV.findViewById(R.id.tv_send_status).setVisibility(View.INVISIBLE);
+				try {
+					mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 1 WHERE GUID = '"+msg.getGUID()+"'");
+					notifyChange(MessageConfig.SEND_MESSAGE_FAILED);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -354,30 +361,43 @@ public class ChatFragment extends PullListFragment{
 	private void resendPicMsg(final View parentV, final Object values) {
 		final ChatDetailBean msg = (ChatDetailBean)values;
 		resendPicLocalPath = msg.getMessage();
+		final ChatDetailBean chatDetailBean = new ChatDetailBean();
+		String username = currentUser.getUsername();
+		chatDetailBean.setUsername(username);
+		chatDetailBean.setGUID(DatabaseHelper.getUUID().toString());
+		chatDetailBean.setOther_username(otherUser.getUsername());
+		chatDetailBean.setMessage_type(ChatConfiguration.TYPE_MESSAGE_PICTURE);
+		chatDetailBean.setMessage_read_status(MessageConfig.MESSAGE_NOT_RECEIVED);
+		chatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_ING);
+		chatDetailBean.setPublish_time(System.currentTimeMillis());
+		chatDetailBean.setMessage(resendPicLocalPath);
+		try {
+			 mChatDetailDao.delete((ChatDetailBean)values);
+			 mChatDetailDao.create(chatDetailBean);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		BmobProFile.getInstance(
 				getActivity()).upload(msg.getMessage(), new UploadListener() {
 			
 			@Override
 			public void onError(int arg0, String arg1) {
-				sendPicture2Db(false,parentV,values);
+				sendPicture2Db(false,parentV,chatDetailBean);
 			}
-			
 			@Override
 			public void onSuccess(String arg0, String arg1, BmobFile arg2) {
 				fileName = arg0; //获取文件上传成功后的文件名
-				Log.i(TAG,"URL:" + picUrl);
 				BmobProFile.getInstance(getActivity()).getAccessURL(fileName, new GetAccessUrlListener() {
 		            @Override
 		            public void onError(int errorcode, String errormsg) {
 		                Log.i(TAG,"获取文件的服务器地址失败："+errormsg+"("+errorcode+")");
-		                sendPicture2Db(false,parentV,values);
+		                sendPicture2Db(false,parentV,chatDetailBean);
 		            }
-
 		            @Override
 		            public void onSuccess(BmobFile file) {
 		            	picUrl = file.getUrl();//获取文件的有效url;
 		                Log.i(TAG, "源文件名："+file.getFilename()+"，可访问的地址："+picUrl);
-		                sendPicture2Db(true,parentV,values);
+		                sendPicture2Db(true,parentV,chatDetailBean);
 		            }
 		        });
 			}
@@ -388,16 +408,8 @@ public class ChatFragment extends PullListFragment{
 	}
 	
 //把数据传到数据库
-	private void sendPicture2Db(Boolean isUpload,final View parentV, final Object values)
+	private void sendPicture2Db(Boolean isUpload,final View parentV, final ChatDetailBean chatDetailBean)
 	{
-		String username = currentUser.getUsername();
-		final ChatDetailBean chatDetailBean = new ChatDetailBean();
-		chatDetailBean.setUsername(username);
-		chatDetailBean.setGUID(DatabaseHelper.getUUID().toString());
-		chatDetailBean.setOther_username(otherUser.getUsername());
-		chatDetailBean.setMessage_type(ChatConfiguration.TYPE_MESSAGE_PICTURE);
-		chatDetailBean.setMessage_read_status(MessageConfig.MESSAGE_NOT_RECEIVED);
-		chatDetailBean.setPublish_time(System.currentTimeMillis());
 		//文件上传成功
 		if(isUpload){
 			chatDetailBean.setMessage(picUrl);
@@ -405,14 +417,13 @@ public class ChatFragment extends PullListFragment{
 			chatDetailBean.save(getActivity(), new SaveListener() {
 				@Override
 				public void onSuccess() {
+					 parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
+					 parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.INVISIBLE);
+					 parentV.findViewById(R.id.tv_send_status).setVisibility(View.VISIBLE);
 					 try {
-						 mChatDetailDao.delete((ChatDetailBean)values);
-						 parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
-						 parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.INVISIBLE);
-						 parentV.findViewById(R.id.tv_send_status).setVisibility(View.VISIBLE);
-						 mChatDetailDao.create(chatDetailBean);
+						 mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 0 WHERE GUID = '"+chatDetailBean.getGUID()+"'");
+						 notifyChange(MessageConfig.SEND_MESSAGE_SUCCEED);
 					} catch (SQLException e) {
-						
 						e.printStackTrace();
 					}
 				}
@@ -422,13 +433,10 @@ public class ChatFragment extends PullListFragment{
 					parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
 					parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.VISIBLE);
 					parentV.findViewById(R.id.tv_send_status).setVisibility(View.INVISIBLE);
-					chatDetailBean.setMessage(resendPicLocalPath);
-					chatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
 					try {
-						mChatDetailDao.delete((ChatDetailBean)values);
-						mChatDetailDao.create(chatDetailBean);
+						mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 1 WHERE GUID = '"+chatDetailBean.getGUID()+"'");
+						notifyChange(MessageConfig.SEND_MESSAGE_FAILED);
 					} catch (SQLException e) {
-						// TODO 自动生成的 catch 块
 						Log.i(TAG,"将聊天信息插入本地数据库失败");
 						e.printStackTrace();
 					}
@@ -438,13 +446,10 @@ public class ChatFragment extends PullListFragment{
 			parentV.findViewById(R.id.progress_load).setVisibility(View.INVISIBLE);
 			parentV.findViewById(R.id.iv_fail_resend).setVisibility(View.VISIBLE);
 			parentV.findViewById(R.id.tv_send_status).setVisibility(View.INVISIBLE);
-			mChatDetailBean.setMessage(resendPicLocalPath);
-			mChatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
 			try {
-				mChatDetailDao.delete((ChatDetailBean)values);
-				mChatDetailDao.create(mChatDetailBean);
+				mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 1 WHERE GUID = '"+chatDetailBean.getGUID()+"'");
+				notifyChange(MessageConfig.SEND_MESSAGE_FAILED);
 			} catch (SQLException e) {
-				// TODO 自动生成的 catch 块
 				e.printStackTrace();
 			}
 		}
@@ -481,6 +486,19 @@ public class ChatFragment extends PullListFragment{
 		mList.add(chatBean);
 		initOrRefresh();
 	}
+	
+	public void notifyChange(int status)
+	{
+		if(status==MessageConfig.SEND_MESSAGE_SUCCEED){
+			mList.get(mList.size()-1).setLast_Message_Status(MessageConfig.SEND_MESSAGE_SUCCEED);
+		}else{
+			if(status==MessageConfig.SEND_MESSAGE_FAILED){
+				mList.get(mList.size()-1).setLast_Message_Status(MessageConfig.SEND_MESSAGE_FAILED);
+			}
+		}
+		Log.i(TAG,"执行了notifyChange");
+		mMessageChatAdapter.notifyDataSetChanged();
+	}
 
 	private void setAdapter() {
 		mMessageChatAdapter = new MessageChatAdapter(getActivity(), mList);
@@ -491,23 +509,19 @@ public class ChatFragment extends PullListFragment{
 	 * 从本地ChatDetailBean数据表获取当前用户与聊天对象的聊天记录信息
 	 * @return
 	 */
-	public List<ChatDetailBean> initMsgData()
-	{
+	public List<ChatDetailBean> initMsgData(){
 		List<ChatDetailBean> list = null;
-		if(mChatDetailDao==null)
-		{
+		if(mChatDetailDao==null){
 			mOrmDatabaseHelper = new OrmDatabaseHelper(getActivity());
 			mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
 		}
 		QueryBuilder<ChatDetailBean, Integer>mQueryBuilder = mChatDetailDao.queryBuilder();
 		try {
-			
 			Where<ChatDetailBean, Integer> where = mQueryBuilder.orderBy("publish_time", true).where().eq("username",otherUser.getUsername()).
 					or().eq("other_username", otherUser.getUsername());
 			list = where.query();
 			
 		} catch (Exception e) {
-			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
 		return list;

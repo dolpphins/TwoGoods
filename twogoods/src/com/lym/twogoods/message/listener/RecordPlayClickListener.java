@@ -57,12 +57,15 @@ public class RecordPlayClickListener implements View.OnClickListener {
 	public boolean isChatMsg = true;
 	/**判断是否是网络url*/
 	private boolean isNetUrl = false;
+	/**控制动画的播放*/
+	private boolean animPlay = false;
 	
 	public static RecordPlayClickListener currentPlayListener = null;
 	
 	Handler mHandler = new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			mVoiceUrl = (String) msg.getData().get("data");
+			playVoice(mVoiceUrl, !isNetUrl);
 		};
 	};
 	
@@ -89,12 +92,13 @@ public class RecordPlayClickListener implements View.OnClickListener {
 		this.mContext = context;
 		this.isChatMsg = isChat;
 		this.isNetUrl = isNet;
+		this.animPlay = isNet;
 		currentPlayListener = this;
 		iv_voice.setOnClickListener(this);
 	}
 	
 	/**
-	 * 设置要播放的录音文件路径
+	 * 设置要播放的录音文件路径或者网络Url
 	 * @param path 录音文件的路径
 	 */
 	public void setFilePath(String path){
@@ -117,6 +121,7 @@ public class RecordPlayClickListener implements View.OnClickListener {
 	public void setIsNetUrl(boolean isNet)
 	{
 		this.isNetUrl = isNet;
+		this.animPlay = isNet;
 	}
 	
 	/**
@@ -134,6 +139,7 @@ public class RecordPlayClickListener implements View.OnClickListener {
 			currentPlayListener.stopPlayRecord();
 			return ;
 		}
+		Log.i(TAG,"执行onClick方法！");
 		startPlayRecord(mVoiceUrl, true);
 	}
 
@@ -145,6 +151,8 @@ public class RecordPlayClickListener implements View.OnClickListener {
 		}
 		//要播放的是网络url
 		if(isNetUrl){
+			isNetUrl = false;
+			Log.i(TAG,"要播放的是网络url！");
 			Runnable downlaodVoice = new Runnable() {
 				public void run() {
 					URL url = null;
@@ -205,11 +213,23 @@ public class RecordPlayClickListener implements View.OnClickListener {
 			        }
 				}
 			};
+			Log.i(TAG,"开启线程！");
 			new Thread(downlaodVoice).start();
+			return;
 		}
+		File fileTest = new File(mVoiceUrl);
+		if(!fileTest.exists()){
+			Log.i(TAG,"文件不存在！");
+			return;
+		}
+		playVoice(mVoiceUrl, !isNetUrl);
+	}
+	
+	private void playVoice(String localPath,boolean isUseSpeaker)
+	{
 		AudioManager audioManager = (AudioManager) mContext
 				.getSystemService(Context.AUDIO_SERVICE);
-		mediaPlayer = MediaPlayer.create(mContext, Uri.parse(mVoiceUrl));
+		mediaPlayer = MediaPlayer.create(mContext, Uri.parse(localPath));
 		
 		if (isUseSpeaker) {
 			audioManager.setMode(AudioManager.MODE_NORMAL);
@@ -219,7 +239,6 @@ public class RecordPlayClickListener implements View.OnClickListener {
 			audioManager.setMode(AudioManager.MODE_IN_CALL);
 		}
 		try {
-			
 			mediaPlayer.setOnPreparedListener(new OnPreparedListener() {
 				@Override
 				public void onPrepared(MediaPlayer arg0) {
@@ -257,7 +276,7 @@ public class RecordPlayClickListener implements View.OnClickListener {
 	private void startRecordAnimation() {
 		if(iv_voice==null)
 			return;
-		if(!isNetUrl){
+		if(!animPlay){
 			iv_voice.setImageResource(R.anim.anim_chat_voice_right);
 			anim = (AnimationDrawable) iv_voice.getDrawable();
 		}else{
@@ -271,12 +290,12 @@ public class RecordPlayClickListener implements View.OnClickListener {
 	 * 停止播放动画
 	 */
 	private void stopRecordAnimation() {
-		if(!isNetUrl){
+		if(!animPlay){
 			iv_voice.setImageResource(R.drawable.message_chat_voice_left3);
 		}else{
 			iv_voice.setImageResource(R.drawable.message_chat_voice_right3);
 		}
-		if (anim != null){
+		if(anim != null){
 			anim.stop();
 		}
 	}

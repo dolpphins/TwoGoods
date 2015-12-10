@@ -8,6 +8,7 @@ import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.ChatSnapshot;
 import com.lym.twogoods.config.ChatConfiguration;
 import com.lym.twogoods.message.ImageLoadOptions;
+import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.message.view.BadgeView;
 import com.lym.twogoods.message.viewHolder.MessageItemViewHolder;
 import com.lym.twogoods.utils.ImageUtil;
@@ -17,6 +18,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +34,7 @@ import android.widget.TextView;
  */
 public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Filterable{
 
+	String TAG = "MessageListAdapter";
 	private LayoutInflater inflater;
 	private List<ChatSnapshot> mData;
 	private Context mContext;
@@ -53,40 +56,30 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 
 	@Override
 	public ChatSnapshot getItem(int position) {
-		// TODO 自动生成的方法存根
-		System.out.println("position="+position);
 		return mData.get(position-1);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		// TODO 自动生成的方法存根
 		return position;
 	}
 
 	@Override
 	public boolean hasStableIds() {
-		// TODO 自动生成的方法存根
 		return false;
 	}
 
 	@Override
 	public void remove(ChatSnapshot object) {
-		// TODO 自动生成的方法存根
 		super.remove(object);
 	}
 
-
-
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO 自动生成的方法存根
 		final ChatSnapshot item = mData.get(position);
 		View view;
 		view = convertView;
-		
 		MessageItemViewHolder holder = null;
-		 
 		if (convertView == null) {
 			view = inflater.inflate(R.layout.message_list_item_conversation, parent, false);
 			holder = new MessageItemViewHolder();
@@ -99,6 +92,8 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 					message_list_tv_recent_msg);
 			holder.time = (TextView) view.findViewById(R.id.
 					message_list_tv_recent_time);
+			holder.status = (ImageView) view.findViewById(R.id.
+					message_list_iv_recent_msg_status);
 			view.setTag(holder);
 		}else{
 			holder = (MessageItemViewHolder) view.getTag();
@@ -108,6 +103,7 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 		TextView tv_recent_name = holder.name;
 		TextView tv_recent_msg = holder.recent_msg;
 		TextView tv_recent_time = holder.time;
+		ImageView iv_recent_msg_status = holder.status;
 		//填充数据
 		String avatar = item.getHead_url();
 		if(avatar!=null&& !avatar.equals("")){
@@ -124,10 +120,9 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 		String name = item.getOther_username();
 		if(name.equals(UserInfoManager.getInstance().getmCurrent().getUsername()))
 			name = item.getUsername();
-		System.out.println("item"+item.getOther_username());
-		System.out.println("item"+item.getUsername());
+		Log.i(TAG,"item"+item.getOther_username());
+		Log.i(TAG,"item"+item.getUsername());
 		tv_recent_name.setText(name);
-		tv_recent_time.setText(TimeUtil.getDescriptionTimeFromTimestamp(item.getLast_time()));
 		if(item.getLast_message_type()==ChatConfiguration.TYPE_MESSAGE_TEXT){
 			tv_recent_msg.setText(item.getLast_message());
 		}else if(item.getLast_message_type()==ChatConfiguration.TYPE_MESSAGE_PICTURE){
@@ -146,25 +141,35 @@ public class MessageListAdapter extends ArrayAdapter<ChatSnapshot> implements Fi
 			badge.setText(""+item.getUnread_num());
 			badge.show();
 		}
+		if(item.getlast_message_status()==MessageConfig.SEND_MESSAGE_ING){
+			iv_recent_msg_status.setVisibility(View.VISIBLE);
+			iv_recent_msg_status.setImageResource(R.drawable.message_chat_status_sending);
+			tv_recent_time.setTextSize(12);
+			tv_recent_time.setText("发送中...");
+		}else if(item.getlast_message_status()==MessageConfig.SEND_MESSAGE_FAILED){
+			iv_recent_msg_status.setVisibility(View.VISIBLE);
+			iv_recent_msg_status.setImageResource(R.drawable.message_chat_fail_resend_normal);
+			tv_recent_time.setText(TimeUtil.getDescriptionTimeFromTimestamp(item.getLast_time()));
+		}else{
+			tv_recent_time.setText(TimeUtil.getDescriptionTimeFromTimestamp(item.getLast_time()));
+		}
+		
 		
 		return view;
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		// TODO 自动生成的方法存根
 		return super.getItemViewType(position);
 	}
 
 	@Override
 	public int getViewTypeCount() {
-		// TODO 自动生成的方法存根
 		return super.getViewTypeCount();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO 自动生成的方法存根
 		return super.isEmpty();
 	}
 }

@@ -36,12 +36,23 @@
             android:singleLine="true"
             android:textColor="@drawable/message_list_name_color_selector"/>
 
+        <ImageView
+            android:id="@+id/message_list_iv_recent_msg_status"
+            android:layout_width="28.0dip"
+            android:layout_height="35.0dip"
+            android:layout_below="@id/message_list_tv_recent_name"
+            android:layout_toRightOf="@id/message_list_iv_recent_avatar"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:paddingLeft="6.0dip"
+            android:paddingRight="6.0dip"/>
         <TextView
             android:id="@+id/message_list_tv_recent_msg"
             android:layout_width="fill_parent"
             android:layout_height="35.0dip"
             android:layout_below="@id/message_list_tv_recent_name"
-            android:layout_toRightOf="@id/message_list_iv_recent_avatar"
+            android:layout_toRightOf="@id/message_list_iv_recent_msg_status"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="35.0dip"
             android:ellipsize="end"
