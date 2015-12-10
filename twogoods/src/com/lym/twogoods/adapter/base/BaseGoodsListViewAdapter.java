@@ -89,13 +89,14 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		//先清除View缓存
+		clearViewCache(viewHolder);
 		//设置基本内容
 		setItemContent(viewHolder, item);
 		//设置特殊内容
 		setCustomContent(viewHolder, item);
 		
 		return convertView;
-		//return LayoutInflater.from(mActivity).inflate(R.layout.app_base_goods_listview_item, null);
 	}
 	
 	private void setItemContent(final ItemViewHolder viewHolder, final Goods item) {
@@ -161,8 +162,6 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 					mActivity.startActivity(intent);
 				}
 			});
-		} else {//防止View重用错乱
-			viewHolder.base_goods_gridview_item_pictures.setAdapter(null);
 		}
 		//用户相关信息子布局点击事件,跳转到某一用户主页
 		viewHolder.base_goods_listview_item_user_layout.setOnTouchListener(new OnTouchListener() {
@@ -210,7 +209,20 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 		return user;
 	}
 	
-	@SuppressWarnings("unused")
+	//清除View缓存,否则会发生错乱
+	private void clearViewCache(ItemViewHolder viewHolder) {
+		if(viewHolder != null) {
+			viewHolder.base_goods_listview_item_headpic.setImageBitmap(null);
+			viewHolder.base_goods_listview_item_username.setText(null);
+			viewHolder.base_goods_listview_item_publishtime.setText(null);;
+			viewHolder.base_goods_listview_item_publishlocation.setText(null);
+			viewHolder.base_goods_listview_item_price.setText(null);
+			viewHolder.base_goods_listview_item_operation.setText(null);
+			viewHolder.base_goods_listview_item_description.setText(null);
+			viewHolder.base_goods_gridview_item_pictures.setAdapter(null);
+		}
+	}
+	
 	protected static class ItemViewHolder {
 		
 		/** 用户相关信息子布局 */
@@ -241,16 +253,3 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 		public GridView base_goods_gridview_item_pictures;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

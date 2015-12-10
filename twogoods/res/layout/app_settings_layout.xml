@@ -127,7 +127,8 @@
 		    android:layout_marginRight="@dimen/settings_exit_button_marginRight"
 		    android:layout_marginEnd="@dimen/settings_exit_button_marginRight"
 		    android:layout_marginTop="@dimen/settings_exit_button_marginTop"
-		    android:layout_marginBottom="@dimen/settings_exit_button_marginBottom"/>
+		    android:layout_marginBottom="@dimen/settings_exit_button_marginBottom"
+		    android:visibility="gone"/>
 	    
 	</LinearLayout>
     

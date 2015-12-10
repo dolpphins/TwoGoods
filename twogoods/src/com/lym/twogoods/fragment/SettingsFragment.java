@@ -2,6 +2,8 @@ package com.lym.twogoods.fragment;
 
 import com.lym.twogoods.AppManager;
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
+import com.lym.twogoods.eventbus.event.FinishRecordEvent;
 import com.lym.twogoods.fragment.base.BaseFragment;
 import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.utils.StringUtil;
@@ -30,6 +32,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 	private RelativeLayout settings_manual;
 	private TextView settings_version_tv;
 	private TextView settings_clear_cache_tv;
+	private TextView settings_exit_button;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +56,15 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 		
 		settings_version_tv = (TextView) mView.findViewById(R.id.settings_version_tv);
 		settings_clear_cache_tv = (TextView) mView.findViewById(R.id.settings_clear_cache_tv);
+		
+		settings_exit_button = (TextView) mView.findViewById(R.id.settings_exit_button);
+		
+		//判断是否需要隐藏退出账号按钮
+		if(!UserInfoManager.getInstance().isLogining()) {
+			settings_exit_button.setVisibility(View.GONE);
+		} else {
+			settings_exit_button.setVisibility(View.VISIBLE);
+		}
 	}
 	
 	private void setOnClickEvent() {
@@ -60,6 +72,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 		settings_clear_cache.setOnClickListener(this);
 		settings_feedback.setOnClickListener(this);
 		settings_manual.setOnClickListener(this);
+		settings_exit_button.setOnClickListener(this);
 	}
 	
 	private void initData() {
@@ -86,6 +99,19 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 		case R.id.settings_manual:
 	
 			break;
+		//退出账号
+		case R.id.settings_exit_button:
+			exitAccount();
+			break;
+		}
+	}
+	
+	private void exitAccount() {
+		if(UserInfoManager.getInstance().isLogining()) {
+			UserInfoManager.getInstance().setmCurrent(null);
+			UserInfoManager.getInstance().writeLoginToSP(mAttachActivity.getApplicationContext(), null);
+			settings_exit_button.setVisibility(View.GONE);
+			mAttachActivity.finish();
 		}
 	}
 	

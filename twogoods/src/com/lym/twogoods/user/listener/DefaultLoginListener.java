@@ -34,8 +34,6 @@ public class DefaultLoginListener implements Loginer.LoginListener{
 	public void onSuccess(User user) {
 		UserInfoManager.getInstance().setmCurrent(user);
 		//写入到SharePreferences
-		SharePreferencesManager spm = SharePreferencesManager.getInstance();
-		spm.setLoginMessageString(mContext, SharePreferencesConfiguration.LOGIN_USERNAME_KEY, user.getUsername());
-		spm.setLoginMessageString(mContext, SharePreferencesConfiguration.LOGIN_PASSWORD_KEY, user.getPassword());
+		UserInfoManager.getInstance().writeLoginToSP(mContext, user);
 	}	
 }

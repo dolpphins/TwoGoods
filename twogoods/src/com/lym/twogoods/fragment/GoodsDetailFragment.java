@@ -3,6 +3,7 @@ package com.lym.twogoods.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lym.twogoods.ActivityManager;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.async.MultiPicturesAsyncTask;
@@ -156,7 +157,6 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		
 		return v;
 	}
-
 	
 	private void initHeaderView() {
 		mPicturesViewPager = (WrapContentViewPager) mHeaderLayout.findViewById(R.id.index_goods_detail_pictures_vp);
@@ -404,10 +404,17 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 					
 					break;
 				case MotionEvent.ACTION_UP:
-					Intent intent = new Intent(mAttachActivity, StoreDetailActivity.class);
-					User user = buildUserByGoods(mData);
-					intent.putExtra("user", user);
-					mAttachActivity.startActivity(intent);
+					//如果上一个Activity已经是要跳转的用户主页页面则不跳转
+					if(!StoreDetailActivity.class.getName().equals(ActivityManager.getInstance().getPreActivityName(mAttachActivity))) {
+						//不是当前登录用户
+						if(!UserInfoManager.getInstance().isLogining() 
+								|| !UserInfoManager.getInstance().getmCurrent().getUsername().equals(mData.getUsername())) {
+							Intent intent = new Intent(mAttachActivity, StoreDetailActivity.class);
+							User user = buildUserByGoods(mData);
+							intent.putExtra("user", user);
+							mAttachActivity.startActivity(intent);
+						}
+					}
 					break;
 				default:
 					break;
@@ -823,7 +830,13 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 
 		@Override
 		public void onSuccess(User user) {
-			requestFocusData();
+			//requestFocusData();
+			//关注
+			initForFocus();
+			//联系商家
+			initForContact();
+			//举报
+			initForReport();
 		}
 	}
 

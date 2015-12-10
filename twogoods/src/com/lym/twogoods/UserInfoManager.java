@@ -2,6 +2,10 @@ package com.lym.twogoods;
 
 import com.lym.twogoods.bean.Location;
 import com.lym.twogoods.bean.User;
+import com.lym.twogoods.config.SharePreferencesConfiguration;
+import com.lym.twogoods.utils.SharePreferencesManager;
+
+import android.content.Context;
 
 /**
  * <p>
@@ -95,6 +99,23 @@ public class UserInfoManager {
 	 */
 	public Location getCurrentLocation() {
 		return mCurrentLocation;
+	}
+	
+	/**
+	 * 写用户登录信息到SharePreferences文件中,如果user为空那么
+	 * 将清除掉所有信息
+	 *  
+	 * @param context 上下文
+	 * @param user 用户信息，为null表示清除之前的信息
+	 */
+	public void writeLoginToSP(Context context, User user) {
+		if(context != null) {
+			String username = user == null ? "" : user.getUsername();
+			String password = user == null ? "" : user.getPassword();
+			SharePreferencesManager spm = SharePreferencesManager.getInstance();
+			spm.setLoginMessageString(context, SharePreferencesConfiguration.LOGIN_USERNAME_KEY, username);
+			spm.setLoginMessageString(context, SharePreferencesConfiguration.LOGIN_PASSWORD_KEY, password);
+		}
 	}
 	
 }

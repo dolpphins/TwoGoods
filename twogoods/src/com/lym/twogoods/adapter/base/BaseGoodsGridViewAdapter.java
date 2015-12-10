@@ -1,17 +1,22 @@
 package com.lym.twogoods.adapter.base;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.fragment.base.PullGridViewFragment;
+import com.lym.twogoods.manager.ImageLoaderHelper;
 import com.lym.twogoods.manager.ThumbnailMapManager;
+import com.lym.twogoods.network.BmobQueryHelper;
+import com.lym.twogoods.network.BmobQueryHelper.OnUsername2HeadPictureListener;
 import com.lym.twogoods.screen.GoodsScreen;
 import com.lym.twogoods.utils.TimeUtil;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +67,7 @@ public class BaseGoodsGridViewAdapter extends BaseGoodsListAdapter {
 		return convertView;
 	}
 	
-	private void setItemContent(ItemViewHolder viewHolder, Goods item) {
+	private void setItemContent(ItemViewHolder viewHolder, final Goods item) {
 		if(viewHolder == null || item == null) {
 			return;
 		}
@@ -88,6 +93,24 @@ public class BaseGoodsGridViewAdapter extends BaseGoodsListAdapter {
 		viewHolder.app_base_goods_gridview_item_publishlocation.setText(item.getPublish_location());
 		//发布时间
 		viewHolder.app_base_goods_gridview_item_publishtime.setText(TimeUtil.getDescriptionTimeFromTimestamp(item.getPublish_time()));
+		
+		//重新获取头像地址
+		if(TextUtils.isEmpty(item.getHead_url())) {
+			BmobQueryHelper.queryHeadPictureByUsername(mActivity, item.getUsername(), new OnUsername2HeadPictureListener() {
+				
+				@Override
+				public void onSuccess(String headUrl) {
+					//设置缓存
+					for(Goods goods : mGoodsList) {
+						if(item.getUsername().equals(goods.getUsername())) {
+							goods.setHead_url(headUrl);
+						}
+					}
+				}
+				@Override
+				public void onError(int errorcode, String errormsg) {}
+			});
+		}
 	}
 	
 	private static class ItemViewHolder {

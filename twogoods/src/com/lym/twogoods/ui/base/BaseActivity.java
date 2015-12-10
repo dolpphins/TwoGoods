@@ -1,5 +1,9 @@
 package com.lym.twogoods.ui.base;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.lym.twogoods.ActivityManager;
 import com.lym.twogoods.R;
 
 import android.app.ActionBar;
@@ -29,6 +33,11 @@ public abstract class BaseActivity extends Activity{
 	
 	/** ActionBar对应的View */
 	private View mActionBarView;
+	
+	public BaseActivity() {
+		super();
+		ActivityManager.getInstance().addActivity(this);
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -215,7 +224,9 @@ public abstract class BaseActivity extends Activity{
 	}
 	
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+	public void finish() {
+		Log.i(TAG, "finish");
+		super.finish();
+		ActivityManager.getInstance().removeActivity(this);
 	}
 }

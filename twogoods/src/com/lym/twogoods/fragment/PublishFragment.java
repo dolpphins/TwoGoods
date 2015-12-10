@@ -295,8 +295,8 @@ public class PublishFragment extends BaseFragment {
 		goodsBean.setPublish_time(System.currentTimeMillis());
 		goodsBean.setPublish_location(tv_publish_fragment_position_set
 				.getText().toString());
-		goodsBean.setHead_url(UserInfoManager.getInstance().getmCurrent()
-				.getHead_url());
+//		goodsBean.setHead_url(UserInfoManager.getInstance().getmCurrent()
+//				.getHead_url());
 		goodsBean
 				.setPictureUrlList((ArrayList<String>) PublishConfigManger.pictureCloudUrl);
 		goodsBean.setVoice_url(PublishConfigManger.voiceUrl);

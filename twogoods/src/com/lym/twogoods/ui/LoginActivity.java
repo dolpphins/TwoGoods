@@ -12,10 +12,12 @@ import cn.bmob.v3.listener.VerifySMSCodeListener;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.User;
+import com.lym.twogoods.config.SharePreferencesConfiguration;
 import com.lym.twogoods.config.UserConfiguration;
 import com.lym.twogoods.ui.base.BackActivity;
 import com.lym.twogoods.utils.EncryptHelper;
 import com.lym.twogoods.utils.NetworkHelper;
+import com.lym.twogoods.utils.SharePreferencesManager;
 import com.lym.twogoods.utils.StringUtil;
 
 import android.app.ProgressDialog;
@@ -365,8 +367,9 @@ public class LoginActivity extends BackActivity {
 	 **/
 	private void writeSharePreference(User user) {
 		this.user=user;
-		user.setHead_url(UserConfiguration.USER_DEFAULT_HEAD);
+		//user.setHead_url(UserConfiguration.USER_DEFAULT_HEAD);
 		UserInfoManager.getInstance().setmCurrent(user);
+		UserInfoManager.getInstance().writeLoginToSP(getApplicationContext(), user);
 	}
 
 	/**
