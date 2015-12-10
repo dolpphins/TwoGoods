@@ -7,17 +7,17 @@ import java.util.List;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -37,6 +37,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
+import com.lym.twogoods.bean.Location;
 import com.lym.twogoods.bean.PictureThumbnailSpecification;
 import com.lym.twogoods.config.SharePreferencesConfiguration;
 import com.lym.twogoods.nearby.NearbyPositionModelBean;
@@ -47,7 +48,6 @@ import com.lym.twogoods.nearby.config.NearbyConfig;
 import com.lym.twogoods.nearby.utils.CharacterParser;
 import com.lym.twogoods.nearby.utils.PinyinComparator;
 import com.lym.twogoods.publish.manger.PublishConfigManger;
-import com.lym.twogoods.publish.ui.PublishGoodsActivity;
 import com.lym.twogoods.screen.NearbyScreen;
 import com.lym.twogoods.ui.base.BackFragmentActivity;
 import com.lym.twogoods.utils.NetworkHelper;
@@ -116,17 +116,8 @@ public class SelectCityActivity extends BackFragmentActivity {
 				getApplicationContext(), dataList);
 		lv_nearby_select_city_search_result
 				.setAdapter(selectCityPositionListViewAdapter);
-		// ProgressDialog初始化
-		// progressDialog = new ProgressDialog(this);
 		progressDialog = PublishConfigManger.getLoadProgressDialog(this,
 				"正在保存位置信息", "稍等一下......", false);
-		/*
-		 * progressDialog.setTitle("正在保存位置信息");
-		 * progressDialog.setMessage("稍等一下......");
-		 * progressDialog.setProgress(ProgressDialog.STYLE_HORIZONTAL);
-		 * progressDialog.setIndeterminate(true);
-		 * progressDialog.setCancelable(false);
-		 */
 	}
 
 	private void initEvent() {
@@ -184,16 +175,14 @@ public class SelectCityActivity extends BackFragmentActivity {
 							int position, long id) {
 						// 设置Location
 						if (NetworkHelper
-								.isMobileDataEnable(getApplicationContext())
-								|| NetworkHelper
-										.isWifiDataEnable(getApplicationContext())) {
+								.isNetworkAvailable(getApplicationContext())) {
 							progressDialog.show();
-							setLocation(getLocation(((NearbyPositionModelBean) selectCityPositionListViewAdapter
-									.getItem(position)).getName()));
-						}else {
-							Toast.makeText(getApplicationContext(), "当前网络不佳哦", Toast.LENGTH_SHORT).show();
+							newThread(((NearbyPositionModelBean) (selectCityPositionListViewAdapter
+									.getItem(position))).getName());
+						} else {
+							Toast.makeText(getApplicationContext(), "当前网络不佳哦",
+									Toast.LENGTH_SHORT).show();
 						}
-						finish();
 					}
 				});
 
@@ -201,15 +190,15 @@ public class SelectCityActivity extends BackFragmentActivity {
 
 			@Override
 			public void onClick(View v) {
-				if (NetworkHelper
-						.isMobileDataEnable(getApplicationContext())
+				if (NetworkHelper.isMobileDataEnable(getApplicationContext())
 						|| NetworkHelper
 								.isWifiDataEnable(getApplicationContext())) {
 					isFirst = true;
 					progressDialog.show();
 					locationClient.requestLocation();
-				}else {
-					Toast.makeText(getApplicationContext(), "当前网络不佳哦", Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(getApplicationContext(), "当前网络不佳哦",
+							Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -267,17 +256,16 @@ public class SelectCityActivity extends BackFragmentActivity {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
+						final int posi = position;
 						if (NetworkHelper
-								.isMobileDataEnable(getApplicationContext())
-								|| NetworkHelper
-										.isWifiDataEnable(getApplicationContext())) {
+								.isNetworkAvailable(SelectCityActivity.this)) {
 							progressDialog.show();
-							setLocation(getLocation((String) (nearbyHotCityGridViewAdapter
-									.getItem(position))));
-						}else {
-							Toast.makeText(getApplicationContext(), "当前网络不佳哦", Toast.LENGTH_SHORT).show();
+							newThread((String) (nearbyHotCityGridViewAdapter
+									.getItem(posi)));
+						} else {
+							Toast.makeText(getApplicationContext(), "当前网络不佳哦",
+									Toast.LENGTH_SHORT).show();
 						}
-						finish();
 					}
 				});
 	}
@@ -405,15 +393,17 @@ public class SelectCityActivity extends BackFragmentActivity {
 		String activityName = getIntent().getStringExtra(
 				PublishConfigManger.publishActivityIdentificationKey);
 		if (activityName.equals("PublishGoodsActivity")) {
+			Log.v(TAG, "if");
 			Intent intent = new Intent();
 			intent.putExtra(
 					PublishConfigManger.publishBackActivityIdentificationKey,
-					location.getDescription());
+					location);
 			setResult(PublishConfigManger.PUBLISH_RESULT_OK, intent);
 		} else {
+			Log.v(TAG, "else");
 			UserInfoManager.getInstance().setCurrentLocation(location);
 			writeSharePreference(location);
-			progressDialog.dismiss();
+			// progressDialog.dismiss();
 		}
 	}
 
@@ -424,6 +414,7 @@ public class SelectCityActivity extends BackFragmentActivity {
 	 * @param location
 	 */
 	private void writeSharePreference(com.lym.twogoods.bean.Location location) {
+		Log.v(TAG, "进入到這里writeSharePreference");
 		SharePreferencesManager sharePreferencesManager = SharePreferencesManager
 				.getInstance();
 		sharePreferencesManager.setLocationString(getApplicationContext(),
@@ -435,8 +426,6 @@ public class SelectCityActivity extends BackFragmentActivity {
 		sharePreferencesManager.setLocationString(getApplicationContext(),
 				SharePreferencesConfiguration.LOCATION_LONGITUDE_KEY,
 				location.getLongitude());
-		Toast.makeText(getApplicationContext(), "亲，你的位置信息已成功保存",
-				Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -451,5 +440,55 @@ public class SelectCityActivity extends BackFragmentActivity {
 	public void onStop() {
 		super.onStop();
 		locationClient.stop();
+	}
+
+	/**
+	 * <p>
+	 * 新建一个线程来执行耗时操作
+	 * </p>
+	 * 
+	 * @param location
+	 *            位置
+	 */
+	private void newThread(final String location) {
+		new Thread() {
+			public void run() {
+				Looper.prepare();
+				setLocation(getLocation(location));
+				finish();
+				Log.v(TAG, "listview");
+			}
+		}.start();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		publishFragmentSetResult();
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void onActionBarBack() {
+		publishFragmentSetResult();
+		super.onActionBarBack();
+	}
+	
+	/**
+	 * <p>
+	 * 防止从发布界面跳转过来，但是不执行任何操作，导致startActivityForResult空指针异常的问题。
+	 * </p>
+	 */
+	private void publishFragmentSetResult() {
+		String activityName = getIntent().getStringExtra(
+				PublishConfigManger.publishActivityIdentificationKey);
+		if (activityName.equals("PublishGoodsActivity")) {
+			Intent intent = new Intent();
+			Location location=new Location();
+			location.setDescription("");
+			intent.putExtra(
+					PublishConfigManger.publishBackActivityIdentificationKey,
+					location);
+			setResult(PublishConfigManger.PUBLISH_RESULT_OK, intent);
+		}
 	}
 }

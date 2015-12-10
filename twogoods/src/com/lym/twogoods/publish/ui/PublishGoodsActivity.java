@@ -1,19 +1,5 @@
 package com.lym.twogoods.publish.ui;
 
-import com.lym.twogoods.R;
-import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
-import com.lym.twogoods.eventbus.event.FinishRecordEvent;
-import com.lym.twogoods.fragment.PublishFragment;
-import com.lym.twogoods.message.config.MessageConfig;
-import com.lym.twogoods.message.listener.RecordPlayClickListener;
-import com.lym.twogoods.publish.manger.PublishConfigManger;
-import com.lym.twogoods.publish.util.DataMangerUtils;
-import com.lym.twogoods.ui.SendPictureActivity;
-import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
-import com.lym.twogoods.widget.WrapContentViewPager;
-
-import de.greenrobot.event.EventBus;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,6 +15,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.lym.twogoods.R;
+import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
+import com.lym.twogoods.eventbus.event.FinishRecordEvent;
+import com.lym.twogoods.fragment.PublishFragment;
+import com.lym.twogoods.message.config.MessageConfig;
+import com.lym.twogoods.message.config.RecordConfig;
+import com.lym.twogoods.message.listener.RecordPlayClickListener;
+import com.lym.twogoods.message.view.ImageCusView;
+import com.lym.twogoods.publish.manger.PublishConfigManger;
+import com.lym.twogoods.publish.util.DataMangerUtils;
+import com.lym.twogoods.ui.SendPictureActivity;
+import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
+import com.lym.twogoods.widget.WrapContentViewPager;
+
+import de.greenrobot.event.EventBus;
+
 /**
  * <p>
  * 发布商品Activity
@@ -37,7 +39,7 @@ import android.widget.TextView;
  * 
  * */
 public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
-	private String TGA="PublishGoodsActivity";
+	private String TGA = "PublishGoodsActivity";
 
 	private TextView publish;
 	private PublishFragment publishFragment;
@@ -48,6 +50,7 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 	private ImageView iv_publish_fragment_add_voice;
 	private WrapContentViewPager vp_publish_fragement_emoji;
 	private LinearLayout ll_publish_fragment_bottom_chat;
+	private ImageCusView imageCusView;
 	// 表情适配器
 	private EmotionViewPagerAdapter emotionViewPagerAdapter;
 	// 表情布局和语音是否显示的标志
@@ -69,6 +72,8 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 					.findViewById(R.id.vp_publish_fragment_emoji);
 			ll_publish_fragment_bottom_chat = (LinearLayout) publish_bottom
 					.findViewById(R.id.ll_publish_fragment_bottom_chat);
+			imageCusView=(ImageCusView) publish_bottom.findViewById(R.id.message_chat_record_view);
+			imageCusView.setFileSavePath(RecordConfig.GOOD_RECORD);
 		}
 		return publish_bottom;
 	}
@@ -112,35 +117,41 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		EventBus.getDefault().unregister(this);
+		imageCusView.release();
 	}
-	
+
 	/**
 	 * 通过eventBus来监听完成录音的操作，
-	 * @param event 完成录音的事件
+	 * 
+	 * @param event
+	 *            完成录音的事件
 	 */
-	public void onEventMainThread(FinishRecordEvent event) {  
-		 String path = event.getPath();
-		 PublishConfigManger.voicePath=path;
-		 updateVoiceImageView(publishFragment.getVoiceImageView());
-		 Log.v(TGA, path+"是录音的路径");
-   }  
-	
+	public void onEventMainThread(FinishRecordEvent event) {
+		String path = event.getPath();
+		PublishConfigManger.voicePath = path;
+		updateVoiceImageView(publishFragment.getVoiceImageView());
+		Log.v(TGA, path + "是录音的路径");
+	}
+
 	private void hideBottomLayout() {
+
 		/**
 		 * 点击最外层布局隐藏底部控件
 		 */
-		publishFragment.getRelativeLayoutMain().setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// 隐藏键盘
-				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-				hideEmotionLayout();
-				hideChatLayout();
-			}
-		});
+		publishFragment.getRelativeLayoutMain().setOnClickListener(
+				new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// 隐藏键盘
+						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+						hideEmotionLayout();
+						hideChatLayout();
+					}
+				});
 	}
+
 	private void initEvent() {
 		iv_publish_fragment_add_photo.setOnClickListener(new OnClickListener() {
 
@@ -156,7 +167,7 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 
 			@Override
 			public void onClick(View v) {
-				//防止表情和语音冲突
+				// 防止表情和语音冲突
 				if (mChatLayoutIsShowing) {
 					hideChatLayout();
 				}
@@ -204,13 +215,13 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 
 	/**
 	 * 
-	 * 	语音切换
+	 * 语音切换
 	 * 
 	 */
 	private void toggleChatLayout() {
 		if (mChatLayoutIsShowing) {
 			hideChatLayout();
-		}else {
+		} else {
 			showChatLayout();
 		}
 	}
@@ -224,8 +235,7 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 		ll_publish_fragment_bottom_chat.setVisibility(View.GONE);
 		mChatLayoutIsShowing = false;
 	}
-	
-	
+
 	public WrapContentViewPager attrachEmotionViewPager() {
 		return vp_publish_fragement_emoji;
 	}
@@ -257,58 +267,73 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 			break;
 		}
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode==KeyEvent.KEYCODE_BACK) {
-			if (DataMangerUtils.goodsDescriptionIsWrote(this, publishFragment.getEditTextDescription(), publishFragment.getEditTextTel(), publishFragment.getEditTextPrice(), publishFragment.getTextViewLocation())) {
-				new AlertDialog.Builder(this).setMessage("你真的要放弃发布吗......").setPositiveButton("我确定...", new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						finish();
-					}
-				}).setNegativeButton("我后悔了...", new DialogInterface.OnClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						
-					}
-				}).show();
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (DataMangerUtils.goodsDescriptionIsWrote(this,
+					publishFragment.getEditTextDescription(),
+					publishFragment.getEditTextTel(),
+					publishFragment.getEditTextPrice(),
+					publishFragment.getTextViewLocation())) {
+				new AlertDialog.Builder(this)
+						.setMessage("你真的要放弃发布吗......")
+						.setPositiveButton("我确定...",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										finish();
+									}
+								})
+						.setNegativeButton("我后悔了...",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+
+									}
+								}).show();
 				return true;
-			}else {
+			} else {
 				finish();
 				return true;
 			}
-		}else {
+		} else {
 			return super.onKeyDown(keyCode, event);
 		}
 	}
-	
+
 	/**
 	 * <p>
-	 * 		当用户使用了语音功能，这时候语音控件会显示出来，并设置语音控件相关点击事件。
+	 * 当用户使用了语音功能，这时候语音控件会显示出来，并设置语音控件相关点击事件。
 	 * </p>
-	 * @param imageView		语音控件
+	 * 
+	 * @param imageView
+	 *            语音控件
 	 */
 	private void updateVoiceImageView(ImageView imageView) {
-		//有发表语音
-		if(!PublishConfigManger.voicePath.equals("")){
+		// 有发表语音
+		if (!PublishConfigManger.voicePath.equals("")) {
 			imageView.setVisibility(View.VISIBLE);
 			imageView.setOnLongClickListener(new OnLongClickListener() {
-				
+
 				@Override
 				public boolean onLongClick(View v) {
 					v.setVisibility(View.GONE);
-					PublishConfigManger.voicePath="";
+					PublishConfigManger.voicePath = "";
 					return true;
 				}
 			});
-			RecordPlayClickListener recordPlayClickListener=new RecordPlayClickListener(getApplicationContext());
+			RecordPlayClickListener recordPlayClickListener = new RecordPlayClickListener(
+					getApplicationContext());
 			recordPlayClickListener.setFilePath(PublishConfigManger.voicePath);
 			recordPlayClickListener.setImageView(imageView);
 			recordPlayClickListener.setIsChatMsg(false);
-			//imageView.setOnClickListener(recordPlayClickListener);
+			// imageView.setOnClickListener(recordPlayClickListener);
 		}
 	}
+	
 }

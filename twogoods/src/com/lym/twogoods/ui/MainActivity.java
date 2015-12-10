@@ -4,6 +4,8 @@ import com.lym.twogoods.R;
 import com.lym.twogoods.ThumbnailMap;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.Location;
+import com.lym.twogoods.bean.User;
+import com.lym.twogoods.dialog.FastLoginDialog;
 import com.lym.twogoods.eventbus.event.ExitChatEvent;
 import com.lym.twogoods.fragment.IndexFragment;
 import com.lym.twogoods.fragment.MessageFragment;
@@ -178,6 +180,12 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		//点击底部发布
 		case R.id.publish_btn:
 			//特殊处理,开启Activity
+			if (!UserInfoManager.getInstance().isLogining()) {
+				FastLoginDialog dialog = new FastLoginDialog(this);
+				dialog.setOnFastLoginListener(new PublishFastLoginListener());
+				dialog.show();
+				return;
+			}
 			Intent intent = new Intent(this, PublishGoodsActivity.class);
 			startActivity(intent);
 			break;
@@ -312,5 +320,17 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		ThumbnailMap.save(getApplicationContext());
 	}
 	
-	
+	//发布按钮快速登录监听器
+	private class PublishFastLoginListener implements FastLoginDialog.OnFastLoginListener {
+		
+		@Override
+		public void onError(int errorCode) {
+		}
+		
+		@Override
+		public void onSuccess(User user) {
+			Intent intent = new Intent(MainActivity.this, PublishGoodsActivity.class);
+			startActivity(intent);
+		}
+	}
 }
