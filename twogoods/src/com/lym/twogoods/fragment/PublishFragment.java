@@ -12,6 +12,7 @@ import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
 import com.lym.twogoods.bean.Goods;
+import com.lym.twogoods.bean.Location;
 import com.lym.twogoods.bean.PictureThumbnailSpecification;
 import com.lym.twogoods.fragment.base.BaseFragment;
 import com.lym.twogoods.nearby.ui.SelectCityActivity;
@@ -26,6 +27,7 @@ import com.lym.twogoods.utils.DatabaseHelper;
 import com.lym.twogoods.utils.SensitiveUtils;
 import com.lym.twogoods.widget.WrapContentViewPager;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -52,6 +54,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.listener.DeleteListener;
 import cn.bmob.v3.listener.SaveListener;
 
 /**
@@ -86,12 +89,14 @@ public class PublishFragment extends BaseFragment {
 	// 货品信息相关
 	private Goods goodsBean;
 	private EmotionViewPagerAdapter emotionViewPagerAdapter;
+	private Location location = null;
 
 	// 发布货品图片适配器
 	private PublishGridViewAdapter publishGridViewAdapter;
 
 	// 上传图片加载器
 	private ProgressDialog progressDialog;
+	private boolean goodsIsNeedDelet = false;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -158,9 +163,13 @@ public class PublishFragment extends BaseFragment {
 		btn_publish_fragment_position.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent=new Intent(getActivity(),SelectCityActivity.class);
-				intent.putExtra(PublishConfigManger.publishActivityIdentificationKey, "PublishGoodsActivity");
-				startActivityForResult(intent, PublishConfigManger.PUBLISH_REQUESTCODE);
+				Intent intent = new Intent(getActivity(),
+						SelectCityActivity.class);
+				intent.putExtra(
+						PublishConfigManger.publishActivityIdentificationKey,
+						"PublishGoodsActivity");
+				startActivityForResult(intent,
+						PublishConfigManger.PUBLISH_REQUESTCODE);
 			}
 		});
 		gv_publish_fragment_photo
@@ -198,12 +207,32 @@ public class PublishFragment extends BaseFragment {
 					}
 				});
 
+		// 为进度框设置取消监听器
 		progressDialog.setOnCancelListener(new OnCancelListener() {
 
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				PublishConfigManger.pictureCloudUrl.clear();
-				progressDialog.dismiss();
+				new AlertDialog.Builder(getActivity())
+						.setMessage("货品信息正努力上传着......" + '\n' + "你真的要放弃吗")
+						.setPositiveButton("我确定...",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										goodsIsNeedDelet = true;
+										getActivity().finish();
+									}
+								})
+						.setNegativeButton("耐心等一下...",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										progressDialog.show();
+									}
+								}).show();
 			}
 		});
 	}
@@ -295,8 +324,10 @@ public class PublishFragment extends BaseFragment {
 		goodsBean.setPublish_time(System.currentTimeMillis());
 		goodsBean.setPublish_location(tv_publish_fragment_position_set
 				.getText().toString());
-//		goodsBean.setHead_url(UserInfoManager.getInstance().getmCurrent()
-//				.getHead_url());
+		goodsBean.setHead_url(UserInfoManager.getInstance().getmCurrent()
+				.getHead_url());
+		goodsBean.setLocation_latitude(location.getLatitude());
+		goodsBean.setLocation_longitude(location.getLongitude());
 		goodsBean
 				.setPictureUrlList((ArrayList<String>) PublishConfigManger.pictureCloudUrl);
 		goodsBean.setVoice_url(PublishConfigManger.voiceUrl);
@@ -313,20 +344,26 @@ public class PublishFragment extends BaseFragment {
 		if ((PublishConfigManger.pictureCloudUrl.size() == PublishConfigManger.publishPictureUrl
 				.size())) {
 			getGoodsData();
-			goodsBean.save(getActivity(), new SaveListener() {
+			goodsBean.save(publishGoodsActivity, new SaveListener() {
 
 				@Override
 				public void onSuccess() {
 					progressDialog.dismiss();
-					Toast.makeText(getActivity(), "发布成功", Toast.LENGTH_SHORT)
+					Toast.makeText(publishGoodsActivity, "发布成功", Toast.LENGTH_SHORT)
 							.show();
-					getActivity().finish();
+					Log.v(TAG, "发布成功");
+					if (goodsIsNeedDelet) {
+						deleteGoods();
+					} else {
+						getActivity().finish();
+					}
 				}
 
 				@Override
 				public void onFailure(int arg0, String arg1) {
 					progressDialog.dismiss();
-					Toast.makeText(getActivity(), "发布失败", Toast.LENGTH_SHORT)
+					Log.v(TAG, "失败的原因："+arg1);
+					Toast.makeText(publishGoodsActivity, "发布失败", Toast.LENGTH_SHORT)
 							.show();
 				}
 			});
@@ -337,8 +374,32 @@ public class PublishFragment extends BaseFragment {
 
 	}
 
-	/*
+	/**
+	 * <p>
+	 * 用户放弃发布货品的时候，但是不能取消发布的线程操作，只好等货品发布成功再执行删除操作。
+	 * </p>
+	 */
+	private void deleteGoods() {
+		goodsBean.delete(publishGoodsActivity, new DeleteListener() {
+
+			@Override
+			public void onSuccess() {
+				Log.v(TAG, "删除成功");
+				Toast.makeText(publishGoodsActivity, "删除成功", Toast.LENGTH_SHORT)
+						.show();
+			}
+
+			@Override
+			public void onFailure(int arg0, String arg1) {
+				deleteGoods();
+			}
+		});
+	}
+
+	/**
+	 * <p>
 	 * 判断货品描述是否合法，存在敏感词汇自动屏蔽
+	 * </p>
 	 */
 	public boolean judgeDescription() {
 		for (String regex : SensitiveUtils.sensitiveWords) {
@@ -356,9 +417,10 @@ public class PublishFragment extends BaseFragment {
 		return true;
 	}
 
-	/*
-	 * 
-	 * 图片信息上传
+	/**
+	 * <p>
+	 * 图片信息上传,内含Goods上传函数
+	 * </p>
 	 */
 	public void pictureUpload() {
 		if (DataMangerUtils.judgeGoods(context,
@@ -459,7 +521,6 @@ public class PublishFragment extends BaseFragment {
 		vp_publish_fragement_emoji.setAdapter(emotionViewPagerAdapter);
 	}
 
-
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -473,15 +534,19 @@ public class PublishFragment extends BaseFragment {
 	public EditText getEditTextDescription() {
 		return et_publish_fragment_description;
 	}
+
 	public EditText getEditTextTel() {
 		return et_publish_fragment_tel;
 	}
+
 	public EditText getEditTextPrice() {
 		return et_publish_fragment_price;
 	}
+
 	public TextView getTextViewLocation() {
 		return tv_publish_fragment_position_set;
 	}
+
 	/**
 	 * <p>
 	 * 取得最外层布局
@@ -529,11 +594,14 @@ public class PublishFragment extends BaseFragment {
 			gv_publish_fragment_photo.setAdapter(publishGridViewAdapter);
 		}
 	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (resultCode) {
 		case PublishConfigManger.PUBLISH_RESULT_OK:
-			tv_publish_fragment_position_set.setText(data.getStringExtra(PublishConfigManger.publishBackActivityIdentificationKey));
+			location = (Location) data
+					.getSerializableExtra(PublishConfigManger.publishBackActivityIdentificationKey);
+			tv_publish_fragment_position_set.setText(location.getDescription());
 			break;
 		default:
 			break;

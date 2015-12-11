@@ -72,32 +72,20 @@ public class Loginer {
 		if(context == null || item == null) {
 			errorCode = LOGIN_ILLEGALARGUMENTS;
 		} else {
-			if(!TextUtils.isEmpty(item.getUsername())) {
-				if(!StringUtil.isErHuoNumber(item.getUsername())) {
-					errorCode = LOGIN_USERNAME_ILLEGAL;
-				} else {
-					if(TextUtils.isEmpty(item.getPassword())) {
-						errorCode = LOGIN_PASSWORD_EMPTY;
-					} else if(!LoginValidator.isPassword(item.getPassword())) {
-						errorCode = LOGIN_PASSWORD_ILLEGAL;
-					} else {
-						return true;
-					}
-				}
-			} else if(!TextUtils.isEmpty(item.getPhone())) {
-				if(!StringUtil.isPhoneNumber(item.getPhone())) {
-					errorCode = LOGIN_PHONE_ILLEGAL;
-				} else {
-					if(TextUtils.isEmpty(item.getPassword())) {
-						errorCode = LOGIN_PASSWORD_EMPTY;
-					} else if(!LoginValidator.isPassword(item.getPassword())) {
-						errorCode = LOGIN_PASSWORD_ILLEGAL;
-					} else {
-						return true;
-					}
-				}
+			if(!LoginValidator.isErHuoNumber(item.getUsername())) {
+				errorCode = LOGIN_USERNAME_ILLEGAL;
+			} else if(!LoginValidator.isPassword(item.getPassword())) {
+				errorCode = LOGIN_PASSWORD_ILLEGAL;
 			} else {
-				errorCode = LOGIN_USERNAME_EMPTY;
+				return true;
+			}
+			errorCode = -1;
+			if(!LoginValidator.isPhoneNumber(item.getPhone())) {
+				errorCode = LOGIN_PHONE_ILLEGAL;
+			} else if(!LoginValidator.isPassword(item.getPassword())) {
+				errorCode = LOGIN_PASSWORD_ILLEGAL;
+			} else {
+				return true;
 			}
 		}
 		if(errorCode != -1 && listener != null) {

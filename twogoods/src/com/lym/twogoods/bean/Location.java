@@ -1,12 +1,14 @@
 package com.lym.twogoods.bean;
 
+import java.io.Serializable;
+
 /**
  * 位置信息实体类
  * 
  * @author 麦灿标
  *
  */
-public class Location {
+public class Location implements Serializable{
 
 	/** 位置描述 */
 	private String description;

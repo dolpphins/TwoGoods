@@ -154,8 +154,8 @@ public class AbsListViewLoader {
 			@Override
 			public void onActivityResult(int requestCode, int resultCode, Intent data) {
 				if(ActivityRequestResultCode.GOODS_ITEM_DETAIL_REQUESTCODE == requestCode
-						|| ActivityRequestResultCode.GOODS_ITEM_DETAIL_RESULTCODE == resultCode
-						|| data != null) {
+						&& ActivityRequestResultCode.GOODS_ITEM_DETAIL_RESULTCODE == resultCode
+						&& data != null) {
 					Goods goods = (Goods) data.getSerializableExtra("goods");
 					updateGoodsItem(goods);
 				}

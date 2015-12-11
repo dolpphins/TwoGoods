@@ -61,12 +61,16 @@ public class FastLoginDialog {
 			@Override
 			public void onClick(View v) {
 				app_fast_login_tip.setText("");
-				String username = app_fast_login_username.getText().toString();
-				String password = app_fast_login_password.getText().toString();
+				String username = app_fast_login_username.getText().toString().trim();
+				String password = app_fast_login_password.getText().toString().trim();
 				Login item = new Login();
 				item.setUsername(username);
 				item.setPhone(username);
 				item.setPassword(EncryptHelper.getMD5(password));
+				
+				System.out.println("username:" + item.getUsername());
+				System.out.println("password:" + item.getPassword());
+				
 				Loginer.getInstance().login(mContext, item, new FastLoginListener(mContext));
 			}
 		});
