@@ -17,6 +17,8 @@ import com.lym.twogoods.bean.ChatSnapshot;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.ChatConfiguration;
 import com.lym.twogoods.db.OrmDatabaseHelper;
+import com.lym.twogoods.message.ChatSetting;
+import com.lym.twogoods.message.JudgeConfig;
 import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.message.ui.ChatActivity;
 import com.lym.twogoods.ui.MainActivity;
@@ -32,12 +34,15 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.preference.TwoStatePreference;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews.RemoteView;
 
 /**
  * * 此service用来检查是否有新消息
@@ -76,8 +81,7 @@ public class ChatService extends Service {
 	
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO 自动生成的方法存根
-		return null;
+		return new MsgBinder();
 	}
 	
 	@Override
@@ -215,9 +219,17 @@ public class ChatService extends Service {
 											chatSnapshot.setLast_time(newestChatDetailBean.getPublish_time());
 											chatSnapshot.setlast_message_status(MessageConfig.SEND_MESSAGE_RECEIVERED);
 											chatSnapshot.setLast_message_type(type);
-											
-											//发来的新消息数目加上之前未读的数目
 											int unread_num = 0;
+											List<ChatSnapshot> listCss = null;
+											//发来的新消息数目加上之前未读的数目
+											try {
+												listCss= mChatSnapshotDao.queryBuilder().where().eq("username",userName).or().eq("other_username", userName).query();
+											} catch (SQLException e1) {
+												e1.printStackTrace();
+											}
+											if(listCss!=null&&listCss.size()>0){
+												unread_num = listCss.get(0).getUnread_num();
+											}
 											chatSnapshot.setUnread_num(unread_num+listChat.size());
 											chatSnapshot.save(getApplicationContext(),new SaveListener() {
 												
@@ -252,29 +264,41 @@ public class ChatService extends Service {
 										for(int n = 0;n<listOfName.size();n++){
 											final String username = listOfName.get(n);
 											List<ChatDetailBean> chatList = map.get(username);
-											//拿到最近的一条新消息
-											final ChatDetailBean newChatDetailBean = chatList.get(chatList.size()-1);
-											mBuilder.setContentTitle(listOfName.get(n))//设置通知栏标题  
-										    .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL,newChatDetailBean)) //设置通知栏点击意图  
-										    .setTicker(listOfName.get(n)+":"+newChatDetailBean.getMessage()) //通知首次出现在通知栏，带上升动画效果的  
-										    .setWhen(System.currentTimeMillis())//通知产生的时间，会在通知信息里显示，一般是系统获取到的时间  
-										    .setPriority(Notification.PRIORITY_HIGH) //设置该通知优先级  
-										    .setOngoing(false)//ture，设置他为一个正在进行的通知。他们通常是用来表示一个后台任务,用户积极参与(如播放音乐)或以某种方式正在等待,因此占用设备(如一个文件下载,同步操作,主动网络连接)  
-										    .setDefaults(Notification.DEFAULT_ALL)
-										    .setSmallIcon(R.drawable.ic_launcher);//设置通知小ICON 
-											if(newChatDetailBean.getMessage_type()== ChatConfiguration.TYPE_MESSAGE_VOICE)
-											{
-												mBuilder.setContentInfo("[语音]");
-											}else{
-												if(newChatDetailBean.getMessage_type()== ChatConfiguration.TYPE_MESSAGE_PICTURE){
-													mBuilder.setContentInfo("[图片]");
+											if(!ChatSetting.otherUserName.equals(username)){
+												//拿到最近的一条新消息
+												final ChatDetailBean newChatDetailBean = chatList.get(chatList.size()-1);
+												mBuilder.setContentTitle(listOfName.get(n))//设置通知栏标题  
+											    .setContentIntent(getDefalutIntent(Notification.FLAG_AUTO_CANCEL,newChatDetailBean)) //设置通知栏点击意图  
+											    .setWhen(System.currentTimeMillis())//通知产生的时间，会在通知信息里显示，一般是系统获取到的时间  
+											    .setPriority(Notification.PRIORITY_HIGH) //设置该通知优先级  
+											    .setOngoing(false)//ture，设置他为一个正在进行的通知。他们通常是用来表示一个后台任务,用户积极参与(如播放音乐)或以某种方式正在等待,因此占用设备(如一个文件下载,同步操作,主动网络连接)  
+											    .setDefaults(Notification.DEFAULT_ALL)
+											    .setSmallIcon(R.drawable.ic_launcher);//设置通知小ICON 
+												
+												if(newChatDetailBean.getMessage_type()== ChatConfiguration.TYPE_MESSAGE_VOICE)
+												{
+													mBuilder.setTicker(listOfName.get(n)+":"+"[语音]");
+													mBuilder.setContentText("[语音]");
 												}else{
-													mBuilder.setContentInfo(newChatDetailBean.getMessage());
+													if(newChatDetailBean.getMessage_type()== ChatConfiguration.TYPE_MESSAGE_PICTURE){
+														mBuilder.setTicker(listOfName.get(n)+":"+"[图片]");
+														mBuilder.setContentText("[图片]");
+													}else{
+														mBuilder.setTicker(listOfName.get(n)+":"+newChatDetailBean.getMessage());
+														mBuilder.setContentText(newChatDetailBean.getMessage());
+													}
+												}
+												Notification notification = mBuilder.build();  
+												notification.flags = Notification.FLAG_AUTO_CANCEL; 
+												mNotificationManager.notify(1, notification);
+											}else{
+												//如果接收到的新消息是当前聊天对象发来的，则直接更新聊天列表
+												if((ChatSetting.isShow)&&(ChatSetting.otherUserName.equals(username))){
+													if(mChatActivity!=null){
+														mChatActivity.refreshFragment(chatList);
+													}
 												}
 											}
-											Notification notification = mBuilder.build();  
-											notification.flags = Notification.FLAG_AUTO_CANCEL; 
-											mNotificationManager.notify(1, notification);
 										}
 									}
 								}
@@ -313,17 +337,33 @@ public class ChatService extends Service {
 		user.setUsername(chatDetailBean.getUsername());
 		//user.setHead_url(head_url);
 		intent.putExtra("otherUser", user);
-		//点击了notification后，跳转到聊天界面，同时本地最近聊天数据表应该更新数据，把未读字段改为0
-		try {
-			ChatSnapshot oneChatSnapshot = mChatSnapshotDao.queryForEq("username", chatDetailBean.getUsername()).get(0);
-			mChatSnapshotDao.delete(oneChatSnapshot);
-			oneChatSnapshot.setUnread_num(0);
-			mChatSnapshotDao.create(oneChatSnapshot);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		intent.putExtra("from", JudgeConfig.FRAM_NOTIFICTION);
 	    PendingIntent pendingIntent= PendingIntent.getActivity(this, 1, intent ,flags);  
 	    return pendingIntent;  
 	}  
+	
+	
+	public class MsgBinder extends Binder{  
+        /** 
+         * 获取当前Service的实例 
+         */  
+        public ChatService getService(){  
+            return ChatService.this;  
+        }  
+    } 
+	 
+	/**接收新发的消息已经被浏览的信息，如果已经被浏览，需要取消notification*/
+	public void cancelAllNotification() {
+		Log.i(TAG,"cancelAllNotification");
+		mNotificationManager.cancelAll();
+	}
+	
+	/**拿到ChatActivity的引用*/
+	private ChatActivity mChatActivity;
+	
+	public void setActivity(ChatActivity activity){
+		Log.i(TAG,"setActivity");
+		mChatActivity = activity;
+	}
 }
 	

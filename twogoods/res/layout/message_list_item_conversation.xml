@@ -5,6 +5,7 @@
     android:orientation="vertical" >
 
     <RelativeLayout
+        android:id="@+id/message_list_conservation_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="65dp"

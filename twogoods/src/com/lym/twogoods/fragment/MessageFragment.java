@@ -9,6 +9,7 @@ import java.util.Map;
 import me.maxwin.view.XListView;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.lym.twogoods.bean.ChatSnapshot;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.db.OrmDatabaseHelper;
 import com.lym.twogoods.fragment.base.PullListFragment;
+import com.lym.twogoods.message.JudgeConfig;
 import com.lym.twogoods.message.MessageDialog;
 import com.lym.twogoods.message.MessageDialog.MyItemOnClickListener;
 import com.lym.twogoods.message.adapter.MessageListAdapter;
@@ -44,7 +46,7 @@ import com.lym.twogoods.utils.TimeUtil;
 
 public class MessageFragment extends PullListFragment implements 
 	OnItemClickListener,OnItemLongClickListener{
-	
+	private String TAG = "MessageFragment";
 	private Boolean isLogining;
 
 	//xListView的adapter
@@ -199,7 +201,6 @@ public class MessageFragment extends PullListFragment implements
 						deleteBuilder.where().eq("username", recent.getUsername());
 						deleteBuilder.delete();
 					} catch (SQLException e) {
-						// TODO 自动生成的 catch 块
 						e.printStackTrace();
 					}
 					
@@ -224,7 +225,8 @@ public class MessageFragment extends PullListFragment implements
 				if(chatSnapshot.getUsername().equals(getCurrentUsername())){//如果最近一条消息是用户自己发出去的
 					try {
 						String name = chatSnapshot.getOther_username();
-						mChatSnapshotDao.updateRaw("UPDATE chatsnapshot SET unread_num = 0 WHERE other_username = '"+name+"'");
+						int i = mChatSnapshotDao.updateRaw("UPDATE chatsnapshot SET unread_num = 0 WHERE other_username = '"+name+"'");
+						Log.i(TAG,i+"返回值");
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
@@ -233,16 +235,13 @@ public class MessageFragment extends PullListFragment implements
 						String name = chatSnapshot.getUsername();
 						mChatSnapshotDao.updateRaw("UPDATE chatsnapshot SET unread_num = 0 WHERE username = '"+name+"'");
 					} catch (SQLException e) {
-						// TODO 自动生成的 catch 块
 						e.printStackTrace();
 					}
 				}
 			}
-			
 			User otherUser = new User();
 			String name;
-			if(chatSnapshot.getUsername().equals(getCurrentUsername()))
-			{
+			if(chatSnapshot.getUsername().equals(getCurrentUsername())){
 				name = chatSnapshot.getOther_username();
 			}else{
 				name = chatSnapshot.getUsername();
@@ -250,7 +249,8 @@ public class MessageFragment extends PullListFragment implements
 			otherUser.setHead_url(chatSnapshot.getHead_url());
 			otherUser.setUsername(name);
 			
-			intent.putExtra("otherUser", otherUser);		
+			intent.putExtra("otherUser", otherUser);	
+			intent.putExtra("from", JudgeConfig.FRAM_MESSAGE_LIST);
 			startActivity(intent);
 		
 	}
@@ -279,8 +279,7 @@ public class MessageFragment extends PullListFragment implements
 		//获取上一次刷新的时间
 		String lasttime_refresh = mSharePreferenceManager.getString(
 				getActivity(), "lasttime_refresh", "failure");
-		if(lasttime_refresh=="failure")
-		{
+		if(lasttime_refresh=="failure"){
 			lasttime_refresh = TimeUtil.getCurrentTime(null);
 		}
 		String time = TimeUtil.getDescriptionTimeFromTimestamp(
@@ -318,14 +317,11 @@ public class MessageFragment extends PullListFragment implements
 	
 	@Override
 	public void stopRefresh() {
-		// TODO 自动生成的方法存根
 		super.stopRefresh();
 	}
 	@Override
 	public void onResume() {
-		// TODO 自动生成的方法存根
 		//refreshMessage();
-		System.out.println("lifeonResume");
 		super.onResume();
 	}
 	

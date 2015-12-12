@@ -44,7 +44,6 @@ import com.lym.twogoods.fragment.base.PullListFragment;
 import com.lym.twogoods.message.NewMessageReceiver;
 import com.lym.twogoods.message.adapter.MessageChatAdapter;
 import com.lym.twogoods.message.config.MessageConfig;
-import com.lym.twogoods.message.ui.ChatActivity;
 import com.lym.twogoods.utils.DatabaseHelper;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 
@@ -65,9 +64,7 @@ public class ChatFragment extends PullListFragment{
 	
 	Handler mHandler;
 	
-	
-	public ChatFragment()
-	{
+	public ChatFragment(){
 		super();
 	}
 	
@@ -82,6 +79,12 @@ public class ChatFragment extends PullListFragment{
 		init();
 	}
 	
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.i(TAG,"onStart");
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -101,7 +104,6 @@ public class ChatFragment extends PullListFragment{
 		//初始化本地聊天数据库
 		mOrmDatabaseHelper = new OrmDatabaseHelper(getActivity());
 		mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
-		
 		mList = initMsgData();
 	}
 
@@ -487,6 +489,18 @@ public class ChatFragment extends PullListFragment{
 		initOrRefresh();
 	}
 	
+	public void receiveNewMessage(List<ChatDetailBean> list)
+	{
+		for(int i = 0;i<list.size();i++)
+		{
+			mList.add(list.get(i));
+		}
+		initOrRefresh();
+	}
+	/**
+	 * 通知消息是否发送成功
+	 * @param status
+	 */
 	public void notifyChange(int status)
 	{
 		if(status==MessageConfig.SEND_MESSAGE_SUCCEED){
@@ -555,5 +569,15 @@ public class ChatFragment extends PullListFragment{
 		}
 	}
 	
+	@Override
+	public void onStop() {
+		Log.i(TAG,"onStop");
+		super.onStop();
+	}
+	@Override
+	public void onDestroy() {
+		Log.i(TAG,"onDestroy");
+		super.onDestroy();
+	}
 
 }

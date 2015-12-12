@@ -2,11 +2,17 @@ package com.lym.twogoods.message.ui;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -32,12 +38,15 @@ import com.lym.twogoods.config.ChatConfiguration;
 import com.lym.twogoods.db.OrmDatabaseHelper;
 import com.lym.twogoods.eventbus.event.ExitChatEvent;
 import com.lym.twogoods.eventbus.event.FinishRecordEvent;
+import com.lym.twogoods.message.ChatSetting;
+import com.lym.twogoods.message.JudgeConfig;
 import com.lym.twogoods.message.adapter.ChatAddViewPagerAdapter;
 import com.lym.twogoods.message.config.ChatBottomConfig;
 import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.message.fragment.ChatFragment;
 import com.lym.twogoods.message.view.EmoticonsEditText;
 import com.lym.twogoods.message.view.ImageCusView;
+import com.lym.twogoods.service.ChatService;
 import com.lym.twogoods.ui.SendPictureActivity;
 import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
 import com.lym.twogoods.utils.DatabaseHelper;
@@ -76,6 +85,8 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	private OrmDatabaseHelper mOrmDatabaseHelper;
 	/**聊天表*/
 	private Dao<ChatDetailBean, Integer> mChatDetailDao;
+	/**最近聊天表*/
+	private Dao<ChatSnapshot, Integer> mChatSnapshotDao;
 	
 	/** 收到消息*/
 	public static final int NEW_MESSAGE = 0x001;
@@ -94,7 +105,10 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	private WrapContentViewPager mWrapContentViewPagerOfEmoji;
 	/**点击添加按钮显示的viewpager*/
 	private WrapContentViewPager mWrapContentViewPagerOfAdd;
+	/**用来判断是谁启动了ChatActivity*/
+	private int from = 0;
 	
+	private boolean chated = false;
 	
 	/**ChatActivity的Handler*/
 	private Handler mHandler = new Handler()
@@ -127,6 +141,22 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		}
 
 	};
+	private ChatService mService;
+	ServiceConnection conn = new ServiceConnection() {  
+        @Override  
+        public void onServiceDisconnected(ComponentName name) {  
+              
+        }  
+          
+        @Override  
+        public void onServiceConnected(ComponentName name, IBinder service) {  
+            //返回一个MsgService对象  
+            mService = ((ChatService.MsgBinder)service).getService();  
+            mService.setActivity(ChatActivity.this);  
+            mService.cancelAllNotification();
+        }  
+    };
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -141,10 +171,15 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	}
 	
 	private void init() {
+		//绑定服务
+		Intent intent = new Intent(ChatActivity.this,ChatService.class);
+		bindService(intent, conn, BIND_AUTO_CREATE);
+		
 		EventBus.getDefault().register(this);
-		initUserInfo();
 		mOrmDatabaseHelper = new OrmDatabaseHelper(this);
 		mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
+		mChatSnapshotDao = mOrmDatabaseHelper.getChatSnapshotDao();
+		initUserInfo();
 		initFragment();
 		initBottom();
 	}
@@ -156,6 +191,18 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		String other_username = otherUser.getUsername();
 		setCenterTitle("与"+other_username+"聊天");
 		
+		ChatSetting.isShow = true;
+		ChatSetting.otherUserName = other_username;
+		
+		from = intent.getExtras().getInt("from");
+		//从notifiction处启动ChatActivity，刷新最近聊天列表
+		if(from==JudgeConfig.FRAM_NOTIFICTION){
+			try {
+				mChatSnapshotDao.updateRaw("UPDATE chatsnapshot SET unread_num = 0 WHERE username = '"+other_username+"'");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		UserInfoManager mUserInfoManager = UserInfoManager.getInstance();
 		currentUser = mUserInfoManager.getmCurrent();
 	}
@@ -259,6 +306,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	 * @author yao
 	 */
 	private void sendTextMessage() {
+		chated = true;
 		final ChatDetailBean chatDetailBean = new ChatDetailBean();
 		String username = currentUser.getUsername();
 		chatDetailBean.setUsername(username);
@@ -314,6 +362,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	 * @author yao
 	 */
 	private void sendPictureMessage(String picPath) {
+		chated = true;
 		localPicturePath = picPath;
 		String username = currentUser.getUsername();
 		
@@ -417,6 +466,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	 * @param localPath 语音文件在本地的路径
 	 */
 	private void sendVoiceMessage(String localPath) {
+		chated = true;
 		voicePath = localPath;
 		final ChatDetailBean chatDetailBean = new ChatDetailBean();
 		String username = currentUser.getUsername();
@@ -644,7 +694,6 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		super.onResume();
 	}
 	
-	
 	/**
 	 * 如果调用此函数时正在播放语音，需要暂停播放
 	 */
@@ -661,6 +710,17 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 			addLinearLayout.setVisibility(View.GONE);
 		}
 	}
+	/**更新界面*/
+	public void refreshFragment(List<ChatDetailBean> list){
+		Log.i(TAG,"接收到的新消息是当前聊天对象发来的更新聊天列表");
+		mChatFragment.receiveNewMessage(list);
+		try {
+			mChatSnapshotDao.updateRaw("UPDATE chatsnapshot SET unread_num = 0 WHERE username = '"+otherUser.getUsername()+"'");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 	/**
 	 * 重定义actionbar的返回方法
@@ -668,15 +728,18 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	@Override
 	public void onActionBarBack() {
 		super.onActionBarBack();
-		 EventBus.getDefault().post(  new ExitChatEvent("back btn clicked"));  
-		
+		if(from!=JudgeConfig.FRAM_GOODS&&chated){
+		 EventBus.getDefault().post(new ExitChatEvent("back btn clicked"));  
+		}
 	}
 	
 	@Override
 	public void onBackPressed() {
 		// TODO 自动生成的方法存根
 		super.onBackPressed();
-		EventBus.getDefault().post(new ExitChatEvent("back btn clicked")); 
+		if(from!=JudgeConfig.FRAM_GOODS&&chated){
+			EventBus.getDefault().post(new ExitChatEvent("back btn clicked")); 
+		}
 	}
 	/**
 	 * 需要释放资源，聊天界面被destory时需要刷新消息列表
@@ -684,14 +747,17 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		unbindService(conn);
 		EventBus.getDefault().unregister(this);
 		mImageCusView.release();
+		ChatSetting.isShow = false;
+		ChatSetting.otherUserName = "";
 	}
+	
 	/**
 	 * 刷新消息列表
 	 **/
 	private void refreshRecent(ChatDetailBean chatDetailBean) {
-		final Dao<ChatSnapshot, Integer> mChatSnapshotDao = mOrmDatabaseHelper.getChatSnapshotDao();
 		final ChatSnapshot mChatSnapshot = new ChatSnapshot();
 		int type = chatDetailBean.getMessage_type();
 		
