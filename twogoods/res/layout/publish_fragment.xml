@@ -41,7 +41,7 @@
         android:layout_below="@+id/et_publish_fragment_description"
         android:layout_toLeftOf="@+id/tv_publish_fragment_text_number"
         android:contentDescription="@string/publish_voice_description"
-        android:src="@drawable/publish_voice_have"
+        android:src="@drawable/message_chat_voice_right"
         android:visibility="gone" />
 
     <LinearLayout
@@ -71,6 +71,7 @@
         android:id="@+id/ll_publish_fragment_tel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/app_publish_fragment_margintop"
         android:layout_alignLeft="@+id/ll_publish_fragment_category"
         android:layout_below="@id/ll_publish_fragment_category"
         android:gravity="center_vertical" >
@@ -97,6 +98,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/ll_publish_fragment_category"
+        android:layout_marginTop="@dimen/app_publish_fragment_margintop"
         android:layout_below="@id/ll_publish_fragment_tel"
         android:gravity="center_vertical" >
 
@@ -119,6 +121,7 @@
             android:id="@+id/tv_publish_fragment_yuan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/app_publish_fragment_textsize"
             android:text="@string/yuan" />
     </LinearLayout>
 
@@ -127,6 +130,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/ll_publish_fragment_category"
+        android:layout_marginTop="@dimen/app_publish_fragment_margintop"
         android:layout_below="@id/ll_publish_fragment_price"
         android:gravity="center_vertical" >
 
@@ -147,6 +151,7 @@
             android:id="@+id/tv_publish_fragment_tian"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/app_publish_fragment_textsize"
             android:text="@string/tian" />
     </LinearLayout>
 

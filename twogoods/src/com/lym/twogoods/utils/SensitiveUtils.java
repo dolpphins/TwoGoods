@@ -30,7 +30,7 @@ public class SensitiveUtils {
 		sensitiveWords.add("杀");
 		sensitiveWords.add("凶");
 		sensitiveWords.add("法轮功");
-		sensitiveWords.add("法轮佛");
+		sensitiveWords.add("法轮功");
 		sensitiveWords.add("枪");
 		sensitiveWords.add("江贼民");
 		sensitiveWords.add("裸聊");

@@ -12,18 +12,15 @@ import cn.bmob.v3.listener.VerifySMSCodeListener;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.User;
-import com.lym.twogoods.config.SharePreferencesConfiguration;
-import com.lym.twogoods.config.UserConfiguration;
 import com.lym.twogoods.ui.base.BackActivity;
 import com.lym.twogoods.utils.EncryptHelper;
 import com.lym.twogoods.utils.NetworkHelper;
-import com.lym.twogoods.utils.SharePreferencesManager;
 import com.lym.twogoods.utils.StringUtil;
+import com.lym.twogoods.utils.VerificationUtil;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -69,6 +66,7 @@ public class LoginActivity extends BackActivity {
 	}
 
 	private void init() {
+		VerificationUtil.configClear();
 		et_login_erhuo = (EditText) findViewById(R.id.et_login_erhuo);
 		et_login_password = (EditText) findViewById(R.id.et_login_password);
 		et_login_code = (EditText) findViewById(R.id.et_login_code);
