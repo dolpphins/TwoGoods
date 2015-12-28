@@ -19,9 +19,6 @@
             android:contentDescription="@null" />
 
 
-        <View
-            android:layout_width="@dimen/app_goods_details_write_comment_top_padding"
-            android:layout_height="match_parent" />
         <ImageView
             android:id="@+id/iv_publish_fragment_add_smile"
             android:layout_width="wrap_content"

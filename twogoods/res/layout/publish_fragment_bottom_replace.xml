@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/app_goods_details_write_comment_padding" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/app_goods_details_write_comment_top_padding" >
+
+        <LinearLayout 
+            android:id="@+id/ll_publish_fragment_add_photo"
+            android:gravity="center_horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            
+            <ImageView
+            android:id="@+id/iv_publish_fragment_add_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/message_btn_chat_add_selector"
+            android:contentDescription="@null" />
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/publish_fragment_bottom_take_phote"/>
+        </LinearLayout>
+        <LinearLayout 
+            android:id="@+id/ll_publish_fragment_add_smile"
+            android:gravity="center_horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            
+            <ImageView
+            android:id="@+id/iv_publish_fragment_add_smile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/message_btn_chat_emo_selector"
+            android:contentDescription="@null" />
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/publish_fragment_bottom_emoji"/>
+        </LinearLayout>
+        <LinearLayout 
+            android:id="@+id/ll_publish_fragment_add_voice"
+            android:gravity="center_horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            
+            <ImageView
+            android:id="@+id/iv_publish_fragment_add_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/publish_voice"
+            android:contentDescription="@null" />
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/publish_fragment_bottom_voice"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#cccccc" />
+
+    <com.lym.twogoods.widget.WrapContentViewPager
+        android:id="@+id/vp_publish_fragment_emoji"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/ll_publish_fragment_bottom_chat"
+        layout="@layout/message_chat_record_content"
+        android:visibility="gone" />
+
+</LinearLayout>

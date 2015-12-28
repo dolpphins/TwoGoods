@@ -61,9 +61,9 @@
 	<!-- publish_spinner_layout -->
 	<color name="publish_spinner_title_background">#defafd</color>
 	<color name="publish_spinner_title_textcolor">#0182af</color>
-	
-	
-	
+	<!-- publish_fragment -->
+	<color name="publish_fragment_background">#e5eecc</color>		<!-- 灰色 -->
+	<color name="publish_fragment_while">#ffffff</color>			<!-- 白色 -->
 	
 	
 	

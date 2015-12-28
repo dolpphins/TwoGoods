@@ -117,14 +117,14 @@
 	<string name="publish_description">请描述你的贰货（200字内）</string>
 	<string name="publish_voice_description">已语音</string>
 	<string name="publish_text_number">200</string>
-	<string name="publish_sort">选择分类</string>
-	<string name="publish_tel">联系方式</string>
+	<string name="publish_sort">选择分类：</string>
+	<string name="publish_tel">联系方式：</string>
 	<string name="publish_tel_hint">给个联系方式呗</string>
-	<string name="publish_price">贰货价格</string>
+	<string name="publish_price">贰货价格(元)：</string>
 	<string name="publish_price_hint">你还没标价呢</string>
 	<string name="yuan">元</string>
-	<string name="publish_date">选择期限</string>
-	<string name="publish_position">位置</string>
+	<string name="publish_date">选择期限(天)：</string>
+	<string name="publish_position">位置：</string>
 	<string name="guangzhou">广州</string>
 	<string name="mine_scan">浏览数</string>
 	<string name="mine_introduction">简介</string>
@@ -148,9 +148,10 @@
     <string name="nearby_select_city_dingwei">定位到目前所在城市</string>
     <!-- publish_spinner_layout -->
     <string name="publish_spinner_title">请选择</string>
-    
-    
-    
+    <!-- publish_fragment_bottom -->
+    <string name="publish_fragment_bottom_take_phote">照片</string>
+    <string name="publish_fragment_bottom_emoji">表情</string>
+    <string name="publish_fragment_bottom_voice">语音</string>
     
     
     

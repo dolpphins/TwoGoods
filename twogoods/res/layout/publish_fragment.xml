@@ -147,12 +147,6 @@
             android:layout_height="50dp"
             android:background="@drawable/publish_spinner_background" />
 
-        <TextView
-            android:id="@+id/tv_publish_fragment_tian"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/app_publish_fragment_textsize"
-            android:text="@string/tian" />
     </LinearLayout>
 
     <LinearLayout
