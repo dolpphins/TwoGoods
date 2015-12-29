@@ -38,7 +38,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -48,7 +47,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -56,7 +54,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.bmob.push.a.This;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.DeleteListener;
 import cn.bmob.v3.listener.SaveListener;
@@ -90,7 +87,6 @@ public class PublishFragment extends BaseFragment {
 	private EditText et_publish_fragment_description;
 	private TextView tv_publish_fragment_position_set;
 	private GridView gv_publish_fragment_photo;
-	private Button btn_publish_fragment_position;
 	private WrapContentViewPager vp_publish_fragement_emoji;
 
 	// 设置日期
@@ -161,8 +157,6 @@ public class PublishFragment extends BaseFragment {
 		context = publishGoodsActivity.getApplicationContext();
 		vp_publish_fragement_emoji = (WrapContentViewPager) publishGoodsActivity
 				.attrachEmotionViewPager();
-		btn_publish_fragment_position = (Button) view
-				.findViewById(R.id.btn_publish_fragment_position);
 		gv_publish_fragment_photo = (GridView) view
 				.findViewById(R.id.gv_publish_fragment_photo);
 		// 货品信息相关
@@ -223,17 +217,6 @@ public class PublishFragment extends BaseFragment {
 						PublishConfigManger.PUBLISH_REQUESTCODE);
 			}
 		});
-		// 定位监听按钮
-		/*
-		 * btn_publish_fragment_position.setOnClickListener(new
-		 * OnClickListener() {
-		 * 
-		 * @Override public void onClick(View v) { Intent intent = new
-		 * Intent(getActivity(), SelectCityActivity.class); intent.putExtra(
-		 * PublishConfigManger.publishActivityIdentificationKey,
-		 * "PublishGoodsActivity"); startActivityForResult(intent,
-		 * PublishConfigManger.PUBLISH_REQUESTCODE); } });
-		 */
 		gv_publish_fragment_photo
 				.setNumColumns(PublishConfigManger.PUBLISH_PICTURE_GRIDVIEW_COLUMN);
 		gv_publish_fragment_photo
