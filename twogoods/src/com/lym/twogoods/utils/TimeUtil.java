@@ -97,8 +97,8 @@ public class TimeUtil {
  	}
  	
  	/**
-	 * String转换为Date类型
-	 * @param strTime 要转换的String
+	 * long转换为String类型
+	 * @param currentTime 要转换的long类型时间
 	 * @param formatType要转换的时间格式yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日 HH时mm分ss秒
 	 * @return Date
 	 * 

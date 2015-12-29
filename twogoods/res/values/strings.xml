@@ -188,43 +188,8 @@
     <string name="chat_finish_record_abandon">向上滑动放弃录音</string>
     <string name="chat_add_avator">头像</string>
     
+    <string name="chat_no_login_tip">快登录查看消息吧</string>
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+ 
 </resources>

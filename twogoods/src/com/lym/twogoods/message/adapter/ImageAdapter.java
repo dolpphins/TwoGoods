@@ -96,8 +96,6 @@ public class ImageAdapter extends BaseAdapter
 				
 				@Override
 				public void onClick(View v) {
-					// TODO 自动生成的方法存根
-					Toast.makeText(mContext, "点击了拍照", Toast.LENGTH_LONG).show();
 					Message message = new Message();
 					message.what = MessageConfig.OPEN_CAMERA;
 					mHandler.sendMessage(message);

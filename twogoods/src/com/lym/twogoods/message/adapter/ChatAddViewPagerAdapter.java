@@ -1,10 +1,13 @@
 package com.lym.twogoods.message.adapter;
 
+import com.lym.twogoods.R;
 import com.lym.twogoods.message.config.ChatBottomConfig;
 import com.lym.twogoods.ui.SendPictureActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
@@ -16,7 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 /**
  * 点击添加按钮后底部显示的viewpager的适配器
- * @author yao
+ * @author 尧俊锋
  *
  */
 public class ChatAddViewPagerAdapter extends PagerAdapter{
@@ -39,10 +42,10 @@ public class ChatAddViewPagerAdapter extends PagerAdapter{
 		mGridView = new GridView[ChatBottomConfig.pagerNum];
 		for(int i = 0;i<ChatBottomConfig.pagerNum;i++)
 		{
-			Log.i(TAG,"��gridview");
 			mGridView[i] = new GridView(mContext);
 			mGridView[i].setNumColumns(ChatBottomConfig.columnNum);
 			mGridView[i].setAdapter(new ChatButtonGridViewAdapter(mContext));
+			mGridView[i].setSelector(new ColorDrawable(Color.TRANSPARENT));
 			setItemClickEventListnerForGrodView(mGridView[i]);
 		}
 	}
@@ -54,6 +57,7 @@ public class ChatAddViewPagerAdapter extends PagerAdapter{
 	private void setItemClickEventListnerForGrodView(GridView gridView) {
 		if(gridView==null)
 			return;
+		
 		gridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override

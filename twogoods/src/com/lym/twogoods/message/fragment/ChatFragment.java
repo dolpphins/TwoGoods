@@ -2,6 +2,7 @@ package com.lym.twogoods.message.fragment;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import me.maxwin.view.XListView;
@@ -20,6 +21,7 @@ import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cn.bmob.im.bean.BmobMsg;
 import cn.bmob.im.config.BmobConfig;
@@ -44,12 +46,13 @@ import com.lym.twogoods.fragment.base.PullListFragment;
 import com.lym.twogoods.message.NewMessageReceiver;
 import com.lym.twogoods.message.adapter.MessageChatAdapter;
 import com.lym.twogoods.message.config.MessageConfig;
-import com.lym.twogoods.message.ui.ChatActivity;
 import com.lym.twogoods.utils.DatabaseHelper;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 
 public class ChatFragment extends PullListFragment{
 	
+	/**刷新聊天界面的次数*/
+	private static int countOfRefresh = 1;
 	private final String TAG = "ChatFragment" ;
 	OrmDatabaseHelper mOrmDatabaseHelper;
 	/**聊天表*/
@@ -58,16 +61,20 @@ public class ChatFragment extends PullListFragment{
 	private MessageChatAdapter mMessageChatAdapter;
 	/**聊天对象*/
 	private User otherUser;
+	/**聊天对象的头像url*/
+	private String otherUserHeadUrl;
 	/**当前用户*/
 	private User currentUser;
 	/**当前用户与聊天对象的消息记录*/
 	List<ChatDetailBean> mList = null;
 	
 	Handler mHandler;
+	/**当前已经被加载聊天记录的数目*/
+	private int currentSize = 0;
+	/**用来标记是否已经加载完全部聊天记录*/
+	private boolean isLoadAll = false;
 	
-	
-	public ChatFragment()
-	{
+	public ChatFragment(){
 		super();
 	}
 	
@@ -83,6 +90,11 @@ public class ChatFragment extends PullListFragment{
 	}
 	
 	@Override
+	public void onStart() {
+		super.onStart();
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		return super.onCreateView(inflater, container, savedInstanceState);
@@ -90,49 +102,40 @@ public class ChatFragment extends PullListFragment{
 
 	private void init() {
 		initCurrentUser();
-		initData();
+		initDataBase();
 		initXlistView();
 	}
 	
-	/**
-	 * 初始化数据
-	 */
-	private void initData() {
-		//初始化本地聊天数据库
+	// 初始化数据库
+	private void initDataBase() {
 		mOrmDatabaseHelper = new OrmDatabaseHelper(getActivity());
 		mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
-		
-		mList = initMsgData();
 	}
 
 	/**
 	 * 初始化当前用户信息
 	 */
 	private void initCurrentUser() {
-		// TODO 自动生成的方法存根
 		currentUser = UserInfoManager.getInstance().getmCurrent();
 	}
 	/**
 	 * 初始化聊天对象消息,由ChatActivity来调用
 	 * @param user
-	 */
+	 **/
 	public void initOtherUser(User user) {
-		// TODO 自动生成的方法存根
 		this.otherUser = user;
+		this.otherUserHeadUrl = user.getHead_url();
 	}
 	/**
 	 * 设置ChatFragment和ChatActivity之间的handler,由ChatActivity来调用
 	 * @param handler
 	 */
-	public void setHandler(Handler handler)
-	{
+	public void setHandler(Handler handler){
 		mHandler = handler;
 	}
 
 	private void initXlistView() {
-		// TODO 自动生成的方法存根
 		setMode(Mode.PULLDOWN);
-		
 		initOrRefresh();
 		//当弹出软键盘时如果ListView最后一条Item可见那么将ListView顶上去(要配合windowSoftInputMode="adjustResize")
 		mListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
@@ -148,14 +151,13 @@ public class ChatFragment extends PullListFragment{
 			}
 		});
 		// 重发按钮的点击事件
-		mMessageChatAdapter.setOnInViewClickListener(R.id.iv_fail_resend,
-					new MessageChatAdapter.onInternalClickListener() {
+		mMessageChatAdapter.setOnInViewClickListener(R.id.iv_fail_resend,new MessageChatAdapter.onInternalClickListener() {
 					@Override
 					public void OnClickListener(View parentV, View v,Integer position, Object values) {
 						// 重发消息
 						reSendMessage(parentV, v, values);
 					}
-				});
+			});
 	}
 	
 	/**
@@ -191,8 +193,7 @@ public class ChatFragment extends PullListFragment{
 	 * 重发语音消息
 	 * @param parentV
 	 * @param values
-	 */
-	
+	 **/
 	private void resendVoiceMsg(final View parentV, final Object values) {
 		resendVoicePath = ((ChatDetailBean)values).getMessage();
 		String username = currentUser.getUsername();
@@ -205,14 +206,12 @@ public class ChatFragment extends PullListFragment{
 		chatDetailBean.setMessage_read_status(MessageConfig.MESSAGE_NOT_RECEIVED);
 		chatDetailBean.setLast_Message_Status(MessageConfig.SEND_MESSAGE_ING);
 		chatDetailBean.setMessage(resendVoicePath);
-		
 		 try {
 			 mChatDetailDao.delete((ChatDetailBean)values);
 			 mChatDetailDao.create(chatDetailBean);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		BmobProFile.getInstance(getActivity()).upload(resendVoicePath, new UploadListener() {
 			@Override
 			public void onError(int arg0, String arg1) {
@@ -235,13 +234,11 @@ public class ChatFragment extends PullListFragment{
 		            }
 		        });
 			}
-			
 			@Override
 			public void onProgress(int arg0) {
 				Log.i(TAG,"onProgress");
 			}
 		});
-		
 	}
 	/**
 	 * 将voice消息插入到数据库中
@@ -454,41 +451,98 @@ public class ChatFragment extends PullListFragment{
 			}
 		}
 	}
-
-
-	/**
-	 * 初始化和刷新聊天信息数据
-	 * @author yao
-	 */
-	public void initOrRefresh()
-	{
-		if(mMessageChatAdapter!=null)
-		{
-			if(NewMessageReceiver.newMsgNums>0){
-				int news=  NewMessageReceiver.newMsgNums;//有可能锁屏期间，来了N条消息,因此需要倒叙显示在界面上
-				int size = initMsgData().size();
-				for(int i=(news-1);i>=0;i--){
-					mMessageChatAdapter.add(initMsgData().get(size-(i+1)));// 添加最后一条消息到界面显示
-				}
-				mListView.setSelection(mAdapter.getCount() - 1);
-			} else {
-			}
-		}else{
-			Log.i(TAG,"12345new一个adapter");
-			setAdapter();
-		}
-		mListView.setSelection(mMessageChatAdapter.getCount()-1);
-		
-	}
 	
-	public void sendNewMessage(ChatDetailBean chatBean)
-	{
+	public void sendNewMessage(ChatDetailBean chatBean){
 		mList.add(chatBean);
 		initOrRefresh();
 	}
 	
-	public void notifyChange(int status)
-	{
+	public void receiveNewMessage(List<ChatDetailBean> list){
+		for(int i = 0;i<list.size();i++){
+			mList.add(list.get(i));
+		}
+		initOrRefresh();
+	}
+
+
+	/**向下拉时调用，加载消息*/
+	@Override
+	public void onRefresh() {
+		super.onRefresh();
+		if(!isLoadAll){
+			countOfRefresh++;
+			List<ChatDetailBean> list = initMsgData(countOfRefresh*50);
+			int size = list.size();
+			int size1 = mList.size();
+			Collection<ChatDetailBean>ct = list.subList(0, size-mList.size());
+			mList.addAll(0, ct);
+			mListView.setSelection(size-size1);
+		}else{
+			Toast.makeText(getActivity(), "已经加载完消息", Toast.LENGTH_SHORT).show();
+		}
+		stopRefresh();
+	}
+
+	@Override
+	public void stopRefresh() {
+		super.stopRefresh();
+	}
+
+	/**
+	 * 初始化聊天信息数据和刷新界面
+	 * @author yao
+	 */
+	public void initOrRefresh(){
+		if(mMessageChatAdapter!=null){
+			if(NewMessageReceiver.newMsgNums>0){
+				int news=  NewMessageReceiver.newMsgNums;//有可能锁屏期间，来了N条消息,因此需要倒叙显示在界面上
+				int size = initMsgData(50).size();
+				for(int i=(news-1);i>=0;i--){
+					mMessageChatAdapter.add(initMsgData(50).get(size-(i+1)));// 添加最后一条消息到界面显示
+				}
+				mListView.setSelection(mAdapter.getCount() - 1);
+			} 
+		}else{
+			mList = initMsgData(50);
+			setAdapter();
+		}
+		mListView.setSelection(mMessageChatAdapter.getCount()-1);
+	}
+	
+	/**
+	 * 从本地ChatDetailBean数据表获取当前用户与聊天对象的聊天记录信息,开始只加载100条
+	 * @param length 要加载多少条消息
+	 * @return
+	 */
+	public List<ChatDetailBean> initMsgData(int length){
+		List<ChatDetailBean> list = null;
+		if(mChatDetailDao==null){
+			mOrmDatabaseHelper = new OrmDatabaseHelper(getActivity());
+			mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
+		}
+		QueryBuilder<ChatDetailBean, Integer>mQueryBuilder = mChatDetailDao.queryBuilder();
+		try {
+			Where<ChatDetailBean, Integer> where = mQueryBuilder.orderBy("publish_time", true).where().eq("username",
+					otherUser.getUsername()).or().eq("other_username", otherUser.getUsername());
+			list = where.query();
+			if(currentSize==list.size()){
+				isLoadAll = true;
+			}
+			if(list.size()>length){
+				list = list.subList(list.size()-length, list.size());
+			}
+			currentSize = list.size();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	/**
+	 * 通知消息是否发送成功
+	 * @param status
+	 */
+	public void notifyChange(int status){
 		if(status==MessageConfig.SEND_MESSAGE_SUCCEED){
 			mList.get(mList.size()-1).setLast_Message_Status(MessageConfig.SEND_MESSAGE_SUCCEED);
 		}else{
@@ -501,37 +555,10 @@ public class ChatFragment extends PullListFragment{
 	}
 
 	private void setAdapter() {
-		mMessageChatAdapter = new MessageChatAdapter(getActivity(), mList);
+		mMessageChatAdapter = new MessageChatAdapter(getActivity(), mList,otherUserHeadUrl);
 		super.setAdapter(mMessageChatAdapter);
 	}
 	
-	/**
-	 * 从本地ChatDetailBean数据表获取当前用户与聊天对象的聊天记录信息
-	 * @return
-	 */
-	public List<ChatDetailBean> initMsgData(){
-		List<ChatDetailBean> list = null;
-		if(mChatDetailDao==null){
-			mOrmDatabaseHelper = new OrmDatabaseHelper(getActivity());
-			mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
-		}
-		QueryBuilder<ChatDetailBean, Integer>mQueryBuilder = mChatDetailDao.queryBuilder();
-		try {
-			Where<ChatDetailBean, Integer> where = mQueryBuilder.orderBy("publish_time", true).where().eq("username",otherUser.getUsername()).
-					or().eq("other_username", otherUser.getUsername());
-			list = where.query();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-	
-	
-	public void addSendPicture(List<String> paths)
-	{
-		
-	}
 	
 	/**
 	 * 通知ChatActivity隐藏底部布局
@@ -555,5 +582,15 @@ public class ChatFragment extends PullListFragment{
 		}
 	}
 	
+	@Override
+	public void onStop() {
+		Log.i(TAG,"onStop");
+		super.onStop();
+	}
+	@Override
+	public void onDestroy() {
+		Log.i(TAG,"onDestroy");
+		super.onDestroy();
+	}
 
 }

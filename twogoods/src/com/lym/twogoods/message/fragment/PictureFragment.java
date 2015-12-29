@@ -120,13 +120,11 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO 自动生成的方法存根
 		return inflater.inflate(R.layout.message_chat_send_local_picture, null);
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO 自动生成的方法存根
 		super.onActivityCreated(savedInstanceState);
 		
 		DisplayMetrics outMetrics = new DisplayMetrics();
@@ -158,9 +156,6 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 		getActivity().startActivityForResult(openCameraIntent,
 				MessageConfig.OPEN_CAMERA);
 	}
-	
-	
-
 
 	/**
 	 * 为View绑定数据
@@ -354,9 +349,7 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 
 	private void initEvent()
 	{
-		/**
-		 * 为底部的布局设置点击事件，弹出popupWindow
-		 */
+		// 为底部的布局设置点击事件，弹出popupWindow
 		mBottomLy.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -393,9 +386,8 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 					return false;
 				}
 			}));
-			/**
-			 * 可以看到文件夹的路径和图片的路径分开保存，极大的减少了内存的消耗；
-			 */
+			 // 可以看到文件夹的路径和图片的路径分开保存，极大的减少了内存的消耗；
+			 
 			adapter = new PicturePathAdapter(getActivity().getApplicationContext(),selectedPics, mImgs,
 					R.layout.message_chat_grid_item, mImgDir.getAbsolutePath());
 			mGirdView.setAdapter(adapter);

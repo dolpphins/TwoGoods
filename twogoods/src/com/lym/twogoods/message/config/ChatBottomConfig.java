@@ -4,7 +4,7 @@ import com.lym.twogoods.R;
 
 /**
  * 有关ChatActivity底部布局的配置
- * @author yao
+ * @author 尧俊锋
  *
  */
 public class ChatBottomConfig {
@@ -28,12 +28,10 @@ public class ChatBottomConfig {
 	
 	
 	/**gridview条目图片,要增加条目直接在此处增加图片*/
-	public static final Integer imgs[] = {R.drawable.message_chat_add_picture_press,R.drawable.message_chat_add_picture_press,
-		R.drawable.message_chat_add_location_press};
-	
+	public static final Integer imgs[] = {R.drawable.message_chat_add_picture_selector,R.drawable.message_chat_add_voice_selector};
 	
 	/**gridview条目title,要增加条目直接在此处增加title*/
-	public static final String titles[] = {"图片","语音","位置"};
+	public static final String titles[] = {"图片","语音"};
 	
 	public static Integer[] getImages()
 	{

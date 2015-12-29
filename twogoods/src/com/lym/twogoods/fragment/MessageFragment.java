@@ -9,6 +9,7 @@ import java.util.Map;
 import me.maxwin.view.XListView;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +28,11 @@ import com.lym.twogoods.bean.ChatSnapshot;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.db.OrmDatabaseHelper;
 import com.lym.twogoods.fragment.base.PullListFragment;
+import com.lym.twogoods.message.JudgeConfig;
 import com.lym.twogoods.message.MessageDialog;
 import com.lym.twogoods.message.MessageDialog.MyItemOnClickListener;
 import com.lym.twogoods.message.adapter.MessageListAdapter;
-import com.lym.twogoods.message.adapter.TestAdapter;
+import com.lym.twogoods.message.adapter.TipAdapter;
 import com.lym.twogoods.message.ui.ChatActivity;
 import com.lym.twogoods.utils.SharePreferencesManager;
 import com.lym.twogoods.utils.TimeUtil;
@@ -44,7 +46,7 @@ import com.lym.twogoods.utils.TimeUtil;
 
 public class MessageFragment extends PullListFragment implements 
 	OnItemClickListener,OnItemLongClickListener{
-	
+	private String TAG = "MessageFragment";
 	private Boolean isLogining;
 
 	//xListView的adapter
@@ -111,6 +113,7 @@ public class MessageFragment extends PullListFragment implements
 	private void initView() {
 		setMode(Mode.PULLDOWN);
 		setAdapter();
+		mListView.setHeaderDividersEnabled(false);
 		mListView.setOnItemClickListener(this);
 		mListView.setOnItemLongClickListener(this);
 	}
@@ -123,10 +126,11 @@ public class MessageFragment extends PullListFragment implements
 			super.setAdapter(mMessageListAdapter);
 			
 		}else{
-			int images[] = {R.drawable.user_default_head,R.drawable.user_default_head,
-					R.drawable.user_default_head,R.drawable.user_default_head,
-					R.drawable.user_default_head};
-			TestAdapter adapter = new TestAdapter(getActivity(), images);
+			mListView.setClickable(false);
+			mListView.setPullRefreshEnable(false);
+			mListView.setPullLoadEnable(false);
+			int images[] = {R.drawable.user_default_head};
+			TipAdapter adapter = new TipAdapter(getActivity(), images);
 			super.setAdapter(adapter);
 		}
 	}
@@ -199,7 +203,6 @@ public class MessageFragment extends PullListFragment implements
 						deleteBuilder.where().eq("username", recent.getUsername());
 						deleteBuilder.delete();
 					} catch (SQLException e) {
-						// TODO 自动生成的 catch 块
 						e.printStackTrace();
 					}
 					
@@ -215,43 +218,42 @@ public class MessageFragment extends PullListFragment implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		
-			Intent intent = new Intent(getActivity(), ChatActivity.class);
-			
-			ChatSnapshot chatSnapshot = (ChatSnapshot) mMessageListAdapter.getItem(position);
-			//有未读的消息点击后要将unread_num置为0
-			if(chatSnapshot.getUnread_num()>0){
-				if(chatSnapshot.getUsername().equals(getCurrentUsername())){//如果最近一条消息是用户自己发出去的
-					try {
-						String name = chatSnapshot.getOther_username();
-						mChatSnapshotDao.updateRaw("UPDATE chatsnapshot SET unread_num = 0 WHERE other_username = '"+name+"'");
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-				}else{
-					try {
-						String name = chatSnapshot.getUsername();
-						mChatSnapshotDao.updateRaw("UPDATE chatsnapshot SET unread_num = 0 WHERE username = '"+name+"'");
-					} catch (SQLException e) {
-						// TODO 自动生成的 catch 块
-						e.printStackTrace();
+			if(isLogining){
+				Intent intent = new Intent(getActivity(), ChatActivity.class);
+				ChatSnapshot chatSnapshot = (ChatSnapshot) mMessageListAdapter.getItem(position);
+				//有未读的消息点击后要将unread_num置为0
+				if(chatSnapshot.getUnread_num()>0){
+					if(chatSnapshot.getUsername().equals(getCurrentUsername())){//如果最近一条消息是用户自己发出去的
+						try {
+							String name = chatSnapshot.getOther_username();
+							int i = mChatSnapshotDao.updateRaw("UPDATE chatsnapshot SET unread_num = 0 WHERE other_username = '"+name+"'");
+							Log.i(TAG,i+"返回值");
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+					}else{
+						try {
+							String name = chatSnapshot.getUsername();
+							mChatSnapshotDao.updateRaw("UPDATE chatsnapshot SET unread_num = 0 WHERE username = '"+name+"'");
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
 					}
 				}
+				User otherUser = new User();
+				String name;
+				if(chatSnapshot.getUsername().equals(getCurrentUsername())){
+					name = chatSnapshot.getOther_username();
+				}else{
+					name = chatSnapshot.getUsername();
+				}
+				otherUser.setHead_url(chatSnapshot.getHead_url());
+				otherUser.setUsername(name);
+				
+				intent.putExtra("otherUser", otherUser);	
+				intent.putExtra("from", JudgeConfig.FRAM_MESSAGE_LIST);
+				startActivity(intent);
 			}
-			
-			User otherUser = new User();
-			String name;
-			if(chatSnapshot.getUsername().equals(getCurrentUsername()))
-			{
-				name = chatSnapshot.getOther_username();
-			}else{
-				name = chatSnapshot.getUsername();
-			}
-			otherUser.setHead_url(chatSnapshot.getHead_url());
-			otherUser.setUsername(name);
-			
-			intent.putExtra("otherUser", otherUser);		
-			startActivity(intent);
 		
 	}
 
@@ -271,16 +273,14 @@ public class MessageFragment extends PullListFragment implements
 	/*
 	 * 向下滑动时调用
 	 * @auther yao
-	 */
-	
+	 **/
 	@Override
 	public void onRefresh() {
 		super.onRefresh();
 		//获取上一次刷新的时间
 		String lasttime_refresh = mSharePreferenceManager.getString(
 				getActivity(), "lasttime_refresh", "failure");
-		if(lasttime_refresh=="failure")
-		{
+		if(lasttime_refresh=="failure"){
 			lasttime_refresh = TimeUtil.getCurrentTime(null);
 		}
 		String time = TimeUtil.getDescriptionTimeFromTimestamp(
@@ -289,9 +289,7 @@ public class MessageFragment extends PullListFragment implements
 				"lasttime_refresh", TimeUtil.getCurrentTime(null));
 		//设置刷新时间
 		setLastRefreshTime(time);
-		
 		refreshMessage();
-		
 		stopRefresh();
 	}
 	
@@ -318,14 +316,11 @@ public class MessageFragment extends PullListFragment implements
 	
 	@Override
 	public void stopRefresh() {
-		// TODO 自动生成的方法存根
 		super.stopRefresh();
 	}
 	@Override
 	public void onResume() {
-		// TODO 自动生成的方法存根
 		//refreshMessage();
-		System.out.println("lifeonResume");
 		super.onResume();
 	}
 	

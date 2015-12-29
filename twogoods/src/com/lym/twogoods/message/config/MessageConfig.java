@@ -61,6 +61,8 @@ public class MessageConfig {
 	/**对方已经接收到消息*/
 	public static final int MESSAGE_RECEIVED = 0;       
 	/**对方还未接收到消息*/
-	public static final int MESSAGE_NOT_RECEIVED = 2;    
+	public static final int MESSAGE_NOT_RECEIVED = 2;  
+	/**接收了新消息，chatFragment需要刷新消息列表*/
+	public static final int NEW_MESSAGE_RECEIVED = 11;
 	 
 }

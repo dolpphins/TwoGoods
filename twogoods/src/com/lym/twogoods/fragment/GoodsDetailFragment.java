@@ -21,6 +21,7 @@ import com.lym.twogoods.index.interf.OnGoodsCommentReplyListener;
 import com.lym.twogoods.index.interf.OnPublishCommentListener;
 import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.manager.ImageLoaderHelper;
+import com.lym.twogoods.message.JudgeConfig;
 import com.lym.twogoods.message.listener.RecordPlayClickListener;
 import com.lym.twogoods.message.ui.ChatActivity;
 import com.lym.twogoods.screen.DisplayUtils;
@@ -558,6 +559,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 						user.setHead_url(mData.getHead_url());
 						Intent intent = new Intent(mAttachActivity, ChatActivity.class);
 						intent.putExtra("otherUser", user);
+						intent.putExtra("from", JudgeConfig.FRAM_GOODS);
 						mAttachActivity.startActivity(intent);
 						mAttachActivity.finish();
 					}

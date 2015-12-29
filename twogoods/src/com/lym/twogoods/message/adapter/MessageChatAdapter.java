@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.ChatDetailBean;
+import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.ChatConfiguration;
 import com.lym.twogoods.manager.UniversalImageLoaderConfigurationManager;
 import com.lym.twogoods.manager.UniversalImageLoaderManager;
@@ -72,12 +73,20 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 	private String currentUserName;
 	/**保存最近一条消息的时间*/
 	private long last_message_time;
+	/**对方头像url*/
+	private String otherUserHeadUrl;
 	
 	static int acount = 0;
-	
-	public MessageChatAdapter(Context context, List<ChatDetailBean> list) {
+	/**
+	 * 
+	 * @param context
+	 * @param list
+	 * @param haedUrl对方的头像url
+	 */
+	public MessageChatAdapter(Context context, List<ChatDetailBean> list,String headUrl) {
 		super(context, list);
 		currentUserName = getCurrentUserName();
+		otherUserHeadUrl = headUrl;
 		last_message_time = TimeUtil.getCurrentMilliSecond();
 		options = new DisplayImageOptions.Builder().showImageForEmptyUri(R.drawable.ic_launcher)
 		.showImageOnFail(R.drawable.ic_launcher).resetViewBeforeLoading(true).cacheOnDisc(true)
@@ -163,8 +172,11 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 		final TextView tv_voice_length = ViewHolder.get(convertView, R.id.tv_voice_length);
 		//点击头像进入个人资料,拿到缓存的
 		String avatar = null;
-		if(item.getUsername().equals(currentUserName))
+		if(item.getUsername().equals(currentUserName)){
 			avatar = UserInfoManager.getInstance().getmCurrent().getHead_url();
+		}else{
+			avatar = "";
+		}
 		//需要获得对方的头像url
 		if(avatar!=null && !avatar.equals("")){//加载头像-为了不每次都加载头像
 			ImageLoader.getInstance().displayImage(avatar, iv_avatar, ImageLoadOptions.getOptions(),animateFirstListener);
@@ -175,13 +187,15 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 			@Override
 			public void onClick(View arg0) {
 				Intent intent =new Intent(mContext,PersonalityInfoActivity.class);
-				if(getItemViewType(position) == TYPE_RECEIVER_TXT ||getItemViewType(position) == TYPE_RECEIVER_IMAGE
-				        ||getItemViewType(position)==TYPE_RECEIVER_LOCATION||getItemViewType(position)==TYPE_RECEIVER_VOICE){
-					intent.putExtra("from", "other");
-					intent.putExtra("username", item.getUsername());
+				User user = new User();
+				user.setUsername(item.getUsername());
+				if(item.getUsername().equals(currentUserName)){
+					user.setHead_url(UserInfoManager.getInstance().getmCurrent().getHead_url());
 				}else{
-					intent.putExtra("from", "me");
+					user.setHead_url(otherUserHeadUrl);
 				}
+				user.setHead_url(otherUserHeadUrl);
+				intent.putExtra("user", user);
 				mContext.startActivity(intent);
 			}
 		});

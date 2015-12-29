@@ -519,6 +519,7 @@ containing a value of this type.
         public static final int message_chat_add_voice_press=0x7f02009f;
         public static final int message_chat_add_voice_selector=0x7f0200a0;
         public static final int message_chat_base_edit_input=0x7f0200a1;
+<<<<<<< HEAD
         public static final int message_chat_btn_fail_resend=0x7f0200a2;
         public static final int message_chat_camera=0x7f0200a3;
         public static final int message_chat_dir_choose=0x7f0200a4;
@@ -606,6 +607,91 @@ containing a value of this type.
         public static final int user_detail_head_layout_bg=0x7f0200f6;
         public static final int user_detail_header_back_icon=0x7f0200f7;
         public static final int xlistview_arrow=0x7f0200f8;
+=======
+        public static final int message_chat_bottom_pic_normal=0x7f0200a2;
+        public static final int message_chat_bottom_pic_prss=0x7f0200a3;
+        public static final int message_chat_bottom_voice_normal=0x7f0200a4;
+        public static final int message_chat_bottom_voice_press=0x7f0200a5;
+        public static final int message_chat_btn_fail_resend=0x7f0200a6;
+        public static final int message_chat_camera=0x7f0200a7;
+        public static final int message_chat_dir_choose=0x7f0200a8;
+        public static final int message_chat_emo_normal=0x7f0200a9;
+        public static final int message_chat_emo_press=0x7f0200aa;
+        public static final int message_chat_fail_resend_normal=0x7f0200ab;
+        public static final int message_chat_fail_resend_press=0x7f0200ac;
+        public static final int message_chat_item_receive_msg=0x7f0200ad;
+        public static final int message_chat_item_send_msg=0x7f0200ae;
+        public static final int message_chat_location_default=0x7f0200af;
+        public static final int message_chat_pic_dir=0x7f0200b0;
+        public static final int message_chat_picture_unselected=0x7f0200b1;
+        public static final int message_chat_pictures_no=0x7f0200b2;
+        public static final int message_chat_pictures_selected=0x7f0200b3;
+        public static final int message_chat_reconding_audio1=0x7f0200b4;
+        public static final int message_chat_reconding_audio2=0x7f0200b5;
+        public static final int message_chat_reconding_audio3=0x7f0200b6;
+        public static final int message_chat_record=0x7f0200b7;
+        public static final int message_chat_send_n=0x7f0200b8;
+        public static final int message_chat_send_p=0x7f0200b9;
+        public static final int message_chat_status_sending=0x7f0200ba;
+        public static final int message_chat_time_block=0x7f0200bb;
+        public static final int message_chat_top_voice_bg=0x7f0200bc;
+        public static final int message_chat_voice_left=0x7f0200bd;
+        public static final int message_chat_voice_left1=0x7f0200be;
+        public static final int message_chat_voice_left2=0x7f0200bf;
+        public static final int message_chat_voice_left3=0x7f0200c0;
+        public static final int message_chat_voice_right=0x7f0200c1;
+        public static final int message_chat_voice_right1=0x7f0200c2;
+        public static final int message_chat_voice_right2=0x7f0200c3;
+        public static final int message_chat_voice_right3=0x7f0200c4;
+        public static final int message_list_name_color_selector=0x7f0200c5;
+        public static final int message_list_newmessage2=0x7f0200c6;
+        public static final int message_list_text_color_selector=0x7f0200c7;
+        public static final int mine_list_item_selector=0x7f0200c8;
+        public static final int nearby_gridview_item_selector=0x7f0200c9;
+        public static final int nearby_select_city_cancel_btn=0x7f0200ca;
+        public static final int nearby_select_city_dingwei=0x7f0200cb;
+        public static final int nearby_select_city_edittext_clear=0x7f0200cc;
+        public static final int nearly_location_icon=0x7f0200cd;
+        public static final int picture_loading_icon=0x7f0200ce;
+        public static final int publish_add_photo=0x7f0200cf;
+        public static final int publish_add_smile=0x7f0200d0;
+        public static final int publish_btn=0x7f0200d1;
+        public static final int publish_gridview_item_delect=0x7f0200d2;
+        public static final int publish_spinner_background=0x7f0200d3;
+        public static final int publish_spinner_background_focused=0x7f0200d4;
+        public static final int publish_spinner_background_pressed=0x7f0200d5;
+        public static final int publish_spinner_title_tick=0x7f0200d6;
+        public static final int publish_voice=0x7f0200d7;
+        public static final int publish_voice_have=0x7f0200d8;
+        public static final int pulltorefresh_down_arrow=0x7f0200d9;
+        public static final int pulltorefresh_up_arrow=0x7f0200da;
+        public static final int report_button_selector=0x7f0200db;
+        public static final int report_edittext_bg=0x7f0200dc;
+        public static final int selectcity_letterview_background=0x7f0200dd;
+        public static final int settings_exit_button_bg_nor=0x7f0200de;
+        public static final int settings_exit_button_bg_sel=0x7f0200df;
+        public static final int settings_exit_button_bg_selector=0x7f0200e0;
+        public static final int settings_list_item_selector=0x7f0200e1;
+        public static final int spinner_dropdown=0x7f0200e2;
+        public static final int tab_home_btn=0x7f0200e3;
+        public static final int tab_home_normal_button=0x7f0200e4;
+        public static final int tab_home_pressed_button=0x7f0200e5;
+        public static final int tab_message_btn=0x7f0200e6;
+        public static final int tab_message_normal_button=0x7f0200e7;
+        public static final int tab_message_pressed_button=0x7f0200e8;
+        public static final int tab_mine_btn=0x7f0200e9;
+        public static final int tab_mine_normal_button=0x7f0200ea;
+        public static final int tab_mine_pressed_button=0x7f0200eb;
+        public static final int tab_near_normal_button=0x7f0200ec;
+        public static final int tab_near_pressed_button=0x7f0200ed;
+        public static final int tab_nearby_btn=0x7f0200ee;
+        public static final int tab_textcolor=0x7f0200ef;
+        public static final int user_default_head=0x7f0200f0;
+        public static final int user_default_head_circle=0x7f0200f1;
+        public static final int user_detail_head_layout_bg=0x7f0200f2;
+        public static final int user_detail_header_back_icon=0x7f0200f3;
+        public static final int xlistview_arrow=0x7f0200f4;
+>>>>>>> 69687504f874dd625b1e935897bcbc0b1f21ad9b
     }
     public static final class id {
         public static final int app_base_goods_gridview_item_description=0x7f090001;
@@ -649,8 +735,12 @@ containing a value of this type.
         public static final int btn_login_code_get=0x7f090026;
         public static final int btn_login_forget=0x7f090027;
         public static final int btn_login_land=0x7f090025;
-        public static final int btn_nearby_select_city_replace_input_cancel=0x7f0900a8;
+        public static final int btn_nearby_select_city_replace_input_cancel=0x7f0900aa;
         public static final int btn_new_password_confirm=0x7f090033;
+<<<<<<< HEAD
+=======
+        public static final int btn_publish_fragment_position=0x7f0900c5;
+>>>>>>> 69687504f874dd625b1e935897bcbc0b1f21ad9b
         public static final int btn_register_code_get=0x7f090039;
         public static final int btn_register_register=0x7f090037;
         public static final int btn_reset_password_code_get=0x7f09003e;
@@ -662,12 +752,18 @@ containing a value of this type.
         public static final int et_login_code=0x7f090024;
         public static final int et_login_erhuo=0x7f090022;
         public static final int et_login_password=0x7f090023;
-        public static final int et_nearby_select_city_replace_input=0x7f0900a7;
+        public static final int et_nearby_select_city_replace_input=0x7f0900a9;
         public static final int et_new_password_again=0x7f090032;
         public static final int et_new_password_password=0x7f090031;
+<<<<<<< HEAD
         public static final int et_publish_fragment_description=0x7f0900b9;
         public static final int et_publish_fragment_price=0x7f0900c7;
         public static final int et_publish_fragment_tel=0x7f0900c5;
+=======
+        public static final int et_publish_fragment_description=0x7f0900b3;
+        public static final int et_publish_fragment_price=0x7f0900be;
+        public static final int et_publish_fragment_tel=0x7f0900bb;
+>>>>>>> 69687504f874dd625b1e935897bcbc0b1f21ad9b
         public static final int et_register_code=0x7f090035;
         public static final int et_register_erhuo=0x7f090034;
         public static final int et_register_password=0x7f09003a;
@@ -675,8 +771,13 @@ containing a value of this type.
         public static final int et_register_phone=0x7f090038;
         public static final int et_reset_password__phone=0x7f09003c;
         public static final int et_reset_password_code=0x7f09003b;
+<<<<<<< HEAD
         public static final int gv_nearby_select_city_replace_hot_city=0x7f0900ad;
         public static final int gv_publish_fragment_photo=0x7f0900ca;
+=======
+        public static final int gv_nearby_select_city_replace_hot_city=0x7f0900af;
+        public static final int gv_publish_fragment_photo=0x7f0900c7;
+>>>>>>> 69687504f874dd625b1e935897bcbc0b1f21ad9b
         public static final int id_bottom_ly=0x7f090095;
         public static final int id_choose_dir=0x7f090096;
         public static final int id_dir_item_count=0x7f090092;
@@ -730,8 +831,9 @@ containing a value of this type.
         public static final int item_dialog_list_lv=0x7f090099;
         public static final int iv_avatar=0x7f090085;
         public static final int iv_fail_resend=0x7f09008d;
-        public static final int iv_nearby_select_city_replace_dingwei_image=0x7f0900ac;
+        public static final int iv_nearby_select_city_replace_dingwei_image=0x7f0900ae;
         public static final int iv_picture=0x7f090086;
+<<<<<<< HEAD
         public static final int iv_publish_fragment_add_photo=0x7f0900b1;
         public static final int iv_publish_fragment_add_smile=0x7f0900b3;
         public static final int iv_publish_fragment_add_voice=0x7f0900b5;
@@ -759,6 +861,30 @@ containing a value of this type.
         public static final int ll_publish_spinner_title=0x7f0900cf;
         public static final int lv_nearby_select_city_replace_search_result=0x7f0900a9;
         public static final int lv_publish_spinner_list=0x7f0900d1;
+=======
+        public static final int iv_publish_fragment_add_photo=0x7f0900c8;
+        public static final int iv_publish_fragment_add_smile=0x7f0900c9;
+        public static final int iv_publish_fragment_add_voice=0x7f0900ca;
+        public static final int iv_publish_fragment_voice=0x7f0900b5;
+        public static final int iv_publish_gridview_image=0x7f0900ce;
+        public static final int iv_publish_gridview_item_delect=0x7f0900cf;
+        public static final int iv_publish_spinner_title_icon=0x7f0900d2;
+        public static final int iv_voice=0x7f09008b;
+        public static final int layout_location=0x7f090088;
+        public static final int ll_nearby_select_city_replace_dingwei=0x7f0900ad;
+        public static final int ll_nearby_select_city_replace_hidelayout=0x7f0900ac;
+        public static final int ll_nearby_select_city_replace_top=0x7f0900a8;
+        public static final int ll_publish_fragment_bottom_chat=0x7f0900cc;
+        public static final int ll_publish_fragment_category=0x7f0900b6;
+        public static final int ll_publish_fragment_date=0x7f0900c0;
+        public static final int ll_publish_fragment_position=0x7f0900c4;
+        public static final int ll_publish_fragment_price=0x7f0900bc;
+        public static final int ll_publish_fragment_tel=0x7f0900b9;
+        public static final int ll_publish_gridview_image=0x7f0900cd;
+        public static final int ll_publish_spinner_title=0x7f0900d1;
+        public static final int lv_nearby_select_city_replace_search_result=0x7f0900ab;
+        public static final int lv_publish_spinner_list=0x7f0900d3;
+>>>>>>> 69687504f874dd625b1e935897bcbc0b1f21ad9b
         public static final int message_chat_add_viewpager=0x7f090075;
         public static final int message_chat_btn_add=0x7f090079;
         public static final int message_chat_btn_emo=0x7f09007a;
@@ -772,21 +898,30 @@ containing a value of this type.
         public static final int message_chat_record_view=0x7f090093;
         public static final int message_chat_show_is_recording_iv=0x7f090012;
         public static final int message_chat_take_photo_iv=0x7f090098;
-        public static final int message_list_iv_recent_avatar=0x7f09009b;
-        public static final int message_list_iv_recent_avatar_head=0x7f09009c;
-        public static final int message_list_iv_recent_msg_status=0x7f09009e;
-        public static final int message_list_tv_recent_msg=0x7f09009f;
-        public static final int message_list_tv_recent_name=0x7f09009d;
-        public static final int message_list_tv_recent_time=0x7f0900a0;
-        public static final int mine_focus_goods=0x7f0900a2;
-        public static final int mine_publish_goods=0x7f0900a1;
-        public static final int mine_settings=0x7f0900a3;
+        public static final int message_list_conservation_item=0x7f09009b;
+        public static final int message_list_iv_recent_avatar=0x7f09009c;
+        public static final int message_list_iv_recent_avatar_head=0x7f09009d;
+        public static final int message_list_iv_recent_msg_status=0x7f09009f;
+        public static final int message_list_tv_recent_msg=0x7f0900a0;
+        public static final int message_list_tv_recent_name=0x7f09009e;
+        public static final int message_list_tv_recent_time=0x7f0900a1;
+        public static final int message_list_tv_tip=0x7f0900a2;
+        public static final int mine_focus_goods=0x7f0900a4;
+        public static final int mine_publish_goods=0x7f0900a3;
+        public static final int mine_settings=0x7f0900a5;
         public static final int progress_load=0x7f090087;
         public static final int publish_btn=0x7f09002c;
+<<<<<<< HEAD
         public static final int report_cancel=0x7f0900da;
         public static final int report_input=0x7f0900d9;
         public static final int report_ok=0x7f0900db;
         public static final int rl_publish_fragment_main=0x7f0900b8;
+=======
+        public static final int report_cancel=0x7f0900dc;
+        public static final int report_input=0x7f0900db;
+        public static final int report_ok=0x7f0900dd;
+        public static final int rl_publish_fragment_main=0x7f0900b2;
+>>>>>>> 69687504f874dd625b1e935897bcbc0b1f21ad9b
         public static final int root=0x7f090076;
         public static final int settings_clear_cache=0x7f090041;
         public static final int settings_clear_cache_tv=0x7f090042;
@@ -795,7 +930,11 @@ containing a value of this type.
         public static final int settings_manual=0x7f090044;
         public static final int settings_version=0x7f09003f;
         public static final int settings_version_tv=0x7f090040;
+<<<<<<< HEAD
         public static final int sp_publish_fragment_category=0x7f0900bf;
+=======
+        public static final int sp_publish_fragment_category=0x7f0900b8;
+>>>>>>> 69687504f874dd625b1e935897bcbc0b1f21ad9b
         public static final int sp_publish_fragment_date=0x7f0900c2;
         public static final int tab_home_btn=0x7f09002a;
         public static final int tab_message_btn=0x7f09002d;
@@ -804,20 +943,33 @@ containing a value of this type.
         public static final int title=0x7f090078;
         public static final int tv_location=0x7f090089;
         public static final int tv_message=0x7f09008a;
+<<<<<<< HEAD
         public static final int tv_nearby_select_city_hot_city_griview_item=0x7f0900ae;
         public static final int tv_publish_fragment_category=0x7f0900be;
         public static final int tv_publish_fragment_date=0x7f0900c1;
         public static final int tv_publish_fragment_position_set=0x7f0900c9;
         public static final int tv_publish_fragment_text_number=0x7f0900ba;
+=======
+        public static final int tv_nearby_select_city_hot_city_griview_item=0x7f0900b0;
+        public static final int tv_publish_fragment_category=0x7f0900b7;
+        public static final int tv_publish_fragment_date=0x7f0900c1;
+        public static final int tv_publish_fragment_position_set=0x7f0900c6;
+        public static final int tv_publish_fragment_price=0x7f0900bd;
+        public static final int tv_publish_fragment_tel=0x7f0900ba;
+        public static final int tv_publish_fragment_text_number=0x7f0900b4;
+        public static final int tv_publish_fragment_tian=0x7f0900c3;
+        public static final int tv_publish_fragment_yuan=0x7f0900bf;
+>>>>>>> 69687504f874dd625b1e935897bcbc0b1f21ad9b
         public static final int tv_select_city_col1=0x7f090070;
         public static final int tv_select_city_col2=0x7f090071;
         public static final int tv_select_city_col3=0x7f090072;
         public static final int tv_select_city_col4=0x7f090073;
-        public static final int tv_select_city_position_name=0x7f0900af;
+        public static final int tv_select_city_position_name=0x7f0900b1;
         public static final int tv_send_status=0x7f09008e;
-        public static final int tv_spinner_dropdown_item=0x7f0900ce;
+        public static final int tv_spinner_dropdown_item=0x7f0900d0;
         public static final int tv_time=0x7f090084;
         public static final int tv_voice_length=0x7f09008c;
+<<<<<<< HEAD
         public static final int user_detail_head_back=0x7f0900d3;
         public static final int user_detail_head_description=0x7f0900d6;
         public static final int user_detail_head_head_picture=0x7f0900d4;
@@ -838,6 +990,28 @@ containing a value of this type.
         public static final int xlistview_header_text=0x7f0900e0;
         public static final int xlistview_header_time=0x7f0900e3;
         public static final int xlistview_header_time_tip=0x7f0900e2;
+=======
+        public static final int user_detail_head_back=0x7f0900d5;
+        public static final int user_detail_head_description=0x7f0900d8;
+        public static final int user_detail_head_head_picture=0x7f0900d6;
+        public static final int user_detail_head_more=0x7f0900d4;
+        public static final int user_detail_head_username=0x7f0900d7;
+        public static final int user_detail_more_list_common_item_left_tv=0x7f0900a6;
+        public static final int user_detail_more_list_common_item_right_tv=0x7f0900a7;
+        public static final int user_detail_more_list_item_head_iv=0x7f0900d9;
+        public static final int user_detail_more_list_item_username=0x7f0900da;
+        public static final int vp_publish_fragment_emoji=0x7f0900cb;
+        public static final int xlistview_footer_content=0x7f0900de;
+        public static final int xlistview_footer_hint_textview=0x7f0900e0;
+        public static final int xlistview_footer_progressbar=0x7f0900df;
+        public static final int xlistview_header_arrow=0x7f0900e6;
+        public static final int xlistview_header_content=0x7f0900e1;
+        public static final int xlistview_header_hint_textview=0x7f0900e3;
+        public static final int xlistview_header_progressbar=0x7f0900e7;
+        public static final int xlistview_header_text=0x7f0900e2;
+        public static final int xlistview_header_time=0x7f0900e5;
+        public static final int xlistview_header_time_tip=0x7f0900e4;
+>>>>>>> 69687504f874dd625b1e935897bcbc0b1f21ad9b
     }
     public static final class layout {
         public static final int app_base_goods_gridview_item=0x7f030000;
@@ -895,6 +1069,7 @@ containing a value of this type.
         public static final int message_dialog=0x7f030034;
         public static final int message_dialog_item=0x7f030035;
         public static final int message_list_item_conversation=0x7f030036;
+<<<<<<< HEAD
         public static final int mine_fragment_layout=0x7f030037;
         public static final int mine_more_list_common_item=0x7f030038;
         public static final int nearby_select_city_activity=0x7f030039;
@@ -910,6 +1085,24 @@ containing a value of this type.
         public static final int write_report_layout=0x7f030043;
         public static final int xlistview_footer=0x7f030044;
         public static final int xlistview_header=0x7f030045;
+=======
+        public static final int message_list_no_login_tip=0x7f030037;
+        public static final int mine_fragment_layout=0x7f030038;
+        public static final int mine_more_list_common_item=0x7f030039;
+        public static final int nearby_select_city_activity=0x7f03003a;
+        public static final int nearby_select_city_hot_city_gridview_item=0x7f03003b;
+        public static final int nearby_select_city_position_item=0x7f03003c;
+        public static final int publish_fragment=0x7f03003d;
+        public static final int publish_fragment_bottom=0x7f03003e;
+        public static final int publish_gridview_item=0x7f03003f;
+        public static final int publish_spinner_dropdown_item=0x7f030040;
+        public static final int publish_spinner_layout=0x7f030041;
+        public static final int user_detail_head_layout=0x7f030042;
+        public static final int user_detail_more_list_head_item=0x7f030043;
+        public static final int write_report_layout=0x7f030044;
+        public static final int xlistview_footer=0x7f030045;
+        public static final int xlistview_header=0x7f030046;
+>>>>>>> 69687504f874dd625b1e935897bcbc0b1f21ad9b
     }
     public static final class string {
         public static final int action_settings=0x7f07007d;
@@ -936,11 +1129,20 @@ containing a value of this type.
          */
         public static final int category_all=0x7f07001b;
         public static final int change_phone_tip=0x7f070003;
+<<<<<<< HEAD
         public static final int chat_add_avator=0x7f070084;
         public static final int chat_finish_camera=0x7f070081;
         public static final int chat_finish_record_abandon=0x7f070083;
         public static final int chat_finish_record_send=0x7f070082;
         public static final int chat_location=0x7f07007b;
+=======
+        public static final int chat_add_avator=0x7f070081;
+        public static final int chat_finish_camera=0x7f07007e;
+        public static final int chat_finish_record_abandon=0x7f070080;
+        public static final int chat_finish_record_send=0x7f07007f;
+        public static final int chat_location=0x7f070078;
+        public static final int chat_no_login_tip=0x7f070082;
+>>>>>>> 69687504f874dd625b1e935897bcbc0b1f21ad9b
         /**  yjf 
          */
         public static final int chat_picture=0x7f07007a;
