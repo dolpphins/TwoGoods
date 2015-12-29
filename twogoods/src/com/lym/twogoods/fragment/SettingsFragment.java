@@ -3,11 +3,11 @@ package com.lym.twogoods.fragment;
 import com.lym.twogoods.AppManager;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
-import com.lym.twogoods.eventbus.event.FinishRecordEvent;
+import com.lym.twogoods.bean.User;
+import com.lym.twogoods.eventbus.event.UserStatus;
 import com.lym.twogoods.fragment.base.BaseFragment;
 import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.utils.StringUtil;
-import com.lym.twogoods.utils.TimeUtil;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import de.greenrobot.event.EventBus;
 
 /**
  * 设置Fragment
@@ -108,8 +109,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 	
 	private void exitAccount() {
 		if(UserInfoManager.getInstance().isLogining()) {
+			User user = UserInfoManager.getInstance().getmCurrent(); 
 			UserInfoManager.getInstance().setmCurrent(null);
 			UserInfoManager.getInstance().writeLoginToSP(mAttachActivity.getApplicationContext(), null);
+			//发送EventBus退出登录事件
+			EventBus.getDefault().post(new UserStatus(UserStatus.LoginStatus.EXIT, user));
 			settings_exit_button.setVisibility(View.GONE);
 			mAttachActivity.finish();
 		}

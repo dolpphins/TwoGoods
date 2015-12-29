@@ -7,6 +7,7 @@ import com.lym.twogoods.bean.Location;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.dialog.FastLoginDialog;
 import com.lym.twogoods.eventbus.event.ExitChatEvent;
+import com.lym.twogoods.eventbus.event.UserStatus;
 import com.lym.twogoods.fragment.IndexFragment;
 import com.lym.twogoods.fragment.MessageFragment;
 import com.lym.twogoods.fragment.MineFragment;
@@ -81,7 +82,10 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		
 		initTabFragment();
 		startService();
-		EventBus.getDefault().register(this);
+		
+		if(!EventBus.getDefault().isRegistered(this)) {
+			EventBus.getDefault().register(this);
+		}
 	}
 
 	@Override
@@ -314,7 +318,9 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 	protected void onDestroy() {
 		// TODO 自动生成的方法存根
 		super.onDestroy();
-		EventBus.getDefault().unregister(this);
+		if(EventBus.getDefault().isRegistered(this)) {
+			EventBus.getDefault().unregister(this);
+		}
 		
 		//保存缩略图映射缓存
 		ThumbnailMap.save(getApplicationContext());
@@ -331,6 +337,26 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		public void onSuccess(User user) {
 			Intent intent = new Intent(MainActivity.this, PublishGoodsActivity.class);
 			startActivity(intent);
+		}
+	}
+	
+	/**
+	 * 当用户登录或者退出登录时会回调该方法
+	 * 
+	 * @param status
+	 */
+	public void onEventMainThread(UserStatus status) {
+		if(status != null) {
+			switch (status.getStatus()) {
+			case LOGIN:
+				
+				
+				break;
+			case EXIT:
+				
+				
+				break;
+			}
 		}
 	}
 }

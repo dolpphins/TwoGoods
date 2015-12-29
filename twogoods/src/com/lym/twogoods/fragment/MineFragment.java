@@ -6,6 +6,7 @@ import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.ActivityRequestResultCode;
+import com.lym.twogoods.eventbus.event.UserStatus;
 import com.lym.twogoods.fragment.base.BaseFragment;
 import com.lym.twogoods.manager.ImageLoaderHelper;
 import com.lym.twogoods.mine.ui.MineFocusActivity;
@@ -26,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import de.greenrobot.event.EventBus;
 
 
 /**
@@ -57,14 +59,9 @@ public class MineFragment extends BaseFragment{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-//		//测试使用
-//		User mCurrent = new User();
-//		mCurrent.setUsername("hello");
-//		mCurrent.setDeclaration("专卖小米手机");
-//		mCurrent.setHead_url("http://d.hiphotos.baidu.com/zhidao/pic/item/472309f790529822090ecdf3d5ca7bcb0a46d4c5.jpg");
-//		mCurrent.setSex("男");
-//		mCurrent.setPhone("15603005716");
-//		UserInfoManager.getInstance().setmCurrent(mCurrent);
+		if(!EventBus.getDefault().isRegistered(this)) {
+			EventBus.getDefault().register(this);
+		}
 	}
 	
 	@Override
@@ -88,7 +85,7 @@ public class MineFragment extends BaseFragment{
 		//user_detail_head_browse_num = (TextView) mView.findViewById(R.id.user_detail_head_browse_num);
 		user_detail_head_description = (TextView) mView.findViewById(R.id.user_detail_head_description);
 		
-		updateHeaderUI();
+		updateHeaderUI(UserInfoManager.getInstance().getmCurrent());
 	}
 	
 	private void initFooterView() {
@@ -186,19 +183,17 @@ public class MineFragment extends BaseFragment{
 		startActivityForResult(intent, ActivityRequestResultCode.MINE_LOGIN_REQUESTCODE);
 	}
 	
-	private void updateHeaderUI() {
-		Log.i(TAG, "updateHeaderUI");
+	private void updateHeaderUI(User user) {
 		//已登录
-		if(UserInfoManager.getInstance().isLogining()) {
-			User user = UserInfoManager.getInstance().getmCurrent();
-			Log.i(TAG, "head_url:" + user.getHead_url());	
+		if(user != null) {
 			ImageLoaderHelper.loadUserHeadPictureThumnail(mAttachActivity, user_detail_head_head_picture, user.getHead_url(), null);
 			user_detail_head_username.setText(user.getUsername());
-			//user_detail_head_browse_num.setText("浏览数:" + user.getBrowse_num());
 			user_detail_head_description.setText(user.getDeclaration());
 		//未登录
 		} else {
+			ImageLoaderHelper.loadUserHeadPictureThumnail(mAttachActivity, user_detail_head_head_picture, null, null);
 			user_detail_head_username.setText(mAttachActivity.getResources().getString(R.string.please_login));
+			user_detail_head_description.setText("");
 		}
 	}
 	
@@ -211,12 +206,38 @@ public class MineFragment extends BaseFragment{
 				&& data != null) {
 			User user = (User) data.getSerializableExtra("user");
 			if(user != null) {
-				UserInfoManager.getInstance().setmCurrent(user);
 				//更新UI
-				updateHeaderUI();
+				updateHeaderUI(user);
 			}
 		} else if(requestCode == ActivityRequestResultCode.MINE_LOGIN_REQUESTCODE) {
-			updateHeaderUI();
+			updateHeaderUI(UserInfoManager.getInstance().getmCurrent());
+		}
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		
+		if(EventBus.getDefault().isRegistered(this)) {
+			EventBus.getDefault().unregister(this);
+		}
+	}
+	
+	/**
+	 * 当用户登录或者退出登录时会回调该方法
+	 * 
+	 * @param status
+	 */
+	public void onEventMainThread(UserStatus status) {
+		if(status != null) {
+			switch (status.getStatus()) {
+			case LOGIN:
+				updateHeaderUI(status.getUser());
+				break;
+			case EXIT:
+				updateHeaderUI(null);
+				break;
+			}
 		}
 	}
 }
