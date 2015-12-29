@@ -30,20 +30,17 @@ public class CameraFragment extends BaseFragment{
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO 自动生成的方法存根
 		return inflater.inflate(R.layout.message_chat_take_photo, null);
 	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO 自动生成的方法存根
 		super.onActivityCreated(savedInstanceState);
 		initView();
 	}
 
 	
 	private void initView() {
-		// TODO 自动生成的方法存根
 		photo = (ImageView) getView().findViewById(R.id.
 				message_chat_take_photo_iv);
 	
@@ -52,9 +49,6 @@ public class CameraFragment extends BaseFragment{
 		photo.setImageBitmap(ImageUtil.decodeSampledBitmapFromFile(mImagePath,
 				BaseScreen.getScreenWidth(getActivity()), BaseScreen.getScreenHeight(getActivity())));
 		DisplayMetrics dm = BaseScreen.getScreenInfo(getActivity());
-		
-		System.out.println(1234+photo.getWidth());
-		System.out.println(1235+photo.getHeight());
 	}
 
 	public void setImageDir(String dir)

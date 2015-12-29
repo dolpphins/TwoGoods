@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="36dp"
+    android:background="#eaf268"
+    android:orientation="vertical" >
+    
+ 	 <TextView
+	     android:id="@+id/message_list_tv_tip"
+	     android:layout_width="match_parent"
+	     android:layout_height="match_parent"
+	     android:text="@string/chat_no_login_tip"
+	     style="@style/Message_Smile_Black"
+	     android:ellipsize="end"
+	     android:textSize="16sp"
+	     android:gravity="center"
+	     android:singleLine="true"
+	     android:textColor="@drawable/message_list_name_color_selector"/>
+    
+</LinearLayout>

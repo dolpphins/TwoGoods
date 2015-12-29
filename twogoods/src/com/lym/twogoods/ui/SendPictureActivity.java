@@ -1,5 +1,6 @@
 package com.lym.twogoods.ui;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -30,12 +31,10 @@ import com.lym.twogoods.ui.base.BackFragmentActivity;
  *  int value)来设置,函数参数中的name的值 必须等于"picCount",value的值调用者决定.具体实现看ChatActivity
  *  中的代码</p>
  * 
- * @author yao
+ * @author 尧俊锋
  * */
 
 public class SendPictureActivity extends BackFragmentActivity{
-	
-	
 	
 	private CameraFragment mCameraFragment;
 	private PictureFragment mPictureFragment;
@@ -47,7 +46,6 @@ public class SendPictureActivity extends BackFragmentActivity{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO 自动生成的方法存根
 		super.onCreate(savedInstanceState);
 		init();
 	}
@@ -78,7 +76,6 @@ public class SendPictureActivity extends BackFragmentActivity{
 	
 	//初始化顶部按钮事件
 	private void initEvent() {
-		// TODO 自动生成的方法存根
 		confirm = (TextView) findViewById(R.id.app_common_actionbar_right_tv);
 		confirm.setClickable(true);
 		confirm.setOnClickListener(new OnClickListener() {
@@ -98,14 +95,9 @@ public class SendPictureActivity extends BackFragmentActivity{
 	 * 将刚刚拍的相片发给对方
 	 */
 	protected void sendCameraPicToFriend(String picPath) {
-		// TODO 自动生成的方法存根
-		//Toast.makeText(this, "发送刚刚拍的"+picPath+"相片给对方", Toast.LENGTH_LONG).show();
-		
     	Intent data=new Intent();  
-       
         data.putExtra("picture", picPath);
         setResult(MessageConfig.SEND_CAMERA_PIC, data);  
-        //关闭掉这个Activity  
         this.finish();
 	}
 
@@ -113,8 +105,6 @@ public class SendPictureActivity extends BackFragmentActivity{
 	 * 将已经选好的本地相片发给对方
 	 */
 	protected void sendImagesToFriend(List<String> selectedPics) {
-		// TODO 自动生成的方法存根
-		//Toast.makeText(this, "发送"+selectedPics.size()+"张相片给对方", Toast.LENGTH_LONG).show();
 		Intent data=new Intent();  
 	    ArrayList<String>value = new ArrayList<String>();
 	    if(selectedPics.size()==0){
@@ -140,27 +130,30 @@ public class SendPictureActivity extends BackFragmentActivity{
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
 		case MessageConfig.OPEN_CAMERA:
-			showFragment(mCameraFragment);
 			
-			mCameraFragment.setImageDir(PictureFragment.localCameraDir);
-			mCameraFragment.setImageName(PictureFragment.localCameraName);
-			setCenterTitle(null);
-			setRightTitle(getResources().getString(R.string.chat_finish_camera));
-			tag = 1;
+			File file = new File(PictureFragment.localCameraDir, PictureFragment.localCameraName);
+			if(file.exists()){
+				showFragment(mCameraFragment);
+				mCameraFragment.setImageDir(PictureFragment.localCameraDir);
+				mCameraFragment.setImageName(PictureFragment.localCameraName);
+				setCenterTitle(null);
+				setRightTitle(getResources().getString(R.string.chat_finish_camera));
+				tag = 1;
+			}else{
+				this.finish();
+			}
+			
 			break;
 
 		default:
 			break;
 		}
-		
 	}
 	
 	@Override
 	protected void onDestroy() {
-		// TODO 自动生成的方法存根
 		super.onDestroy();
 	}
-	
 	@Override
 	public void finish() {
 		super.finish();
@@ -168,9 +161,6 @@ public class SendPictureActivity extends BackFragmentActivity{
 	
 	@Override
 	protected void onResume() {
-		// TODO 自动生成的方法存根
 		super.onResume();
 	}
-	
-	
 }

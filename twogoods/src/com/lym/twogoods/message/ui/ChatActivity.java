@@ -241,7 +241,7 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	{
 		switch(view.getId()){
 		case R.id.message_chat_btn_send:
-			if(edit_user_comment.getText().equals("")){
+			if(edit_user_comment.getText().toString().equals("")||edit_user_comment.getText().toString().equals(null)){
 				Toast.makeText(ChatActivity.this, "消息内容不能为空", Toast.LENGTH_SHORT).show();
 				return ;
 			}
@@ -659,38 +659,28 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		return currentUser.getUsername();
 	}
 	
-	
 	/**
 	 * 获得聊天对象的名字，即贰货号
 	 * @return
 	 */
-	public String getOther_Username()
-	{
+	public String getOther_Username(){
 		return otherUser.getUsername();
 	}
 	
-	public User getOtherUser()
-	{
+	public User getOtherUser(){
 		return otherUser;
 	}
-	
-	
 	@Override
 	protected void onStart() {
-		// TODO 自动生成的方法存根
 		super.onStart();
 	}
 	@Override
 	protected void onRestart() {
-		// TODO 自动生成的方法存根
 		super.onRestart();
 	}
-	
-	
 	//
 	@Override
 	protected void onResume() {
-		// TODO 自动生成的方法存根
 		super.onResume();
 	}
 	
@@ -728,17 +718,20 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	@Override
 	public void onActionBarBack() {
 		super.onActionBarBack();
-		if(from!=JudgeConfig.FRAM_GOODS&&chated){
-		 EventBus.getDefault().post(new ExitChatEvent("back btn clicked"));  
+		if(from==JudgeConfig.FRAM_GOODS&&!chated){
+			
+		}else{
+			EventBus.getDefault().post(new ExitChatEvent("back btn clicked"));  
 		}
 	}
 	
 	@Override
 	public void onBackPressed() {
-		// TODO 自动生成的方法存根
 		super.onBackPressed();
-		if(from!=JudgeConfig.FRAM_GOODS&&chated){
-			EventBus.getDefault().post(new ExitChatEvent("back btn clicked")); 
+		if(from==JudgeConfig.FRAM_GOODS&&!chated){
+			
+		}else{
+			EventBus.getDefault().post(new ExitChatEvent("back btn clicked"));  
 		}
 	}
 	/**
