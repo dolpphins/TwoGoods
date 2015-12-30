@@ -43,13 +43,14 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,12 +77,16 @@ public class PublishFragment extends BaseFragment {
 	private TextView tv_publish_fragment_text_number;
 	private PublishSpinner sp_publish_fragment_type;
 	private PublishSpinner sp_publish_fragment_date;
+	private LinearLayout ll_publish_fragment_category;
+	private LinearLayout ll_publish_fragment_date;
+	private LinearLayout ll_publish_fragment_tel;
+	private LinearLayout ll_publish_fragment_price;
+	private LinearLayout ll_publish_fragment_location;
 	private EditText et_publish_fragment_tel;
 	private EditText et_publish_fragment_price;
 	private EditText et_publish_fragment_description;
 	private TextView tv_publish_fragment_position_set;
 	private GridView gv_publish_fragment_photo;
-	private Button btn_publish_fragment_position;
 	private WrapContentViewPager vp_publish_fragement_emoji;
 
 	// 设置日期
@@ -101,8 +106,8 @@ public class PublishFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View publishfragment = inflater.inflate(R.layout.publish_fragment,
-				container, false);
+		View publishfragment = inflater.inflate(
+				R.layout.publish_fragment_replace, container, false);
 
 		init(publishfragment);
 		initEvent();
@@ -122,6 +127,16 @@ public class PublishFragment extends BaseFragment {
 		PublishConfigManger.voicePath = "";
 		rl_publish_fragment_main = (RelativeLayout) view
 				.findViewById(R.id.rl_publish_fragment_main);
+		ll_publish_fragment_category = (LinearLayout) view
+				.findViewById(R.id.ll_publish_fragment_category);
+		ll_publish_fragment_date = (LinearLayout) view
+				.findViewById(R.id.ll_publish_fragment_date);
+		ll_publish_fragment_location = (LinearLayout) view
+				.findViewById(R.id.ll_publish_fragment_location);
+		ll_publish_fragment_price = (LinearLayout) view
+				.findViewById(R.id.ll_publish_fragment_price);
+		ll_publish_fragment_tel = (LinearLayout) view
+				.findViewById(R.id.ll_publish_fragment_tel);
 		iv_publish_fragment_voice = (ImageView) view
 				.findViewById(R.id.iv_publish_fragment_voice);
 		tv_publish_fragment_text_number = (TextView) view
@@ -142,8 +157,6 @@ public class PublishFragment extends BaseFragment {
 		context = publishGoodsActivity.getApplicationContext();
 		vp_publish_fragement_emoji = (WrapContentViewPager) publishGoodsActivity
 				.attrachEmotionViewPager();
-		btn_publish_fragment_position = (Button) view
-				.findViewById(R.id.btn_publish_fragment_position);
 		gv_publish_fragment_photo = (GridView) view
 				.findViewById(R.id.gv_publish_fragment_photo);
 		// 货品信息相关
@@ -159,8 +172,40 @@ public class PublishFragment extends BaseFragment {
 	private void initEvent() {
 		et_publish_fragment_description.addTextChangedListener(mTextWatcher);
 		setSpinner();
-		// 定位监听按钮
-		btn_publish_fragment_position.setOnClickListener(new OnClickListener() {
+		ll_publish_fragment_category.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				sp_publish_fragment_type.performClick();
+			}
+		});
+		ll_publish_fragment_date.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				sp_publish_fragment_date.performClick();
+			}
+		});
+		ll_publish_fragment_tel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				et_publish_fragment_tel.requestFocus();
+				InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
+			}
+		});
+		ll_publish_fragment_price.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				et_publish_fragment_price.requestFocus();
+				InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
+			}
+		});
+		ll_publish_fragment_location.setOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(),
@@ -258,6 +303,14 @@ public class PublishFragment extends BaseFragment {
 		ArrayAdapter<String> dateAdapter = new ArrayAdapter<String>(
 				getActivity(), android.R.layout.simple_spinner_item, items);
 		sp_publish_fragment_date.setAdapter(dateAdapter);
+		// 這样子嵌套其它控件的方法。
+		/*
+		 * et_publish_fragment_description.setOnClickListener(new
+		 * OnClickListener() {
+		 * 
+		 * @Override public void onClick(View v) {
+		 * sp_publish_fragment_date.performClick(); } });
+		 */
 	}
 
 	private TextWatcher mTextWatcher = new TextWatcher() {
@@ -349,8 +402,8 @@ public class PublishFragment extends BaseFragment {
 				@Override
 				public void onSuccess() {
 					progressDialog.dismiss();
-					Toast.makeText(publishGoodsActivity, "发布成功", Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(publishGoodsActivity, "发布成功",
+							Toast.LENGTH_SHORT).show();
 					Log.v(TAG, "发布成功");
 					if (goodsIsNeedDelet) {
 						deleteGoods();
@@ -362,9 +415,9 @@ public class PublishFragment extends BaseFragment {
 				@Override
 				public void onFailure(int arg0, String arg1) {
 					progressDialog.dismiss();
-					Log.v(TAG, "失败的原因："+arg1);
-					Toast.makeText(publishGoodsActivity, "发布失败", Toast.LENGTH_SHORT)
-							.show();
+					Log.v(TAG, "失败的原因：" + arg1);
+					Toast.makeText(publishGoodsActivity, "发布失败",
+							Toast.LENGTH_SHORT).show();
 				}
 			});
 		} else {
@@ -607,4 +660,5 @@ public class PublishFragment extends BaseFragment {
 			break;
 		}
 	}
+	
 }

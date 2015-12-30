@@ -47,7 +47,7 @@ import com.lym.twogoods.utils.TimeUtil;
 public class MessageFragment extends PullListFragment implements 
 	OnItemClickListener,OnItemLongClickListener{
 	private String TAG = "MessageFragment";
-	private Boolean isLogining;
+	private Boolean isLogining = false;
 
 	//xListView的adapter
 	private MessageListAdapter mMessageListAdapter;
@@ -84,7 +84,7 @@ public class MessageFragment extends PullListFragment implements
 	}
 	
 
-	private void init() {
+	public void init() {
 		mSharePreferenceManager = SharePreferencesManager.getInstance();
 		isLogining = UserInfoManager.getInstance().isLogining();
 		intiUser();
@@ -93,17 +93,21 @@ public class MessageFragment extends PullListFragment implements
 	}
 	//初始化当前用户的信息
 	private void intiUser() {
-		currentUser = UserInfoManager.getInstance().getmCurrent();
+		if(isLogining){
+			currentUser = UserInfoManager.getInstance().getmCurrent();
+		}
 	}
 	
 	/**
 	 * 初始化消息列表的数据
 	 */
-	private void initData() {
-		mDatabaseHelper = new OrmDatabaseHelper(getActivity());
-		mChatSnapshotDao = mDatabaseHelper.getChatSnapshotDao();
-		chatSnapshotList = new ArrayList<ChatSnapshot>();
-		chatSnapshotList = queryRecent();
+	public void initData() {
+		if(isLogining){
+			mDatabaseHelper = new OrmDatabaseHelper(getActivity());
+			mChatSnapshotDao = mDatabaseHelper.getChatSnapshotDao();
+			chatSnapshotList = new ArrayList<ChatSnapshot>();
+			chatSnapshotList = queryRecent();
+		}
 	}
 
 
@@ -111,6 +115,7 @@ public class MessageFragment extends PullListFragment implements
 	 * 初始化mListView
 	 */
 	private void initView() {
+		Log.i(TAG, "initView");
 		setMode(Mode.PULLDOWN);
 		setAdapter();
 		mListView.setHeaderDividersEnabled(false);
@@ -119,7 +124,7 @@ public class MessageFragment extends PullListFragment implements
 	}
 
 
-	protected void setAdapter() {
+	public void setAdapter() {
 		if(isLogining){
 			mMessageListAdapter = new MessageListAdapter(getActivity(),
 					R.layout.message_list_item_conversation, chatSnapshotList);
@@ -299,18 +304,21 @@ public class MessageFragment extends PullListFragment implements
 	 */
 	public void refreshMessage()
 	{
-		try {
-			getActivity().runOnUiThread(new Runnable() {
-				public void run() {
-					
-					chatSnapshotList = queryRecent();
-					mMessageListAdapter = new MessageListAdapter(getActivity(), 
-							R.layout.message_list_item_conversation, chatSnapshotList);
-					setAdapter(mMessageListAdapter);
-				}
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(isLogining){
+			try {
+				getActivity().runOnUiThread(new Runnable() {
+					public void run() {
+						chatSnapshotList = queryRecent();
+						mMessageListAdapter = new MessageListAdapter(getActivity(), 
+								R.layout.message_list_item_conversation, chatSnapshotList);
+						setAdapter(mMessageListAdapter);
+					}
+				});
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else{
+			setAdapter();
 		}
 	}
 	
@@ -320,8 +328,12 @@ public class MessageFragment extends PullListFragment implements
 	}
 	@Override
 	public void onResume() {
-		//refreshMessage();
 		super.onResume();
+	}
+	
+	public void setLoginState(Boolean state)
+	{
+		this.isLogining = state;
 	}
 	
 }

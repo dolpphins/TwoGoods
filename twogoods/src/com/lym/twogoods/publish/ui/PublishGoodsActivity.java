@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,9 +47,9 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 	private PublishFragment publishFragment;
 	// 底部控件
 	private View publish_bottom;
-	private ImageView iv_publish_fragment_add_photo;
-	private ImageView iv_publish_fragment_add_smile;
-	private ImageView iv_publish_fragment_add_voice;
+	private LinearLayout ll_publish_fragment_add_photo;
+	private LinearLayout ll_publish_fragment_add_smile;
+	private LinearLayout ll_publish_fragment_add_voice;
 	private WrapContentViewPager vp_publish_fragement_emoji;
 	private LinearLayout ll_publish_fragment_bottom_chat;
 	private ImageCusView imageCusView;
@@ -60,14 +62,15 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 	@Override
 	public View onCreateBottomView() {
 		publish_bottom = getLayoutInflater().inflate(
-				R.layout.publish_fragment_bottom, null);
+				R.layout.publish_fragment_bottom_replace, null);
 		if (publish_bottom != null) {
-			iv_publish_fragment_add_photo = (ImageView) publish_bottom
-					.findViewById(R.id.iv_publish_fragment_add_photo);
-			iv_publish_fragment_add_smile = (ImageView) publish_bottom
-					.findViewById(R.id.iv_publish_fragment_add_smile);
-			iv_publish_fragment_add_voice = (ImageView) publish_bottom
-					.findViewById(R.id.iv_publish_fragment_add_voice);
+			ll_publish_fragment_add_photo = (LinearLayout) publish_bottom
+					.findViewById(R.id.ll_publish_fragment_add_photo);
+			ll_publish_fragment_add_smile = (LinearLayout) publish_bottom
+					.findViewById(R.id.ll_publish_fragment_add_smile);
+			ll_publish_fragment_add_voice = (LinearLayout) publish_bottom
+					.findViewById(R.id.ll_publish_fragment_add_voice);
+			
 			vp_publish_fragement_emoji = (WrapContentViewPager) publish_bottom
 					.findViewById(R.id.vp_publish_fragment_emoji);
 			ll_publish_fragment_bottom_chat = (LinearLayout) publish_bottom
@@ -152,8 +155,28 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 				});
 	}
 
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		if (ev.getAction() == MotionEvent.ACTION_DOWN) {  
+	        View v = getCurrentFocus();  
+	        if (isShouldHideInput(v, ev)) {  
+	  
+	            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+	            if (imm != null) {  
+	                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);  
+	            }  
+	        }  
+	        return super.dispatchTouchEvent(ev);  
+	    }  
+	    // 必不可少，否则所有的组件都不会有TouchEvent了  
+	    if (getWindow().superDispatchTouchEvent(ev)) {  
+	        return true;  
+	    }  
+	    return onTouchEvent(ev);  
+	}
+	
 	private void initEvent() {
-		iv_publish_fragment_add_photo.setOnClickListener(new OnClickListener() {
+		ll_publish_fragment_add_photo.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -163,7 +186,7 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 				startActivityForResult(intent, PublishConfigManger.requestCode);
 			}
 		});
-		iv_publish_fragment_add_smile.setOnClickListener(new OnClickListener() {
+		ll_publish_fragment_add_smile.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -179,7 +202,7 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 				}
 			}
 		});
-		iv_publish_fragment_add_voice.setOnClickListener(new OnClickListener() {
+		ll_publish_fragment_add_voice.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -334,6 +357,33 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 			recordPlayClickListener.setIsChatMsg(false);
 			// imageView.setOnClickListener(recordPlayClickListener);
 		}
+	}
+	/**
+	 *<p>
+	 *		判断是否需要隐藏键盘
+	 *</p>
+	 * @param v		触发的view	
+	 * @param event	触发的事件
+	 * @return		
+	 */
+	public  boolean isShouldHideInput(View v, MotionEvent event) {  
+	    if (v != null && (v instanceof EditText)) {  
+	        int[] leftTop = { 0, 0 };  
+	        //获取输入框当前的location位置  
+	        v.getLocationInWindow(leftTop);  
+	        int left = leftTop[0];  
+	        int top = leftTop[1];  
+	        int bottom = top + v.getHeight();  
+	        int right = left + v.getWidth();  
+	        if (event.getX() > left && event.getX() < right  
+	                && event.getY() > top && event.getY() < bottom) {  
+	            // 点击的是输入框区域，保留点击EditText的事件  
+	            return false;  
+	        } else {  
+	            return true;  
+	        }  
+	    }  
+	    return false;  
 	}
 	
 }

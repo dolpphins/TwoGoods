@@ -2,8 +2,10 @@ package com.lym.twogoods.ui;
 
 import java.util.List;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -19,9 +21,11 @@ import cn.bmob.v3.listener.VerifySMSCodeListener;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.bean.User;
+import com.lym.twogoods.publish.manger.PublishConfigManger;
 import com.lym.twogoods.ui.base.BackActivity;
 import com.lym.twogoods.utils.NetworkHelper;
 import com.lym.twogoods.utils.StringUtil;
+import com.lym.twogoods.utils.VerificationUtil;
 
 /**
  * <p>
@@ -32,6 +36,7 @@ import com.lym.twogoods.utils.StringUtil;
  **/
 public class ResetPasswordActivity extends BackActivity {
 
+	private String TAG = "ResetPasswordActivity";
 	// 定义布局控件
 	private EditText et_reset_password__phone;
 	private EditText et_reset_password_code;
@@ -44,6 +49,8 @@ public class ResetPasswordActivity extends BackActivity {
 	private String objectId;
 	// 验证码是否验证成功
 	private boolean codeVerify = false;
+	// 加载器
+	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +64,13 @@ public class ResetPasswordActivity extends BackActivity {
 	}
 
 	private void init() {
+		VerificationUtil.configClear();
 		et_reset_password__phone = (EditText) findViewById(R.id.et_reset_password__phone);
 		et_reset_password_code = (EditText) findViewById(R.id.et_reset_password_code);
 		btn_reset_password_code_get = (Button) findViewById(R.id.btn_reset_password_code_get);
 		btn_reset_password_verification = (Button) findViewById(R.id.btn_reset_password_verification);
+		progressDialog = PublishConfigManger.getLoadProgressDialog(
+				ResetPasswordActivity.this, "重置密码", "正在努力加载中......", true);
 	}
 
 	/**
@@ -77,39 +87,33 @@ public class ResetPasswordActivity extends BackActivity {
 
 			@Override
 			public void onClick(View v) {
-				if (NetworkHelper.isMobileDataEnable(getApplicationContext())
-						|| NetworkHelper
-						.isWifiDataEnable(getApplicationContext())) {
-					if (StringUtil.isPhoneNumber(et_reset_password__phone
-							.getText().toString())) {
-						BmobSMS.requestSMSCode(getApplicationContext(),
-								et_reset_password__phone.getText().toString(),
-								"重置密码验证", new RequestSMSCodeListener() {
-
-									@Override
-									public void done(Integer smsId,
-											BmobException ex) {
-										if (ex == null) {
-											Toast.makeText(
-													getApplicationContext(),
-													"短信已发送，请注意查看",
-													Toast.LENGTH_SHORT).show();
-										} else {
-											Toast.makeText(
-													getApplicationContext(),
-													"系统出错", Toast.LENGTH_SHORT)
-													.show();
-										}
-									}
-								});
-					} else {
-						Toast.makeText(getApplicationContext(), "手机格式不对",
-								Toast.LENGTH_SHORT).show();
-					}
+				if (StringUtil.isPhoneNumber(et_reset_password__phone.getText()
+						.toString())) {
+					VerificationUtil.sendCodeByPhone(getApplicationContext(),
+							et_reset_password__phone.getText().toString());
 				} else {
-					Toast.makeText(getApplicationContext(), "当前网络不佳",
+					Toast.makeText(getApplicationContext(), "手机号码格式不正确",
 							Toast.LENGTH_SHORT).show();
 				}
+				/*
+				 * if
+				 * (NetworkHelper.isNetworkAvailable(getApplicationContext())) {
+				 * if (StringUtil.isPhoneNumber(et_reset_password__phone
+				 * .getText().toString())) {
+				 * BmobSMS.requestSMSCode(getApplicationContext(),
+				 * et_reset_password__phone.getText().toString(), "重置密码验证", new
+				 * RequestSMSCodeListener() {
+				 * 
+				 * @Override public void done(Integer smsId, BmobException ex) {
+				 * if (ex == null) { Toast.makeText( getApplicationContext(),
+				 * "短信已发送，请注意查看", Toast.LENGTH_SHORT).show(); } else {
+				 * Toast.makeText( getApplicationContext(), "系统出错",
+				 * Toast.LENGTH_SHORT) .show(); } } }); } else {
+				 * Toast.makeText(getApplicationContext(), "手机格式不对",
+				 * Toast.LENGTH_SHORT).show(); } } else {
+				 * Toast.makeText(getApplicationContext(), "当前网络不佳",
+				 * Toast.LENGTH_SHORT).show(); }
+				 */
 			}
 		});
 
@@ -121,9 +125,7 @@ public class ResetPasswordActivity extends BackActivity {
 					public void onClick(View v) {
 						// 判断网络是否可用
 						if (NetworkHelper
-								.isMobileDataEnable(getApplicationContext())
-								|| NetworkHelper
-										.isWifiDataEnable(getApplicationContext())) {
+								.isNetworkAvailable(getApplicationContext())) {
 							// 对手机号和验证码的合法性进行检测
 							if (StringUtil
 									.isPhoneNumber(et_reset_password__phone
@@ -131,18 +133,8 @@ public class ResetPasswordActivity extends BackActivity {
 								if (StringUtil
 										.isSecurityCode(et_reset_password_code
 												.getText().toString())) {
-									usernameMatch();
-									// 判断验证码是否正确
-									if (find_succeed) {
-										// 传输数据到下一个activity
-										Bundle data = new Bundle();
-										data.putString("id", objectId);
-										Intent intent = new Intent(
-												ResetPasswordActivity.this,
-												NewPasswordActivity.class);
-										intent.putExtras(data);
-										startActivity(intent);
-									}
+									progressDialog.show();
+									codeMatch();
 								} else {
 									Toast.makeText(getApplicationContext(),
 											"验证码格式不对", Toast.LENGTH_SHORT)
@@ -179,9 +171,11 @@ public class ResetPasswordActivity extends BackActivity {
 			@Override
 			public void done(BmobException ex) {
 				if (ex == null) {
-					codeVerify = true;
-				}else {
-					codeVerify=false;
+					usernameMatch();
+				} else {
+					progressDialog.dismiss();
+					Toast.makeText(getApplicationContext(), "验证码错误",
+							Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -202,18 +196,20 @@ public class ResetPasswordActivity extends BackActivity {
 
 			@Override
 			public void onSuccess(List<User> list) {
-				codeMatch();
-				if (codeVerify) {
-					objectId = list.get(0).getObjectId();
-					find_succeed = true;
-				}
+				objectId = list.get(0).getObjectId();
+				Bundle data = new Bundle();
+				data.putString("id", objectId);
+				Intent intent = new Intent(ResetPasswordActivity.this,
+						NewPasswordActivity.class);
+				intent.putExtras(data);
+				progressDialog.dismiss();
+				startActivity(intent);
 			}
 
 			@Override
 			public void onError(int arg0, String arg1) {
 				Toast.makeText(getApplicationContext(), "用户不存在",
 						Toast.LENGTH_SHORT).show();
-				find_succeed = false;
 			}
 		});
 	}

@@ -7,6 +7,7 @@ import com.lym.twogoods.bean.Location;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.dialog.FastLoginDialog;
 import com.lym.twogoods.eventbus.event.ExitChatEvent;
+import com.lym.twogoods.eventbus.event.UserStatus;
 import com.lym.twogoods.fragment.IndexFragment;
 import com.lym.twogoods.fragment.MessageFragment;
 import com.lym.twogoods.fragment.MineFragment;
@@ -55,6 +56,8 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 	/** 底部Tab Fragment */
 	private Fragment[] mTabFragments = new Fragment[tabCount]; 
 	
+	private MessageFragment mMessageFragment;
+	
 	/** 底部Tab布局 */
 	private View mTabView;
 
@@ -81,7 +84,10 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		
 		initTabFragment();
 		startService();
-		EventBus.getDefault().register(this);
+		
+		if(!EventBus.getDefault().isRegistered(this)) {
+			EventBus.getDefault().register(this);
+		}
 	}
 
 	@Override
@@ -104,7 +110,7 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 
 
 	/**
-	 * 开启service,
+	 * 开启后台service,
 	 */
 	private void startService() {
 		
@@ -118,6 +124,7 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		mTabFragments[0] = new IndexFragment();
 		mTabFragments[1] = new NearbyFragment();
 		mTabFragments[2] = new MessageFragment();
+		mMessageFragment = (MessageFragment) mTabFragments[2];
 		mTabFragments[3] = new MineFragment();
 		
 		addFragment(mTabFragments[0]);
@@ -314,7 +321,9 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 	protected void onDestroy() {
 		// TODO 自动生成的方法存根
 		super.onDestroy();
-		EventBus.getDefault().unregister(this);
+		if(EventBus.getDefault().isRegistered(this)) {
+			EventBus.getDefault().unregister(this);
+		}
 		
 		//保存缩略图映射缓存
 		ThumbnailMap.save(getApplicationContext());
@@ -332,5 +341,34 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 			Intent intent = new Intent(MainActivity.this, PublishGoodsActivity.class);
 			startActivity(intent);
 		}
+	}
+	
+	/**
+	 * 当用户登录或者退出登录时会回调该方法
+	 * 
+	 * @param status
+	 */
+	public void onEventMainThread(UserStatus status) {
+		if(status != null) {
+			switch (status.getStatus()) {
+			case LOGIN:
+				Log.i(TAG,"登录");
+				startService();
+				mMessageFragment.setLoginState(true);
+				mMessageFragment.init();
+				break;
+			case EXIT:
+				Log.i(TAG,"退出登录");
+				stopService();
+				mMessageFragment.setLoginState(false);
+				mMessageFragment.setAdapter();
+				break;
+			}
+		}
+	}
+	//关闭后台服务
+	public void stopService(){
+		Log.i(TAG,"关闭服务");
+		stopService(chatService);
 	}
 }

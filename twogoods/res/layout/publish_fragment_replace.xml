@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/publish_fragment_background"
+    android:scrollbars="none" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/rl_publish_fragment_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <EditText
+                android:id="@+id/et_publish_fragment_description"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/app_publish_fragment_et_heigth"
+                android:layout_marginLeft="@dimen/app_publish_fragment_marginletf_right"
+                android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
+                android:layout_marginTop="@dimen/app_publish_fragment_margintop"
+                android:background="@drawable/edittext_circle_shape"
+                android:gravity="top"
+                android:hint="@string/publish_description"
+                android:maxLength="200" />
+
+            <TextView
+                android:id="@+id/tv_publish_fragment_text_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/et_publish_fragment_description"
+                android:layout_below="@+id/et_publish_fragment_description"
+                android:gravity="center"
+                android:text="@string/publish_text_number"
+                android:textSize="@dimen/app_publish_fragment_textsize" />
+
+            <ImageView
+                android:id="@+id/iv_publish_fragment_voice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_publish_fragment_description"
+                android:layout_toLeftOf="@+id/tv_publish_fragment_text_number"
+                android:contentDescription="@string/publish_voice_description"
+                android:src="@drawable/message_chat_voice_right"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_publish_fragment_category_and_update"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/app_publish_fragment_marginletf_right"
+            android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
+            android:layout_marginTop="@dimen/app_publish_fragment_margintop"
+            android:background="@color/publish_fragment_while"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/ll_publish_fragment_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/app_publish_fragment_marginletf_right"
+                    android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
+                    android:src="@drawable/publish_fragment_category" />
+
+                <TextView
+                    android:id="@+id/tv_publish_fragment_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/publish_sort"
+                    android:textSize="@dimen/app_publish_fragment_textsize" />
+
+                <com.lym.twogoods.publish.ui.PublishSpinner
+                    android:id="@+id/sp_publish_fragment_category"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:background="@color/publish_fragment_while" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
+                    android:src="@drawable/publish_fragment_dropdown" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginLeft="40dp"
+                android:background="#cccccc" />
+
+            <LinearLayout
+                android:id="@+id/ll_publish_fragment_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/app_publish_fragment_margintop"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/app_publish_fragment_marginletf_right"
+                    android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
+                    android:src="@drawable/publish_fragment_update" />
+
+                <TextView
+                    android:id="@+id/tv_publish_fragment_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/publish_date"
+                    android:textSize="@dimen/app_publish_fragment_textsize" />
+
+                <com.lym.twogoods.publish.ui.PublishSpinner
+                    android:id="@+id/sp_publish_fragment_date"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:background="@color/publish_fragment_while" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
+                    android:src="@drawable/publish_fragment_dropdown" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_publish_fragment_tel_and_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/app_publish_fragment_marginletf_right"
+            android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
+            android:layout_marginTop="@dimen/app_publish_fragment_margintop"
+            android:background="@color/publish_fragment_while"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/ll_publish_fragment_tel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/app_publish_fragment_marginletf_right"
+                    android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
+                    android:src="@drawable/publish_fragment_tel" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/publish_tel"
+                    android:textSize="@dimen/app_publish_fragment_textsize" />
+
+                <EditText
+                    android:id="@+id/et_publish_fragment_tel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/app_publish_fragment_marginletf_right"
+                    android:layout_weight="1"
+                    android:background="@color/publish_fragment_while"
+                    android:inputType="phone" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/publish_fragment_write" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginLeft="40dp"
+                android:background="#cccccc" />
+
+            <LinearLayout
+                android:id="@+id/ll_publish_fragment_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/app_publish_fragment_margintop"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/app_publish_fragment_marginletf_right"
+                    android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
+                    android:src="@drawable/publish_fragment_price" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/publish_price"
+                    android:textSize="@dimen/app_publish_fragment_textsize" />
+
+                <EditText
+                    android:id="@+id/et_publish_fragment_price"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/app_publish_fragment_marginletf_right"
+                    android:layout_weight="1"
+                    android:background="@color/publish_fragment_while"
+                    android:inputType="number" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/publish_fragment_write" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_publish_fragment_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/app_publish_fragment_marginletf_right"
+            android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
+            android:layout_marginTop="@dimen/app_publish_fragment_margintop"
+            android:background="@color/publish_fragment_while"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/app_publish_fragment_margintop"
+            android:paddingTop="@dimen/app_publish_fragment_margintop" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/app_publish_fragment_marginletf_right"
+                android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
+                android:src="@drawable/publish_fragment_location" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/publish_position"
+                android:textSize="@dimen/app_publish_fragment_textsize" />
+
+            <TextView
+                android:id="@+id/tv_publish_fragment_position_set"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/app_publish_fragment_marginletf_right"
+                android:textSize="@dimen/app_publish_fragment_textsize" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
+                android:src="@drawable/publish_fragment_arrow_right" />
+        </LinearLayout>
+
+        <GridView
+            android:id="@+id/gv_publish_fragment_photo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/app_publish_fragment_marginletf_right"
+            android:layout_marginRight="@dimen/app_publish_fragment_marginletf_right"
+            android:layout_marginTop="@dimen/app_publish_fragment_margintop"
+            android:gravity="center_horizontal"
+            android:paddingLeft="@dimen/app_publish_fragment_gridview_left_right_padding"
+            android:paddingRight="@dimen/app_publish_fragment_gridview_left_right_padding"
+            android:scrollbars="none" >
+        </GridView>
+    </LinearLayout>
+
+</ScrollView>
