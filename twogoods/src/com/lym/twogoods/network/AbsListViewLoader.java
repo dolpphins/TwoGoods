@@ -1,9 +1,14 @@
 package com.lym.twogoods.network;
  
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.lym.loader.HeadPictureLoader;
+import com.lym.loader.HeadPictureLoader.OnLoadHeadPictureUrlFinishListener;
 import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
+import com.lym.twogoods.adapter.base.BaseGoodsListViewAdapter;
+import com.lym.twogoods.adapter.base.BaseGoodsListViewAdapter.ItemViewHolder;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.config.ActivityRequestResultCode;
 import com.lym.twogoods.fragment.base.BaseFragment;
@@ -12,7 +17,7 @@ import com.lym.twogoods.ui.GoodsDetailActivity;
 import com.lym.twogoods.utils.NetworkHelper;
 
 import android.content.Intent;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -119,16 +124,21 @@ public class AbsListViewLoader {
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				mScrollStatus = scrollState;
-			}
-			
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				int lastItemPosition = mAbsListView.getLastVisiblePosition();
 				
-				if(lastItemPosition == totalItemCount - 1 
-						//&& mScrollStatus == OnScrollListener.SCROLL_STATE_IDLE
+				int totalCount = view.getCount();
+				//从Header算起
+				int firstIndex = view.getFirstVisiblePosition();
+				int lastIndex = view.getLastVisiblePosition();
+				int visibleItemCount = lastIndex - firstIndex + 1;
+				
+				//如果停止滚动,那么开始异步加载数据,包括头像，图片等
+				requestLoadHeadPicture(firstIndex, visibleItemCount);
+
+				//停止滚动时加载更多
+				if(lastIndex == totalCount - 1 
+						&& scrollState == OnScrollListener.SCROLL_STATE_IDLE
 						&& mStatus == Status.NONE
-						&& visibleItemCount < totalItemCount) {
+						&& visibleItemCount < totalCount) {
 					if(mBmobQuery != null) {
 						mBmobQuery.setSkip(mGoodsList.size());
 						prepareLoadDataFromNetwork(mBmobQuery, Type.LOADMORE);
@@ -137,6 +147,14 @@ public class AbsListViewLoader {
 						mOnLoaderListener.onLoadMoreStart();
 					}
 				}
+				
+			}
+			
+			//注意是正在滚动才会调用该方法，因此OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
+			//和OnScrollListener.SCROLL_STATE_FLING两种状态
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				
 			}
 		});
 		mAbsListView.setOnItemClickListener(new OnItemClickListener() {
@@ -163,6 +181,59 @@ public class AbsListViewLoader {
 		});
 	}
 
+	/**
+	 * 请求加载头像,该方法只有在列表处于静止(没有滚动)状态才会加载头像
+	 * 
+	 * @param start 从start位置开始
+	 * @param count 指定要加载的Item数
+	 */
+	public void requestLoadHeadPicture(int start, int count) {
+		if(mScrollStatus == OnScrollListener.SCROLL_STATE_IDLE) {
+			//头像
+			List<HeadPictureLoader.HeadPictureTask> tasks = new ArrayList<HeadPictureLoader.HeadPictureTask>();
+			//
+			for(int i = 0; i < count; i++) {
+				//getChildAt并没有包含Header
+				View v = mAbsListView.getChildAt(i);
+				//System.out.println(v == null ? "v null" : "v not null");
+				if(v != null) {
+					BaseGoodsListViewAdapter.ItemViewHolder holder = (ItemViewHolder) v.getTag();
+					//holder可能为空
+					//System.out.println(holder == null ? "holder null" : "holder not null");
+					if(holder != null) {
+						Goods goods = mGoodsList.get(start + i - 1);
+						String username = holder.username;
+						if(!TextUtils.isEmpty(username) && username.equals(goods.getUsername())) {
+							continue;
+						}
+						holder.username = goods.getUsername();
+						HeadPictureLoader.HeadPictureTask task = new HeadPictureLoader.HeadPictureTask();
+						task.setGUID(goods.getGUID());
+						task.setUsername(goods.getUsername());
+						task.setIv(holder.base_goods_listview_item_headpic);
+						tasks.add(task);
+					}
+				}
+			}
+			if(tasks.size() > 0) {
+				HeadPictureLoader.getInstance().submit(mFragment.getActivity().getApplicationContext(), tasks, new OnLoadHeadPictureUrlFinishListener() {
+					
+					@Override
+					public void onFinish(String username, String url) {
+						if(!TextUtils.isEmpty(url)) {
+							for(Goods goods : mGoodsList) {
+								String goodsUsername = goods.getUsername();
+								if(goodsUsername.equals(username)) {
+									goods.setHead_url(url);
+								}
+							}	
+						}
+					}
+				});
+			}
+		}
+	}
+	
 	/**
 	 * 请求加载数据
 	 * 

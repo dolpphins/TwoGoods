@@ -499,8 +499,6 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 		mAbsListViewLoader = new AbsListViewLoader(this, mListView, mAdapter, mGoodsList);
 		mOnLoaderListener = new ListViewOnLoaderListener(this, mAbsListViewLoader, mListView);
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
-		//mListViewLoader.setLoadCacheFromDisk(true);
-		//mListViewLoader.setSaveCacheToDisk(true);
 		mListView.setAdapter(mAdapter);
 	}
 	

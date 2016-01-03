@@ -1,12 +1,15 @@
 package com.lym.twogoods.manager;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.lym.twogoods.R;
 import com.lym.twogoods.screen.UserScreen;
-import com.lym.twogoods.utils.ImageUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -24,16 +27,17 @@ import android.widget.ImageView;
  * */
 public class ImageLoaderHelper {
 
-	/**
-	 * 加载用户头像缩略图,如果访问网络失败会自动设置默认头像缩略图
-	 * 
-	 * @param context 上下文
-	 * @param iv 要显示头像缩略图的ImageView控件,不能为null
-	 * @param url 头像缩略图的网络url地址
-	 * @param listener 加载监听器
-	 * */
+
 	public static void loadUserHeadPictureThumnail(Context context, ImageView iv, String url, ImageLoadingListener listener) {
-		if(iv == null) {
+		if(iv != null) {
+			List<ImageView> list = new ArrayList<ImageView>(1);
+			list.add(iv);
+			loadUserHeadPictureThumnail(context, url, list, listener);
+		}
+	}
+	
+	public static void loadUserHeadPictureThumnail(Context context, String url, final List<ImageView> ivList, final ImageLoadingListener listener) {
+		if(ivList == null || ivList.size() <= 0) {
 			return;
 		}
 		ImageLoaderConfiguration configuration = UniversalImageLoaderConfigurationManager
@@ -47,7 +51,52 @@ public class ImageLoaderHelper {
 		decodingOptions.outWidth = w;
 		DisplayImageOptions options = UniversalImageLoaderOptionManager.getHeadPictureDisplayImageOption(decodingOptions, w, w);
 		
-		imageLoader.displayImage(url, iv, options, listener);
+//		ivList.get(0).setImageResource(R.drawable.common_m1);
+//		if(true) {
+//			return;
+//		}
+		
+		//必须实现为多个ImageView加载同一幅图片的功能,ImageLoader没有提供
+		imageLoader.displayImage(url, ivList.get(0), options, new ImageLoadingListener() {
+			
+			@Override
+			public void onLoadingStarted(String arg0, View arg1) {
+				if(listener != null) {
+					listener.onLoadingCancelled(arg0, arg1);
+				}
+				
+			}
+			
+			@Override
+			public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+				if(listener != null) {
+					listener.onLoadingFailed(arg0, arg1, arg2);
+				}
+			}
+			
+			@Override
+			public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
+				if(listener != null) {
+					listener.onLoadingComplete(arg0, arg1, arg2);
+				}
+				//arg2可能为null(比如获取失败时)
+				if(arg2 != null) {
+					for(ImageView iv : ivList) {
+						//注意要判空
+						if(iv != null) {
+							iv.setImageBitmap(arg2);
+						}
+					}
+				}
+			}
+			
+			@Override
+			public void onLoadingCancelled(String arg0, View arg1) {
+				if(listener != null) {
+					listener.onLoadingCancelled(arg0, arg1);
+				}
+			}
+		});
 				
 	}
 	

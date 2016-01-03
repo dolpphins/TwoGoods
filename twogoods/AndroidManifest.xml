@@ -176,7 +176,7 @@
         </service>
        <!-- 聊天接收新消息的service --> 
         <service
-           android:name="com.lym.twogoods.service.ChatService" >
+           android:name="com.lym.twogoods.service.ChatService">
         </service>
     </application>
 
