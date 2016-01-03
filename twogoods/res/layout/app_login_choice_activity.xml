@@ -7,6 +7,7 @@
 <LinearLayout	xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#3e5367"
     android:orientation="horizontal">
     
     <Button android:id="@+id/btn_login_choice_direct"
@@ -17,7 +18,7 @@
         style="?android:attr/buttonBarButtonStyle"
         android:textSize="@dimen/app_login_choice_button_textsize"
         android:layout_marginLeft="@dimen/app_login_choice_marginLeft"
-        android:background="@drawable/edittext_circle_shape"
+        android:background="@drawable/app_normal_login_button_background"
         android:visibility="invisible"/>
     
      <Button android:id="@+id/btn_login_choice_login"
@@ -29,6 +30,6 @@
         android:layout_marginRight="@dimen/app_login_choice_marginLeft"
         style="?android:attr/buttonBarButtonStyle"
         android:textSize="@dimen/app_login_choice_button_textsize"
-        android:background="@drawable/edittext_circle_shape"
+        android:background="@drawable/app_normal_login_button_background"
         android:visibility="invisible"/>
 </LinearLayout>

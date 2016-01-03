@@ -7,6 +7,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#3e5367"
     android:orientation="vertical" >
 
     <EditText
@@ -19,7 +20,8 @@
         android:layout_marginLeft="@dimen/app_register_left_right_margin"
         android:layout_marginRight="@dimen/app_register_left_right_margin"
         android:layout_marginTop="@dimen/app_register_parenttop"
-        android:background="@drawable/edittext_circle_shape"
+        android:background="@drawable/app_normal_login_button_background"
+        android:gravity="center_horizontal"
         android:hint="@string/register_erhuo" />
 
     <EditText
@@ -30,7 +32,8 @@
         android:layout_alignRight="@+id/btn_register_register"
         android:layout_below="@+id/et_register_phone"
         android:layout_marginTop="@dimen/app_register_margintop"
-        android:background="@drawable/edittext_circle_shape"
+        android:background="@drawable/app_normal_login_button_background"
+        android:gravity="center_horizontal"
         android:hint="@string/get_code" />
 
     <Button
@@ -42,6 +45,7 @@
         android:layout_alignTop="@+id/et_register_code"
         android:background="@color/transparent"
         android:layout_toRightOf="@+id/btn_register_register"
+        android:textColor="@color/base_color_text_white"
         android:text="@string/get_code" />
 
     <Button
@@ -51,7 +55,9 @@
         android:layout_below="@+id/et_register_code"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/app_register_margintop"
-        android:background="@drawable/edittext_circle_shape"
+        android:background="@drawable/app_normal_login_button_background"
+        android:paddingLeft="@dimen/app_login_view_margin_right_left"
+        android:paddingRight="@dimen/app_login_view_margin_right_left"
         android:text="@string/register" />
 
     <EditText
@@ -62,8 +68,9 @@
         android:layout_alignRight="@+id/et_register_erhuo"
         android:layout_below="@+id/et_register_erhuo"
         android:layout_marginTop="@dimen/app_register_margintop"
-        android:background="@drawable/edittext_circle_shape"
+        android:background="@drawable/app_normal_login_button_background"
         android:hint="@string/register_password"
+        android:gravity="center_horizontal"
         android:inputType="textPassword" />
 
     <EditText
@@ -74,8 +81,9 @@
         android:layout_alignRight="@+id/et_register_password"
         android:layout_below="@+id/et_register_password"
         android:layout_marginTop="@dimen/app_register_margintop"
-        android:background="@drawable/edittext_circle_shape"
+        android:background="@drawable/app_normal_login_button_background"
         android:hint="@string/register_password_again"
+        android:gravity="center_horizontal"
         android:inputType="textPassword" />
 
     <EditText
@@ -86,7 +94,8 @@
         android:layout_alignRight="@+id/et_register_password_again"
         android:layout_below="@+id/et_register_password_again"
         android:layout_marginTop="@dimen/app_register_margintop"
-        android:background="@drawable/edittext_circle_shape"
+        android:background="@drawable/app_normal_login_button_background"
+        android:gravity="center_horizontal"
         android:hint="@string/phone"/>
 
 </RelativeLayout>

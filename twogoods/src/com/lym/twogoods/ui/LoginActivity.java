@@ -11,20 +11,27 @@ import cn.bmob.v3.listener.VerifySMSCodeListener;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
+import com.lym.twogoods.bean.Login;
 import com.lym.twogoods.bean.User;
+import com.lym.twogoods.publish.ui.PublishGoodsActivity;
+import com.lym.twogoods.screen.DisplayUtils;
 import com.lym.twogoods.ui.base.BackActivity;
+import com.lym.twogoods.user.Loginer;
+import com.lym.twogoods.user.listener.DefaultLoginListener;
 import com.lym.twogoods.utils.EncryptHelper;
 import com.lym.twogoods.utils.NetworkHelper;
 import com.lym.twogoods.utils.StringUtil;
 import com.lym.twogoods.utils.VerificationUtil;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,12 +45,13 @@ import android.widget.Toast;
 public class LoginActivity extends BackActivity {
 
 	// 定义布局控件
+	private LinearLayout ll_app_login_main;
 	private EditText et_login_erhuo;
 	private EditText et_login_password;
 	private EditText et_login_code;
 	private Button btn_login_code_get;
 	private Button btn_login_land;
-	private Button btn_login_forget;
+	private TextView tv_login_forget;
 
 	// 定义actionbar控件
 	private TextView actionbarRightTextView;
@@ -59,7 +67,7 @@ public class LoginActivity extends BackActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.app_login_activity);
+		setContentView(R.layout.app_login_activity_replace);
 		initActionbar();
 		init();
 		clickEvent();
@@ -67,12 +75,13 @@ public class LoginActivity extends BackActivity {
 
 	private void init() {
 		VerificationUtil.configClear();
+		ll_app_login_main=(LinearLayout) findViewById(R.id.ll_app_login_main);
 		et_login_erhuo = (EditText) findViewById(R.id.et_login_erhuo);
 		et_login_password = (EditText) findViewById(R.id.et_login_password);
 		et_login_code = (EditText) findViewById(R.id.et_login_code);
 		btn_login_code_get = (Button) findViewById(R.id.btn_login_code_get);
 		btn_login_land = (Button) findViewById(R.id.btn_login_land);
-		btn_login_forget = (Button) findViewById(R.id.btn_login_forget);
+		tv_login_forget = (TextView) findViewById(R.id.tv_login_forget);
 
 		user = new User();
 		progressDialog = new ProgressDialog(this);
@@ -80,6 +89,7 @@ public class LoginActivity extends BackActivity {
 		progressDialog.setMessage("稍等一下......");
 		progressDialog.setProgress(ProgressDialog.STYLE_HORIZONTAL);
 		progressDialog.setIndeterminate(true);
+		setLayoutParams();
 	}
 
 	/**
@@ -166,17 +176,25 @@ public class LoginActivity extends BackActivity {
 				if (NetworkHelper.isMobileDataEnable(getApplicationContext())
 						|| NetworkHelper
 								.isWifiDataEnable(getApplicationContext())) {
+					progressDialog.show();
+					Login loginItem=new Login();
+					loginItem.setUsername(et_login_erhuo.getText().toString().trim());
+					loginItem.setPhone(et_login_erhuo.getText().toString().trim());
+					loginItem.setPassword(EncryptHelper.getMD5(et_login_password.getText().toString().trim()));
+					Loginer.getInstance().login(getApplicationContext(),loginItem,new NormalLoginListener(getApplicationContext()));
+					
+					//////从這里开始删
 					//
 					// 对贰货号，密码和验证码的合理性进行检测。
-					if (StringUtil.isErHuoNumber(et_login_erhuo.getText()
+					/*if (StringUtil.isErHuoNumber(et_login_erhuo.getText()
 							.toString())
 							|| StringUtil.isPhoneNumber(et_login_erhuo
 									.getText().toString())) {
 						if (StringUtil.isPassword(et_login_password.getText()
-								.toString())) {
+								.toString())) {*/
 //							if (StringUtil.isSecurityCode(et_login_code
 //									.getText().toString())) {
-								judgePassword();
+////////恢复这句								judgePassword();	//到时候需要验证码的时候，只需要留下codeMatch();
 //								codeMatch();
 //								if (find_succeed && codeVerify) {
 									/*Intent intent = new Intent(
@@ -191,7 +209,7 @@ public class LoginActivity extends BackActivity {
 //								Toast.makeText(getApplicationContext(),
 //										"验证码格式有误", Toast.LENGTH_SHORT).show();
 //							}
-						} else {
+						/*} else {
 
 							Toast.makeText(getApplicationContext(), "密码格式有误",
 									Toast.LENGTH_SHORT).show();
@@ -199,9 +217,10 @@ public class LoginActivity extends BackActivity {
 					} else {
 						Toast.makeText(getApplicationContext(), "贰货号格式有误",
 								Toast.LENGTH_SHORT).show();
-					}
+					}*/
 
 				}
+				///一直删到這里
 				else {
 					Toast.makeText(getApplicationContext(), "当前网络不佳",
 							Toast.LENGTH_SHORT).show();
@@ -210,7 +229,7 @@ public class LoginActivity extends BackActivity {
 		});
 
 		// 忘记密码按钮点击事件
-		btn_login_forget.setOnClickListener(new OnClickListener() {
+		tv_login_forget.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -401,5 +420,29 @@ public class LoginActivity extends BackActivity {
 			phone = user.getPhone();
 		}
 		return phone;
+	}
+	
+	private class NormalLoginListener extends DefaultLoginListener{
+
+		public NormalLoginListener(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
+		}
+		@Override
+		public void onError(int errorCode) {
+			super.onError(errorCode);
+			progressDialog.dismiss();
+			Toast.makeText(getApplicationContext(), "登陆失败", Toast.LENGTH_SHORT).show();
+		}
+		@Override
+		public void onSuccess(User user) {
+			super.onSuccess(user);
+			progressDialog.dismiss();
+			Intent intent = new Intent(LoginActivity.this, PublishGoodsActivity.class);
+			startActivity(intent);
+		}
+	}
+	private void setLayoutParams() {
+		ll_app_login_main.setY(DisplayUtils.getScreenHeightPixels(this)/5);
 	}
 }

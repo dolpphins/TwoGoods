@@ -159,6 +159,9 @@
 	<dimen name="app_login_choice_button_textsize">20sp</dimen>
 	<dimen name="app_login_choice_marginmiddle">40dp</dimen>
 	<!-- app_login -->
+	<dimen name="app_login_icon_text_top">20dp</dimen>
+	<dimen name="app_login_view_top">15dp</dimen>
+	<dimen name="app_login_view_margin_right_left">20dp</dimen>
 	<!-- app_register -->
 	<dimen name="app_register_parenttop">60dp</dimen>
 	<dimen name="app_register_margintop">20dp</dimen>
