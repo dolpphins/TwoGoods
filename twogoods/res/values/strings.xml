@@ -93,15 +93,16 @@
     
     
     
-    <!-- lyw -->
+     <!-- lyw -->
     <!-- app_login_choice -->
     <string name="login_direct">游客</string>
     <string name="login">登录</string>
     <!-- app_login -->
+    <string name="icon_text">Er Huo</string>
     <string name="login_erhuo">贰货号/手机号码</string>
     <string name="password">密码</string>
     <string name="get_code">获取验证码</string>
-    <string name="login_forget_password">忘记密码？</string>
+    <string name="login_forget_password">Forgot you password?</string>
     <!-- app_register -->
     <string name="register_erhuo">起个好听的贰货号吧（4到15个字母或汉字）</string>
     <string name="register_password">密码（6到15个字母或者数字）</string>
