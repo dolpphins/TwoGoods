@@ -8,6 +8,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
@@ -274,7 +275,7 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 		case  ChatConfiguration.TYPE_MESSAGE_VOICE://语音消息
 			if (text != null && !text.equals("")) {
 				tv_voice_length.setVisibility(View.VISIBLE);
-				tv_voice_length.setText("3''");
+				tv_voice_length.setText(gettime(text));
 				String content = item.getMessage();
 				RecordPlayClickListener clickListener = new RecordPlayClickListener(mContext);
 				clickListener.setFilePath(content);
@@ -285,8 +286,10 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 					if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_SUCCEED){
 						tv_voice_length.setVisibility(View.VISIBLE);
 					}else{
+						if(item.getLast_Message_Status()==MessageConfig.SEND_MESSAGE_FAILED){
+							iv_fail_resend.setVisibility(View.VISIBLE);
+						}
 						tv_voice_length.setVisibility(View.INVISIBLE);
-						iv_fail_resend.setVisibility(View.VISIBLE);
 					}
 				} else {//接收的语音消息
 					clickListener.setIsNetUrl(true);
@@ -398,5 +401,27 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 			}
 			return (T) childView;
 		}
+	}
+	
+	//获取音频文件的语音长度
+	private String gettime(String string){
+	    MediaPlayer player = new MediaPlayer();  
+        try {
+            player.setDataSource(string);  
+            player.prepare();        
+        } catch (Exception e){
+    	    e.printStackTrace(); 
+        } 
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {//监听准备
+        	
+        @Override
+            public void onPrepared(MediaPlayer player) {
+           }
+        });  
+        double size =player.getDuration();
+        String  timelong1 = (int) Math.ceil((size / 1000)) + "''";
+        player.stop();
+        player.release();
+        return  timelong1; 
 	}
 }

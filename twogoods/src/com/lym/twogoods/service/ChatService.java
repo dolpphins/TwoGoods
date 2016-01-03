@@ -51,6 +51,7 @@ public class ChatService extends Service {
 	
 	private String TAG = "ChatService";
 	
+	private Boolean isServiceRunning = false;
 	/**保存上一次的加载时间*/
 	private long loadTime;
 	/**判断是否刚刚打开程序，第一次加载消息*/
@@ -79,6 +80,8 @@ public class ChatService extends Service {
 	NotificationManager mNotificationManager;
 	NotificationCompat.Builder mBuilder;
 	
+	private MyThread thread;
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		return new MsgBinder();
@@ -86,16 +89,14 @@ public class ChatService extends Service {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		// TODO 自动生成的方法存根
 		init();
-		MyThread thread = new MyThread();
+		thread = new MyThread();
 		thread.start();
 		return super.onStartCommand(intent, flags, startId);
 	}
 
 	
 	private void init() {
-		
 		currentUser = UserInfoManager.getInstance().getmCurrent();
 		mOrmDatabaseHelper = new OrmDatabaseHelper(getApplicationContext());
 		mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
@@ -105,6 +106,8 @@ public class ChatService extends Service {
 		
 		isFirstLoad = true;
 		netConnectTip = true;
+		//程序开始运行
+		isServiceRunning = true;
 		
 		query = new BmobQuery<ChatDetailBean>();
 		//查询发送对象是当前用户的数据
@@ -116,19 +119,36 @@ public class ChatService extends Service {
 				getSystemService(Context.NOTIFICATION_SERVICE); 
 		mBuilder = new NotificationCompat.Builder(getApplicationContext()); 
 	}
+	
+	
+	/**
+	 * 关闭service后MyThread也要关闭
+	 */
+	public void stopChatService(){
+		Log.i(TAG,"关闭线程停止搜索");
+		isServiceRunning = false;
+		thread.interrupt();
+		thread = null;
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		stopChatService();
+	}
 
 
 	class MyThread extends Thread {  
 		
         public void run() {  
-        	while(true){
+        	while(isServiceRunning){
         		if(NetworkHelper.isNetConnected(getApplicationContext())){
 	    			query.addWhereGreaterThan("message_read_status", 1);
 	        		//执行查询方法
 	        		query.findObjects(getApplicationContext(), new FindListener<ChatDetailBean>() {
 	        		        @Override
 	        		        public void onError(int code, String msg) {
-	        		        	Log.i(TAG,"service查询失败");
+	        		        	Log.e(TAG,"service查询失败");
 	        		        }
 							@Override
 							public void onSuccess(List<ChatDetailBean> object) {
@@ -354,7 +374,6 @@ public class ChatService extends Service {
 	 
 	/**接收新发的消息已经被浏览的信息，如果已经被浏览，需要取消notification*/
 	public void cancelAllNotification() {
-		Log.i(TAG,"cancelAllNotification");
 		mNotificationManager.cancelAll();
 	}
 	
@@ -362,7 +381,6 @@ public class ChatService extends Service {
 	private ChatActivity mChatActivity;
 	
 	public void setActivity(ChatActivity activity){
-		Log.i(TAG,"setActivity");
 		mChatActivity = activity;
 	}
 }

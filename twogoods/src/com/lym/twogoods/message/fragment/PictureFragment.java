@@ -42,6 +42,7 @@ import android.widget.Toast;
 
 public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 	
+	private String TAG = "PictureFragment";
 	private ProgressDialog mProgressDialog;
 
 	/**
@@ -162,15 +163,26 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 	 */
 	private void data2View()
 	{
-		/**
-		 * 可以看到文件夹的路径和图片的路径分开保存，极大的减少了内存的消耗；
-		 */
+		//可以看到文件夹的路径和图片的路径分开保存，极大的减少了内存的消耗
+		allImgs = picsFilter(allImgs);
 		mImageAdapter = new ImageAdapter(getActivity().getApplicationContext(),selectedPics
 				,R.layout.message_chat_grid_item,allImgs,mHandler);
 		mImageAdapter.setSelectCount(selectCount);
 		mGirdView.setAdapter(mImageAdapter);
 		mImageCount.setText(allImgs.size() + "张");
 	};
+	/**
+	 * 过滤图片
+	 */
+	public List<String> picsFilter(List<String> list){
+		for(int i = 0;i<list.size();i++){
+			if(!(list.get(i).endsWith(".png")||list.get(i).endsWith(".jpg")||list.get(i).endsWith(".jpeg"))){
+				list.remove(i);
+				i = i - 1;
+			}
+		}
+		return list;
+	}
 
 	/**
 	 * 初始化展示文件夹的popupWindw
@@ -197,9 +209,6 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 		// 设置选择文件夹的回调
 		mListImageDirPopupWindow.setOnImageDirSelected(this);
 	}
-
-
-	
 	
 	/**
 	 * 利用ContentProvider扫描手机中的图片，此方法在运行在子线程中 完成图片的扫描，最终获得jpg最多的那个文件夹
