@@ -3,6 +3,7 @@ package com.lym.twogoods.adapter.base;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lym.loader.HeadPictureLoader;
 import com.lym.twogoods.R;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.PictureThumbnailSpecification;
@@ -19,6 +20,7 @@ import com.lym.twogoods.utils.TimeUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -52,7 +54,8 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
+		System.out.println("getView");
+		//android.os.Debug.startMethodTracing();
 		ItemViewHolder viewHolder = null;
 		if(convertView == null) {
 			viewHolder = new ItemViewHolder();
@@ -90,11 +93,12 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 			e.printStackTrace();
 		}
 		//先清除View缓存
-		clearViewCache(viewHolder);
+		clearViewCache(viewHolder, item);
 		//设置基本内容
 		setItemContent(viewHolder, item);
 		//设置特殊内容
 		setCustomContent(viewHolder, item);
+		//android.os.Debug.stopMethodTracing();
 		
 		return convertView;
 	}
@@ -103,31 +107,38 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 		if(viewHolder == null || item == null) {
 			return;
 		}
+		//ImageLoaderHelper.loadUserHeadPictureThumnail(mActivity, viewHolder.base_goods_listview_item_headpic, "", null);
 		//头像
-		if(TextUtils.isEmpty(item.getHead_url())) {
-			BmobQueryHelper.queryHeadPictureByUsername(mActivity, item.getUsername(), new OnUsername2HeadPictureListener() {
-				
-				@Override
-				public void onSuccess(String headUrl) {
-					ImageLoaderHelper.loadUserHeadPictureThumnail(mActivity, viewHolder.base_goods_listview_item_headpic, headUrl, null);
-					//设置缓存
-					List<Goods> goodsList = new ArrayList<Goods>();
-					for(Goods goods : mGoodsList) {
-						if(item.getUsername().equals(goods.getUsername())) {
-							goods.setHead_url(headUrl);
-							goodsList.add(goods);
-						}
-					}
-				}
-				
-				@Override
-				public void onError(int errorcode, String errormsg) {				
-					ImageLoaderHelper.loadUserHeadPictureThumnail(mActivity, viewHolder.base_goods_listview_item_headpic, null, null);
-				}
-			});
-		} else {
-			ImageLoaderHelper.loadUserHeadPictureThumnail(mActivity, viewHolder.base_goods_listview_item_headpic, item.getHead_url(), null);
-		}
+		//android.os.Debug.startMethodTracing();
+		//卡顿代码
+//		if(TextUtils.isEmpty(item.getHead_url())) {
+//			BmobQueryHelper.queryHeadPictureByUsername(mActivity, item.getUsername(), new OnUsername2HeadPictureListener() {
+//				
+//				@Override
+//				public void onSuccess(String headUrl) {
+//					ImageLoaderHelper.loadUserHeadPictureThumnail(mActivity, viewHolder.base_goods_listview_item_headpic, headUrl, null);
+//					//设置缓存
+//					List<Goods> goodsList = new ArrayList<Goods>();
+//					for(Goods goods : mGoodsList) {
+//						if(item.getUsername().equals(goods.getUsername())) {
+//							goods.setHead_url(headUrl);
+//							goodsList.add(goods);
+//						}
+//					}
+//				}
+//				
+//				@Override
+//				public void onError(int errorcode, String errormsg) {				
+//					ImageLoaderHelper.loadUserHeadPictureThumnail(mActivity, viewHolder.base_goods_listview_item_headpic, null, null);
+//				}
+//			});
+//		} else {
+//			ImageLoaderHelper.loadUserHeadPictureThumnail(mActivity, viewHolder.base_goods_listview_item_headpic, item.getHead_url(), null);
+//		}
+		//android.os.Debug.stopMethodTracing();
+		//加载头像优化代码
+		//完全不管,直接采用默认头像就行,等停止滑动再去加载真正的头像
+		
 		//用户名
 		viewHolder.base_goods_listview_item_username.setText(item.getUsername());
 		//发布时间
@@ -210,20 +221,20 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 	}
 	
 	//清除View缓存,否则会发生错乱
-	private void clearViewCache(ItemViewHolder viewHolder) {
-		if(viewHolder != null) {
-			viewHolder.base_goods_listview_item_headpic.setImageBitmap(null);
-			viewHolder.base_goods_listview_item_username.setText(null);
-			viewHolder.base_goods_listview_item_publishtime.setText(null);;
-			viewHolder.base_goods_listview_item_publishlocation.setText(null);
-			viewHolder.base_goods_listview_item_price.setText(null);
-			viewHolder.base_goods_listview_item_operation.setText(null);
-			viewHolder.base_goods_listview_item_description.setText(null);
+	//优化:1.由于text会被直接覆盖,因此为避免UI重复绘制没必要清除
+	//    2.如果发现该缓存View显示的头像就是我们新的Item需要显示的头像,那么也不用清除,并做一定的标记
+	private void clearViewCache(ItemViewHolder viewHolder, Goods item) {
+		if(viewHolder != null && item != null) {
+			String preUsrname = viewHolder.username;
+			if(!TextUtils.isEmpty(preUsrname) && preUsrname.equals(item.getUsername())) {
+			} else {
+				viewHolder.base_goods_listview_item_headpic.setImageResource(R.drawable.user_default_head);	
+			}
 			viewHolder.base_goods_gridview_item_pictures.setAdapter(null);
 		}
 	}
 	
-	protected static class ItemViewHolder {
+	public static class ItemViewHolder {
 		
 		/** 用户相关信息子布局 */
 		public RelativeLayout base_goods_listview_item_user_layout;
@@ -251,5 +262,8 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 		
 		/** 左右可滑动图片 */
 		public GridView base_goods_gridview_item_pictures;
+		
+		/** 该Item上一次显示的数据集Item的username,优化缓存使用 */
+		public String username;
 	}
 }

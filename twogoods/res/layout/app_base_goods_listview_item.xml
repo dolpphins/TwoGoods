@@ -31,7 +31,8 @@
 	        	android:layout_height="wrap_content"
 	        	android:contentDescription="@null"
 	        	android:layout_marginRight="@dimen/app_base_goods_listview_item_headpicture_marginRight"
-	        	android:layout_marginEnd="@dimen/app_base_goods_listview_item_headpicture_marginRight"/>
+	        	android:layout_marginEnd="@dimen/app_base_goods_listview_item_headpicture_marginRight"
+	        	android:src="@drawable/user_default_head"/>
 	        <!-- 用户名 -->
 	        <TextView 
 	            android:id="@+id/base_goods_listview_item_username" 
