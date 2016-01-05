@@ -207,14 +207,16 @@ public class PersonalityInfoFragment extends BaseListFragment {
 	
 	private int getHeadPictureCompressQuality(Bitmap bm) {
 		long size = ImageUtil.sizeOfBitmap(bm);
-		//小于128KB
+		//(0,128KB)
 		if(size < 128 * 1024) {
 			return 100;
-		//小于512KB
+		//[128kB, 512KB)
 		} else if(size <  512 * 1024) {
 			return 50;
+		//[512KB, 10MB)
 		} else if(size < 10 * 1024 * 1024) {
 			return 20;
+		//[10MB, ...)
 		} else {
 			return 5;
 		}

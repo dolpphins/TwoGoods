@@ -393,8 +393,16 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 	}
 	
 	private void initHeadPicture() {
+		android.view.ViewGroup.LayoutParams params = detailMessageViewHolder.index_goods_detail_head_picture.getLayoutParams();
+		if(params != null) {
+			int side = DisplayUtils.dp2px(mAttachActivity.getApplicationContext(), 70);
+			params.width = side;
+			params.height = side;
+		}
+		
 		ImageLoaderHelper.loadUserHeadPictureThumnail(mAttachActivity,
 				detailMessageViewHolder.index_goods_detail_head_picture, mData.getHead_url(), null);
+		
 		//用户相关信息子布局点击事件,跳转到某一用户主页
 		detailMessageViewHolder.index_goods_detail_head_picture.setOnTouchListener(new OnTouchListener() {
 					

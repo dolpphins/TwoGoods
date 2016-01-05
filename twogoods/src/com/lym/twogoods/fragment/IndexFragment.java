@@ -18,10 +18,9 @@ import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.index.widget.DropdownLinearLayout;
 import com.lym.twogoods.index.widget.MaskLayer;
 import com.lym.twogoods.network.AbsListViewLoader;
+import com.lym.twogoods.network.ListViewLoader;
 import com.lym.twogoods.network.ListViewOnLoaderListener;
-import com.lym.twogoods.ui.GoodsDetailActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -496,7 +495,7 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 		//ListView加载器
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new IndexGoodsListAdapter(mAttachActivity, mGoodsList);
-		mAbsListViewLoader = new AbsListViewLoader(this, mListView, mAdapter, mGoodsList);
+		mAbsListViewLoader = new ListViewLoader(this, mListView, mAdapter, mGoodsList);
 		mOnLoaderListener = new ListViewOnLoaderListener(this, mAbsListViewLoader, mListView);
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		mListView.setAdapter(mAdapter);

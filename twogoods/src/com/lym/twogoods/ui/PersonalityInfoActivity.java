@@ -3,6 +3,7 @@ package com.lym.twogoods.ui;
 import java.io.File;
 
 import com.lym.twogoods.R;
+import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.ActivityRequestResultCode;
 import com.lym.twogoods.manager.DiskCacheManager;
@@ -16,6 +17,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 
 /**
@@ -41,7 +43,13 @@ public class PersonalityInfoActivity extends BackFragmentActivity{
 		super.onCreate(savedInstanceState);
 		setCenterTitle(getResources().getString(R.string.more_personality));
 		
-		mUser = (User) getIntent().getSerializableExtra("user");
+		//mUser = (User) getIntent().getSerializableExtra("user");
+		//没有登录
+		if(!UserInfoManager.getInstance().isLogining()) {
+			Toast.makeText(getApplicationContext(), "请先登录", Toast.LENGTH_SHORT).show();
+			finish();
+		}
+		mUser = UserInfoManager.getInstance().getmCurrent();
 		mPersonalityInfoFragment = new PersonalityInfoFragment(mUser);
 		showFragment(mPersonalityInfoFragment);
 	}

@@ -100,6 +100,17 @@ public class ImageLoaderHelper {
 				
 	}
 	
+	public static void loadUserHeadPictureThumnail(Context context, String url, ImageView imageView) {
+		if(context != null && !TextUtils.isEmpty(url) && imageView != null) {
+			ImageLoaderConfiguration config = UniversalImageLoaderConfigurationManager
+					.getUserHeadPictureThumbnailLocalImageLoaderConfiguration(context);
+			ImageLoader imageLoader = UniversalImageLoaderManager.getImageLoader(config);
+			DisplayImageOptions options = UniversalImageLoaderOptionManager.getHeadPictureDisplayImageOption(null, 0, 0);
+			
+			imageLoader.displayImage(url, imageView, options);
+		}
+	}
+	
 	/**
 	 * 加载一张商品缩略图(该缩略图在ListView中显示)
 	 * 

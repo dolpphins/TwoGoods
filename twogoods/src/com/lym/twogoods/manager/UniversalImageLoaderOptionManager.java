@@ -1,6 +1,5 @@
 package com.lym.twogoods.manager;
 
-import com.baidu.platform.comapi.map.w;
 import com.lym.twogoods.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -104,12 +103,11 @@ public class UniversalImageLoaderOptionManager {
 	 * */
 	public static DisplayImageOptions getHeadPictureDisplayImageOption(BitmapFactory.Options options, int width, int height) {
 
-		BitmapFactory.Options decodingOptions = null;
+		BitmapFactory.Options decodingOptions = new BitmapFactory.Options();
 		if(options != null && width > 0 && height > 0) {
 			int realWidth = options.outWidth;
 			int realHeight = options.outHeight;
 			if(realWidth > 0 && realHeight > 0) {
-				decodingOptions = new BitmapFactory.Options();
 				decodingOptions.inSampleSize = calculateInSampleSize(realWidth, realHeight, width, height);
 			}
 		}
@@ -121,7 +119,7 @@ public class UniversalImageLoaderOptionManager {
 								.cacheInMemory(true)
 								.cacheOnDisk(true)
 								.considerExifParams(true)
-								.displayer(new FadeInBitmapDisplayer(200))
+								//.displayer(new FadeInBitmapDisplayer(200))
 								.decodingOptions(decodingOptions)
 								.bitmapConfig(Bitmap.Config.RGB_565)
 								.build();

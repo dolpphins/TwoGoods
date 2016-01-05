@@ -54,7 +54,7 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		System.out.println("getView");
+		//System.out.println("getView");
 		//android.os.Debug.startMethodTracing();
 		ItemViewHolder viewHolder = null;
 		if(convertView == null) {
@@ -225,11 +225,15 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 	//    2.如果发现该缓存View显示的头像就是我们新的Item需要显示的头像,那么也不用清除,并做一定的标记
 	private void clearViewCache(ItemViewHolder viewHolder, Goods item) {
 		if(viewHolder != null && item != null) {
-			String preUsrname = viewHolder.username;
-			if(!TextUtils.isEmpty(preUsrname) && preUsrname.equals(item.getUsername())) {
-			} else {
-				viewHolder.base_goods_listview_item_headpic.setImageResource(R.drawable.user_default_head);	
-			}
+			//该优化有时会导致头像错乱,原因待查
+			//String preUsrname = viewHolder.username;
+			//if(!TextUtils.isEmpty(preUsrname) && preUsrname.equals(item.getUsername())) {
+			//} else {
+				boolean mayLoaded = HeadPictureLoader.getInstance().tryLoadFromMenoryCache(mActivity.getApplicationContext(), item.getUsername(), viewHolder.base_goods_listview_item_headpic);
+				if(!mayLoaded) {
+					viewHolder.base_goods_listview_item_headpic.setImageResource(R.drawable.user_default_head);
+				}	
+			//}
 			viewHolder.base_goods_gridview_item_pictures.setAdapter(null);
 		}
 	}

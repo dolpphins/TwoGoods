@@ -31,35 +31,35 @@ import cn.bmob.v3.listener.FindListener;
  * 
  * @author 麦灿标
  * */
-public class AbsListViewLoader {
+public class AbsListViewLoader implements OnScrollListener{
 
 	private final static String TAG = "AbsListViewLoader";
 	
 	/** 相关联 的Fragment */
-	private BaseFragment mFragment;
+	protected BaseFragment mFragment;
 	
 	/** 相关联的AbsListView */
-	private AbsListView mAbsListView;
+	protected AbsListView mAbsListView;
 	
 	/** 数据集 */
-	private List<Goods> mGoodsList;
+	protected List<Goods> mGoodsList;
 	
 	/** 适配器 */
-	private BaseGoodsListAdapter mAdapter;
+	protected BaseGoodsListAdapter mAdapter;
 	
-	private AbsListViewLoaderConfiguration mConfiguration;//暂时没用到
+	protected AbsListViewLoaderConfiguration mConfiguration;//暂时没用到
 	
 	private static enum Status {
 		LOADING, NONE
 	}
 	
 	//ListView当前状态
-	private Status mStatus = Status.NONE;
+	protected Status mStatus = Status.NONE;
 	//ListView滚动状态
-	private int mScrollStatus = OnScrollListener.SCROLL_STATE_IDLE;
+	protected int mScrollStatus = OnScrollListener.SCROLL_STATE_IDLE;
 	
 	/** 数据加载监听器 */
-	private OnLoaderListener mOnLoaderListener;
+	protected OnLoaderListener mOnLoaderListener;
 	
 	/** 查询对象 */
 	BmobQuery<Goods> mBmobQuery;
@@ -119,44 +119,7 @@ public class AbsListViewLoader {
 	}
 	
 	private void init() {
-		mAbsListView.setOnScrollListener(new OnScrollListener() {
-			
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				mScrollStatus = scrollState;
-				
-				int totalCount = view.getCount();
-				//从Header算起
-				int firstIndex = view.getFirstVisiblePosition();
-				int lastIndex = view.getLastVisiblePosition();
-				int visibleItemCount = lastIndex - firstIndex + 1;
-				
-				//如果停止滚动,那么开始异步加载数据,包括头像，图片等
-				requestLoadHeadPicture(firstIndex, visibleItemCount);
-
-				//停止滚动时加载更多
-				if(lastIndex == totalCount - 1 
-						&& scrollState == OnScrollListener.SCROLL_STATE_IDLE
-						&& mStatus == Status.NONE
-						&& visibleItemCount < totalCount) {
-					if(mBmobQuery != null) {
-						mBmobQuery.setSkip(mGoodsList.size());
-						prepareLoadDataFromNetwork(mBmobQuery, Type.LOADMORE);
-					}
-					if(mOnLoaderListener != null) {
-						mOnLoaderListener.onLoadMoreStart();
-					}
-				}
-				
-			}
-			
-			//注意是正在滚动才会调用该方法，因此OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
-			//和OnScrollListener.SCROLL_STATE_FLING两种状态
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				
-			}
-		});
+		mAbsListView.setOnScrollListener(this);
 		mAbsListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -179,59 +142,6 @@ public class AbsListViewLoader {
 				}
 			}
 		});
-	}
-
-	/**
-	 * 请求加载头像,该方法只有在列表处于静止(没有滚动)状态才会加载头像
-	 * 
-	 * @param start 从start位置开始
-	 * @param count 指定要加载的Item数
-	 */
-	public void requestLoadHeadPicture(int start, int count) {
-		if(mScrollStatus == OnScrollListener.SCROLL_STATE_IDLE) {
-			//头像
-			List<HeadPictureLoader.HeadPictureTask> tasks = new ArrayList<HeadPictureLoader.HeadPictureTask>();
-			//
-			for(int i = 0; i < count; i++) {
-				//getChildAt并没有包含Header
-				View v = mAbsListView.getChildAt(i);
-				//System.out.println(v == null ? "v null" : "v not null");
-				if(v != null) {
-					BaseGoodsListViewAdapter.ItemViewHolder holder = (ItemViewHolder) v.getTag();
-					//holder可能为空
-					//System.out.println(holder == null ? "holder null" : "holder not null");
-					if(holder != null) {
-						Goods goods = mGoodsList.get(start + i - 1);
-						String username = holder.username;
-						if(!TextUtils.isEmpty(username) && username.equals(goods.getUsername())) {
-							continue;
-						}
-						holder.username = goods.getUsername();
-						HeadPictureLoader.HeadPictureTask task = new HeadPictureLoader.HeadPictureTask();
-						task.setGUID(goods.getGUID());
-						task.setUsername(goods.getUsername());
-						task.setIv(holder.base_goods_listview_item_headpic);
-						tasks.add(task);
-					}
-				}
-			}
-			if(tasks.size() > 0) {
-				HeadPictureLoader.getInstance().submit(mFragment.getActivity().getApplicationContext(), tasks, new OnLoadHeadPictureUrlFinishListener() {
-					
-					@Override
-					public void onFinish(String username, String url) {
-						if(!TextUtils.isEmpty(url)) {
-							for(Goods goods : mGoodsList) {
-								String goodsUsername = goods.getUsername();
-								if(goodsUsername.equals(username)) {
-									goods.setHead_url(url);
-								}
-							}	
-						}
-					}
-				});
-			}
-		}
 	}
 	
 	/**
@@ -416,6 +326,49 @@ public class AbsListViewLoader {
 		void onLoadMoreStart();
 		
 		void onLoadMoreFinish(boolean success);
+	}
+	
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		mScrollStatus = scrollState;
+		
+		onLoadHeadPicture(view);
+
+		int totalCount = view.getCount();
+		//从Header算起
+		int firstIndex = view.getFirstVisiblePosition();
+		int lastIndex = view.getLastVisiblePosition();
+		int visibleItemCount = lastIndex - firstIndex + 1;
+		
+		//停止滚动时加载更多
+		if(lastIndex == totalCount - 1 
+				&& scrollState == OnScrollListener.SCROLL_STATE_IDLE
+				&& mStatus == Status.NONE
+				&& visibleItemCount < totalCount) {
+			if(mBmobQuery != null) {
+				mBmobQuery.setSkip(mGoodsList.size());
+				prepareLoadDataFromNetwork(mBmobQuery, Type.LOADMORE);
+			}
+			if(mOnLoaderListener != null) {
+				mOnLoaderListener.onLoadMoreStart();
+			}
+		}
+		
+	}
+	
+	//注意是正在滚动才会调用该方法，因此OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
+	//和OnScrollListener.SCROLL_STATE_FLING两种状态
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		
+	}
+	
+	/**
+	 * 加载头像,子类如果需要实现加载头像功能可以重写该方法
+	 * 
+	 * @param view 与之关联的AbsListView对象
+	 */
+	protected void onLoadHeadPicture(AbsListView view){
 	}
 	
 }

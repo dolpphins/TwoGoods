@@ -4,18 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lym.twogoods.R;
-import com.lym.twogoods.adapter.NearbyAdapter;
 import com.lym.twogoods.adapter.base.BaseGoodsGridViewAdapter;
 import com.lym.twogoods.adapter.base.BaseGoodsListAdapter;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.network.AbsListViewLoader;
+import com.lym.twogoods.network.GridViewLoader;
 import com.lym.twogoods.network.GridViewOnLoaderListener;
 import com.lym.twogoods.ui.GoodsDetailActivity;
-import com.lym.twogoods.utils.Debugger;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -69,7 +67,7 @@ public abstract class PullGridViewFragment extends BaseListFragment implements I
 		
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new BaseGoodsGridViewAdapter(mAttachActivity, mGoodsList, this);
-		mAbsListViewLoader = new AbsListViewLoader(this, mGridView.getAbsListView(), mAdapter, mGoodsList);
+		mAbsListViewLoader = new GridViewLoader(this, mGridView.getAbsListView(), mAdapter, mGoodsList);
 		mOnLoaderListener = new GridViewOnLoaderListener(this, mAbsListViewLoader, mGridView);
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		mGridView.setNumColumns(mGridViewColumnNum);

@@ -8,6 +8,7 @@ import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
 import android.content.Context;
 
@@ -33,6 +34,11 @@ public class UniversalImageLoaderConfigurationManager {
 	private static ImageLoaderConfiguration sUserHeadPictureThumbnailImageLoaderConfiguration;
 	/** 用户头像缩略图ImageLoader配置相关的锁对象 */
 	private static Object sUserHeadPictureThumbnailImageLoaderConfigurationLock = new Object();
+	
+	/** 用户头像缩略图ImageLoader(具有超时时间,一般只加载本地缓存)配置 */
+	private static ImageLoaderConfiguration sUserHeadPictureThumbnailLocalImageLoaderConfiguration;
+	/** 用户头像缩略图ImageLoader配置相关的锁对象 */
+	private static Object sUserHeadPictureThumbnailLocalImageLoaderConfigurationLock = new Object();
 	
 	/**
 	 * <p>
@@ -124,6 +130,38 @@ public class UniversalImageLoaderConfigurationManager {
 			}
 		}
 		return sUserHeadPictureThumbnailImageLoaderConfiguration;
+	}
+	
+	/**
+	 * <p>
+	 * 	获取头像缩略图ImageLoader配置
+	 * </p>
+	 * <p>
+	 * 	该方法是线程安全的
+	 * </p>
+	 * 
+	 * @param context 上下文 
+	 * 
+	 * @return 头像缩略图ImageLoader配置(仅获取本地缓存),注意多次获取的是同一实例.
+	 * */
+	public static ImageLoaderConfiguration getUserHeadPictureThumbnailLocalImageLoaderConfiguration(Context context) {
+		if(sUserHeadPictureThumbnailLocalImageLoaderConfiguration == null) {
+			synchronized (sUserHeadPictureThumbnailLocalImageLoaderConfigurationLock) {
+				if(sUserHeadPictureThumbnailLocalImageLoaderConfiguration == null) {
+					sUserHeadPictureThumbnailLocalImageLoaderConfiguration = 
+							new ImageLoaderConfiguration.Builder(context)
+							.threadPriority(Thread.NORM_PRIORITY - 2)
+							.threadPoolSize(5) // five thread
+							.memoryCache(new LruMemoryCache(2 * 1024 * 1024)) //2MB
+							.denyCacheImageMultipleSizesInMemory() 
+							.tasksProcessingOrder(QueueProcessingType.LIFO) //LIFO
+							.diskCache(new UnlimitedDiskCache(new File(DiskCacheManager.getInstance(context).getUserHeadPictureCachePath())))
+							.imageDownloader(new BaseImageDownloader(context, 2 * 1000, 5 * 1000))
+							.build();
+				}
+			}
+		}
+		return sUserHeadPictureThumbnailLocalImageLoaderConfiguration;
 	}
 	
 }

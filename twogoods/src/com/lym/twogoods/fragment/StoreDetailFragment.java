@@ -14,9 +14,9 @@ import com.lym.twogoods.index.manager.GoodsSortManager;
 import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.manager.ImageLoaderHelper;
 import com.lym.twogoods.network.AbsListViewLoader;
+import com.lym.twogoods.network.ListViewLoader;
 import com.lym.twogoods.network.ListViewOnLoaderListener;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
-import com.lym.twogoods.ui.GoodsDetailActivity;
 import com.lym.twogoods.ui.PersonalityInfoActivity;
 
 import android.content.Intent;
@@ -26,8 +26,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.bmob.v3.BmobQuery;
@@ -114,7 +112,7 @@ public class StoreDetailFragment extends PullListFragment {
 		
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new StoreDetailGoodsListAdapter(mAttachActivity, mGoodsList);
-		mAbsListViewLoader = new AbsListViewLoader(this, mListView, mAdapter, mGoodsList);
+		mAbsListViewLoader = new ListViewLoader(this, mListView, mAdapter, mGoodsList);
 		mOnLoaderListener = new StoreDetailOnLoaderListener(this, mAbsListViewLoader, mListView);
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		//mListViewLoader.setLoadCacheFromDisk(true);

@@ -8,6 +8,7 @@ import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.fragment.base.HeaderListFragment;
 import com.lym.twogoods.index.adapter.IndexGoodsListAdapter;
 import com.lym.twogoods.network.AbsListViewLoader;
+import com.lym.twogoods.network.ListViewLoader;
 import com.lym.twogoods.network.ListViewOnLoaderListener;
 
 import android.os.Bundle;
@@ -85,7 +86,7 @@ public class GoodsSearchResultFragment extends HeaderListFragment {
 	private void initListView() {
 		mSearchGoodsList = new ArrayList<Goods>();
 		mGoodsListAdapter = new IndexGoodsListAdapter(mAttachActivity, mSearchGoodsList);
-		mAbsListViewLoader = new AbsListViewLoader(this, mListView, mGoodsListAdapter, mSearchGoodsList);
+		mAbsListViewLoader = new ListViewLoader(this, mListView, mGoodsListAdapter, mSearchGoodsList);
 		mOnLoaderListener = new ListViewOnLoaderListener(this, mAbsListViewLoader, mListView);
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		mListView.setAdapter(mGoodsListAdapter);

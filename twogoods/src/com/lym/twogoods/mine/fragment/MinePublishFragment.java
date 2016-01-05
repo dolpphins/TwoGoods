@@ -10,17 +10,13 @@ import com.lym.twogoods.index.manager.GoodsSortManager;
 import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.mine.adapter.MinePublishGoodsListAdapter;
 import com.lym.twogoods.network.AbsListViewLoader;
-import com.lym.twogoods.network.DefaultOnLoaderListener;
+import com.lym.twogoods.network.ListViewLoader;
 import com.lym.twogoods.network.ListViewOnLoaderListener;
-import com.lym.twogoods.ui.GoodsDetailActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import cn.bmob.v3.BmobQuery;
 
 /**
@@ -64,7 +60,7 @@ public class MinePublishFragment extends PullListFragment {
 		
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new MinePublishGoodsListAdapter(mAttachActivity, mGoodsList);
-		mAbsListViewLoader = new AbsListViewLoader(this, mListView, mAdapter, mGoodsList);
+		mAbsListViewLoader = new ListViewLoader(this, mListView, mAdapter, mGoodsList);
 		mOnLoaderListener = new ListViewOnLoaderListener(this, mAbsListViewLoader, mListView);
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		mListView.setAdapter(mAdapter);

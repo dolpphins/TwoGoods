@@ -57,6 +57,7 @@ public class PersonalityInfoAdapter extends BaseAdapter{
 			ImageView headIv = (ImageView) v.findViewById(R.id.user_detail_more_list_item_head_iv);
 			TextView username = (TextView) v.findViewById(R.id.user_detail_more_list_item_username);
 			ImageLoaderHelper.loadUserHeadPictureThumnail(mContext, headIv, data.getHead_url(), null);
+			System.out.println("head url:" + data.getHead_url());
 			username.setText(data.getUsername());
 			setClickEventForHead(headIv);
 		} else {

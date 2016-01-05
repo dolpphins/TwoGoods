@@ -11,6 +11,7 @@ import com.lym.twogoods.index.manager.GoodsSortManager;
 import com.lym.twogoods.index.manager.GoodsSortManager.GoodsSort;
 import com.lym.twogoods.mine.adapter.MineFocusGoodsListAdapter;
 import com.lym.twogoods.network.AbsListViewLoader;
+import com.lym.twogoods.network.ListViewLoader;
 import com.lym.twogoods.network.ListViewOnLoaderListener;
 
 import android.os.Bundle;
@@ -70,7 +71,7 @@ public class MineFocusFragment extends PullListFragment {
 		
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new MineFocusGoodsListAdapter(mAttachActivity, mGoodsList);
-		mAbsListViewLoader = new AbsListViewLoader(this, mListView, mAdapter, mGoodsList);
+		mAbsListViewLoader = new ListViewLoader(this, mListView, mAdapter, mGoodsList);
 		mOnLoaderListener = new ListViewOnLoaderListener(this, mAbsListViewLoader, mListView);
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
 		mListView.setAdapter(mAdapter);

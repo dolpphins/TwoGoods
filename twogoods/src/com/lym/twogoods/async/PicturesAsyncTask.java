@@ -11,6 +11,7 @@ import com.lym.twogoods.async.base.BaseAsyncTask;
 import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.utils.EncryptHelper;
 import com.lym.twogoods.utils.ImageUtil;
+import com.lym.twogoods.utils.StringUtil;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -211,9 +212,30 @@ public class PicturesAsyncTask extends BaseAsyncTask<String, Integer, Bitmap>{
 		}
 		//不存在才放入内存缓存
 		if(memoryCache.get(url) == null) {
-			memoryCache.put(url, bitmap);
+			//判断内存是否紧张,如果是则不缓存该位图
+			if(canPutMemoryCache(bitmap)) {
+				memoryCache.put(url, bitmap);
+			}
 		}
 		return true;
+	}
+	
+	private boolean canPutMemoryCache(Bitmap bitmap) {
+		if(bitmap == null) {
+			return false;
+		}
+		int size = ImageUtil.sizeOfBitmap(bitmap);
+		if(size <= 0) {
+			return false;
+		}
+		Runtime runtime = Runtime.getRuntime();
+		long freeMaxSize = runtime.maxMemory() - runtime.totalMemory() + runtime.freeMemory();
+		Log.d(TAG, "remainder heap size:" + StringUtil.byteSize2String(freeMaxSize));
+		if(freeMaxSize / size < 8) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
 	//将位图保存到磁盘缓存中

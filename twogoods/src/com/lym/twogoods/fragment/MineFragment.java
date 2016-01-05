@@ -103,7 +103,7 @@ public class MineFragment extends BaseFragment{
 				if(checkIsLogining()) {
 					//跳转到个人更多信息页面
 					Intent intent = new Intent(mAttachActivity, PersonalityInfoActivity.class);
-					intent.putExtra("user", UserInfoManager.getInstance().getmCurrent());
+					//intent.putExtra("user", UserInfoManager.getInstance().getmCurrent());
 					startActivityForResult(intent, ActivityRequestResultCode.MINE_MORE_REQUESTCODE);
 				}
 			}

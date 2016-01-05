@@ -14,6 +14,7 @@ import com.lym.twogoods.network.BmobQueryHelper;
 import com.lym.twogoods.network.BmobQueryHelper.OnUsername2HeadPictureListener;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
@@ -95,6 +96,15 @@ public class HeadPictureLoader {
 			}
 		}
 		return map;
+	}
+	
+	public boolean tryLoadFromMenoryCache(Context context, String username, ImageView imageView) {
+		if(context != null && !TextUtils.isEmpty(username) && sHeadPictureMap.containsKey(username)) {
+			String url = sHeadPictureMap.get(username);
+			ImageLoaderHelper.loadUserHeadPictureThumnail(context, url, imageView);
+			return true;
+		}
+		return false;
 	}
 	
 	public static class HeadPictureTask {
