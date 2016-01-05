@@ -8,15 +8,14 @@ import com.bmob.BmobProFile;
 import com.bmob.btp.callback.UploadListener;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
-import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.ActivityRequestResultCode;
+import com.lym.twogoods.eventbus.event.HeadPicChangedEvent;
 import com.lym.twogoods.fragment.base.BaseListFragment;
 import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.mine.adapter.PersonalityInfoAdapter;
 import com.lym.twogoods.utils.FileUtil;
 import com.lym.twogoods.utils.ImageUtil;
-import com.lym.twogoods.utils.IoUtils;
 import com.lym.twogoods.utils.MethodCompat;
 import com.lym.twogoods.utils.PicturesHelper;
 
@@ -27,7 +26,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.Drawable;
-import android.media.MediaRouter.UserRouteInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
@@ -38,10 +36,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
-import android.widget.TimePicker;
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.UpdateListener;
+import de.greenrobot.event.EventBus;
 
 
 /**
@@ -244,6 +241,11 @@ public class PersonalityInfoFragment extends BaseListFragment {
 				preHeadUrl = mUser.getHead_url();
 				mUser.setHead_filename(filename);
 				mUser.setHead_url(file.getUrl());
+				//发送EventBus更换头像消息
+				HeadPicChangedEvent event = new HeadPicChangedEvent();
+				event.setPreUrl(preHeadUrl);
+				event.setNewUrl(mUser.getHead_url());
+				EventBus.getDefault().post(event);
 				//更新数据
 				updateUserData(UpdateType.HP);
 				//删除文件

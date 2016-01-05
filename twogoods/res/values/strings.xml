@@ -65,6 +65,7 @@
     <string name="goods_report_input_hint">请输入您要举报该商品的原因</string>
     <string name="goods_report_cancel">取消</string>
     <string name="goods_report_ok">确定</string>
+    <string name="contact_seller">客服</string>
     <!-- 搜索 -->
     <string name="search_goods">搜贰货</string>
     <string name="search">搜索</string>

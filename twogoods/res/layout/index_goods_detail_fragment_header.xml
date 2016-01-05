@@ -92,6 +92,7 @@
             android:layout_marginStart="@dimen/index_goods_detail_publish_time_marginLeft"
             android:layout_marginRight="@dimen/index_goods_detail_publish_time_marginRight"
             android:layout_marginEnd="@dimen/index_goods_detail_publish_time_marginRight"/>
+        <!-- 联系电话 -->
         <TextView 
             android:id="@+id/index_goods_detail_phone"
             android:layout_width="wrap_content"
@@ -114,21 +115,33 @@
         <!-- 语音 -->
         <ImageView
             android:id="@+id/index_goods_detail_voice"
-            android:layout_width="25dip"
-            android:layout_height="25dip"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
             android:layout_alignRight="@id/index_goods_detail_description"
             android:layout_alignEnd="@id/index_goods_detail_description"
-            android:layout_alignBaseline="@id/index_goods_detail_fouse_num"
+            android:layout_alignBottom="@id/index_goods_detail_head_picture"
             android:src="@drawable/audio3"/>
         <!-- 联系卖家 -->
 		<ImageView
             android:id="@+id/index_goods_detail_contact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
             android:layout_alignRight="@id/index_goods_detail_description"
             android:layout_alignEnd="@id/index_goods_detail_description"
-            android:layout_alignBottom="@id/index_goods_detail_head_picture"
-            android:src="@drawable/index_goods_detail_contact"/>
+            android:layout_alignTop="@id/index_goods_detail_head_picture"
+            android:src="@drawable/index_goods_detail_contact"
+            android:layout_marginRight="5dip"
+            android:layout_marginEnd="5dip"/>
+		<TextView 
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignRight="@id/index_goods_detail_description"
+            android:layout_alignEnd="@id/index_goods_detail_description"
+            android:layout_below="@id/index_goods_detail_contact"
+            android:text="@string/contact_seller"
+            android:textSize="12sp"
+            android:layout_marginRight="3dip"
+            android:layout_marginEnd="3dip"/>
         <!-- 举报 -->
         <TextView 
             android:id="@+id/index_goods_detail_report"
