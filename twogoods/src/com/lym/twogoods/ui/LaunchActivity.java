@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 /**
  * <p>App启动Activity</p>
@@ -28,8 +29,7 @@ public class LaunchActivity extends Activity {
 	// 定义两个选择button 
 	private Button btn_login_choice_direct;
 	private Button btn_login_choice_login;
-
-	//private ProgressDialog pd;
+	private LinearLayout ll_app_login_choice_main;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +92,7 @@ public class LaunchActivity extends Activity {
 	private void init() {
 		btn_login_choice_direct = (Button) findViewById(R.id.btn_login_choice_direct);
 		btn_login_choice_login = (Button) findViewById(R.id.btn_login_choice_login);
+		ll_app_login_choice_main=(LinearLayout) findViewById(R.id.ll_app_login_choice_main);
 		setButtonParams();
 	}
 
@@ -119,7 +120,8 @@ public class LaunchActivity extends Activity {
 		});
 	}
 	private void setButtonParams() {
-		btn_login_choice_direct.setY(DisplayUtils.getScreenHeightPixels(this)/3*2);
-		btn_login_choice_login.setY(DisplayUtils.getScreenHeightPixels(this)/3*2);
+		//btn_login_choice_direct.setY(DisplayUtils.getScreenHeightPixels(this)/3*2);
+		//btn_login_choice_login.setY(DisplayUtils.getScreenHeightPixels(this)/3*2);
+		ll_app_login_choice_main.setY(DisplayUtils.getScreenHeightPixels(this)/3);
 	}
 }
