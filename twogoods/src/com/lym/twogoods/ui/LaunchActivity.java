@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 /**
  * <p>App启动Activity</p>
@@ -28,8 +29,7 @@ public class LaunchActivity extends Activity {
 	// 定义两个选择button 
 	private Button btn_login_choice_direct;
 	private Button btn_login_choice_login;
-
-	//private ProgressDialog pd;
+	private LinearLayout ll_app_login_choice_main;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +50,10 @@ public class LaunchActivity extends Activity {
 		int versionCode = spm.getInt(getApplicationContext(), SharePreferencesConfiguration.APP_VERSION_CODE_KEY, -1);
 		if(AppManager.isUpdate(getApplicationContext(), versionCode)) {
 			spm.putInt(getApplicationContext(), SharePreferencesConfiguration.APP_VERSION_CODE_KEY, AppManager.getAppVersion(getApplicationContext()));
-			btn_login_choice_direct.setVisibility(View.VISIBLE);
-			btn_login_choice_login.setVisibility(View.VISIBLE);
 		} else {
+			btn_login_choice_direct.setVisibility(View.INVISIBLE);
+			btn_login_choice_login.setVisibility(View.INVISIBLE);
+			
 			String username = spm.getLoginMessageString(getApplicationContext(), SharePreferencesConfiguration.LOGIN_USERNAME_KEY, null);
 			String password = spm.getLoginMessageString(getApplicationContext(), SharePreferencesConfiguration.LOGIN_PASSWORD_KEY, null);
 			//自动登录
@@ -92,7 +93,7 @@ public class LaunchActivity extends Activity {
 	private void init() {
 		btn_login_choice_direct = (Button) findViewById(R.id.btn_login_choice_direct);
 		btn_login_choice_login = (Button) findViewById(R.id.btn_login_choice_login);
-		setButtonParams();
+		ll_app_login_choice_main=(LinearLayout) findViewById(R.id.ll_app_login_choice_main);
 	}
 
 	private void clickEvent() {
@@ -117,9 +118,5 @@ public class LaunchActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-	}
-	private void setButtonParams() {
-		btn_login_choice_direct.setY(DisplayUtils.getScreenHeightPixels(this)/3*2);
-		btn_login_choice_login.setY(DisplayUtils.getScreenHeightPixels(this)/3*2);
 	}
 }
