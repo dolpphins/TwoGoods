@@ -50,6 +50,9 @@
     
     
 	<!-- lyw -->
+	<!-- login and so on -->
+	<color name="login_background">#6fb9e4</color>
+	<!--  -->
 	<color name="division">#000000</color>		<!-- 选择位置分割线背景 -->
 	<color name="nearby_select_city_position_letter">#454545</color>
 	<color name="nearby_select_city_position_name">#336598</color>

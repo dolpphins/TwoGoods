@@ -13,8 +13,6 @@ import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.Login;
 import com.lym.twogoods.bean.User;
-import com.lym.twogoods.publish.ui.PublishGoodsActivity;
-import com.lym.twogoods.screen.DisplayUtils;
 import com.lym.twogoods.ui.base.BackActivity;
 import com.lym.twogoods.user.Loginer;
 import com.lym.twogoods.user.listener.DefaultLoginListener;
@@ -31,7 +29,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +42,6 @@ import android.widget.Toast;
 public class LoginActivity extends BackActivity {
 
 	// 定义布局控件
-	private LinearLayout ll_app_login_main;
 	private EditText et_login_erhuo;
 	private EditText et_login_password;
 	private EditText et_login_code;
@@ -75,7 +71,6 @@ public class LoginActivity extends BackActivity {
 
 	private void init() {
 		VerificationUtil.configClear();
-		ll_app_login_main=(LinearLayout) findViewById(R.id.ll_app_login_main);
 		et_login_erhuo = (EditText) findViewById(R.id.et_login_erhuo);
 		et_login_password = (EditText) findViewById(R.id.et_login_password);
 		et_login_code = (EditText) findViewById(R.id.et_login_code);
@@ -89,7 +84,6 @@ public class LoginActivity extends BackActivity {
 		progressDialog.setMessage("稍等一下......");
 		progressDialog.setProgress(ProgressDialog.STYLE_HORIZONTAL);
 		progressDialog.setIndeterminate(true);
-		setLayoutParams();
 	}
 
 	/**
@@ -426,7 +420,6 @@ public class LoginActivity extends BackActivity {
 
 		public NormalLoginListener(Context context) {
 			super(context);
-			// TODO Auto-generated constructor stub
 		}
 		@Override
 		public void onError(int errorCode) {
@@ -438,11 +431,9 @@ public class LoginActivity extends BackActivity {
 		public void onSuccess(User user) {
 			super.onSuccess(user);
 			progressDialog.dismiss();
-			Intent intent = new Intent(LoginActivity.this, PublishGoodsActivity.class);
+			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 			startActivity(intent);
+			finish();
 		}
-	}
-	private void setLayoutParams() {
-		ll_app_login_main.setY(DisplayUtils.getScreenHeightPixels(this)/5);
 	}
 }

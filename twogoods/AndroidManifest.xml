@@ -63,7 +63,8 @@
             </intent-filter>
         </activity>
         <!-- 账号登录 界面Activity -->
-        <activity android:name="com.lym.twogoods.ui.LoginActivity" >
+        <activity android:name="com.lym.twogoods.ui.LoginActivity"
+            	  android:windowSoftInputMode="adjustResize" >
         </activity>
         <!-- 注册界面Activity -->
         <activity android:name="com.lym.twogoods.ui.RegisterActivity" >

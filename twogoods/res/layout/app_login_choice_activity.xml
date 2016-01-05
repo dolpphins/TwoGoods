@@ -4,32 +4,71 @@
 	
 	author:龙宇文
  -->
-<LinearLayout	xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3e5367"
-    android:orientation="horizontal">
-    
-    <Button android:id="@+id/btn_login_choice_direct"
-        android:layout_width="wrap_content"
+    android:background="@color/login_background"
+    android:orientation="vertical" >
+
+    <LinearLayout 
+        android:id="@+id/ll_app_login_choice_main"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/login_direct"
-        android:layout_weight="1"
-        style="?android:attr/buttonBarButtonStyle"
-        android:textSize="@dimen/app_login_choice_button_textsize"
-        android:layout_marginLeft="@dimen/app_login_choice_marginLeft"
-        android:background="@drawable/app_normal_login_button_background"
-        android:visibility="invisible"/>
-    
-     <Button android:id="@+id/btn_login_choice_login"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
+        android:orientation="vertical">
+        
+    <LinearLayout
+        android:id="@+id/ll_app_login_choice_icon"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:layout_marginLeft="@dimen/app_login_choice_marginmiddle"
-        android:layout_marginRight="@dimen/app_login_choice_marginLeft"
-        style="?android:attr/buttonBarButtonStyle"
-        android:textSize="@dimen/app_login_choice_button_textsize"
-        android:background="@drawable/app_normal_login_button_background"
-        android:visibility="invisible"/>
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/app_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/app_login_icon_text_top"
+            android:text="@string/icon_text"
+            android:textColor="#4d8ed6"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_login_choice_button"
+        android:layout_marginTop="@dimen/app_login_view_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_login_choice_direct"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/app_login_choice_marginLeft"
+            android:layout_weight="1"
+            android:background="@drawable/app_normal_login_button_background"
+            android:text="@string/login_direct"
+            android:textSize="@dimen/app_login_choice_button_textsize"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/btn_login_choice_login"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/app_login_choice_marginmiddle"
+            android:layout_marginRight="@dimen/app_login_choice_marginLeft"
+            android:layout_weight="1"
+            android:background="@drawable/app_normal_login_button_background"
+            android:text="@string/login"
+            android:textSize="@dimen/app_login_choice_button_textsize"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>
