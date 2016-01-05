@@ -374,7 +374,7 @@ containing a value of this type.
         public static final int app_fast_login_button_selector=0x7f020006;
         public static final int app_fast_login_edittext_bg=0x7f020007;
         public static final int app_fast_login_input_bg=0x7f020008;
-        public static final int app_icon=0x7f020009;
+        public static final int app_login_icon=0x7f020009;
         public static final int app_normal_login_button_background=0x7f02000a;
         public static final int audio0=0x7f02000b;
         public static final int audio1=0x7f02000c;
