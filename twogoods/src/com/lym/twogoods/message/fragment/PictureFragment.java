@@ -34,7 +34,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,7 +46,6 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 	
 	private String TAG = "PictureFragment";
 	private ProgressDialog mProgressDialog;
-
 	/**
 	 * 存储文件夹中的图片数量
 	 */
@@ -59,9 +60,9 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 	private List<String> mImgs;
 	
 	/**
-	 * 设置一次可以发多少张相片,默认是20张
+	 * 设置一次可以发多少张相片,默认是10张
 	 */
-	private int selectCount = 20;
+	private int selectCount = 10;
 	
 	//已经被选择的图片
 	public List<String> selectedPics = null;
@@ -76,7 +77,6 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 	 * 临时的辅助类，用于防止同一个文件夹的多次扫描
 	 */
 	private List<String> mDirPaths = new ArrayList<String>();
-
 	/**
 	 * 扫描拿到所有的图片文件夹
 	 */
@@ -88,13 +88,11 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 	private TextView mImageCount;
 	//全部图片的数量
 	int totalCount = 0;
-
 	private int mScreenHeight;
 
 	private ListImageDirPopupWindow mListImageDirPopupWindow;
 	//判断是否有点击底部进行选择目录，默认为false，即是为点击
 	private Boolean isClickBottom = false;
-	
 	
 	public static String localCameraDir;
 	public static String localCameraName;
@@ -127,16 +125,12 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
 		DisplayMetrics outMetrics = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
 		mScreenHeight = outMetrics.heightPixels;
-
 		initView();
 		getImages();
-		
 		initEvent();
-
 	}
 	/*
 	 * 拍照发送
@@ -161,8 +155,7 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 	/**
 	 * 为View绑定数据
 	 */
-	private void data2View()
-	{
+	private void data2View(){
 		//可以看到文件夹的路径和图片的路径分开保存，极大的减少了内存的消耗
 		allImgs = picsFilter(allImgs);
 		mImageAdapter = new ImageAdapter(getActivity().getApplicationContext(),selectedPics
@@ -176,7 +169,7 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 	 */
 	public List<String> picsFilter(List<String> list){
 		for(int i = 0;i<list.size();i++){
-			if(!(list.get(i).endsWith(".png")||list.get(i).endsWith(".jpg")||list.get(i).endsWith(".jpeg"))){
+			if(!(list.get(i).endsWith(".png")||list.get(i).endsWith(".jpg")||list.get(i).endsWith(".jpeg")||list.get(i).endsWith(".webp"))){
 				list.remove(i);
 				i = i - 1;
 			}
@@ -208,6 +201,15 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 		});
 		// 设置选择文件夹的回调
 		mListImageDirPopupWindow.setOnImageDirSelected(this);
+	}
+	/**
+	 * 初始化View
+	 */
+	private void initView(){
+		mGirdView = (GridView) getView().findViewById(R.id.id_gridView);
+		mChooseDir = (TextView) getView().findViewById(R.id.id_choose_dir);
+		mImageCount = (TextView) getView().findViewById(R.id.id_total_count);
+		mBottomLy = (RelativeLayout) getView().findViewById(R.id.id_bottom_ly);
 	}
 	
 	/**
@@ -337,23 +339,8 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 				Message msg = new Message();
 				msg.what = MessageConfig.FINISH_LOAD;
 				mHandler.sendMessage(msg);
-	
 			}
 		}).start();
-
-	}
-
-	/**
-	 * 初始化View
-	 */
-	private void initView()
-	{
-		mGirdView = (GridView) getView().findViewById(R.id.id_gridView);
-		mChooseDir = (TextView) getView().findViewById(R.id.id_choose_dir);
-		mImageCount = (TextView) getView().findViewById(R.id.id_total_count);
-
-		mBottomLy = (RelativeLayout) getView().findViewById(R.id.id_bottom_ly);
-
 	}
 
 	private void initEvent()
@@ -430,6 +417,13 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 	public void setSelectCount(int count)
 	{
 		selectCount = count;
+	}
+	
+	public void playAnimation(Animation anim){
+		if(anim==null){
+			return;
+		}
+		//mGirdView.startAnimation(anim);
 	}
 
 }

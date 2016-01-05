@@ -393,7 +393,6 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 			public void onSuccess(String arg0, String arg1, BmobFile arg2) {
 				Log.i(TAG,"onSuccess");
 				fileName = arg0; //获取文件上传成功后的文件名
-				Log.i(TAG,"URL:" + url);
 				BmobProFile.getInstance(ChatActivity.this).getAccessURL(fileName, new GetAccessUrlListener() {
 		            @Override
 		            public void onError(int errorcode, String errormsg) {
@@ -427,8 +426,8 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 				public void onSuccess() {
 					 try {
 						 mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 0 WHERE GUID = '"+chatDetailBean.getGUID()+"'");
+						 chatDetailBean.setMessage(localPicturePath);
 						 mChatFragment.notifyChange(MessageConfig.SEND_MESSAGE_SUCCEED);
-						 
 						refreshRecent(chatDetailBean);
 					} catch (SQLException e) {
 						e.printStackTrace();
@@ -439,8 +438,8 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 					// 插入聊天信息到服务器的数据库中失败也当做是发送失败
 					try {
 						mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 1 WHERE GUID = '"+chatDetailBean.getGUID()+"'");
-						mChatFragment.notifyChange(MessageConfig.SEND_MESSAGE_FAILED);
-						
+						 chatDetailBean.setMessage(localPicturePath);
+						 mChatFragment.notifyChange(MessageConfig.SEND_MESSAGE_FAILED);
 						refreshRecent(chatDetailBean);
 					} catch (SQLException e) {
 						Log.i(TAG,"将聊天信息插入本地数据库失败");

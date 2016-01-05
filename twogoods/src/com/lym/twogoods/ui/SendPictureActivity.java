@@ -4,20 +4,28 @@ import java.io.File;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lym.twogoods.R;
+import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.message.fragment.CameraFragment;
 import com.lym.twogoods.message.fragment.PictureFragment;
 import com.lym.twogoods.ui.base.BackActivity;
 import com.lym.twogoods.ui.base.BackFragmentActivity;
+import com.lym.twogoods.utils.FileUtil;
+import com.lym.twogoods.utils.ImageUtil;
+import com.lym.twogoods.utils.TimeUtil;
 
 
 /**
@@ -35,6 +43,8 @@ import com.lym.twogoods.ui.base.BackFragmentActivity;
  * */
 
 public class SendPictureActivity extends BackFragmentActivity{
+	
+	private String TAG = "SendPictureActivity";
 	
 	private CameraFragment mCameraFragment;
 	private PictureFragment mPictureFragment;
@@ -82,10 +92,30 @@ public class SendPictureActivity extends BackFragmentActivity{
 			
 			@Override
 			public void onClick(View v) {
-				if(tag == 0){
-					sendImagesToFriend(mPictureFragment.getSelectPics());
-				}else{
-					sendCameraPicToFriend(mCameraFragment.mImagePath);
+				if(tag == 0){//发送本地的相片
+					Animation anim = AnimationUtils.loadAnimation(SendPictureActivity.this, R.anim.display_pictures_loading_anim);
+					mPictureFragment.playAnimation(anim);
+					//压缩图片
+					List<String> compressFiles = new ArrayList<String>();//压缩后的图片路径
+					List<String>list = mPictureFragment.getSelectPics();
+					for(int i = 0;i<list.size();i++){
+						String filename = "sent"+TimeUtil.getCurrentMilliSecond()+".jpg";
+						String filepath = DiskCacheManager.getInstance(getApplicationContext()).
+								getSendPictureCachePath()+filename;
+						ImageUtil.saveBitmap(filepath,ImageUtil.compressImage(list.get(i)));
+						compressFiles.add(filepath);
+						Log.i(TAG,""+FileUtil.getFileOrFilesSize(filepath, 2));
+					}
+					sendImagesToFriend(compressFiles);
+					
+				}else{//发送相机拍的相片
+					Animation anim = AnimationUtils.loadAnimation(SendPictureActivity.this, R.anim.display_pictures_loading_anim);
+					mPictureFragment.playAnimation(anim);
+					String filename = "sent"+TimeUtil.getCurrentMilliSecond()+".jpg";
+					String filepath = DiskCacheManager.getInstance(getApplicationContext()).
+							getSendPictureCachePath()+filename;
+					ImageUtil.saveBitmap(filepath,ImageUtil.compressImage(mCameraFragment.mImagePath));
+					sendCameraPicToFriend(filepath);
 				}
 			}
 		});
