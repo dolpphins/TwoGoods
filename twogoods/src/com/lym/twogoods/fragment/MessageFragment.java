@@ -9,6 +9,7 @@ import java.util.Map;
 import me.maxwin.view.XListView;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.lym.twogoods.message.MessageDialog;
 import com.lym.twogoods.message.MessageDialog.MyItemOnClickListener;
 import com.lym.twogoods.message.adapter.MessageListAdapter;
 import com.lym.twogoods.message.adapter.TipAdapter;
+import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.message.ui.ChatActivity;
 import com.lym.twogoods.utils.SharePreferencesManager;
 import com.lym.twogoods.utils.TimeUtil;
@@ -63,6 +65,13 @@ public class MessageFragment extends PullListFragment implements
 	private User currentUser;
 	
 	OrmDatabaseHelper mDatabaseHelper;
+	
+	
+	public Handler mHandler = new Handler(){
+		public void handleMessage(android.os.Message msg){
+			init();
+		}
+	};
 	
 	
 	@Override
@@ -125,7 +134,7 @@ public class MessageFragment extends PullListFragment implements
 
 
 	public void setAdapter() {
-		if(isLogining){
+		if(isLogining&&chatSnapshotList.size()>0){
 			mMessageListAdapter = new MessageListAdapter(getActivity(),
 					R.layout.message_list_item_conversation, chatSnapshotList);
 			super.setAdapter(mMessageListAdapter);
@@ -135,7 +144,12 @@ public class MessageFragment extends PullListFragment implements
 			mListView.setPullRefreshEnable(false);
 			mListView.setPullLoadEnable(false);
 			int images[] = {R.drawable.user_default_head};
-			TipAdapter adapter = new TipAdapter(getActivity(), images);
+			TipAdapter adapter;
+			if(!isLogining){
+				adapter = new TipAdapter(getActivity(), images,mHandler,MessageConfig.NOT_LOGIN);
+			}else{
+				adapter = new TipAdapter(getActivity(), images,mHandler,MessageConfig.IS_LOGIN_AND_NO_MSG);
+			}
 			super.setAdapter(adapter);
 		}
 	}
@@ -259,7 +273,6 @@ public class MessageFragment extends PullListFragment implements
 				intent.putExtra("from", JudgeConfig.FRAM_MESSAGE_LIST);
 				startActivity(intent);
 			}
-		
 	}
 
 	/**判断当前fragment是否显示在屏幕上，如果显示，则刷新界面*/
@@ -309,6 +322,9 @@ public class MessageFragment extends PullListFragment implements
 				getActivity().runOnUiThread(new Runnable() {
 					public void run() {
 						chatSnapshotList = queryRecent();
+						if(chatSnapshotList.size()==0){
+							return;
+						}
 						mMessageListAdapter = new MessageListAdapter(getActivity(), 
 								R.layout.message_list_item_conversation, chatSnapshotList);
 						setAdapter(mMessageListAdapter);

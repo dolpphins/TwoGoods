@@ -4,20 +4,28 @@ import java.io.File;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lym.twogoods.R;
+import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.message.fragment.CameraFragment;
 import com.lym.twogoods.message.fragment.PictureFragment;
 import com.lym.twogoods.ui.base.BackActivity;
 import com.lym.twogoods.ui.base.BackFragmentActivity;
+import com.lym.twogoods.utils.FileUtil;
+import com.lym.twogoods.utils.ImageUtil;
+import com.lym.twogoods.utils.TimeUtil;
 
 
 /**
@@ -36,13 +44,16 @@ import com.lym.twogoods.ui.base.BackFragmentActivity;
 
 public class SendPictureActivity extends BackFragmentActivity{
 	
+	private String TAG = "SendPictureActivity";
+	
 	private CameraFragment mCameraFragment;
 	private PictureFragment mPictureFragment;
 	
 	private TextView confirm;
 	//判断当前是哪个fragment,默认是mPictureFragment
 	private int tag = 0;
-	
+	private int count = 0;
+	private List<String> compressFiles;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +93,42 @@ public class SendPictureActivity extends BackFragmentActivity{
 			
 			@Override
 			public void onClick(View v) {
-				if(tag == 0){
-					sendImagesToFriend(mPictureFragment.getSelectPics());
-				}else{
-					sendCameraPicToFriend(mCameraFragment.mImagePath);
+				if(mPictureFragment.getSelectPics().size()<=0){
+					Toast.makeText(SendPictureActivity.this, "请选择图片", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if(tag == 0){//发送本地的相片
+					Animation anim = AnimationUtils.loadAnimation(SendPictureActivity.this, R.anim.display_pictures_loading_anim);
+					mPictureFragment.playAnimation(anim);
+					//压缩图片
+					compressFiles = new ArrayList<String>();//压缩后的图片路径
+					final List<String>list = mPictureFragment.getSelectPics();
+					String filename;
+					String filepath;
+					for(int i = 0;i<list.size();i++){
+						count = i;
+						filename = "sent"+TimeUtil.getCurrentMilliSecond()+".jpg";
+						filepath = DiskCacheManager.getInstance(getApplicationContext()).
+								getSendPictureCachePath()+filename;
+						//ImageUtil.saveBitmap(filepath,ImageUtil.compressImage(list.get(i)));
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								ImageUtil.saveBitmap(compressFiles.get(count),ImageUtil.compressImage(list.get(count)));
+							}
+						}).start();
+						compressFiles.add(filepath);
+					}
+					sendImagesToFriend(compressFiles);
+					
+				}else{//发送相机拍的相片
+					Animation anim = AnimationUtils.loadAnimation(SendPictureActivity.this, R.anim.display_pictures_loading_anim);
+					mPictureFragment.playAnimation(anim);
+					String filename = "sent"+TimeUtil.getCurrentMilliSecond()+".jpg";
+					String filepath = DiskCacheManager.getInstance(getApplicationContext()).
+							getSendPictureCachePath()+filename;
+					ImageUtil.saveBitmap(filepath,ImageUtil.compressImage(mCameraFragment.mImagePath));
+					sendCameraPicToFriend(filepath);
 				}
 			}
 		});
@@ -109,12 +152,10 @@ public class SendPictureActivity extends BackFragmentActivity{
 	    ArrayList<String>value = new ArrayList<String>();
 	    if(selectedPics.size()==0){
 	    	data.putExtra("pictures", "没有相片");
-	    	System.out.println("没有已经选择的相片");
 	    }else{
 		    for(int i = 0;i<selectedPics.size();i++)
 		    {
 		    	value.add(selectedPics.get(i));
-		    	System.out.println("aaa"+selectedPics.get(i));
 		    }
 	        data.putStringArrayListExtra("pictures", value);
 	    }

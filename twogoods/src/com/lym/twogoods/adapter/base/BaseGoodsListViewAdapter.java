@@ -12,9 +12,11 @@ import com.lym.twogoods.manager.ImageLoaderHelper;
 import com.lym.twogoods.network.BmobQueryHelper;
 import com.lym.twogoods.network.BmobQueryHelper.OnUsername2HeadPictureListener;
 import com.lym.twogoods.network.BmobUpdateHelper;
+import com.lym.twogoods.screen.DisplayUtils;
 import com.lym.twogoods.screen.GoodsScreen;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
 import com.lym.twogoods.ui.StoreDetailActivity;
+import com.lym.twogoods.utils.StringUtil;
 import com.lym.twogoods.utils.TimeUtil;
 
 import android.app.Activity;
@@ -140,9 +142,17 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 		//完全不管,直接采用默认头像就行,等停止滑动再去加载真正的头像
 		
 		//用户名
-		viewHolder.base_goods_listview_item_username.setText(item.getUsername());
+		//viewHolder.base_goods_listview_item_username.setText(item.getUsername());
+		String time = TimeUtil.getDescriptionTimeFromTimestamp(item.getPublish_time());
+		float textSize = mActivity.getResources().getDimensionPixelSize(R.dimen.app_base_goods_listview_item_publishtime_textSize);
+		//float textSize = DisplayUtils.sp2px(mActivity.getApplicationContext(), );
+		System.out.println("textSize:" + textSize);
+		int minpixels =  (int) StringUtil.getTextLength(time+"阿尧", textSize);
+		System.out.println("minpixels:" + minpixels);
+		viewHolder.base_goods_listview_item_username.setMinWidth(minpixels);
+		viewHolder.base_goods_listview_item_username.setText("阿尧yao");
 		//发布时间
-		viewHolder.base_goods_listview_item_publishtime.setText(TimeUtil.getDescriptionTimeFromTimestamp(item.getPublish_time()));
+		viewHolder.base_goods_listview_item_publishtime.setText(time);
 		//发布位置
 		viewHolder.base_goods_listview_item_publishlocation.setText(item.getPublish_location());
 		//价格,注意要转换为字符串

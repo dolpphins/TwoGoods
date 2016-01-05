@@ -42,6 +42,9 @@ public class DiskCacheManager {
 	/** 默认图片缓存目录 */
 	private final String defaultPictureCachePath = "/default/pictures/";
 	
+	/** 默认发送的图片缓存目录 */
+	private final String sendPictureCachePath = "/sent/pictures/";
+	
 	private static DiskCacheManager diskCacheManager = new DiskCacheManager();
 	
 	private Object lock = new Object();
@@ -151,6 +154,17 @@ public class DiskCacheManager {
 	 * */
 	public String getDefaultPictureCachePath() {
 		return sBaseDiskCachePath + defaultPictureCachePath;
+	}
+	
+	/**
+	 * <p>
+	 * 	获取发送的图片缓存默认存放路径
+	 * </p>
+	 * 
+	 * @return 发送的图片缓存默认存放路径
+	 * */
+	public String getSendPictureCachePath(){
+		return sBaseDiskCachePath+sendPictureCachePath;
 	}
 	
 	/**

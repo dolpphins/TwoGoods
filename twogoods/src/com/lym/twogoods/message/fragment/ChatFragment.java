@@ -39,6 +39,7 @@ import com.j256.ormlite.stmt.Where;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.ChatDetailBean;
+import com.lym.twogoods.bean.ChatSnapshot;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.ChatConfiguration;
 import com.lym.twogoods.db.OrmDatabaseHelper;
@@ -47,7 +48,6 @@ import com.lym.twogoods.message.NewMessageReceiver;
 import com.lym.twogoods.message.adapter.MessageChatAdapter;
 import com.lym.twogoods.message.config.MessageConfig;
 import com.lym.twogoods.utils.DatabaseHelper;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 
 public class ChatFragment extends PullListFragment{
 	
@@ -57,6 +57,8 @@ public class ChatFragment extends PullListFragment{
 	OrmDatabaseHelper mOrmDatabaseHelper;
 	/**聊天表*/
 	private Dao<ChatDetailBean, Integer> mChatDetailDao;
+	/**最近聊天表*/
+	private Dao<ChatSnapshot, Integer> mChatSnapShotDao;
 	/**聊天适配器*/
 	private MessageChatAdapter mMessageChatAdapter;
 	/**聊天对象*/
@@ -110,6 +112,7 @@ public class ChatFragment extends PullListFragment{
 	private void initDataBase() {
 		mOrmDatabaseHelper = new OrmDatabaseHelper(getActivity());
 		mChatDetailDao = mOrmDatabaseHelper.getChatDetailDao();
+		mChatSnapShotDao = mOrmDatabaseHelper.getChatSnapshotDao();
 	}
 
 	/**
@@ -259,6 +262,7 @@ public class ChatFragment extends PullListFragment{
 						 Log.i(TAG,"bmob将语音插入到服务器的数据库成功");
 						 
 						 mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 0 WHERE GUID = '"+chatDetailBean.getGUID()+"'");
+						 mChatSnapShotDao.updateRaw("UPDATE chatsnapshot SET last_message_status = 0 WHERE other_username = '"+chatDetailBean.getOther_username()+"'");
 						 notifyChange(MessageConfig.SEND_MESSAGE_SUCCEED);
 					 } catch (SQLException e) {
 						e.printStackTrace();
@@ -323,6 +327,7 @@ public class ChatFragment extends PullListFragment{
 				parentV.findViewById(R.id.tv_send_status).setVisibility(View.VISIBLE);
 				try {
 					mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 0 WHERE GUID = '"+msg.getGUID()+"'");
+					mChatSnapShotDao.updateRaw("UPDATE chatsnapshot SET last_message_status = 0 WHERE other_username = '"+msg.getOther_username()+"'");
 					notifyChange(MessageConfig.SEND_MESSAGE_SUCCEED);
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -419,6 +424,7 @@ public class ChatFragment extends PullListFragment{
 					 parentV.findViewById(R.id.tv_send_status).setVisibility(View.VISIBLE);
 					 try {
 						 mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 0 WHERE GUID = '"+chatDetailBean.getGUID()+"'");
+						 mChatSnapShotDao.updateRaw("UPDATE chatsnapshot SET last_message_status = 0 WHERE other_username = '"+chatDetailBean.getOther_username()+"'");
 						 notifyChange(MessageConfig.SEND_MESSAGE_SUCCEED);
 					} catch (SQLException e) {
 						e.printStackTrace();
@@ -580,6 +586,10 @@ public class ChatFragment extends PullListFragment{
 				manager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 
 						InputMethodManager.HIDE_NOT_ALWAYS);
 		}
+	}
+	
+	public void notifyChangeHeadUrl(String url){
+		mMessageChatAdapter.notifyChangeHeadUrl(url);
 	}
 	
 	@Override

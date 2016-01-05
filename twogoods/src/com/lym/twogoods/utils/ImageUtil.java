@@ -1,5 +1,7 @@
 package com.lym.twogoods.utils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -26,7 +28,7 @@ import android.text.TextUtils;
 /**
  * 与图片操作相关的工具类
  * 
- * @author yao
+ * @author 尧俊锋
  *
  * */
 import java.io.File;
@@ -56,7 +58,7 @@ import android.media.ThumbnailUtils;
 /**
  * 与图片操作相关的工具类
  * 
- * @author yao
+ * @author 尧俊锋
  *
  * */
 public class ImageUtil {
@@ -94,7 +96,7 @@ public class ImageUtil {
 	   * 
 	   * @return 缩放后的bitmap
 	   * 
-	   * @author yao
+	   * @author 尧俊锋
 	   */
 	  private static Bitmap createScaleBitmap(Bitmap src, int dstWidth, int dstHeight, int inSampleSize) {
 	    //如果inSampleSize是2的倍数，也就说这个src已经是我们想要的缩略图了，直接返回即可。
@@ -119,7 +121,7 @@ public class ImageUtil {
 		 * 
 		 * @return Bitmap
 		 * 
-		 * @author yao
+		 * @author 尧俊锋
 	   */
 	  public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
 	    final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -140,7 +142,7 @@ public class ImageUtil {
 		 * 
 		 * @return Bitmap
 		 * 
-		 * @author yao
+		 * @author 尧俊锋
 		 */
 	  public static Bitmap decodeSampledBitmapFromFile(String pathName, int reqWidth, int reqHeight) {
 	    final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -157,7 +159,7 @@ public class ImageUtil {
 	 * 
 	 * @throws
 	 * 
-	 * @author yao
+	 * @author 尧俊锋
 	 */
 	public static void recycle(Bitmap bitmap) {
 		// 先判断是否已经回收
@@ -202,7 +204,7 @@ public class ImageUtil {
 	 * 从网上获取图片，返回图片的InputStream。
 	 * @param url 图片的url
 	 * @return 网络图片的InputStream
-	 * @author yao
+	 * @author 尧俊锋
 	 */
 	private static InputStream decodeUrl2InputStreamFromNet(String url)
 	{
@@ -230,7 +232,7 @@ public class ImageUtil {
 	 * @param is 图片的输入流
 	 * @param width 要缩放到的宽度
 	 * @param height 要缩放到的高度
-	 * @author yao
+	 * @author 尧俊锋
 	 */
 	private static Bitmap getBitmapThumbnail(InputStream is,int width,int height)
 	{
@@ -256,7 +258,7 @@ public class ImageUtil {
 	 * 
 	 * @return 如果imagPath指定的文件为空或者不能转化Bitmap,返回null;否则返回bitmap
 	 * 
-	 * @author yao
+	 * @author 尧俊锋
 	 */
 	public static Bitmap getImage(String imagePath)
 	{
@@ -288,7 +290,7 @@ public class ImageUtil {
 	 * 
 	 * @return Bitmap
 	 * 
-	 * @author yao
+	 * @author 尧俊锋
 	 */
 	public static Bitmap getImageThumbnail(String imagePath, int width,
 			int height) {
@@ -317,7 +319,7 @@ public class ImageUtil {
 	 * @param  filename bitmap文件的名字
 	 * @param  bitmap 需要被存储的位图
 	 * @return void
-	 * @author yao
+	 * @author 尧俊锋
 	 */
 	public static void saveBitmap(String dirpath, String filename,
 			Bitmap bitmap) {
@@ -336,7 +338,7 @@ public class ImageUtil {
 	 * @param imagepath 路径和名字
 	 * @param bitmap 要被保存的位图
 	 * 
-	 * @author yao
+	 * @author 尧俊锋
 	 */
 	public static void saveBitmap(String imagepath,Bitmap bitmap) {
 		File file = new File(imagepath);
@@ -389,7 +391,7 @@ public class ImageUtil {
 	 * 
 	 * @return degree旋转的角度
 	 * 
-	 * @author yao
+	 * @author 尧俊锋
 	 **/
 	public static int readPictureDegree(String path) {
 		int degree = 0;
@@ -422,7 +424,7 @@ public class ImageUtil {
 	  * @return 旋转后的Bitmap
 	  * @throws
 	  * 
-	  * @author yao
+	  * @author 尧俊锋
 	  */
 	public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
 		// 旋转图片 动作
@@ -443,7 +445,7 @@ public class ImageUtil {
 	 *            图片圆角的弧度(单位:像素(px))
 	 * @return 带有圆角的图片(Bitmap 类型)
 	 * 
-	 * @author yao
+	 * @author 尧俊锋
 	 */
 	public static Bitmap toRoundCorner(Bitmap bitmap, int pixels) {
 		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
@@ -473,7 +475,7 @@ public class ImageUtil {
 	 * @param bitmap 要被转化的位图
 	 * 
 	 * @return 转化后得到的位图
-	 * @author yao
+	 * @author 尧俊锋
 	 */
 	public static Bitmap toRoundBitmap(Bitmap bitmap) {
 		int width = bitmap.getWidth();
@@ -541,7 +543,7 @@ public class ImageUtil {
      * 
      * @param context 上下文, deValue dp大小
      * 
-     * @author yao
+     * @author 尧俊锋
      * 
      * @return 像素的数目
      */  
@@ -555,7 +557,7 @@ public class ImageUtil {
      * 
      * @param context 上下文, pxValue 像素数目
      * 
-     * @author yao
+     * @author 尧俊锋
      * 
      * @return dp的大小
      */  
@@ -588,5 +590,51 @@ public class ImageUtil {
     	} else {
     		return bitmap.getRowBytes() * bitmap.getHeight();
     	}
+    }
+    
+   /**
+    *  通过降低图片质量压缩图片大小
+    * @param srcPath 图片路径
+    * @return 压缩后的图片
+    */
+    public static Bitmap compressImage(String srcPath) {
+        BitmapFactory.Options newOpts = new BitmapFactory.Options();
+        //开始读入图片，此时把options.inJustDecodeBounds 设回true了
+        newOpts.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(srcPath,newOpts);//此时返回bm为空
+
+        newOpts.inJustDecodeBounds = false;
+        int w = newOpts.outWidth;
+        int h = newOpts.outHeight;
+        //现在主流手机比较多是800*480分辨率，所以高和宽我们设置为
+        float hh = 800f;//这里设置高度为800f
+        float ww = 480f;//这里设置宽度为480f
+        //缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
+        int be = 1;//be=1表示不缩放
+        if (w > h && w > ww) {//如果宽度大的话根据宽度固定大小缩放
+            be = (int) (newOpts.outWidth / ww);
+        } else if (w < h && h > hh) {//如果高度高的话根据宽度固定大小缩放
+            be = (int) (newOpts.outHeight / hh);
+        }
+        if (be <= 0)
+            be = 1;
+        newOpts.inSampleSize = be;//设置缩放比例
+        //重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
+        bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+        return compressImage(bitmap);//压缩好比例大小后再进行质量压缩
+    }
+    
+    private static Bitmap compressImage(Bitmap image) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        int options = 100;
+        while ( baos.toByteArray().length / 1024>800) {    //循环判断如果压缩后图片是否大于500kb,大于继续压缩        
+            baos.reset();//重置baos即清空baos
+            options -= 10;//每次都减少10
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
+        }
+        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream中
+        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片
+        return bitmap;
     }
 }

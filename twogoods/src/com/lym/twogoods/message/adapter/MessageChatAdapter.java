@@ -77,6 +77,8 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 	/**对方头像url*/
 	private String otherUserHeadUrl;
 	
+	private String headerUrl;
+	
 	static int acount = 0;
 	/**
 	 * 
@@ -88,6 +90,8 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 		super(context, list);
 		currentUserName = getCurrentUserName();
 		otherUserHeadUrl = headUrl;
+		headerUrl = UserInfoManager.getInstance().getmCurrent().getHead_url();
+		Log.e(TAG, "头像路径"+headerUrl);
 		last_message_time = TimeUtil.getCurrentMilliSecond();
 		options = new DisplayImageOptions.Builder().showImageForEmptyUri(R.drawable.ic_launcher)
 		.showImageOnFail(R.drawable.ic_launcher).resetViewBeforeLoading(true).cacheOnDisc(true)
@@ -105,6 +109,10 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 			return 0;
 		}
 		return list.size();
+	}
+	/**修改头像*/
+	public void notifyChangeHeadUrl(String url){
+		headerUrl = url;
 	}
 
 	@Override
@@ -174,9 +182,10 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 		//点击头像进入个人资料,拿到缓存的
 		String avatar = null;
 		if(item.getUsername().equals(currentUserName)){
-			avatar = UserInfoManager.getInstance().getmCurrent().getHead_url();
+			avatar = headerUrl;
+			Log.e(TAG, "头像url"+avatar);
 		}else{
-			avatar = "";
+			avatar = otherUserHeadUrl;
 		}
 		//需要获得对方的头像url
 		if(avatar!=null && !avatar.equals("")){//加载头像-为了不每次都加载头像
@@ -195,7 +204,6 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 				}else{
 					user.setHead_url(otherUserHeadUrl);
 				}
-				user.setHead_url(otherUserHeadUrl);
 				intent.putExtra("user", user);
 				mContext.startActivity(intent);
 			}
