@@ -7,7 +7,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3e5367"
+    android:background="@color/login_background"
     android:orientation="vertical" >
 
     <EditText
@@ -21,7 +21,6 @@
         android:layout_marginRight="@dimen/app_register_left_right_margin"
         android:layout_marginTop="@dimen/app_register_parenttop"
         android:background="@drawable/app_normal_login_button_background"
-        android:gravity="center_horizontal"
         android:hint="@string/register_erhuo" />
 
     <EditText
@@ -33,8 +32,7 @@
         android:layout_below="@+id/et_register_phone"
         android:layout_marginTop="@dimen/app_register_margintop"
         android:background="@drawable/app_normal_login_button_background"
-        android:gravity="center_horizontal"
-        android:hint="@string/get_code" />
+        android:hint="@string/login_code" />
 
     <Button
         android:id="@+id/btn_register_code_get"
@@ -70,7 +68,6 @@
         android:layout_marginTop="@dimen/app_register_margintop"
         android:background="@drawable/app_normal_login_button_background"
         android:hint="@string/register_password"
-        android:gravity="center_horizontal"
         android:inputType="textPassword" />
 
     <EditText
@@ -83,7 +80,6 @@
         android:layout_marginTop="@dimen/app_register_margintop"
         android:background="@drawable/app_normal_login_button_background"
         android:hint="@string/register_password_again"
-        android:gravity="center_horizontal"
         android:inputType="textPassword" />
 
     <EditText
@@ -95,7 +91,6 @@
         android:layout_below="@+id/et_register_password_again"
         android:layout_marginTop="@dimen/app_register_margintop"
         android:background="@drawable/app_normal_login_button_background"
-        android:gravity="center_horizontal"
         android:hint="@string/phone"/>
 
 </RelativeLayout>
