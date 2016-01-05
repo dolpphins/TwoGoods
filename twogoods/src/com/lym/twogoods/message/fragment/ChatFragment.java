@@ -588,6 +588,10 @@ public class ChatFragment extends PullListFragment{
 		}
 	}
 	
+	public void notifyChangeHeadUrl(String url){
+		mMessageChatAdapter.notifyChangeHeadUrl(url);
+	}
+	
 	@Override
 	public void onStop() {
 		Log.i(TAG,"onStop");

@@ -20,8 +20,10 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import cn.bmob.v3.Bmob;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadBatchListener;
 
 import com.bmob.BmobProFile;
 import com.bmob.btp.callback.GetAccessUrlListener;
@@ -36,6 +38,7 @@ import com.lym.twogoods.bean.ChatSnapshot;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.ChatConfiguration;
 import com.lym.twogoods.db.OrmDatabaseHelper;
+import com.lym.twogoods.eventbus.event.ChangeHeadPicEvent;
 import com.lym.twogoods.eventbus.event.ExitChatEvent;
 import com.lym.twogoods.eventbus.event.FinishRecordEvent;
 import com.lym.twogoods.message.ChatSetting;
@@ -109,7 +112,8 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 	private int from = 0;
 	
 	private boolean chated = false;
-	
+	/**用来标记批量上传图片*/
+	private static int count = 0;
 	/**ChatActivity的Handler*/
 	private Handler mHandler = new Handler()
 	{
@@ -428,7 +432,8 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 						 mChatDetailDao.updateRaw("UPDATE chatdetailbean SET last_message_status = 0 WHERE GUID = '"+chatDetailBean.getGUID()+"'");
 						 chatDetailBean.setMessage(localPicturePath);
 						 mChatFragment.notifyChange(MessageConfig.SEND_MESSAGE_SUCCEED);
-						refreshRecent(chatDetailBean);
+						 refreshRecent(chatDetailBean);
+						 
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
@@ -577,14 +582,85 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		case MessageConfig.SEND_LOCAL_PIC:
 			ArrayList<String> pics = data.getExtras().getStringArrayList("pictures");
 			Toast.makeText(this, "共发送本地图片"+pics.size()+"张", Toast.LENGTH_LONG).show();
-			for(String pic:pics)
-				sendPictureMessage(pic);
+			if(pics.size()==1){
+				sendPictureMessage(pics.get(0));
+			}else{
+				sendPicturesMessage(pics);
+			}
 			break;
 		default:
 			break;
 		}
 	} 
 	
+	/**
+	 * 一次2张或以上图片
+	 * @param list
+	 */
+	public void sendPicturesMessage(final List<String>list){
+		count = 0;
+		final ChatDetailBean[]mChatDetailBeans =  new ChatDetailBean[list.size()];
+		String[]files = new String[list.size()];
+		for(int j = 0;j<list.size();j++){
+			files[j] = list.get(j);
+		}
+		
+		chated = true;
+		
+		for(int i = 0;i<list.size();i++){
+			localPicturePath = list.get(i);
+			String username = currentUser.getUsername();
+			
+			mChatDetailBeans[i] = new ChatDetailBean();
+			mChatDetailBeans[i].setUsername(username);
+			mChatDetailBeans[i].setGUID(DatabaseHelper.getUUID().toString());
+			mChatDetailBeans[i].setOther_username(otherUser.getUsername());
+			mChatDetailBeans[i].setMessage_type(ChatConfiguration.TYPE_MESSAGE_PICTURE);
+			mChatDetailBeans[i].setPublish_time(System.currentTimeMillis());
+			mChatDetailBeans[i].setMessage_read_status(MessageConfig.MESSAGE_NOT_RECEIVED);
+			mChatDetailBeans[i].setMessage(localPicturePath);
+			mChatDetailBeans[i].setLast_Message_Status(MessageConfig.SEND_MESSAGE_ING);
+			try {
+				mChatDetailDao.create(mChatDetailBeans[i]);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			refreshRecent(mChatDetailBeans[i]);
+			mChatFragment.sendNewMessage(mChatDetailBeans[i]);
+		}
+		
+		Bmob.uploadBatch(ChatActivity.this, files, new UploadBatchListener() {
+			
+			@Override
+			public void onSuccess(List<BmobFile> arg0, List<String> arg1) {
+				Log.i(TAG,"批量上传文件成功");
+				Log.i(TAG,"count="+count);
+				url = arg1.get(count);
+				localPicturePath = list.get(count);
+				sendPicture2Db(true, mChatDetailBeans[count]);
+				count++;
+			}
+			
+			@Override
+			public void onProgress(int arg0, int arg1, int arg2, int arg3) {
+				Log.e(TAG,"表示当前第几个文件正在上传"+arg0);
+				Log.e(TAG,"表示当前上传文件的进度值"+arg1);
+				Log.e(TAG,"表示总的上传文件数"+arg2);
+				Log.e(TAG,"表示总的上传进度"+arg3);
+			}
+			
+			@Override
+			public void onError(int arg0, String arg1) {
+				Log.e(TAG,"批量上传图片失败");
+				if(count<list.size()-1){
+					for(int i=count;i<list.size();i++){
+						sendPicture2Db(false, mChatDetailBeans[i]);
+					}
+				}
+			}
+		});
+		
+	}
 	/**
 	 * 通过eventBus来监听完成录音的操作，
 	 * @param event 完成录音的事件
@@ -594,7 +670,6 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 		 Log.i(TAG,"录音的路径："+path);
 		 sendVoiceMessage(path);
    }  
-	
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

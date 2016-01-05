@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import android.graphics.Paint;
 /**
  * 与String操作相关的工具类
  * 
@@ -230,5 +232,19 @@ public class StringUtil {
 	    		}
 	    	}
 	    }
+	    
+	    /**
+	     * 获取指定文本在指定字体大小下的宽度
+	     * 
+	     * @param text 指定的文本
+	     * @param size 指定的字体大小
+	     * @return 返回指定文本在指定字体大小下的宽度
+	     */
+	    public static float getTextLength(String text, float size) {
+	        Paint paint = new Paint();
+	        paint.setTextSize(size);
+	        return paint.measureText(text);
+	    }
+
 	    
 }  

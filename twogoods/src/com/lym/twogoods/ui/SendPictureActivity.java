@@ -92,6 +92,10 @@ public class SendPictureActivity extends BackFragmentActivity{
 			
 			@Override
 			public void onClick(View v) {
+				if(mPictureFragment.getSelectPics().size()<=0){
+					Toast.makeText(SendPictureActivity.this, "请选择图片", Toast.LENGTH_SHORT).show();
+					return;
+				}
 				if(tag == 0){//发送本地的相片
 					Animation anim = AnimationUtils.loadAnimation(SendPictureActivity.this, R.anim.display_pictures_loading_anim);
 					mPictureFragment.playAnimation(anim);
@@ -139,7 +143,6 @@ public class SendPictureActivity extends BackFragmentActivity{
 	    ArrayList<String>value = new ArrayList<String>();
 	    if(selectedPics.size()==0){
 	    	data.putExtra("pictures", "没有相片");
-	    	System.out.println("没有已经选择的相片");
 	    }else{
 		    for(int i = 0;i<selectedPics.size();i++)
 		    {

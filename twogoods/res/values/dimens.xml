@@ -26,6 +26,7 @@
     <dimen name="app_base_goods_listview_item_location_marginTop">10dip</dimen>
     <dimen name="app_base_goods_listview_item_location_text_marginLeft">5dip</dimen>
     <dimen name="app_base_goods_listview_item_location_textSize">12sp</dimen>
+    <dimen name="app_base_goods_listview_item_publishtime_textSize">14sp</dimen>
     <!-- 加载动画 -->
     <dimen name="app_basefragment_listview_laodfail_tip_textSize">16sp</dimen>
     <!-- 下拉刷新头部底部布局 -->

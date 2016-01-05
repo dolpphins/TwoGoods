@@ -50,7 +50,8 @@
 	        	android:layout_toEndOf="@id/base_goods_listview_item_headpic"
 	        	android:layout_alignBottom="@id/base_goods_listview_item_headpic"
 	        	android:layout_marginRight="@dimen/app_base_goods_listview_item_publishtime_marginRight"
-	        	android:layout_marginEnd="@dimen/app_base_goods_listview_item_publishtime_marginRight"/>
+	        	android:layout_marginEnd="@dimen/app_base_goods_listview_item_publishtime_marginRight"
+	        	android:textSize="@dimen/app_base_goods_listview_item_publishtime_textSize"/>
 	         
         </RelativeLayout>
         
