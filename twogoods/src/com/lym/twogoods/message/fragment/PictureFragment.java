@@ -253,8 +253,6 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 					// 获取图片的路径
 					String path = mCursor.getString(mCursor
 							.getColumnIndex(MediaStore.Images.Media.DATA));
-
-					Log.e("TAG", path);
 					// 拿到第一张图片的路径
 					if (firstImage == null)
 						firstImage = path;

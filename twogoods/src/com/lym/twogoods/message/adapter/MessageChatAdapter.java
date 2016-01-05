@@ -91,6 +91,7 @@ public class MessageChatAdapter extends ChatBaseAdapter<ChatDetailBean> {
 		currentUserName = getCurrentUserName();
 		otherUserHeadUrl = headUrl;
 		headerUrl = UserInfoManager.getInstance().getmCurrent().getHead_url();
+		Log.e(TAG, "头像路径"+headerUrl);
 		last_message_time = TimeUtil.getCurrentMilliSecond();
 		options = new DisplayImageOptions.Builder().showImageForEmptyUri(R.drawable.ic_launcher)
 		.showImageOnFail(R.drawable.ic_launcher).resetViewBeforeLoading(true).cacheOnDisc(true)

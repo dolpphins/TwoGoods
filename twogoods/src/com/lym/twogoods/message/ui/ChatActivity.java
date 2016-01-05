@@ -126,8 +126,8 @@ public class ChatActivity extends BottomDockBackFragmentActivity{
 			//点击发送图片	
 			case ChatBottomConfig.MSG_SEND_PIC:
 				Intent intent = new Intent(ChatActivity.this,SendPictureActivity.class);
-				//设置一次可以发10张相片
-				intent.putExtra("picCount", 10);
+				//设置一次可以发5张相片
+				intent.putExtra("picCount", 5);
 				startActivityForResult(intent, SEND_PICTURE);
 				break;
 			//点击发送语音

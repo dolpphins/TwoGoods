@@ -52,7 +52,8 @@ public class SendPictureActivity extends BackFragmentActivity{
 	private TextView confirm;
 	//判断当前是哪个fragment,默认是mPictureFragment
 	private int tag = 0;
-	
+	private int count = 0;
+	private List<String> compressFiles;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,15 +101,23 @@ public class SendPictureActivity extends BackFragmentActivity{
 					Animation anim = AnimationUtils.loadAnimation(SendPictureActivity.this, R.anim.display_pictures_loading_anim);
 					mPictureFragment.playAnimation(anim);
 					//压缩图片
-					List<String> compressFiles = new ArrayList<String>();//压缩后的图片路径
-					List<String>list = mPictureFragment.getSelectPics();
+					compressFiles = new ArrayList<String>();//压缩后的图片路径
+					final List<String>list = mPictureFragment.getSelectPics();
+					String filename;
+					String filepath;
 					for(int i = 0;i<list.size();i++){
-						String filename = "sent"+TimeUtil.getCurrentMilliSecond()+".jpg";
-						String filepath = DiskCacheManager.getInstance(getApplicationContext()).
+						count = i;
+						filename = "sent"+TimeUtil.getCurrentMilliSecond()+".jpg";
+						filepath = DiskCacheManager.getInstance(getApplicationContext()).
 								getSendPictureCachePath()+filename;
-						ImageUtil.saveBitmap(filepath,ImageUtil.compressImage(list.get(i)));
+						//ImageUtil.saveBitmap(filepath,ImageUtil.compressImage(list.get(i)));
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								ImageUtil.saveBitmap(compressFiles.get(count),ImageUtil.compressImage(list.get(count)));
+							}
+						}).start();
 						compressFiles.add(filepath);
-						Log.i(TAG,""+FileUtil.getFileOrFilesSize(filepath, 2));
 					}
 					sendImagesToFriend(compressFiles);
 					
@@ -147,7 +156,6 @@ public class SendPictureActivity extends BackFragmentActivity{
 		    for(int i = 0;i<selectedPics.size();i++)
 		    {
 		    	value.add(selectedPics.get(i));
-		    	System.out.println("aaa"+selectedPics.get(i));
 		    }
 	        data.putStringArrayListExtra("pictures", value);
 	    }

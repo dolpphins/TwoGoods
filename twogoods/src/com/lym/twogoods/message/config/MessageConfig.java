@@ -64,5 +64,12 @@ public class MessageConfig {
 	public static final int MESSAGE_NOT_RECEIVED = 2;  
 	/**接收了新消息，chatFragment需要刷新消息列表*/
 	public static final int NEW_MESSAGE_RECEIVED = 11;
+	
+	/**登录而且有聊天信息*/
+	public static final int IS_LOGIN_AND_MSG = 100;
+	/**登录了但是没有聊天消息*/
+	public static final int IS_LOGIN_AND_NO_MSG = 101;
+	/**没有登录*/
+	public static final int NOT_LOGIN = 102;
 	 
 }
