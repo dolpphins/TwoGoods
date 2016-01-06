@@ -61,6 +61,8 @@ public class TipAdapter extends BaseAdapter {
 		if(tip==MessageConfig.IS_LOGIN_AND_NO_MSG){
 			TextView tv_tip = (TextView)view.findViewById(R.id.message_list_tv_tip);
 			tv_tip.setText("暂时没有消息,赶紧联系卖家吧");
+			tv_tip.setClickable(false);
+			view.setClickable(false);
 		}else{
 			if(tip==MessageConfig.NOT_LOGIN){
 				view.setOnClickListener(new OnClickListener() {

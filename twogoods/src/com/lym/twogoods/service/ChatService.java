@@ -90,8 +90,10 @@ public class ChatService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		init();
-		thread = new MyThread();
-		thread.start();
+		if(currentUser!=null){
+			thread = new MyThread();
+			thread.start();
+		}
 		return super.onStartCommand(intent, flags, startId);
 	}
 
@@ -111,10 +113,12 @@ public class ChatService extends Service {
 		
 		query = new BmobQuery<ChatDetailBean>();
 		//查询发送对象是当前用户的数据
-		query.addWhereEqualTo("other_username", currentUser.getUsername());
-		//返回50条数据，如果不加上这条语句，默认返回10条数据
-		query.setLimit(50);
-		
+		if(currentUser!=null){
+			query.addWhereEqualTo("other_username", currentUser.getUsername());
+			//返回50条数据，如果不加上这条语句，默认返回10条数据
+			query.setLimit(50);
+		}
+			
 		mNotificationManager = (NotificationManager) getApplicationContext().
 				getSystemService(Context.NOTIFICATION_SERVICE); 
 		mBuilder = new NotificationCompat.Builder(getApplicationContext()); 

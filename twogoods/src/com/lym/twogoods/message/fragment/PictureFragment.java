@@ -274,7 +274,10 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 						imageFloder.setDir(dirPath);
 						imageFloder.setFirstImagePath(path);
 					}
-
+					if(!parentFile.isDirectory()){
+						Log.i(TAG, "parentFile不是文件夹");
+						continue;
+					}
 					int picSize = parentFile.list(new FilenameFilter()
 					{
 						@Override
@@ -311,18 +314,20 @@ public class PictureFragment extends BaseFragment implements OnImageDirSelected{
 				for(int i=0;i<mDirPaths.size();i++){
 
 					File file = new File(mDirPaths.get(i));
-					List<String> pics = Arrays.asList(file.list());
-					
-					int index = 0;
-					
-					String parentPath = file.getAbsolutePath();
-					
-					String path;
-					
-					while(index<pics.size()){
-						path = parentPath + File.separator + pics.get(index);
-						allImgs.add(path);
-						index++;
+					if(file.isDirectory()){
+						List<String> pics = Arrays.asList(file.list());
+						
+						int index = 0;
+						
+						String parentPath = file.getAbsolutePath();
+						
+						String path;
+						
+						while(index<pics.size()){
+							path = parentPath + File.separator + pics.get(index);
+							allImgs.add(path);
+							index++;
+						}
 					}
 				}
 				
