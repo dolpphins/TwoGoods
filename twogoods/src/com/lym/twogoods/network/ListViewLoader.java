@@ -52,7 +52,7 @@ public class ListViewLoader extends AbsListViewLoader {
 			//头像
 			List<HeadPictureLoader.HeadPictureTask> tasks = new ArrayList<HeadPictureLoader.HeadPictureTask>();
 			//
-			for(int i = 0; i < count; i++) {
+			for(int i = 0; i < count && i < mAbsListView.getChildCount(); i++) {
 				//getChildAt并没有包含Header
 				View v = mAbsListView.getChildAt(i);
 				//System.out.println(v == null ? "v null" : "v not null");
@@ -61,7 +61,11 @@ public class ListViewLoader extends AbsListViewLoader {
 					//holder可能为空
 					//System.out.println(holder == null ? "holder null" : "holder not null");
 					if(holder != null) {
-						Goods goods = mGoodsList.get(start + i - 1);
+						int index = start + i - 1;
+						if(index < 0 || index >= mGoodsList.size()) {
+							continue;
+						}
+						Goods goods = mGoodsList.get(index);
 						String username = holder.username;
 						if(!TextUtils.isEmpty(username) && username.equals(goods.getUsername())) {
 							continue;
