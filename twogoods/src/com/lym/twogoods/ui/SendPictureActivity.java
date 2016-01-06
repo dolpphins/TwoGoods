@@ -93,11 +93,11 @@ public class SendPictureActivity extends BackFragmentActivity{
 			
 			@Override
 			public void onClick(View v) {
-				if(mPictureFragment.getSelectPics().size()<=0){
-					Toast.makeText(SendPictureActivity.this, "请选择图片", Toast.LENGTH_SHORT).show();
-					return;
-				}
 				if(tag == 0){//发送本地的相片
+					if(mPictureFragment.getSelectPics().size()<=0){
+						Toast.makeText(SendPictureActivity.this, "请选择图片", Toast.LENGTH_SHORT).show();
+						return;
+					}
 					Animation anim = AnimationUtils.loadAnimation(SendPictureActivity.this, R.anim.display_pictures_loading_anim);
 					mPictureFragment.playAnimation(anim);
 					//压缩图片
@@ -122,8 +122,6 @@ public class SendPictureActivity extends BackFragmentActivity{
 					sendImagesToFriend(compressFiles);
 					
 				}else{//发送相机拍的相片
-					Animation anim = AnimationUtils.loadAnimation(SendPictureActivity.this, R.anim.display_pictures_loading_anim);
-					mPictureFragment.playAnimation(anim);
 					String filename = "sent"+TimeUtil.getCurrentMilliSecond()+".jpg";
 					String filepath = DiskCacheManager.getInstance(getApplicationContext()).
 							getSendPictureCachePath()+filename;

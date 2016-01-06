@@ -43,7 +43,7 @@ public class ThumbnailMapManager {
 			return;
 		}
 		
-		BmobProFile.getInstance(context.getApplicationContext()).submitThumnailTask(bmobFileName, 1, new ThumbnailListener() {
+		BmobProFile.getInstance(context.getApplicationContext()).submitThumnailTask(bmobFileName, 2, new ThumbnailListener() {
 			
 			@Override
 			public void onError(int statuscode, String errormsg) {

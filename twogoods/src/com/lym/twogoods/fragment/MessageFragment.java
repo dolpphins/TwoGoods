@@ -237,7 +237,7 @@ public class MessageFragment extends PullListFragment implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-			if(isLogining){
+			if(isLogining&&chatSnapshotList.size()>0){
 				Intent intent = new Intent(getActivity(), ChatActivity.class);
 				ChatSnapshot chatSnapshot = (ChatSnapshot) mMessageListAdapter.getItem(position);
 				//有未读的消息点击后要将unread_num置为0
@@ -323,6 +323,7 @@ public class MessageFragment extends PullListFragment implements
 					public void run() {
 						chatSnapshotList = queryRecent();
 						if(chatSnapshotList.size()==0){
+							setAdapter();
 							return;
 						}
 						mMessageListAdapter = new MessageListAdapter(getActivity(), 
