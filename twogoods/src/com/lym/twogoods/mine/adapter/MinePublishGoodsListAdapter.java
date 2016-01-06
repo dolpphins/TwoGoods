@@ -3,6 +3,7 @@ package com.lym.twogoods.mine.adapter;
 import java.util.List;
 
 import com.bmob.BmobProFile;
+import com.lym.twogoods.R;
 import com.lym.twogoods.adapter.base.BaseGoodsListViewAdapter;
 import com.lym.twogoods.bean.Goods;
 
@@ -10,6 +11,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,15 +38,15 @@ public class MinePublishGoodsListAdapter extends BaseGoodsListViewAdapter {
 		
 		final Goods goods = item;
 		viewHolder.base_goods_listview_item_operation.setVisibility(View.VISIBLE);
-		viewHolder.base_goods_listview_item_operation.setText("删除");
+		//viewHolder.base_goods_listview_item_operation.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+		viewHolder.base_goods_listview_item_operation.setText(R.string.delete);
 		viewHolder.base_goods_listview_item_operation.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				Log.i(TAG, "onClick");
 				
 				AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-				builder.setTitle("你真的要删除该贰货吗");
+				builder.setTitle("你真的要删除该贰货吗？");
 				builder.setNegativeButton("取消", null);
 				builder.setPositiveButton("确定", new AlertDialog.OnClickListener() {
 					

@@ -73,7 +73,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:clickable="true"
-            android:layout_alignBottom="@id/base_goods_listview_item_user_layout"/>
+            android:layout_alignBottom="@id/base_goods_listview_item_user_layout"
+            android:textColor="@color/red"/>
         
         
     </RelativeLayout>

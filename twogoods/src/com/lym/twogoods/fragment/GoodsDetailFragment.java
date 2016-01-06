@@ -186,7 +186,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		}
 		
 		//detailMessageViewHolder.index_goods_detail_browse_num = (TextView) mHeaderLayout.findViewById(R.id.index_goods_detail_browse_num);
-		detailMessageViewHolder.index_goods_detail_contact = (ImageView) mHeaderLayout.findViewById(R.id.index_goods_detail_contact);
+		detailMessageViewHolder.index_goods_detail_contact = mHeaderLayout.findViewById(R.id.index_goods_detail_contact);
 		detailMessageViewHolder.index_goods_detail_description = (EmojiTextView) mHeaderLayout.findViewById(R.id.index_goods_detail_description);
 		detailMessageViewHolder.index_goods_detail_focus = (TextView) mHeaderLayout.findViewById(R.id.index_goods_detail_focus);
 		detailMessageViewHolder.index_goods_detail_fouse_num = (TextView) mHeaderLayout.findViewById(R.id.index_goods_detail_fouse_num);
@@ -825,7 +825,7 @@ public class GoodsDetailFragment extends PullListFragment implements MultiPictur
 		private ImageView index_goods_detail_voice;
 		
 		/** 联系商家 */
-		private ImageView index_goods_detail_contact;
+		private View index_goods_detail_contact;
 		
 		/** 举报 */
 		private TextView index_goods_detail_report;
