@@ -142,15 +142,11 @@ public class BaseGoodsListViewAdapter extends BaseGoodsListAdapter{
 		//完全不管,直接采用默认头像就行,等停止滑动再去加载真正的头像
 		
 		//用户名
-		//viewHolder.base_goods_listview_item_username.setText(item.getUsername());
 		String time = TimeUtil.getDescriptionTimeFromTimestamp(item.getPublish_time());
 		float textSize = mActivity.getResources().getDimensionPixelSize(R.dimen.app_base_goods_listview_item_publishtime_textSize);
-		//float textSize = DisplayUtils.sp2px(mActivity.getApplicationContext(), );
-		System.out.println("textSize:" + textSize);
 		int minpixels =  (int) StringUtil.getTextLength(time+"阿尧", textSize);
-		System.out.println("minpixels:" + minpixels);
 		viewHolder.base_goods_listview_item_username.setMinWidth(minpixels);
-		viewHolder.base_goods_listview_item_username.setText("阿尧yao");
+		viewHolder.base_goods_listview_item_username.setText(item.getUsername());
 		//发布时间
 		viewHolder.base_goods_listview_item_publishtime.setText(time);
 		//发布位置
