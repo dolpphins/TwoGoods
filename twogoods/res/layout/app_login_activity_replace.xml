@@ -26,6 +26,7 @@
                 android:src="@drawable/app_login_icon" />
 
             <TextView
+                android:id="@+id/tv_app_login_activity_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/app_login_icon_text_top"

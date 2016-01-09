@@ -7,6 +7,13 @@ import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Typeface;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 /**
  * 与String操作相关的工具类
  * 
@@ -230,5 +237,17 @@ public class StringUtil {
 	    		}
 	    	}
 	    }
+	    /**
+	     * <p>
+	     * 		设置字体
+	     * </p>
+	     * @param activity
+	     * @param view		要设置字体的控件
+	     * @param path		字体的路径
+	     */
+	    public static void setTextFont(Activity activity,TextView view,String path) {
+	    	Typeface tf=Typeface.createFromAsset(activity.getAssets(), path);
+			view.setTypeface(tf);
+		}
 	    
 }  

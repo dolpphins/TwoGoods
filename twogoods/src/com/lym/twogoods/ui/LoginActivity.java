@@ -24,7 +24,9 @@ import com.lym.twogoods.utils.VerificationUtil;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -48,6 +50,7 @@ public class LoginActivity extends BackActivity {
 	private Button btn_login_code_get;
 	private Button btn_login_land;
 	private TextView tv_login_forget;
+	private TextView tv_app_login_activity_title;
 
 	// 定义actionbar控件
 	private TextView actionbarRightTextView;
@@ -77,7 +80,9 @@ public class LoginActivity extends BackActivity {
 		btn_login_code_get = (Button) findViewById(R.id.btn_login_code_get);
 		btn_login_land = (Button) findViewById(R.id.btn_login_land);
 		tv_login_forget = (TextView) findViewById(R.id.tv_login_forget);
-
+		tv_app_login_activity_title=(TextView) findViewById(R.id.tv_app_login_activity_title);
+		StringUtil.setTextFont(this, tv_app_login_activity_title, "fonts/huawenxingkai.ttf");
+		
 		user = new User();
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setTitle("正在登陆");
