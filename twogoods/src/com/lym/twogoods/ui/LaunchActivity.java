@@ -9,15 +9,19 @@ import com.lym.twogoods.screen.DisplayUtils;
 import com.lym.twogoods.user.Loginer;
 import com.lym.twogoods.user.listener.DefaultLoginListener;
 import com.lym.twogoods.utils.SharePreferencesManager;
+import com.lym.twogoods.utils.StringUtil;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * <p>App启动Activity</p>
@@ -30,6 +34,7 @@ public class LaunchActivity extends Activity {
 	private Button btn_login_choice_direct;
 	private Button btn_login_choice_login;
 	private LinearLayout ll_app_login_choice_main;
+	private TextView tv_login_choice_title;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +99,9 @@ public class LaunchActivity extends Activity {
 		btn_login_choice_direct = (Button) findViewById(R.id.btn_login_choice_direct);
 		btn_login_choice_login = (Button) findViewById(R.id.btn_login_choice_login);
 		ll_app_login_choice_main=(LinearLayout) findViewById(R.id.ll_app_login_choice_main);
+
+		//tv_login_choice_title=(TextView) findViewById(R.id.tv_login_choice_title);
+		//StringUtil.setTextFont(this, tv_login_choice_title, "fonts/huawenxingkai.ttf");
 	}
 
 	private void clickEvent() {

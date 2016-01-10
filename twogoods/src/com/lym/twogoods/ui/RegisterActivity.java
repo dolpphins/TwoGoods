@@ -1,5 +1,7 @@
 package com.lym.twogoods.ui;
 
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,8 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.RequestSMSCodeListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.VerifySMSCodeListener;
@@ -47,8 +51,6 @@ public class RegisterActivity extends BackActivity {
 
 	// 本地存储
 	private SharePreferencesManager sSpManager;
-	// 验证码是否验证成功
-	private boolean codeVerify = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,21 +97,58 @@ public class RegisterActivity extends BackActivity {
 								.isWifiDataEnable(getApplicationContext())) {
 					if (StringUtil.isPhoneNumber(et_register_phone.getText()
 							.toString())) {
-						BmobSMS.requestSMSCode(getApplicationContext(),
-								et_register_phone.getText().toString(), "注册验证",
-								new RequestSMSCodeListener() {
+						//判断账号或者手机已注册。
+						BmobQuery<User> queryUserName=new BmobQuery<User>();
+						queryUserName.addWhereEqualTo("username", et_register_erhuo.getText().toString().trim());
+						queryUserName.findObjects(getApplicationContext(), new FindListener<User>() {
+							
+							@Override
+							public void onSuccess(List<User> list) {
+								if (list.size()<=0) {
+									BmobQuery<User> queryPhone=new BmobQuery<User>();
+									queryPhone.addWhereEqualTo("phone", et_register_phone.getText().toString().trim());
+									queryPhone.findObjects(getApplicationContext(), new FindListener<User>() {
 
-									@Override
-									public void done(Integer smsId,
-											BmobException ex) {
-										if (ex == null) {
-											Toast.makeText(
-													getApplicationContext(),
-													"短信已发送，请注意查看",
-													Toast.LENGTH_SHORT).show();
+										@Override
+										public void onError(int arg0,
+												String arg1) {
+											// TODO Auto-generated method stub
+											
 										}
-									}
-								});
+
+										@Override
+										public void onSuccess(List<User> list) {
+											if (list.size()<=0) {
+												BmobSMS.requestSMSCode(getApplicationContext(),
+														et_register_phone.getText().toString(), "注册验证",
+														new RequestSMSCodeListener() {
+															@Override
+															public void done(Integer smsId,
+																	BmobException ex) {
+																if (ex == null) {
+																	Toast.makeText(
+																			getApplicationContext(),
+																			"短信已发送，请注意查看",
+																			Toast.LENGTH_SHORT).show();
+																}
+															}
+														});
+											}else {
+												Toast.makeText(getApplicationContext(), "手机已经注册了哦，亲", Toast.LENGTH_SHORT).show();
+											}
+										}
+									});
+								}else {
+									Toast.makeText(getApplicationContext(), "账号已经注册了哦，亲", Toast.LENGTH_SHORT).show();
+								}
+							}
+							
+							@Override
+							public void onError(int arg0, String arg1) {
+								// TODO Auto-generated method stub
+								
+							}
+						});
 					} else {
 						Toast.makeText(getApplicationContext(), "手机格式不对",
 								Toast.LENGTH_SHORT).show();
@@ -141,24 +180,12 @@ public class RegisterActivity extends BackActivity {
 								if (StringUtil.isSecurityCode(et_register_code
 										.getText().toString())) {
 									// 只有在两次输入密码都一样的时候才进行注册操作(还需要判断验证码)
-									codeMatch();
 									if (et_register_password
 											.getText()
 											.toString()
 											.equals(et_register_password_again
-													.getText().toString())
-											&& codeVerify) {
-										// 将用户注册的数据取到放在UserBean中
-										getRegisterData();
-										// 上传数据到Bmob中
-										sendData();
-										// 本地存储数据
-										writeSharePreference();
-										Intent intent = new Intent(
-												RegisterActivity.this,
-												MainActivity.class);
-										startActivity(intent);
-										finish();
+													.getText().toString())) {
+										codeMatch();
 									} else {
 										Toast.makeText(RegisterActivity.this,
 												"密码不一致", Toast.LENGTH_SHORT)
@@ -221,21 +248,28 @@ public class RegisterActivity extends BackActivity {
 	 * @author 龙宇文
 	 **/
 	private void codeMatch() {
-		/*BmobSMS.verifySmsCode(getApplicationContext(), et_register_phone
+		BmobSMS.verifySmsCode(getApplicationContext(), et_register_phone
 				.getText().toString(), et_register_code.getText().toString(),
 				new VerifySMSCodeListener() {
 
 					@Override
 					public void done(BmobException ex) {
 						if (ex == null) {
-							codeVerify = true;
+							// 将用户注册的数据取到放在UserBean中
+							getRegisterData();
+							// 上传数据到Bmob中
+							sendData();
+							// 本地存储数据
+							writeSharePreference();
+							Intent intent = new Intent(
+									RegisterActivity.this,
+									MainActivity.class);
+							startActivity(intent);
+							finish();
 						} else {
-							codeVerify = false;
 						}
 					}
-				});*/
-		//以下测试代码（为了方便）
-		codeVerify = true;
+				});
 	}
 
 	/**

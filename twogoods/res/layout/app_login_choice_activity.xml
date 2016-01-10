@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!-- 
 	App启动页面布局
 	
 	author:龙宇文
+
  -->
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@color/login_background">
 
-    <LinearLayout 
+        <LinearLayout 
         android:id="@+id/ll_app_login_choice_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        
         
 	    <LinearLayout
 	        android:id="@+id/ll_app_login_choice_icon"
@@ -72,4 +76,7 @@
 	    </LinearLayout>
 
     </LinearLayout>
+
 </ScrollView>
+
+
