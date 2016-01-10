@@ -36,7 +36,7 @@ public abstract class BaseActivity extends Activity{
 	
 	public BaseActivity() {
 		super();
-		ActivityManager.getInstance().addActivity(this);
+		//ActivityManager.getInstance().addActivity(this);
 	}
 	
 	@Override
@@ -225,8 +225,8 @@ public abstract class BaseActivity extends Activity{
 	
 	@Override
 	public void finish() {
-		Log.i(TAG, "finish");
+		//Log.i(TAG, "finish");
 		super.finish();
-		ActivityManager.getInstance().removeActivity(this);
+		//ActivityManager.getInstance().removeActivity(this);
 	}
 }

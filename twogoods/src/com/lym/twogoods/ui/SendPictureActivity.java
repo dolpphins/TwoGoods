@@ -103,30 +103,32 @@ public class SendPictureActivity extends BackFragmentActivity{
 					//压缩图片
 					compressFiles = new ArrayList<String>();//压缩后的图片路径
 					final List<String>list = mPictureFragment.getSelectPics();
-					String filename;
-					String filepath;
-					for(int i = 0;i<list.size();i++){
-						count = i;
-						filename = "sent"+TimeUtil.getCurrentMilliSecond()+".jpg";
-						filepath = DiskCacheManager.getInstance(getApplicationContext()).
-								getSendPictureCachePath()+filename;
-						//ImageUtil.saveBitmap(filepath,ImageUtil.compressImage(list.get(i)));
-						new Thread(new Runnable() {
-							@Override
-							public void run() {
-								ImageUtil.saveBitmap(compressFiles.get(count),ImageUtil.compressImage(list.get(count)));
-							}
-						}).start();
-						compressFiles.add(filepath);
-					}
-					sendImagesToFriend(compressFiles);
+//					String filename;
+//					String filepath;
+//					for(int i = 0;i<list.size();i++){
+//						count = i;
+//						filename = "sent"+TimeUtil.getCurrentMilliSecond()+".jpg";
+//						filepath = DiskCacheManager.getInstance(getApplicationContext()).
+//								getSendPictureCachePath()+filename;
+//						//ImageUtil.saveBitmap(filepath,ImageUtil.compressImage(list.get(i)));
+//						new Thread(new Runnable() {
+//							@Override
+//							public void run() {
+//								ImageUtil.saveBitmap(compressFiles.get(count),ImageUtil.compressImage(list.get(count)));
+//							}
+//						}).start();
+//						compressFiles.add(filepath);
+//					}
+//					sendImagesToFriend(compressFiles);
+					sendImagesToFriend(list);
 					
 				}else{//发送相机拍的相片
-					String filename = "sent"+TimeUtil.getCurrentMilliSecond()+".jpg";
-					String filepath = DiskCacheManager.getInstance(getApplicationContext()).
-							getSendPictureCachePath()+filename;
-					ImageUtil.saveBitmap(filepath,ImageUtil.compressImage(mCameraFragment.mImagePath));
-					sendCameraPicToFriend(filepath);
+					//String filename = "sent"+TimeUtil.getCurrentMilliSecond()+".jpg";
+					//String filepath = DiskCacheManager.getInstance(getApplicationContext()).
+					//		getSendPictureCachePath()+filename;
+					//ImageUtil.saveBitmap(filepath,ImageUtil.compressImage(mCameraFragment.mImagePath));
+					
+					sendCameraPicToFriend(mCameraFragment.mImagePath);
 				}
 			}
 		});

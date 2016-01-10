@@ -9,6 +9,7 @@ import java.util.Date;
 
 import com.lym.twogoods.manager.DiskCacheManager;
 
+import android.text.TextUtils;
 import android.util.Log;
 /**
  * 与文件操作相关的工具类
@@ -17,6 +18,22 @@ import android.util.Log;
  *
  * */
 public class FileUtil {
+	
+	/**
+	 * 判断文件或目录是否存在
+	 * 
+	 * @param path 要判断的文件或目录路径
+	 * @return 存在返回true，不存在返回false
+	 * 
+	 * @author mao
+	 */
+	public static boolean exist(String path) {
+		if(TextUtils.isEmpty(path)) {
+			return false;
+		}
+		File f = new File(path);
+		return f.exists();
+	}
 	
 	 /** 
      * 创建文件夹，如果文件夹存在则不进行创建。 

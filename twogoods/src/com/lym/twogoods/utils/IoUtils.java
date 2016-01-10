@@ -2,6 +2,7 @@ package com.lym.twogoods.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -40,36 +41,28 @@ public class IoUtils {
 			e.printStackTrace();
 			return null;
 		} finally {
-			closeInputStream(ois);
-			closeInputStream(bais);
-			closeOutStream(oos);
-			closeOutStream(baos);
+			close(ois);
+			close(bais);
+			close(oos);
+			close(baos);
 		}
 	}
 	
-	private static boolean closeInputStream(InputStream is) {
-		if(is == null) {
-			return false;
+	/**
+	 * 关闭流
+	 * 
+	 * @param stream 要关闭的流
+	 * @return 关闭成功返回true，失败返回false
+	 */
+	public static boolean close(Closeable stream) {
+		if(stream != null) {
+			try {
+				stream.close();
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
 		}
-		try {
-			is.close();
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
-	private static boolean closeOutStream(OutputStream os) {
-		if(os == null) {
-			return false;
-		}
-		try {
-			os.close();
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
+		return false;
 	}
 }

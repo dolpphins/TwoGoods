@@ -7,9 +7,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
@@ -590,6 +593,33 @@ public class ImageUtil {
     	} else {
     		return bitmap.getRowBytes() * bitmap.getHeight();
     	}
+    }
+    
+    /**
+     * 按指定质量保存位图
+     * 
+     * @param bitmap
+     * @param quality
+     * @param path
+     * @return
+     */
+    public static boolean saveBitmap(Bitmap bitmap, int quality, String path) {
+    	if(bitmap == null || quality < 0
+    					  || quality > 100
+    					  || path == null) {
+    		return false;
+    	}
+		
+    	OutputStream os = null;
+		try {
+			os = new FileOutputStream(path);
+			return bitmap.compress(CompressFormat.JPEG, quality, os);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			IoUtils.close(os);
+		}
     }
     
    /**

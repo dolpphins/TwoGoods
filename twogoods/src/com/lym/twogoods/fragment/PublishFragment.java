@@ -1,5 +1,6 @@
 package com.lym.twogoods.fragment;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,6 +16,7 @@ import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.bean.Location;
 import com.lym.twogoods.bean.PictureThumbnailSpecification;
 import com.lym.twogoods.fragment.base.BaseFragment;
+import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.nearby.ui.SelectCityActivity;
 import com.lym.twogoods.publish.adapter.PublishGridViewAdapter;
 import com.lym.twogoods.publish.manger.PublishConfigManger;
@@ -24,6 +26,9 @@ import com.lym.twogoods.publish.util.DataMangerUtils;
 import com.lym.twogoods.screen.PublishGoodsScreen;
 import com.lym.twogoods.ui.DisplayPicturesActivity;
 import com.lym.twogoods.utils.DatabaseHelper;
+import com.lym.twogoods.utils.FileUtil;
+import com.lym.twogoods.utils.ImageUtil;
+import com.lym.twogoods.utils.RandomUtils;
 import com.lym.twogoods.utils.SensitiveUtils;
 import com.lym.twogoods.widget.WrapContentViewPager;
 
@@ -33,8 +38,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -486,41 +496,9 @@ public class PublishFragment extends BaseFragment {
 						.toArray(new String[PublishConfigManger.publishPictureUrl
 								.size()]);
 				progressDialog.show();
-				BmobProFile.getInstance(getActivity()).uploadBatch(files,
-						new UploadBatchListener() {
-							@Override
-							public void onError(int arg0, String arg1) {
-								progressDialog.dismiss();
-								Log.v(TAG, "pictureUpload上传失败" + arg1);
-								progressDialog.dismiss();
-							}
-
-							@Override
-							public void onProgress(int arg0, int arg1,
-									int arg2, int arg3) {
-								Log.i("PublishFrament", "onProgress :" + arg0
-										+ "---" + arg1 + "---" + arg2 + "----"
-										+ arg3);
-							}
-
-							@Override
-							public void onSuccess(boolean arg0, String[] arg1,
-									String[] arg2, BmobFile[] arg3) {
-								if (arg0) {
-									for (int i = 0; i < arg3.length; i++) {
-										PublishConfigManger.pictureCloudUrl
-												.add(arg3[i].getUrl());
-									}
-									ArrayList<String> picFileUrlList = new ArrayList<String>();
-									for (int i = 0; i < arg1.length; i++) {
-										picFileUrlList.add(arg1[i]);
-									}
-									goodsBean.setPicFileUrlList(picFileUrlList);
-									uploadVoice();
-								}
-							}
-
-						});
+				//先压缩图片到缓存目录
+				preCompressPicutres(files);
+				
 			} else {
 				progressDialog.show();
 				uploadVoice();
@@ -528,6 +506,65 @@ public class PublishFragment extends BaseFragment {
 		}
 	}
 
+	private void preCompressPicutres(String[] files) {
+		
+		String[] dstPaths = null;
+		if(files != null) {
+			dstPaths = new String[files.length];
+			for(int i = 0; i < files.length; i++) {
+				String filename = "sent"+RandomUtils.generateDigits()+".jpg";
+				String filepath = DiskCacheManager.getInstance(mAttachActivity.getApplicationContext()).
+						getSendPictureCachePath()+filename;
+				
+				dstPaths[i] = filepath;
+			}
+		}
+		
+		Handler handler = new CompressPicturesHandler(this);
+		
+		CompressPicturesTask task = new CompressPicturesTask(files, handler, dstPaths);	
+		task.work();
+	}
+	
+	private void startUploadPictures(String[] files) {
+
+		BmobProFile.getInstance(getActivity()).uploadBatch(files,
+		new UploadBatchListener() {
+			@Override
+			public void onError(int arg0, String arg1) {
+				progressDialog.dismiss();
+				Log.v(TAG, "pictureUpload上传失败" + arg1);
+				progressDialog.dismiss();
+			}
+
+			@Override
+			public void onProgress(int arg0, int arg1,
+					int arg2, int arg3) {
+				Log.i("PublishFrament", "onProgress :" + arg0
+						+ "---" + arg1 + "---" + arg2 + "----"
+						+ arg3);
+			}
+
+			@Override
+			public void onSuccess(boolean arg0, String[] arg1,
+					String[] arg2, BmobFile[] arg3) {
+				if (arg0) {
+					for (int i = 0; i < arg3.length; i++) {
+						PublishConfigManger.pictureCloudUrl
+								.add(arg3[i].getUrl());
+					}
+					ArrayList<String> picFileUrlList = new ArrayList<String>();
+					for (int i = 0; i < arg1.length; i++) {
+						picFileUrlList.add(arg1[i]);
+					}
+					goodsBean.setPicFileUrlList(picFileUrlList);
+					uploadVoice();
+				}
+			}
+
+		});
+	}
+	
 	/**
 	 * <p>
 	 * 语音上传
@@ -661,4 +698,109 @@ public class PublishFragment extends BaseFragment {
 		}
 	}
 	
+	
+	private static class CompressPicturesTask extends Thread{
+		
+		private String[] files;
+		private Handler mHandler;
+		private String[] dstPaths;
+		
+		public CompressPicturesTask(String[] files, Handler h, String[] dstPaths) {
+			this.files = files;
+			mHandler = h;
+			this.dstPaths = dstPaths;
+		}
+		
+		@Override
+		public void run() {
+			if(files != null && dstPaths != null) {
+				for(int i = 0; i < files.length && i < dstPaths.length; i++) {
+					compress(files[i], dstPaths[i]);
+				}
+			}
+			
+			if(mHandler != null) {
+				Message msg = Message.obtain();
+				msg.what = CompressPicturesHandler.COMPRESS_PICTURESS_COMPLETE;
+				msg.obj = dstPaths;
+				mHandler.sendMessage(msg);
+			}
+		}
+		
+		public void work() {
+			start();
+		}
+		
+		private void compress(String path, String dstPath) {
+			if(TextUtils.isEmpty(path) || !FileUtil.exist(path)) {
+				return;
+			}
+			BitmapFactory.Options opts = new BitmapFactory.Options();
+			opts.inJustDecodeBounds = true;
+			BitmapFactory.decodeFile(path, opts);
+			int width = opts.outWidth;
+			int height = opts.outHeight;
+			
+			int inSampleSize = 1;
+			//粗略估算大小，单位：字节
+			int size = (int) (width * height * 3 / 8.0);
+			int MB = 1024 * 1024;
+			
+			Bitmap bm = null;
+			//大于1MB
+			if(size > MB) {
+				//inSampleSize = (int) Math.round(Math.abs(1.0 * size / MB));
+				opts.inJustDecodeBounds = false;
+				opts.inSampleSize = 4;
+				bm = BitmapFactory.decodeFile(path, opts);
+			} else {
+				bm = BitmapFactory.decodeFile(path);
+			}
+			
+			System.out.println("size:" + ImageUtil.sizeOfBitmap(bm));
+			
+			if(ImageUtil.saveBitmap(bm, 100, dstPath)) {
+				//System.out.println("compress successfully");
+			} else {
+				//System.out.println("compress fail");
+			}
+		}
+	}
+	
+	private static class CompressPicturesHandler extends Handler {
+
+		/** 防止内存泄露 */
+		private WeakReference<PublishFragment> mFragment;
+		
+		/** 压缩图片操作完成，不管成功或失败 */
+		private final static int COMPRESS_PICTURESS_COMPLETE = 1;
+		
+		public CompressPicturesHandler(PublishFragment fragment) {
+			mFragment = new WeakReference<PublishFragment>(fragment);
+		}
+		
+		@Override
+		public void handleMessage(Message msg) {
+
+			switch (msg.what) {
+			case COMPRESS_PICTURESS_COMPLETE:
+				handleForCompressComplete(msg);
+				break;
+
+			default:
+				break;
+			}
+		}
+		
+		private void handleForCompressComplete(Message msg) {
+			if(msg != null) {
+				String[] files = (String[])msg.obj;
+				PublishFragment f = mFragment.get();
+				//可能已经被回收了
+				if(f != null) {
+					f.startUploadPictures(files);
+				}
+			}
+		}
+	}
 }
