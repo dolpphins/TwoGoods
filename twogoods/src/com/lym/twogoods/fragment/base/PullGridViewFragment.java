@@ -131,9 +131,9 @@ public abstract class PullGridViewFragment extends BaseListFragment implements I
 	}
 	
 	private void reloadData(AbsListViewLoader.Type type, boolean clear) {
-		if(mBmobquery == null) {
+		//if(mBmobquery == null) {
 			mBmobquery = onCreateBmobQuery();
-		}
+		//}
 		if(mBmobquery == null) {
 			return;
 		}
