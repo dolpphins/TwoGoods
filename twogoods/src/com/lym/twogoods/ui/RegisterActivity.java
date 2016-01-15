@@ -2,10 +2,14 @@ package com.lym.twogoods.ui;
 
 import java.util.List;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,7 +25,9 @@ import cn.bmob.v3.listener.VerifySMSCodeListener;
 import com.lym.twogoods.R;
 import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.User;
+import com.lym.twogoods.publish.manger.PublishConfigManger;
 import com.lym.twogoods.ui.base.BackActivity;
+import com.lym.twogoods.ui.utils.LoginUtils;
 import com.lym.twogoods.utils.DatabaseHelper;
 import com.lym.twogoods.utils.EncryptHelper;
 import com.lym.twogoods.utils.NetworkHelper;
@@ -48,10 +54,10 @@ public class RegisterActivity extends BackActivity {
 
 	// 用户注册信息表数据
 	private User user_data;
-
+	
 	// 本地存储
 	private SharePreferencesManager sSpManager;
-
+	private ProgressDialog progressDialog;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,6 +83,8 @@ public class RegisterActivity extends BackActivity {
 
 		// SharedPreferences的初始化
 		sSpManager = SharePreferencesManager.getInstance();
+		progressDialog = PublishConfigManger.getLoadProgressDialog(
+				this, "小二正在注册中......", "稍等一下......如果取消可能会需要重新发送验证码消息哦", true);
 	}
 
 	/**
@@ -97,58 +105,81 @@ public class RegisterActivity extends BackActivity {
 								.isWifiDataEnable(getApplicationContext())) {
 					if (StringUtil.isPhoneNumber(et_register_phone.getText()
 							.toString())) {
-						//判断账号或者手机已注册。
-						BmobQuery<User> queryUserName=new BmobQuery<User>();
-						queryUserName.addWhereEqualTo("username", et_register_erhuo.getText().toString().trim());
-						queryUserName.findObjects(getApplicationContext(), new FindListener<User>() {
-							
-							@Override
-							public void onSuccess(List<User> list) {
-								if (list.size()<=0) {
-									BmobQuery<User> queryPhone=new BmobQuery<User>();
-									queryPhone.addWhereEqualTo("phone", et_register_phone.getText().toString().trim());
-									queryPhone.findObjects(getApplicationContext(), new FindListener<User>() {
+						// 判断账号或者手机已注册。
+						BmobQuery<User> queryUserName = new BmobQuery<User>();
+						queryUserName.addWhereEqualTo("username",
+								et_register_erhuo.getText().toString().trim());
+						queryUserName.findObjects(getApplicationContext(),
+								new FindListener<User>() {
 
-										@Override
-										public void onError(int arg0,
-												String arg1) {
-											// TODO Auto-generated method stub
-											
-										}
+									@Override
+									public void onSuccess(List<User> list) {
+										if (list.size() <= 0) {
+											BmobQuery<User> queryPhone = new BmobQuery<User>();
+											queryPhone.addWhereEqualTo("phone",
+													et_register_phone.getText()
+															.toString().trim());
+											queryPhone.findObjects(
+													getApplicationContext(),
+													new FindListener<User>() {
 
-										@Override
-										public void onSuccess(List<User> list) {
-											if (list.size()<=0) {
-												BmobSMS.requestSMSCode(getApplicationContext(),
-														et_register_phone.getText().toString(), "注册验证",
-														new RequestSMSCodeListener() {
-															@Override
-															public void done(Integer smsId,
-																	BmobException ex) {
-																if (ex == null) {
-																	Toast.makeText(
-																			getApplicationContext(),
-																			"短信已发送，请注意查看",
-																			Toast.LENGTH_SHORT).show();
-																}
+														@Override
+														public void onError(
+																int arg0,
+																String arg1) {
+															// TODO
+															// Auto-generated
+															// method stub
+
+														}
+
+														@Override
+														public void onSuccess(
+																List<User> list) {
+															if (list.size() <= 0) {
+																BmobSMS.requestSMSCode(
+																		getApplicationContext(),
+																		et_register_phone
+																				.getText()
+																				.toString(),
+																		"注册验证",
+																		new RequestSMSCodeListener() {
+																			@Override
+																			public void done(
+																					Integer smsId,
+																					BmobException ex) {
+																				if (ex == null) {
+																					Toast.makeText(
+																							getApplicationContext(),
+																							"短信已发送，请注意查看",
+																							Toast.LENGTH_SHORT)
+																							.show();
+																				}
+																			}
+																		});
+															} else {
+																Toast.makeText(
+																		getApplicationContext(),
+																		"手机已经注册了哦，亲",
+																		Toast.LENGTH_SHORT)
+																		.show();
 															}
-														});
-											}else {
-												Toast.makeText(getApplicationContext(), "手机已经注册了哦，亲", Toast.LENGTH_SHORT).show();
-											}
+														}
+													});
+										} else {
+											Toast.makeText(
+													getApplicationContext(),
+													"账号已经注册了哦，亲",
+													Toast.LENGTH_SHORT).show();
 										}
-									});
-								}else {
-									Toast.makeText(getApplicationContext(), "账号已经注册了哦，亲", Toast.LENGTH_SHORT).show();
-								}
-							}
-							
-							@Override
-							public void onError(int arg0, String arg1) {
-								// TODO Auto-generated method stub
-								
-							}
-						});
+									}
+
+									@Override
+									public void onError(int arg0, String arg1) {
+										// TODO Auto-generated method stub
+
+									}
+								});
 					} else {
 						Toast.makeText(getApplicationContext(), "手机格式不对",
 								Toast.LENGTH_SHORT).show();
@@ -185,6 +216,7 @@ public class RegisterActivity extends BackActivity {
 											.toString()
 											.equals(et_register_password_again
 													.getText().toString())) {
+										progressDialog.show();
 										codeMatch();
 									} else {
 										Toast.makeText(RegisterActivity.this,
@@ -259,14 +291,10 @@ public class RegisterActivity extends BackActivity {
 							getRegisterData();
 							// 上传数据到Bmob中
 							sendData();
-							// 本地存储数据
-							writeSharePreference();
-							Intent intent = new Intent(
-									RegisterActivity.this,
-									MainActivity.class);
-							startActivity(intent);
-							finish();
 						} else {
+							progressDialog.dismiss();
+							Toast.makeText(getApplicationContext(), "验证失败",
+									Toast.LENGTH_SHORT).show();
 						}
 					}
 				});
@@ -286,12 +314,20 @@ public class RegisterActivity extends BackActivity {
 			public void onSuccess() {
 				Toast.makeText(getApplicationContext(), "添加数据成功",
 						Toast.LENGTH_SHORT).show();
-				//保存当前用户信息
+				// 保存当前用户信息
 				UserInfoManager.getInstance().setmCurrent(user_data);
+				// 本地存储数据
+				writeSharePreference();
+				progressDialog.dismiss();
+				Intent intent = new Intent(RegisterActivity.this,
+						MainActivity.class);
+				startActivity(intent);
+				finish();
 			}
 
 			@Override
 			public void onFailure(int arg0, String arg1) {
+				progressDialog.dismiss();
 				Toast.makeText(getApplicationContext(), "注册失败",
 						Toast.LENGTH_SHORT).show();
 			}
@@ -315,5 +351,25 @@ public class RegisterActivity extends BackActivity {
 								.getText().toString()));
 		sSpManager.putString(this, "loginmessage(MD5).xml", MODE_PRIVATE,
 				"phone", et_register_phone.getText().toString());
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+			View v = getCurrentFocus();
+			if (LoginUtils.isShouldHideInput(v, ev)) {
+
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				if (imm != null) {
+					imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+				}
+			}
+			return super.dispatchTouchEvent(ev);
+		}
+		// 必不可少，否则所有的组件都不会有TouchEvent了
+		if (getWindow().superDispatchTouchEvent(ev)) {
+			return true;
+		}
+		return onTouchEvent(ev);
 	}
 }

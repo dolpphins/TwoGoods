@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.adapter.EmotionViewPagerAdapter;
@@ -29,6 +30,8 @@ import com.lym.twogoods.publish.manger.PublishConfigManger;
 import com.lym.twogoods.publish.util.DataMangerUtils;
 import com.lym.twogoods.ui.SendPictureActivity;
 import com.lym.twogoods.ui.base.BottomDockBackFragmentActivity;
+import com.lym.twogoods.ui.utils.LoginUtils;
+import com.lym.twogoods.utils.NetworkHelper;
 import com.lym.twogoods.widget.WrapContentViewPager;
 
 import de.greenrobot.event.EventBus;
@@ -98,8 +101,12 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 
 			@Override
 			public void onClick(View v) {
-				if (publishFragment.judgeDescription()) {
-					publishFragment.pictureUpload();
+				if (NetworkHelper.isNetworkAvailable(getApplicationContext())) {
+					if (publishFragment.judgeDescription()) {
+						publishFragment.pictureUpload();
+					}
+				}else {
+					Toast.makeText(getApplicationContext(), "当前网络不可用哦，亲", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -159,7 +166,7 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 	public boolean dispatchTouchEvent(MotionEvent ev) {
 		if (ev.getAction() == MotionEvent.ACTION_DOWN) {  
 	        View v = getCurrentFocus();  
-	        if (isShouldHideInput(v, ev)) {  
+	        if (LoginUtils.isShouldHideInput(v, ev)) {  
 	  
 	            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
 	            if (imm != null) {  
@@ -358,32 +365,6 @@ public class PublishGoodsActivity extends BottomDockBackFragmentActivity {
 			// imageView.setOnClickListener(recordPlayClickListener);
 		}
 	}
-	/**
-	 *<p>
-	 *		判断是否需要隐藏键盘
-	 *</p>
-	 * @param v		触发的view	
-	 * @param event	触发的事件
-	 * @return		
-	 */
-	public  boolean isShouldHideInput(View v, MotionEvent event) {  
-	    if (v != null && (v instanceof EditText)) {  
-	        int[] leftTop = { 0, 0 };  
-	        //获取输入框当前的location位置  
-	        v.getLocationInWindow(leftTop);  
-	        int left = leftTop[0];  
-	        int top = leftTop[1];  
-	        int bottom = top + v.getHeight();  
-	        int right = left + v.getWidth();  
-	        if (event.getX() > left && event.getX() < right  
-	                && event.getY() > top && event.getY() < bottom) {  
-	            // 点击的是输入框区域，保留点击EditText的事件  
-	            return false;  
-	        } else {  
-	            return true;  
-	        }  
-	    }  
-	    return false;  
-	}
+
 	
 }
