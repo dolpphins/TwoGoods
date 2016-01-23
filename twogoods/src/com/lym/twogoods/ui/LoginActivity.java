@@ -14,6 +14,7 @@ import com.lym.twogoods.UserInfoManager;
 import com.lym.twogoods.bean.Login;
 import com.lym.twogoods.bean.User;
 import com.lym.twogoods.ui.base.BackActivity;
+import com.lym.twogoods.ui.utils.LoginUtils;
 import com.lym.twogoods.user.Loginer;
 import com.lym.twogoods.user.listener.DefaultLoginListener;
 import com.lym.twogoods.utils.EncryptHelper;
@@ -27,8 +28,10 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -440,5 +443,24 @@ public class LoginActivity extends BackActivity {
 			startActivity(intent);
 			finish();
 		}
+	}
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		if (ev.getAction() == MotionEvent.ACTION_DOWN) {  
+	        View v = getCurrentFocus();  
+	        if (LoginUtils.isShouldHideInput(v, ev)) {  
+	  
+	            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+	            if (imm != null) {  
+	                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);  
+	            }  
+	        }  
+	        return super.dispatchTouchEvent(ev);  
+	    }  
+	    // 必不可少，否则所有的组件都不会有TouchEvent了  
+	    if (getWindow().superDispatchTouchEvent(ev)) {  
+	        return true;  
+	    }  
+	    return onTouchEvent(ev); 
 	}
 }

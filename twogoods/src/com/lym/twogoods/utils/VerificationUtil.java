@@ -82,12 +82,18 @@ public class VerificationUtil {
 			bmobQuery.findObjects(context, new FindListener<User>() {
 				@Override
 				public void onError(int arg0, String arg1) {
-					Toast.makeText(context, "用户不存在", Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, "查找失败", Toast.LENGTH_SHORT).show();
 				}
 				
 				@Override
 				public void onSuccess(List<User> list) {
-					codeVerification(context, phone, "重置密码验证");
+					if(list.size()<=0){
+						Toast.makeText(context, "用户不存在", Toast.LENGTH_SHORT).show();
+					}else if(list.size()==1){
+						codeVerification(context, phone, "重置密码验证");
+					}else {
+						Toast.makeText(context, "未知错误", Toast.LENGTH_SHORT).show();
+					}
 				}
 			});
 		}else {

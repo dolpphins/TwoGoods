@@ -117,7 +117,7 @@ public class SelectCityActivity extends BackFragmentActivity {
 		lv_nearby_select_city_search_result
 				.setAdapter(selectCityPositionListViewAdapter);
 		progressDialog = PublishConfigManger.getLoadProgressDialog(this,
-				"正在保存位置信息", "稍等一下......", false);
+				"正在保存位置信息", "稍等一下......", true);
 	}
 
 	private void initEvent() {
