@@ -1,28 +1,19 @@
 package com.lym.twogoods.adapter.base;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.bmob.BmobProFile;
-import com.bmob.btp.callback.GetAccessUrlListener;
-import com.bmob.btp.callback.ThumbnailListener;
-import com.lym.twogoods.ThumbnailMap;
 import com.lym.twogoods.bean.PictureThumbnailSpecification;
-import com.lym.twogoods.manager.ImageLoaderHelper;
 import com.lym.twogoods.manager.ThumbnailMapManager;
 import com.lym.twogoods.screen.GoodsScreen;
 
 import android.app.Activity;
-import android.text.TextUtils;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * <p>
@@ -33,12 +24,12 @@ import cn.bmob.v3.datatype.BmobFile;
  * */
 public class GoodsPictureListAdapter extends BaseAdapter{
 
-	private Activity mAcitity;
+	private Context mContext;
 	
 	private List<String> mPictureUrlList;
 	
-	public GoodsPictureListAdapter(Activity activity, List<String> pictureUrlList) {
-		mAcitity = activity;
+	public GoodsPictureListAdapter(Context context, List<String> pictureUrlList) {
+		mContext = context;
 		mPictureUrlList = pictureUrlList;
 	}
 	
@@ -62,12 +53,16 @@ public class GoodsPictureListAdapter extends BaseAdapter{
 
 	@Override  
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
-		ImageView iv = new ImageView(mAcitity);
-		iv.setScaleType(ScaleType.CENTER_CROP);
-		PictureThumbnailSpecification specification = GoodsScreen.getIndexGoodsPictureThumbnailSpecification(mAcitity);
-		AbsListView.LayoutParams params = new AbsListView.LayoutParams(specification.getWidth(), specification.getHeight());
-		iv.setLayoutParams(params);
+		ImageView iv = null;
+		if(convertView == null) {
+			iv = new ImageView(mContext);
+			iv.setScaleType(ScaleType.CENTER_CROP);
+			PictureThumbnailSpecification specification = GoodsScreen.getIndexGoodsPictureThumbnailSpecification();
+			AbsListView.LayoutParams params = new AbsListView.LayoutParams(specification.getWidth(), specification.getHeight());
+			iv.setLayoutParams(params);
+		} else {
+			iv = (ImageView) convertView;
+		}
 		
 		String url = (String) getItem(position);
 		setItemContent(url, iv);
@@ -76,6 +71,15 @@ public class GoodsPictureListAdapter extends BaseAdapter{
 	}
 
 	private void setItemContent(final String url, final ImageView imageView) {	
-		ThumbnailMapManager.loadGoodsPictureThumnail(mAcitity, url, imageView, ThumbnailMapManager.DisplayType.ListViewType);
+		ThumbnailMapManager.loadGoodsPictureThumnail(mContext, url, imageView, ThumbnailMapManager.DisplayType.ListViewType);
+	}
+	
+	/**
+	 * 重新设置数据集
+	 * 
+	 * @param pictureUrlList
+	 */
+	public void resetData(List<String> pictureUrlList) {
+		mPictureUrlList = pictureUrlList;
 	}
 }

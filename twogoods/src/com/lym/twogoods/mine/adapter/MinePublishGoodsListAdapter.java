@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.View;
@@ -28,8 +29,11 @@ public class MinePublishGoodsListAdapter extends BaseGoodsListViewAdapter {
 
 	private final static String TAG = "MinePublishGoodsListAdapter";
 	
+	private Activity mActivity;
+	
 	public MinePublishGoodsListAdapter(Activity at, List<Goods> goodsList) {
-		super(at, goodsList);
+		super(at.getApplicationContext(), goodsList);
+		mActivity = at;
 	}
 
 	@Override
@@ -37,6 +41,7 @@ public class MinePublishGoodsListAdapter extends BaseGoodsListViewAdapter {
 		viewHolder.base_goods_listview_item_user_layout.setOnTouchListener(null);
 		
 		final Goods goods = item;
+		viewHolder.base_goods_listview_item_operation.setTextColor(Color.RED);
 		viewHolder.base_goods_listview_item_operation.setVisibility(View.VISIBLE);
 		//viewHolder.base_goods_listview_item_operation.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 		viewHolder.base_goods_listview_item_operation.setText(R.string.delete);

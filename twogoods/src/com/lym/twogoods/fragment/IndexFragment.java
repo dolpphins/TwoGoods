@@ -6,6 +6,7 @@ import java.util.List;
 import com.lym.twogoods.R;
 import com.lym.twogoods.adapter.base.BaseGoodsListViewAdapter;
 import com.lym.twogoods.bean.Goods;
+import com.lym.twogoods.bean.User;
 import com.lym.twogoods.config.GoodsCategory;
 import com.lym.twogoods.config.GoodsCategory.Category;
 import com.lym.twogoods.fragment.base.HeaderPullListFragment;
@@ -20,7 +21,10 @@ import com.lym.twogoods.index.widget.MaskLayer;
 import com.lym.twogoods.network.AbsListViewLoader;
 import com.lym.twogoods.network.ListViewLoader;
 import com.lym.twogoods.network.ListViewOnLoaderListener;
+import com.lym.twogoods.ui.DisplayPicturesActivity;
+import com.lym.twogoods.ui.StoreDetailActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -495,6 +499,7 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 		//ListView加载器
 		mGoodsList = new ArrayList<Goods>();
 		mAdapter = new IndexGoodsListAdapter(mAttachActivity, mGoodsList);
+		//mAdapter.setOnItemViewClickListener(new OnIndexItemViewClickListener());
 		mAbsListViewLoader = new ListViewLoader(this, mListView, mAdapter, mGoodsList);
 		mOnLoaderListener = new ListViewOnLoaderListener(this, mAbsListViewLoader, mListView);
 		mAbsListViewLoader.setOnLoaderListener(mOnLoaderListener);
@@ -528,4 +533,22 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 	protected boolean requestDelayShowAbsListView() {
 		return true;
 	}
+	
+//	private class OnIndexItemViewClickListener implements BaseGoodsListViewAdapter.OnItemViewClickListener {
+//
+//		@Override
+//		public void onClickPictures(ArrayList<String> pictures, int position) {
+//			Intent intent = new Intent(mAttachActivity, DisplayPicturesActivity.class);
+//			intent.putStringArrayListExtra("picturesUrlList", pictures);
+//			intent.putExtra("currentIndex", position);
+//			mAttachActivity.startActivity(intent);
+//		}
+//
+//		@Override
+//		public void onClickUser(User user) {
+//			Intent intent = new Intent(mAttachActivity, StoreDetailActivity.class);
+//			intent.putExtra("user", user);
+//			mAttachActivity.startActivity(intent);
+//		}
+//	}
 }

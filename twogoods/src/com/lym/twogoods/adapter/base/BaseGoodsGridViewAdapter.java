@@ -1,12 +1,10 @@
 package com.lym.twogoods.adapter.base;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.lym.twogoods.R;
 import com.lym.twogoods.bean.Goods;
 import com.lym.twogoods.fragment.base.PullGridViewFragment;
-import com.lym.twogoods.manager.ImageLoaderHelper;
 import com.lym.twogoods.manager.ThumbnailMapManager;
 import com.lym.twogoods.network.BmobQueryHelper;
 import com.lym.twogoods.network.BmobQueryHelper.OnUsername2HeadPictureListener;
@@ -14,15 +12,12 @@ import com.lym.twogoods.screen.GoodsScreen;
 import com.lym.twogoods.utils.TimeUtil;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,8 +34,8 @@ public class BaseGoodsGridViewAdapter extends BaseGoodsListAdapter {
 	
 	private PullGridViewFragment mFragment;
 	
-	public BaseGoodsGridViewAdapter(Activity at, List<Goods> goodsList, PullGridViewFragment fragment) {
-		super(at, goodsList);
+	public BaseGoodsGridViewAdapter(Context context, List<Goods> goodsList, PullGridViewFragment fragment) {
+		super(context, goodsList);
 		mFragment = fragment;
 	}
 
@@ -48,7 +43,7 @@ public class BaseGoodsGridViewAdapter extends BaseGoodsListAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ItemViewHolder viewHolder = null;
 		if(convertView == null) {
-			convertView = LayoutInflater.from(mActivity).inflate(R.layout.app_base_goods_gridview_item, null);
+			convertView = LayoutInflater.from(mContext).inflate(R.layout.app_base_goods_gridview_item, null);
 			viewHolder = new ItemViewHolder();
 			
 			viewHolder.app_base_goods_gridview_item_iv = (ImageView) convertView.findViewById(R.id.app_base_goods_gridview_item_iv);
@@ -78,13 +73,13 @@ public class BaseGoodsGridViewAdapter extends BaseGoodsListAdapter {
 			params = new LinearLayout.LayoutParams(0, 0);
 			viewHolder.app_base_goods_gridview_item_iv.setLayoutParams(params);
 		}
-		params.width = params.height = GoodsScreen.getNearbyGoodsPictureThumbnailSpecification(mActivity, mFragment.getHorizontalExtraDistance()).getWidth();
+		params.width = params.height = GoodsScreen.getNearbyGoodsPictureThumbnailSpecification(mFragment.getHorizontalExtraDistance()).getWidth();
 		String bmobFileName = null;
 		List<String> picFileUrlList = item.getPicFileUrlList();
 		if(picFileUrlList != null && picFileUrlList.size() > 0) {
 			bmobFileName = picFileUrlList.get(0);
 		}
-		ThumbnailMapManager.loadGoodsPictureThumnail(mActivity, bmobFileName, viewHolder.app_base_goods_gridview_item_iv, ThumbnailMapManager.DisplayType.GridViewType);
+		ThumbnailMapManager.loadGoodsPictureThumnail(mContext, bmobFileName, viewHolder.app_base_goods_gridview_item_iv, ThumbnailMapManager.DisplayType.GridViewType);
 		//描述
 		viewHolder.app_base_goods_gridview_item_description.setText(item.getDescription());
 		//价格
@@ -96,7 +91,7 @@ public class BaseGoodsGridViewAdapter extends BaseGoodsListAdapter {
 		
 		//重新获取头像地址
 		if(TextUtils.isEmpty(item.getHead_url())) {
-			BmobQueryHelper.queryHeadPictureByUsername(mActivity, item.getUsername(), new OnUsername2HeadPictureListener() {
+			BmobQueryHelper.queryHeadPictureByUsername(mContext, item.getUsername(), new OnUsername2HeadPictureListener() {
 				
 				@Override
 				public void onSuccess(String headUrl) {

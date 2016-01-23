@@ -5,6 +5,7 @@ import java.util.List;
 import com.lym.twogoods.bean.Goods;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -17,12 +18,12 @@ import android.widget.BaseAdapter;
  */
 public abstract class BaseGoodsListAdapter extends BaseAdapter {
 
-	protected Activity mActivity;
+	protected Context mContext;
 	
 	protected List<Goods> mGoodsList;
 	
-	public BaseGoodsListAdapter(Activity at, List<Goods> goodsList) {
-		mActivity = at;
+	public BaseGoodsListAdapter(Context context, List<Goods> goodsList) {
+		mContext = context;
 		mGoodsList = goodsList;
 	}
 	

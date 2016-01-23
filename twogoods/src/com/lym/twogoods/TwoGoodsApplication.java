@@ -7,6 +7,7 @@ import com.lym.twogoods.config.SharePreferencesConfiguration;
 import com.lym.twogoods.manager.DiskCacheManager;
 import com.lym.twogoods.manager.UniversalImageLoaderConfigurationManager;
 import com.lym.twogoods.manager.UniversalImageLoaderManager;
+import com.lym.twogoods.screen.GoodsScreen;
 import com.lym.twogoods.user.Loginer;
 import com.lym.twogoods.user.Loginer.LoginListener;
 import com.lym.twogoods.utils.FileUtil;
@@ -32,12 +33,7 @@ public class TwoGoodsApplication extends Application{
 		super.onCreate();
 		
 		bmobInit();
-		
 		initConfig();
-		/*User user = new User();
-		user.setUsername("阿尧yao");
-		user.setPhone("15603005669");
-		UserInfoManager.getInstance().setmCurrent(user);*/
 		prepare();
 		
 	}

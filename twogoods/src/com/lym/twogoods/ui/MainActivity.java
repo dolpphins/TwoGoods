@@ -18,6 +18,7 @@ import com.lym.twogoods.publish.manger.PublishConfigManger;
 import com.lym.twogoods.publish.ui.PublishGoodsActivity;
 import com.lym.twogoods.receiver.NetworkTipsBroadcastReceiver;
 import com.lym.twogoods.screen.DisplayUtils;
+import com.lym.twogoods.screen.GoodsScreen;
 import com.lym.twogoods.service.ChatService;
 import com.lym.twogoods.ui.base.BottomDockFragmentActivity;
 import com.lym.twogoods.viewholder.TabViewHolder;
@@ -77,10 +78,11 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 	/**接收新消息的服务*/
 	Intent chatService;
 	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		appInit();
 		
 		initTabFragment();
 		startService();
@@ -90,6 +92,11 @@ public class MainActivity extends BottomDockFragmentActivity implements View.OnC
 		}
 	}
 
+	//App相关初始化
+	public void appInit() {
+		GoodsScreen.init(this);
+	}
+	
 	@Override
 	public View onCreateBottomView() {
 		mTabView = getLayoutInflater().inflate(R.layout.app_main_bottomdock_tab, null);
