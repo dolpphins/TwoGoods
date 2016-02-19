@@ -353,7 +353,7 @@ public class XListView extends ListView implements OnScrollListener {
 	/**
 	 * 请求强制拦截触摸事件
 	 * 
-	 * @param allow true表示强制拦截,false表示有系统自行处理,不强制拦截
+	 * @param allow true表示强制拦截,false表示由系统自行处理,不强制拦截
 	 * */
 	public void requestForceInterceptTouchEvent(boolean allow) {
 		mRequestInterceptTouchEventFlag = allow;
