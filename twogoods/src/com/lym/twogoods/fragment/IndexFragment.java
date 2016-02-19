@@ -146,12 +146,12 @@ public class IndexFragment extends HeaderPullListFragment implements DropDownAbl
 		maskLayer = new MaskLayer(mAttachActivity);
 		maskLayer.setOnTouchDropDownAbleListener(this);
 		//分类下拉布局
-		categoryDropdownLayout = (DropdownLinearLayout) inflater.inflate(R.layout.index_fragment_head_category_dropdown_layout, null);
+		categoryDropdownLayout = (DropdownLinearLayout) inflater.inflate(R.layout.index_fragment_head_category_dropdown_layout, frameLayout, false);
 		//排序下拉布局
-		sortDropdownLayout = (DropdownLinearLayout) inflater.inflate(R.layout.index_fragment_head_sort_dropdown_layout, null);
+		sortDropdownLayout = (DropdownLinearLayout) inflater.inflate(R.layout.index_fragment_head_sort_dropdown_layout, frameLayout, false);
 		
 		//真正的头部
-		realHead = inflater.inflate(R.layout.index_fragment_head_layout, null);
+		realHead = inflater.inflate(R.layout.index_fragment_head_layout, frameLayout, false);
 		//设置布局参数
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		categoryDropdownLayout.setLayoutParams(lp);
