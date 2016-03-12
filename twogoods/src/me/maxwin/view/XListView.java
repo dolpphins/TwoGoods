@@ -11,6 +11,7 @@ package me.maxwin.view;
 import com.lym.twogoods.R;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -67,6 +68,9 @@ public class XListView extends ListView implements OnScrollListener {
 	
 	/** 标记是否请求强制拦截触摸事件 */
 	private boolean mRequestInterceptTouchEventFlag = false;
+	private float preX;
+	private float preY;
+	
 	
 	/**
 	 * @param context
@@ -343,8 +347,22 @@ public class XListView extends ListView implements OnScrollListener {
 	
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		if(mRequestInterceptTouchEventFlag) {
-			return false;//为解决与ViewPager滚动冲突
+		//if(mRequestInterceptTouchEventFlag) {
+		//	return false;//为解决与ViewPager滚动冲突
+		//} else {
+		//	return super.onInterceptTouchEvent(ev);
+		//}
+		float deltaX = ev.getX() - preX;
+		float deltaY = ev.getY() - preY;
+		preX = ev.getX();
+		preY = ev.getY();
+		
+		System.out.println("deltaX:" + deltaX);
+		System.out.println("deltaY:" + deltaY);
+		
+		if(ev.getAction() == MotionEvent.ACTION_MOVE 
+				&&Math.abs(deltaX) > 2 * Math.abs(deltaY)) {
+			return false;
 		} else {
 			return super.onInterceptTouchEvent(ev);
 		}
